@@ -65,7 +65,7 @@ const DriverHomeScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('DriverProfile');
+              navigation.navigate('SettingsTab', { screen: 'DriverProfile' });
             }}
             style={styles.profileButton}
             activeOpacity={0.7}
@@ -265,7 +265,7 @@ const DriverHomeScreen = () => {
       <View style={styles.quickActionsContainer}>
         <TouchableOpacity
           style={[styles.quickActionButton, { backgroundColor: theme.colors.white }]}
-          onPress={() => navigation.navigate('DriverHistory')}
+          onPress={() => navigation.navigate('RidesTab', { screen: 'DriverHistory' })}
           activeOpacity={0.7}
         >
           <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
@@ -275,7 +275,7 @@ const DriverHomeScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.quickActionButton, { backgroundColor: theme.colors.white }]}
-          onPress={() => navigation.navigate('DriverProfile')}
+          onPress={() => navigation.navigate('SettingsTab', { screen: 'DriverProfile' })}
           activeOpacity={0.7}
         >
           <Ionicons name="person-outline" size={24} color={theme.colors.primary} />

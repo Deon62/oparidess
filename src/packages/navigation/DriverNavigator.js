@@ -19,6 +19,7 @@ import UploadDrivingLicenseScreen from '../../screens/driver/UploadDrivingLicens
 import DriverBookingDetailsScreen from '../../screens/driver/DriverBookingDetailsScreen';
 import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
 import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
+import RoutesScreen from '../../screens/driver/RoutesScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -136,6 +137,14 @@ const RidesStack = () => {
         component={DriverBookingDetailsScreen}
         options={{ 
           title: 'Booking Details',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Routes" 
+        component={RoutesScreen}
+        options={{ 
+          title: 'Route Directions',
           headerShown: true 
         }}
       />

@@ -81,13 +81,11 @@ const ActiveRideScreen = () => {
   };
 
   const handleNavigateToPickup = () => {
-    // TODO: Open navigation app with pickup location
-    Alert.alert('Navigation', 'Opening navigation to pickup location...');
+    navigation.navigate('Routes', { ride: rideData });
   };
 
   const handleNavigateToDropoff = () => {
-    // TODO: Open navigation app with dropoff location
-    Alert.alert('Navigation', 'Opening navigation to dropoff location...');
+    navigation.navigate('Routes', { ride: rideData });
   };
 
   const handleArrived = () => {
@@ -197,9 +195,21 @@ const ActiveRideScreen = () => {
 
         {/* Route Information */}
         <Card style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Route
-          </Text>
+          <View style={styles.routeHeader}>
+            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              Route
+            </Text>
+            <TouchableOpacity
+              style={[styles.viewRouteButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => navigation.navigate('Routes', { ride: rideData })}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="map-outline" size={16} color={theme.colors.white} />
+              <Text style={[styles.viewRouteButtonText, { color: theme.colors.white }]}>
+                View Route
+              </Text>
+            </TouchableOpacity>
+          </View>
           
           {/* Pickup Location */}
           <View style={styles.routeItem}>
@@ -414,6 +424,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     letterSpacing: -0.3,
+  },
+  routeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  viewRouteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+  },
+  viewRouteButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
   clientInfo: {
     flexDirection: 'row',

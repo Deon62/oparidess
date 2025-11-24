@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
-const OwnerBookingsScreen = () => {
+const OwnerSettingsScreen = () => {
   const theme = useTheme();
 
   return (
@@ -11,10 +11,10 @@ const OwnerBookingsScreen = () => {
       contentContainerStyle={styles.contentContainer}
     >
       <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-        Bookings
+        Settings
       </Text>
       <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-        View and manage all your car rental bookings
+        Manage your account settings and preferences
       </Text>
     </ScrollView>
   );
@@ -42,4 +42,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OwnerBookingsScreen;
+export default OwnerSettingsScreen;
+

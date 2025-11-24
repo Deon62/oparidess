@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Card } from '../../packages/components';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -101,44 +100,43 @@ const MessagesScreen = () => {
           key={message.id}
           onPress={() => handleMessagePress(message)}
           activeOpacity={0.7}
+          style={styles.messageItem}
         >
-          <Card style={styles.messageCard}>
-            <View style={styles.avatarContainer}>
-              <Image source={message.avatar} style={styles.avatar} resizeMode="cover" />
-              {message.isOnline && (
-                <View style={[styles.onlineIndicator, { backgroundColor: '#4CAF50' }]} />
+          <View style={styles.avatarContainer}>
+            <Image source={message.avatar} style={styles.avatar} resizeMode="cover" />
+            {message.isOnline && (
+              <View style={[styles.onlineIndicator, { backgroundColor: '#4CAF50' }]} />
+            )}
+          </View>
+          <View style={styles.messageContent}>
+            <View style={styles.messageHeader}>
+              <Text style={[styles.messageName, { color: theme.colors.textPrimary }]}>
+                {message.name}
+              </Text>
+              <Text style={[styles.messageTime, { color: theme.colors.hint }]}>
+                {message.time}
+              </Text>
+            </View>
+            <View style={styles.messageFooter}>
+              <Text
+                style={[
+                  styles.lastMessage,
+                  { color: message.unread > 0 ? theme.colors.textPrimary : theme.colors.textSecondary },
+                  message.unread > 0 && styles.unreadMessage,
+                ]}
+                numberOfLines={1}
+              >
+                {message.lastMessage}
+              </Text>
+              {message.unread > 0 && (
+                <View style={[styles.unreadBadge, { backgroundColor: theme.colors.primary }]}>
+                  <Text style={[styles.unreadText, { color: theme.colors.white }]}>
+                    {message.unread}
+                  </Text>
+                </View>
               )}
             </View>
-            <View style={styles.messageContent}>
-              <View style={styles.messageHeader}>
-                <Text style={[styles.messageName, { color: theme.colors.textPrimary }]}>
-                  {message.name}
-                </Text>
-                <Text style={[styles.messageTime, { color: theme.colors.hint }]}>
-                  {message.time}
-                </Text>
-              </View>
-              <View style={styles.messageFooter}>
-                <Text
-                  style={[
-                    styles.lastMessage,
-                    { color: message.unread > 0 ? theme.colors.textPrimary : theme.colors.textSecondary },
-                    message.unread > 0 && styles.unreadMessage,
-                  ]}
-                  numberOfLines={1}
-                >
-                  {message.lastMessage}
-                </Text>
-                {message.unread > 0 && (
-                  <View style={[styles.unreadBadge, { backgroundColor: theme.colors.primary }]}>
-                    <Text style={[styles.unreadText, { color: theme.colors.white }]}>
-                      {message.unread}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </View>
-          </Card>
+          </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
@@ -150,14 +148,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
+    paddingHorizontal: 24,
+    paddingTop: 8,
     paddingBottom: 40,
-    gap: 12,
   },
-  messageCard: {
+  messageItem: {
     flexDirection: 'row',
-    padding: 16,
-    marginBottom: 0,
+    paddingVertical: 16,
     alignItems: 'center',
   },
   avatarContainer: {

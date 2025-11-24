@@ -20,7 +20,6 @@ const RenterHomeScreen = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [likedCars, setLikedCars] = useState(new Set());
-  const [bookmarkedCars, setBookmarkedCars] = useState(new Set());
   const [showNoFeesMessage, setShowNoFeesMessage] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
 
@@ -67,18 +66,6 @@ const RenterHomeScreen = () => {
 
   const toggleLike = (carId) => {
     setLikedCars(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(carId)) {
-        newSet.delete(carId);
-      } else {
-        newSet.add(carId);
-      }
-      return newSet;
-    });
-  };
-
-  const toggleBookmark = (carId) => {
-    setBookmarkedCars(prev => {
       const newSet = new Set(prev);
       if (newSet.has(carId)) {
         newSet.delete(carId);
@@ -260,22 +247,8 @@ const RenterHomeScreen = () => {
                       style={styles.carImage}
                       resizeMode="cover"
                     />
-                    {/* Bookmark and Like Icons */}
+                    {/* Like Icon */}
                     <View style={styles.carActions}>
-                      <TouchableOpacity
-                        onPress={(e) => {
-                          e.stopPropagation();
-                          toggleBookmark(car.id);
-                        }}
-                        style={styles.actionButton}
-                        activeOpacity={0.7}
-                      >
-                        <Ionicons
-                          name={bookmarkedCars.has(car.id) ? "bookmark" : "bookmark-outline"}
-                          size={20}
-                          color={bookmarkedCars.has(car.id) ? theme.colors.primary : theme.colors.textPrimary}
-                        />
-                      </TouchableOpacity>
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();

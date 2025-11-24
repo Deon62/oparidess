@@ -340,8 +340,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F5F5F5',
   },
   settingItemLeft: {
     flexDirection: 'row',

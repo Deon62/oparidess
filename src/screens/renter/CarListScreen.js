@@ -18,7 +18,6 @@ const CarListScreen = () => {
   const { classId } = route.params || {};
 
   const [likedCars, setLikedCars] = useState(new Set());
-  const [bookmarkedCars, setBookmarkedCars] = useState(new Set());
 
   // All cars data organized by class
   const allCarsByClass = {
@@ -177,17 +176,6 @@ const CarListScreen = () => {
     });
   };
 
-  const toggleBookmark = (carId) => {
-    setBookmarkedCars((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(carId)) {
-        newSet.delete(carId);
-      } else {
-        newSet.add(carId);
-      }
-      return newSet;
-    });
-  };
 
   const handleCarPress = (car) => {
     navigation.navigate('CarDetails', { car });
@@ -219,20 +207,6 @@ const CarListScreen = () => {
                 <View style={styles.carImageContainer}>
                   <Image source={car.image} style={styles.carImage} resizeMode="cover" />
                   <View style={styles.carActions}>
-                    <TouchableOpacity
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        toggleBookmark(car.id);
-                      }}
-                      style={[styles.actionButton, { backgroundColor: theme.colors.white }]}
-                      activeOpacity={0.7}
-                    >
-                      <Ionicons
-                        name={bookmarkedCars.has(car.id) ? 'bookmark' : 'bookmark-outline'}
-                        size={20}
-                        color={bookmarkedCars.has(car.id) ? theme.colors.primary : theme.colors.textPrimary}
-                      />
-                    </TouchableOpacity>
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();

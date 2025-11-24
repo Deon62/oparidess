@@ -16,7 +16,7 @@ import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
-import BookmarksScreen from '../../screens/renter/BookmarksScreen';
+import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
 
@@ -101,10 +101,10 @@ const HomeStack = () => {
         }}
       />
       <Stack.Screen 
-        name="Bookmarks" 
-        component={BookmarksScreen}
+        name="Wishlist" 
+        component={WishlistScreen}
         options={{ 
-          title: 'Bookmarked Cars',
+          title: 'Wishlist',
           headerShown: true 
         }}
       />

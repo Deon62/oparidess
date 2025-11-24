@@ -11,12 +11,12 @@ const carImage2 = require('../../../assets/images/car2.jpg');
 const carImage3 = require('../../../assets/images/car3.jpg');
 const carImage4 = require('../../../assets/images/car4.jpg');
 
-const BookmarksScreen = () => {
+const WishlistScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const [bookmarkedCars, setBookmarkedCars] = useState(new Set([1, 4, 7])); // Mock bookmarked car IDs
+  const [likedCars, setLikedCars] = useState(new Set([1, 4, 7])); // Mock liked car IDs
 
-  // Mock bookmarked cars data
+  // Mock liked cars data
   const allCars = [
     {
       id: 1,
@@ -53,16 +53,16 @@ const BookmarksScreen = () => {
     },
   ];
 
-  const bookmarkedCarsList = allCars.filter((car) => bookmarkedCars.has(car.id));
+  const likedCarsList = allCars.filter((car) => likedCars.has(car.id));
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Bookmarked Cars',
+      title: 'Wishlist',
     });
   }, [navigation]);
 
-  const toggleBookmark = (carId) => {
-    setBookmarkedCars((prev) => {
+  const toggleLike = (carId) => {
+    setLikedCars((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(carId)) {
         newSet.delete(carId);
@@ -83,19 +83,19 @@ const BookmarksScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {bookmarkedCarsList.length === 0 ? (
+      {likedCarsList.length === 0 ? (
         <View style={styles.emptyState}>
-          <Ionicons name="bookmark-outline" size={64} color={theme.colors.hint} />
+          <Ionicons name="heart-outline" size={64} color={theme.colors.hint} />
           <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-            No bookmarked cars yet
+            No liked cars yet
           </Text>
           <Text style={[styles.emptyStateSubtext, { color: theme.colors.hint }]}>
-            Start bookmarking cars you like to find them easily later
+            Start liking cars you're interested in to find them easily later
           </Text>
         </View>
       ) : (
         <View style={styles.carsGrid}>
-          {bookmarkedCarsList.map((car) => (
+          {likedCarsList.map((car) => (
             <TouchableOpacity
               key={car.id}
               onPress={() => handleCarPress(car)}
@@ -108,15 +108,15 @@ const BookmarksScreen = () => {
                   <TouchableOpacity
                     onPress={(e) => {
                       e.stopPropagation();
-                      toggleBookmark(car.id);
+                      toggleLike(car.id);
                     }}
-                    style={[styles.bookmarkButton, { backgroundColor: theme.colors.white }]}
+                    style={[styles.likeButton, { backgroundColor: theme.colors.white }]}
                     activeOpacity={0.7}
                   >
                     <Ionicons
-                      name="bookmark"
+                      name="heart"
                       size={20}
-                      color={theme.colors.primary}
+                      color="#FF3B30"
                     />
                   </TouchableOpacity>
                 </View>
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  bookmarkButton: {
+  likeButton: {
     position: 'absolute',
     top: 8,
     right: 8,
@@ -252,5 +252,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookmarksScreen;
+export default WishlistScreen;
 

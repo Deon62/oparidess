@@ -12,6 +12,7 @@ const AddCarScreen = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 4;
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -35,6 +36,15 @@ const AddCarScreen = () => {
     insurance_doc: null,
     // Step 3: Photos
     car_photos: [], // Array of up to 5 photo URIs
+    // Step 4: Rental Info
+    daily_rate: '',
+    pickup_location: '',
+    deposit_amount: '',
+    minimum_rental_days: '',
+    weekly_rate: '',
+    monthly_rate: '',
+    features: [], // Array of selected features
+    restrictions: '',
   });
 
   // Options for dropdowns
@@ -49,6 +59,10 @@ const AddCarScreen = () => {
   const [showTransmissionModal, setShowTransmissionModal] = useState(false);
   const [showCarClassModal, setShowCarClassModal] = useState(false);
   const [showColorModal, setShowColorModal] = useState(false);
+  const [showFeaturesModal, setShowFeaturesModal] = useState(false);
+
+  // Available car features
+  const availableFeatures = ['AC', 'GPS', 'Bluetooth', 'USB Port', 'Sunroof', 'Leather Seats', 'Backup Camera', 'Parking Sensors', 'Keyless Entry', 'Remote Start', 'Heated Seats', 'Cooled Seats'];
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -260,6 +274,88 @@ const AddCarScreen = () => {
     return true;
   };
 
+  const validateStep4 = () => {
+    if (!formData.daily_rate || formData.daily_rate.trim() === '') {
+      Alert.alert('Validation Error', 'Please enter the daily rate');
+      return false;
+    }
+    const dailyRate = parseFloat(formData.daily_rate.replace(/[^0-9.]/g, ''));
+    if (isNaN(dailyRate) || dailyRate <= 0) {
+      Alert.alert('Validation Error', 'Please enter a valid daily rate');
+      return false;
+    }
+
+    if (!formData.pickup_location || formData.pickup_location.trim() === '') {
+      Alert.alert('Validation Error', 'Please enter the pickup location');
+      return false;
+    }
+
+    if (!formData.deposit_amount || formData.deposit_amount.trim() === '') {
+      Alert.alert('Validation Error', 'Please enter the deposit amount');
+      return false;
+    }
+    const deposit = parseFloat(formData.deposit_amount.replace(/[^0-9.]/g, ''));
+    if (isNaN(deposit) || deposit <= 0) {
+      Alert.alert('Validation Error', 'Please enter a valid deposit amount');
+      return false;
+    }
+
+    if (formData.minimum_rental_days && formData.minimum_rental_days.trim() !== '') {
+      const minDays = parseInt(formData.minimum_rental_days);
+      if (isNaN(minDays) || minDays < 1) {
+        Alert.alert('Validation Error', 'Minimum rental days must be at least 1');
+        return false;
+      }
+    }
+
+    if (formData.weekly_rate && formData.weekly_rate.trim() !== '') {
+      const weekly = parseFloat(formData.weekly_rate.replace(/[^0-9.]/g, ''));
+      if (isNaN(weekly) || weekly <= 0) {
+        Alert.alert('Validation Error', 'Please enter a valid weekly rate');
+        return false;
+      }
+    }
+
+    if (formData.monthly_rate && formData.monthly_rate.trim() !== '') {
+      const monthly = parseFloat(formData.monthly_rate.replace(/[^0-9.]/g, ''));
+      if (isNaN(monthly) || monthly <= 0) {
+        Alert.alert('Validation Error', 'Please enter a valid monthly rate');
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleSubmitCar = async () => {
+    if (!validateStep4()) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // TODO: Implement actual API call to submit car data
+      // const carData = {
+      //   ...formData,
+      //   daily_rate: parseFloat(formData.daily_rate.replace(/[^0-9.]/g, '')),
+      //   deposit_amount: parseFloat(formData.deposit_amount.replace(/[^0-9.]/g, '')),
+      //   minimum_rental_days: formData.minimum_rental_days ? parseInt(formData.minimum_rental_days) : null,
+      //   weekly_rate: formData.weekly_rate ? parseFloat(formData.weekly_rate.replace(/[^0-9.]/g, '')) : null,
+      //   monthly_rate: formData.monthly_rate ? parseFloat(formData.monthly_rate.replace(/[^0-9.]/g, '')) : null,
+      // };
+      // await submitCar(carData);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setShowSuccessModal(true);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to submit car. Please try again.');
+      console.error('Submit error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleNext = () => {
     if (currentStep === 1) {
       if (!validateStep1()) {
@@ -276,8 +372,8 @@ const AddCarScreen = () => {
         return;
       }
       setCurrentStep(4);
-      // TODO: Step 4 will be implemented next
-      Alert.alert('Next Step', 'Step 4 will be implemented next');
+    } else if (currentStep === 4) {
+      handleSubmitCar();
     }
   };
 
@@ -740,15 +836,132 @@ const AddCarScreen = () => {
           </View>
         )}
 
-        {/* Placeholder for step 4 */}
+        {/* Step 4: Rental Info */}
         {currentStep === 4 && (
           <View style={styles.stepContainer}>
             <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
-              Step 4
+              Rental Information
             </Text>
             <Text style={[styles.stepSubtitle, { color: theme.colors.textSecondary }]}>
-              This step will be implemented next
+              Set your rental rates and availability details
             </Text>
+
+            {/* Required Fields */}
+            <Input
+              label="Daily Rate (KES) *"
+              placeholder="e.g., 5000"
+              value={formData.daily_rate}
+              onChangeText={(value) => updateFormData('daily_rate', value.replace(/[^0-9.]/g, ''))}
+              keyboardType="numeric"
+            />
+
+            <Input
+              label="Pickup Location *"
+              placeholder="Address where vehicle is available"
+              value={formData.pickup_location}
+              onChangeText={(value) => updateFormData('pickup_location', value)}
+              multiline
+              numberOfLines={2}
+              textAlignVertical="top"
+              style={styles.textArea}
+            />
+
+            <Input
+              label="Security Deposit (KES) *"
+              placeholder="e.g., 20000"
+              value={formData.deposit_amount}
+              onChangeText={(value) => updateFormData('deposit_amount', value.replace(/[^0-9.]/g, ''))}
+              keyboardType="numeric"
+            />
+
+            {/* Optional Fields */}
+            <View style={styles.sectionDivider}>
+              <Text style={[styles.sectionLabel, { color: theme.colors.textSecondary }]}>
+                Optional Information
+              </Text>
+            </View>
+
+            <Input
+              label="Minimum Rental Days"
+              placeholder="e.g., 3"
+              value={formData.minimum_rental_days}
+              onChangeText={(value) => updateFormData('minimum_rental_days', value.replace(/[^0-9]/g, ''))}
+              keyboardType="numeric"
+            />
+
+            <View style={styles.row}>
+              <View style={[styles.rowItem, { flex: 1 }]}>
+                <Input
+                  label="Weekly Rate (KES)"
+                  placeholder="e.g., 30000"
+                  value={formData.weekly_rate}
+                  onChangeText={(value) => updateFormData('weekly_rate', value.replace(/[^0-9.]/g, ''))}
+                  keyboardType="numeric"
+                />
+              </View>
+              <View style={[styles.rowItem, { flex: 1 }]}>
+                <Input
+                  label="Monthly Rate (KES)"
+                  placeholder="e.g., 120000"
+                  value={formData.monthly_rate}
+                  onChangeText={(value) => updateFormData('monthly_rate', value.replace(/[^0-9.]/g, ''))}
+                  keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            {/* Features Selection */}
+            <View style={styles.fieldContainer}>
+              <Text style={[styles.label, { color: theme.colors.textPrimary }]}>
+                Features
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.selectField,
+                  {
+                    backgroundColor: theme.colors.background,
+                    borderColor: formData.features.length > 0 ? theme.colors.primary : theme.colors.hint + '40',
+                    borderWidth: formData.features.length > 0 ? 2 : 1,
+                  },
+                ]}
+                onPress={() => setShowFeaturesModal(true)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.selectFieldText, { color: formData.features.length > 0 ? theme.colors.textPrimary : theme.colors.hint }]}>
+                  {formData.features.length > 0 ? `${formData.features.length} feature(s) selected` : 'Select features (optional)'}
+                </Text>
+                <Ionicons name="chevron-down" size={20} color={theme.colors.hint} />
+              </TouchableOpacity>
+              {formData.features.length > 0 && (
+                <View style={styles.selectedFeaturesContainer}>
+                  {formData.features.map((feature, index) => (
+                    <View key={index} style={[styles.featureTag, { backgroundColor: theme.colors.primary + '20' }]}>
+                      <Text style={[styles.featureTagText, { color: theme.colors.primary }]}>{feature}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          const newFeatures = formData.features.filter((_, i) => i !== index);
+                          updateFormData('features', newFeatures);
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="close-circle" size={18} color={theme.colors.primary} />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              )}
+            </View>
+
+            <Input
+              label="Rental Restrictions"
+              placeholder="e.g., No smoking, City driving only"
+              value={formData.restrictions}
+              onChangeText={(value) => updateFormData('restrictions', value)}
+              multiline
+              numberOfLines={3}
+              textAlignVertical="top"
+              style={styles.textArea}
+            />
           </View>
         )}
 
@@ -765,7 +978,7 @@ const AddCarScreen = () => {
           style={styles.actionButton}
         />
         <Button
-          title={currentStep === totalSteps ? 'Submit' : 'Next'}
+          title={currentStep === totalSteps ? 'Add Car' : 'Next'}
           onPress={handleNext}
           variant="primary"
           style={styles.actionButton}
@@ -814,6 +1027,98 @@ const AddCarScreen = () => {
         onSelect={(value) => updateFormData('color', value)}
         selectedValue={formData.color}
       />
+
+      {/* Features Multi-Select Modal */}
+      <Modal visible={showFeaturesModal} transparent animationType="slide" onRequestClose={() => setShowFeaturesModal(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>Select Features</Text>
+              <TouchableOpacity onPress={() => setShowFeaturesModal(false)} activeOpacity={0.7}>
+                <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView style={styles.modalOptions}>
+              {availableFeatures.map((feature) => {
+                const isSelected = formData.features.includes(feature);
+                return (
+                  <TouchableOpacity
+                    key={feature}
+                    style={[
+                      styles.modalOption,
+                      {
+                        backgroundColor: isSelected ? theme.colors.primary + '10' : 'transparent',
+                      },
+                    ]}
+                    onPress={() => {
+                      if (isSelected) {
+                        const newFeatures = formData.features.filter((f) => f !== feature);
+                        updateFormData('features', newFeatures);
+                      } else {
+                        updateFormData('features', [...formData.features, feature]);
+                      }
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.modalOptionText,
+                        {
+                          color: isSelected ? theme.colors.primary : theme.colors.textPrimary,
+                          fontFamily: isSelected ? 'Nunito_700Bold' : 'Nunito_400Regular',
+                        },
+                      ]}
+                    >
+                      {feature}
+                    </Text>
+                    {isSelected && <Ionicons name="checkmark" size={20} color={theme.colors.primary} />}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+            <View style={[styles.modalFooter, { borderTopColor: theme.colors.hint + '20' }]}>
+              <Button
+                title="Done"
+                onPress={() => setShowFeaturesModal(false)}
+                variant="primary"
+                style={styles.modalFooterButton}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal visible={showSuccessModal} transparent animationType="fade" onRequestClose={() => {}}>
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Car Submitted Successfully!
+            </Text>
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              Your car listing has been submitted and is awaiting verification. We'll review your submission and notify you once it's approved and listed.
+            </Text>
+            <Text style={[styles.successModalSubMessage, { color: theme.colors.hint }]}>
+              This process usually takes 24-48 hours.
+            </Text>
+            <TouchableOpacity
+              style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                setShowSuccessModal(false);
+                navigation.goBack();
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.successModalButtonText, { color: theme.colors.white }]}>
+                Done
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -1123,6 +1428,96 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginTop: 8,
     textAlign: 'center',
+  },
+  // Step 4 Styles
+  sectionDivider: {
+    marginTop: 8,
+    marginBottom: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E5E5',
+  },
+  sectionLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  selectedFeaturesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 12,
+  },
+  featureTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 6,
+  },
+  featureTagText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  modalFooter: {
+    padding: 16,
+    borderTopWidth: 1,
+  },
+  modalFooterButton: {
+    marginBottom: 0,
+  },
+  successModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  successModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  successIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 8,
+    lineHeight: 22,
+  },
+  successModalSubMessage: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    fontStyle: 'italic',
+  },
+  successModalButton: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

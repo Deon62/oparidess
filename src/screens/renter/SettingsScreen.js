@@ -52,8 +52,7 @@ const SettingsScreen = () => {
   }, [navigation, theme]);
 
   const handleAccountEdit = () => {
-    // TODO: Navigate to account editing screen
-    console.log('Account edit pressed');
+    navigation.navigate('HomeTab', { screen: 'UpdateProfile' });
   };
 
   const handleCustomerSupport = () => {

@@ -22,12 +22,18 @@ const UpdateProfileScreen = () => {
     location: user?.location || '',
     address: user?.address || '',
     id_number: user?.id_number || '',
+    dl_number: user?.dl_number || '',
+    dl_category: user?.dl_category || '',
+    dl_issue_date: user?.dl_issue_date || '',
+    dl_expiry_date: user?.dl_expiry_date || '',
   };
 
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [showDateModal, setShowDateModal] = useState(false);
+  const [showDlIssueDateModal, setShowDlIssueDateModal] = useState(false);
+  const [showDlExpiryDateModal, setShowDlExpiryDateModal] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // Set header title
@@ -48,44 +54,30 @@ const UpdateProfileScreen = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.first_name.trim()) {
-      newErrors.first_name = 'First name is required';
-    }
-
-    if (!formData.last_name.trim()) {
-      newErrors.last_name = 'Last name is required';
-    }
-
-    if (!formData.phone_number.trim()) {
-      newErrors.phone_number = 'Phone number is required';
-    } else if (!/^\+?[\d\s-()]+$/.test(formData.phone_number)) {
+    // All fields are optional, but if provided, validate format
+    if (formData.phone_number.trim() && !/^\+?[\d\s-()]+$/.test(formData.phone_number)) {
       newErrors.phone_number = 'Please enter a valid phone number';
     }
 
-    if (!formData.date_of_birth.trim()) {
-      newErrors.date_of_birth = 'Date of birth is required';
-    } else {
-      // Basic date validation (YYYY-MM-DD format)
+    if (formData.date_of_birth.trim()) {
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
       if (!dateRegex.test(formData.date_of_birth)) {
         newErrors.date_of_birth = 'Please use format YYYY-MM-DD';
       }
     }
 
-    if (!formData.gender) {
-      newErrors.gender = 'Gender is required';
+    if (formData.dl_issue_date.trim()) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(formData.dl_issue_date)) {
+        newErrors.dl_issue_date = 'Please use format YYYY-MM-DD';
+      }
     }
 
-    if (!formData.location.trim()) {
-      newErrors.location = 'Location is required';
-    }
-
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required';
-    }
-
-    if (!formData.id_number.trim()) {
-      newErrors.id_number = 'ID number is required';
+    if (formData.dl_expiry_date.trim()) {
+      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+      if (!dateRegex.test(formData.dl_expiry_date)) {
+        newErrors.dl_expiry_date = 'Please use format YYYY-MM-DD';
+      }
     }
 
     setErrors(newErrors);
@@ -94,7 +86,7 @@ const UpdateProfileScreen = () => {
 
   const handleSave = async () => {
     if (!validateForm()) {
-      Alert.alert('Validation Error', 'Please fill in all required fields correctly.');
+      Alert.alert('Validation Error', 'Please correct the errors in the form.');
       return;
     }
 
@@ -154,17 +146,34 @@ const UpdateProfileScreen = () => {
     setShowGenderModal(false);
   };
 
-  const handleDateSelect = (year, month, day) => {
+  const handleDateSelect = (year, month, day, field) => {
     const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    updateField('date_of_birth', formattedDate);
-    setShowDateModal(false);
+    updateField(field, formattedDate);
+    if (field === 'date_of_birth') {
+      setShowDateModal(false);
+    } else if (field === 'dl_issue_date') {
+      setShowDlIssueDateModal(false);
+    } else if (field === 'dl_expiry_date') {
+      setShowDlExpiryDateModal(false);
+    }
   };
 
   // Simple date picker component (you can replace with a proper date picker library)
-  const DatePickerModal = () => {
-    const [year, setYear] = useState(new Date().getFullYear() - 25);
-    const [month, setMonth] = useState(1);
-    const [day, setDay] = useState(1);
+  const DatePickerModal = ({ visible, onClose, onConfirm, title, initialDate }) => {
+    const parseDate = (dateString) => {
+      if (!dateString) return { year: new Date().getFullYear() - 25, month: 1, day: 1 };
+      const parts = dateString.split('-');
+      return {
+        year: parseInt(parts[0]) || new Date().getFullYear() - 25,
+        month: parseInt(parts[1]) || 1,
+        day: parseInt(parts[2]) || 1,
+      };
+    };
+
+    const initial = parseDate(initialDate);
+    const [year, setYear] = useState(initial.year);
+    const [month, setMonth] = useState(initial.month);
+    const [day, setDay] = useState(initial.day);
 
     const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -172,15 +181,15 @@ const UpdateProfileScreen = () => {
 
     return (
       <Modal
-        visible={showDateModal}
+        visible={visible}
         transparent
         animationType="slide"
-        onRequestClose={() => setShowDateModal(false)}
+        onRequestClose={onClose}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
-              Select Date of Birth
+              {title}
             </Text>
             <View style={styles.datePickerContainer}>
               <ScrollView style={styles.datePickerColumn}>
@@ -250,13 +259,13 @@ const UpdateProfileScreen = () => {
             <View style={styles.modalButtons}>
               <Button
                 title="Cancel"
-                onPress={() => setShowDateModal(false)}
+                onPress={onClose}
                 variant="secondary"
                 style={styles.modalButton}
               />
               <Button
                 title="Confirm"
-                onPress={() => handleDateSelect(year, month, day)}
+                onPress={() => onConfirm(year, month, day)}
                 variant="primary"
                 style={styles.modalButton}
               />
@@ -280,7 +289,7 @@ const UpdateProfileScreen = () => {
         </Text>
 
         <Input
-          label="First Name"
+          label="First Name (Optional)"
           placeholder="Enter your first name"
           value={formData.first_name}
           onChangeText={(value) => updateField('first_name', value)}
@@ -288,7 +297,7 @@ const UpdateProfileScreen = () => {
         />
 
         <Input
-          label="Last Name"
+          label="Last Name (Optional)"
           placeholder="Enter your last name"
           value={formData.last_name}
           onChangeText={(value) => updateField('last_name', value)}
@@ -296,7 +305,7 @@ const UpdateProfileScreen = () => {
         />
 
         <Input
-          label="Phone Number"
+          label="Phone Number (Optional)"
           placeholder="+254 712 345 678"
           value={formData.phone_number}
           onChangeText={(value) => updateField('phone_number', value)}
@@ -307,7 +316,7 @@ const UpdateProfileScreen = () => {
         {/* Date of Birth */}
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Date of Birth
+            Date of Birth (Optional)
           </Text>
           <TouchableOpacity
             style={[
@@ -344,7 +353,7 @@ const UpdateProfileScreen = () => {
         {/* Gender Selector */}
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Gender
+            Gender (Optional)
           </Text>
           <TouchableOpacity
             style={[
@@ -373,7 +382,7 @@ const UpdateProfileScreen = () => {
         </View>
 
         <Input
-          label="Location"
+          label="Location (Optional)"
           placeholder="City, Country"
           value={formData.location}
           onChangeText={(value) => updateField('location', value)}
@@ -381,7 +390,7 @@ const UpdateProfileScreen = () => {
         />
 
         <Input
-          label="Address"
+          label="Address (Optional)"
           placeholder="Street address"
           value={formData.address}
           onChangeText={(value) => updateField('address', value)}
@@ -391,13 +400,113 @@ const UpdateProfileScreen = () => {
         />
 
         <Input
-          label="ID Number"
+          label="ID Number (Optional)"
           placeholder="Enter your ID number"
           value={formData.id_number}
           onChangeText={(value) => updateField('id_number', value)}
           keyboardType="numeric"
           error={errors.id_number}
         />
+      </View>
+
+      {/* Driving License Information Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Driving License Information
+        </Text>
+        <Text style={[styles.sectionSubtitle, { color: theme.colors.textSecondary }]}>
+          Optional - for self-drive car rental
+        </Text>
+
+        <Input
+          label="Driving License Number"
+          placeholder="Enter your driving license number"
+          value={formData.dl_number}
+          onChangeText={(value) => updateField('dl_number', value)}
+          error={errors.dl_number}
+        />
+
+        <Input
+          label="Driving License Category"
+          placeholder="e.g., B, C, D"
+          value={formData.dl_category}
+          onChangeText={(value) => updateField('dl_category', value)}
+          error={errors.dl_category}
+        />
+
+        {/* DL Issue Date */}
+        <View style={styles.inputContainer}>
+          <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
+            Driving License Issue Date
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.selectInput,
+              {
+                borderColor: errors.dl_issue_date
+                  ? '#FF3B30'
+                  : '#E0E0E0',
+                backgroundColor: theme.colors.white,
+              },
+            ]}
+            onPress={() => setShowDlIssueDateModal(true)}
+            activeOpacity={0.7}
+          >
+            <Text
+              style={[
+                styles.selectInputText,
+                {
+                  color: formData.dl_issue_date
+                    ? theme.colors.textPrimary
+                    : theme.colors.hint,
+                },
+              ]}
+            >
+              {formData.dl_issue_date || 'Select issue date (YYYY-MM-DD)'}
+            </Text>
+            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+          </TouchableOpacity>
+          {errors.dl_issue_date && (
+            <Text style={styles.errorText}>{errors.dl_issue_date}</Text>
+          )}
+        </View>
+
+        {/* DL Expiry Date */}
+        <View style={styles.inputContainer}>
+          <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
+            Driving License Expiry Date
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.selectInput,
+              {
+                borderColor: errors.dl_expiry_date
+                  ? '#FF3B30'
+                  : '#E0E0E0',
+                backgroundColor: theme.colors.white,
+              },
+            ]}
+            onPress={() => setShowDlExpiryDateModal(true)}
+            activeOpacity={0.7}
+          >
+            <Text
+              style={[
+                styles.selectInputText,
+                {
+                  color: formData.dl_expiry_date
+                    ? theme.colors.textPrimary
+                    : theme.colors.hint,
+                },
+              ]}
+            >
+              {formData.dl_expiry_date || 'Select expiry date (YYYY-MM-DD)'}
+            </Text>
+            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+          </TouchableOpacity>
+          {errors.dl_expiry_date && (
+            <Text style={styles.errorText}>{errors.dl_expiry_date}</Text>
+          )}
+        </View>
       </View>
 
       {/* Action Buttons */}
@@ -472,8 +581,28 @@ const UpdateProfileScreen = () => {
         </View>
       </Modal>
 
-      {/* Date Picker Modal */}
-      <DatePickerModal />
+      {/* Date Picker Modals */}
+      <DatePickerModal
+        visible={showDateModal}
+        onClose={() => setShowDateModal(false)}
+        onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'date_of_birth')}
+        title="Select Date of Birth"
+        initialDate={formData.date_of_birth}
+      />
+      <DatePickerModal
+        visible={showDlIssueDateModal}
+        onClose={() => setShowDlIssueDateModal(false)}
+        onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'dl_issue_date')}
+        title="Select License Issue Date"
+        initialDate={formData.dl_issue_date}
+      />
+      <DatePickerModal
+        visible={showDlExpiryDateModal}
+        onClose={() => setShowDlExpiryDateModal(false)}
+        onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'dl_expiry_date')}
+        title="Select License Expiry Date"
+        initialDate={formData.dl_expiry_date}
+      />
     </ScrollView>
   );
 };
@@ -494,8 +623,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 24,
+    marginBottom: 8,
     letterSpacing: -0.3,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 24,
   },
   inputContainer: {
     marginBottom: 16,

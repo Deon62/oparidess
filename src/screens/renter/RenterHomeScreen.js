@@ -98,6 +98,33 @@ const RenterHomeScreen = () => {
     navigation.navigate('CarList', { classId });
   };
 
+  // Filter cars based on search query
+  const filterCarsBySearch = (cars, query) => {
+    if (!query.trim()) return cars;
+    const lowerQuery = query.toLowerCase().trim();
+    return cars.filter(car => 
+      car.name.toLowerCase().includes(lowerQuery) ||
+      car.color.toLowerCase().includes(lowerQuery) ||
+      car.fuel.toLowerCase().includes(lowerQuery)
+    );
+  };
+
+  // Get all cars from all classes
+  const allCars = carClasses.flatMap(carClass => carClass.cars);
+  
+  // Filter cars based on search query
+  const filteredCars = searchQuery.trim() 
+    ? filterCarsBySearch(allCars, searchQuery)
+    : null;
+
+  // Filter car classes to show only classes with matching cars when searching
+  const filteredCarClasses = searchQuery.trim()
+    ? carClasses.map(carClass => ({
+        ...carClass,
+        cars: filterCarsBySearch(carClass.cars, searchQuery)
+      })).filter(carClass => carClass.cars.length > 0)
+    : carClasses;
+
   // Hide banner when scrolling
   const handleScroll = (event) => {
     const offsetY = event.nativeEvent.contentOffset.y;
@@ -184,8 +211,18 @@ const RenterHomeScreen = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
+      {/* Search Results */}
+      {searchQuery.trim() && (
+        <View style={styles.searchResultsHeader}>
+          <Text style={[styles.searchResultsText, { color: theme.colors.textPrimary }]}>
+            {filteredCars?.length || 0} {filteredCars?.length === 1 ? 'car' : 'cars'} found for "{searchQuery}"
+          </Text>
+        </View>
+      )}
+
       {/* Car Classes Sections */}
-      {carClasses.map((carClass, index) => (
+      {filteredCarClasses.length > 0 ? (
+        filteredCarClasses.map((carClass, index) => (
         <View key={carClass.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
           <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
             <View>
@@ -291,7 +328,18 @@ const RenterHomeScreen = () => {
             ))}
           </ScrollView>
         </View>
-      ))}
+      ))
+      ) : searchQuery.trim() ? (
+        <View style={styles.noResultsContainer}>
+          <Ionicons name="search-outline" size={64} color={theme.colors.hint} />
+          <Text style={[styles.noResultsText, { color: theme.colors.textSecondary }]}>
+            No cars found matching "{searchQuery}"
+          </Text>
+          <Text style={[styles.noResultsSubtext, { color: theme.colors.hint }]}>
+            Try searching with a different term
+          </Text>
+        </View>
+      ) : null}
 
       {/* No Hidden Fees Message Banner - Bottom */}
       {showNoFeesMessage && (
@@ -518,6 +566,33 @@ const styles = StyleSheet.create({
   carDetailText: {
     fontSize: 12,
     fontFamily: 'Nunito_400Regular',
+  },
+  searchResultsHeader: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  searchResultsText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  noResultsContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+  },
+  noResultsText: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  noResultsSubtext: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });
 

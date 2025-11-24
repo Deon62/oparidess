@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -14,6 +14,8 @@ const BookingTrackingScreen = () => {
   const [daysUntilPickup, setDaysUntilPickup] = useState(0);
   const [hoursUntilPickup, setHoursUntilPickup] = useState(0);
   const [minutesUntilPickup, setMinutesUntilPickup] = useState(0);
+  const [showReceiptModal, setShowReceiptModal] = useState(false);
+  const [receiptDownloaded, setReceiptDownloaded] = useState(false);
 
   // Hide bottom tab bar on this screen
   useLayoutEffect(() => {
@@ -78,23 +80,28 @@ const BookingTrackingScreen = () => {
   };
 
   const handleDownloadReceipt = () => {
-    Alert.alert(
-      'Download Receipt',
-      'Your receipt will be downloaded and saved to your device.',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Download',
-          onPress: () => {
-            // TODO: Implement actual receipt download
-            Alert.alert('Success', 'Receipt downloaded successfully!');
-          },
-        },
-      ]
-    );
+    setShowReceiptModal(true);
+  };
+
+  const handleConfirmDownload = () => {
+    // TODO: Implement actual receipt download
+    setReceiptDownloaded(true);
+    setTimeout(() => {
+      setShowReceiptModal(false);
+      setReceiptDownloaded(false);
+    }, 2000);
+  };
+
+  const handleMessageCarOwner = () => {
+    // Navigate to chat with car owner
+    navigation.navigate('MessagesTab', {
+      screen: 'Chat',
+      params: {
+        chatId: `owner_${bookingDetails?.car?.ownerId || '1'}`,
+        userName: bookingDetails?.car?.ownerName || 'Car Owner',
+        userAvatar: bookingDetails?.car?.ownerAvatar || null,
+      },
+    });
   };
 
   const handleContactSupport = () => {
@@ -354,24 +361,139 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
-      {/* Actions */}
-      <View style={styles.actionsContainer}>
-        <Button
-          title="Download Receipt"
+      {/* Manage Booking Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Manage Booking
+        </Text>
+        <TouchableOpacity
+          style={[styles.manageItem, { borderBottomColor: '#F0F0F0' }]}
+          onPress={handleMessageCarOwner}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="chatbubbles-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              Message Car Owner
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.manageItem, { borderBottomColor: '#F0F0F0' }]}
           onPress={handleDownloadReceipt}
-          variant="secondary"
-          style={styles.actionButton}
-        />
-        <Button
-          title="Contact Support"
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              Download Receipt
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
           onPress={handleContactSupport}
-          variant="primary"
-          style={styles.actionButton}
-        />
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="headset-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              Contact Support
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
       </View>
 
       {/* Bottom Spacing */}
       <View style={{ height: 40 }} />
+
+      {/* Receipt Download Modal */}
+      <Modal
+        visible={showReceiptModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowReceiptModal(false)}
+      >
+        <View style={styles.receiptModalOverlay}>
+          <View style={[styles.receiptModalContent, { backgroundColor: theme.colors.white }]}>
+            {receiptDownloaded ? (
+              <>
+                <View style={[styles.receiptSuccessIcon, { backgroundColor: '#4CAF50' + '20' }]}>
+                  <Ionicons name="checkmark-circle" size={64} color="#4CAF50" />
+                </View>
+                <Text style={[styles.receiptModalTitle, { color: theme.colors.textPrimary }]}>
+                  Receipt Downloaded!
+                </Text>
+                <Text style={[styles.receiptModalMessage, { color: theme.colors.textSecondary }]}>
+                  Your receipt has been saved to your device.
+                </Text>
+              </>
+            ) : (
+              <>
+                <View style={[styles.receiptIconCircle, { backgroundColor: theme.colors.primary + '20' }]}>
+                  <Ionicons name="receipt" size={48} color={theme.colors.primary} />
+                </View>
+                <Text style={[styles.receiptModalTitle, { color: theme.colors.textPrimary }]}>
+                  Download Receipt
+                </Text>
+                <Text style={[styles.receiptModalMessage, { color: theme.colors.textSecondary }]}>
+                  Your receipt will be downloaded and saved to your device. This may take a few moments.
+                </Text>
+                <View style={styles.receiptModalDetails}>
+                  <View style={styles.receiptDetailRow}>
+                    <Text style={[styles.receiptDetailLabel, { color: theme.colors.hint }]}>
+                      Booking ID
+                    </Text>
+                    <Text style={[styles.receiptDetailValue, { color: theme.colors.textPrimary }]}>
+                      #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+                    </Text>
+                  </View>
+                  <View style={styles.receiptDetailRow}>
+                    <Text style={[styles.receiptDetailLabel, { color: theme.colors.hint }]}>
+                      Amount Paid
+                    </Text>
+                    <Text style={[styles.receiptDetailValue, { color: theme.colors.primary }]}>
+                      ${totalPrice?.toFixed(2) || '0.00'}
+                    </Text>
+                  </View>
+                  <View style={styles.receiptDetailRow}>
+                    <Text style={[styles.receiptDetailLabel, { color: theme.colors.hint }]}>
+                      Payment Method
+                    </Text>
+                    <Text style={[styles.receiptDetailValue, { color: theme.colors.textPrimary }]}>
+                      {paymentMethod === 'mpesa' ? 'M-PESA' : paymentMethod === 'airtel' ? 'Airtel Money' : 'Card'}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.receiptModalButtons}>
+                  <TouchableOpacity
+                    style={[styles.receiptModalButton, styles.receiptModalButtonCancel, { borderColor: theme.colors.hint }]}
+                    onPress={() => setShowReceiptModal(false)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.receiptModalButtonText, { color: theme.colors.textSecondary }]}>
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.receiptModalButton, styles.receiptModalButtonDownload, { backgroundColor: theme.colors.primary }]}
+                    onPress={handleConfirmDownload}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="download-outline" size={20} color={theme.colors.white} />
+                    <Text style={[styles.receiptModalButtonText, { color: theme.colors.white }]}>
+                      Download
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -554,6 +676,117 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     flex: 1,
+  },
+  manageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+  },
+  manageItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    flex: 1,
+  },
+  manageItemText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Receipt Modal Styles
+  receiptModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  receiptModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  receiptIconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  receiptSuccessIcon: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  receiptModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  receiptModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  receiptModalDetails: {
+    width: '100%',
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    marginBottom: 24,
+    gap: 16,
+  },
+  receiptDetailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  receiptDetailLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  receiptDetailValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  receiptModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  receiptModalButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+  },
+  receiptModalButtonCancel: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  receiptModalButtonDownload: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  receiptModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

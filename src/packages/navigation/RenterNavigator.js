@@ -11,6 +11,7 @@ import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
+import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -204,6 +205,14 @@ const SettingsStack = () => {
         component={AboutScreen}
         options={{ 
           title: 'About',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="RenterProfile" 
+        component={RenterProfileScreen}
+        options={{ 
+          title: 'My Profile',
           headerShown: true 
         }}
       />

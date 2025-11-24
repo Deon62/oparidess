@@ -25,8 +25,7 @@ const SettingsScreen = () => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            // TODO: Navigate to profile
-            console.log('Profile pressed');
+            navigation.navigate('RenterProfile');
           }}
           style={styles.profileButton}
           activeOpacity={0.7}

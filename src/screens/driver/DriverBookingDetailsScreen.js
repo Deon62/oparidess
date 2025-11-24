@@ -16,6 +16,7 @@ const DriverBookingDetailsScreen = () => {
 
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showAcceptSuccessModal, setShowAcceptSuccessModal] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [processing, setProcessing] = useState(false);
 
@@ -106,23 +107,17 @@ const DriverBookingDetailsScreen = () => {
     try {
       // TODO: Implement API call to accept booking
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      Alert.alert(
-        'Booking Accepted',
-        'You have successfully accepted this booking. Navigate to Active Rides to start the trip.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              navigation.goBack();
-            },
-          },
-        ]
-      );
+      setShowAcceptSuccessModal(true);
     } catch (error) {
       Alert.alert('Error', 'Failed to accept booking. Please try again.');
-    } finally {
       setProcessing(false);
     }
+  };
+
+  const handleAcceptSuccessClose = () => {
+    setShowAcceptSuccessModal(false);
+    setProcessing(false);
+    navigation.goBack();
   };
 
   const handleReject = () => {
@@ -594,6 +589,92 @@ const DriverBookingDetailsScreen = () => {
           </View>
         </View>
       </Modal>
+
+      {/* Accept Success Modal */}
+      <Modal
+        visible={showAcceptSuccessModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleAcceptSuccessClose}
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            {/* Success Icon */}
+            <View style={[styles.successIconContainer, { backgroundColor: '#4CAF50' + '20' }]}>
+              <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' }]}>
+                <Ionicons name="checkmark" size={64} color={theme.colors.white} />
+              </View>
+            </View>
+
+            {/* Success Title */}
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Booking Accepted!
+            </Text>
+
+            {/* Success Message */}
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              You have successfully accepted this booking. The client has been notified.
+            </Text>
+
+            {/* Booking Summary */}
+            <View style={[styles.successSummaryCard, { backgroundColor: theme.colors.background }]}>
+              <View style={styles.successSummaryRow}>
+                <View style={styles.successSummaryLeft}>
+                  <Ionicons name="person-outline" size={20} color={theme.colors.primary} />
+                  <Text style={[styles.successSummaryLabel, { color: theme.colors.textSecondary }]}>
+                    Client
+                  </Text>
+                </View>
+                <Text style={[styles.successSummaryValue, { color: theme.colors.textPrimary }]}>
+                  {bookingData.clientName}
+                </Text>
+              </View>
+              <View style={styles.successSummaryRow}>
+                <View style={styles.successSummaryLeft}>
+                  <Ionicons name="navigate-outline" size={20} color={theme.colors.primary} />
+                  <Text style={[styles.successSummaryLabel, { color: theme.colors.textSecondary }]}>
+                    Route
+                  </Text>
+                </View>
+                <Text style={[styles.successSummaryValue, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                  {bookingData.pickupLocation} → {bookingData.dropoffLocation}
+                </Text>
+              </View>
+              <View style={styles.successSummaryRow}>
+                <View style={styles.successSummaryLeft}>
+                  <Ionicons name="cash-outline" size={20} color={theme.colors.primary} />
+                  <Text style={[styles.successSummaryLabel, { color: theme.colors.textSecondary }]}>
+                    Net Earnings
+                  </Text>
+                </View>
+                <Text style={[styles.successSummaryValue, { color: '#4CAF50', fontFamily: 'Nunito_700Bold' }]}>
+                  {formatCurrency(bookingData.netPrice || ((typeof bookingData.price === 'string' ? parseFloat(bookingData.price.replace('$', '')) : bookingData.price || 0) * 0.85))}
+                </Text>
+              </View>
+            </View>
+
+            {/* Action Buttons */}
+            <View style={styles.successModalButtons}>
+              <Button
+                title="View Active Ride"
+                onPress={() => {
+                  setShowAcceptSuccessModal(false);
+                  setProcessing(false);
+                  navigation.navigate('ActiveRide', { ride: bookingData });
+                }}
+                variant="primary"
+                style={styles.successModalButton}
+              />
+              <Button
+                title="Back to Home"
+                onPress={handleAcceptSuccessClose}
+                variant="secondary"
+                style={styles.successModalButton}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -843,6 +924,84 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     flex: 1,
+    marginBottom: 0,
+  },
+  // Success Modal Styles
+  successModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  successModalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  successIconContainer: {
+    marginBottom: 24,
+  },
+  successIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#4CAF50',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  successModalTitle: {
+    fontSize: 28,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  successSummaryCard: {
+    width: '100%',
+    padding: 16,
+    borderRadius: 16,
+    marginBottom: 24,
+    gap: 12,
+  },
+  successSummaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  successSummaryLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  successSummaryLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  successSummaryValue: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
+    textAlign: 'right',
+  },
+  successModalButtons: {
+    width: '100%',
+    gap: 12,
+  },
+  successModalButton: {
     marginBottom: 0,
   },
 });

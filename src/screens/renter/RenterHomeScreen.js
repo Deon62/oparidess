@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   noFeesBanner: {
     position: 'absolute',
-    bottom: 80,
+    bottom: 100,
     left: 0,
     right: 0,
     zIndex: 1000,

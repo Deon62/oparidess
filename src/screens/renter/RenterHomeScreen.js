@@ -23,7 +23,6 @@ const RenterHomeScreen = () => {
   const [bookmarkedCars, setBookmarkedCars] = useState(new Set());
   const [showNoFeesMessage, setShowNoFeesMessage] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
-  const scrollY = useState(new Animated.Value(0))[0];
 
   // Map car images to IDs
   const carImages = {
@@ -125,19 +124,20 @@ const RenterHomeScreen = () => {
       })).filter(carClass => carClass.cars.length > 0)
     : carClasses;
 
-  // Hide banner when scrolling
-  const handleScroll = (event) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    if (offsetY > 5 && showNoFeesMessage) {
+  // Auto-hide banner after a few seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 300,
+        duration: 500,
         useNativeDriver: true,
       }).start(() => {
         setShowNoFeesMessage(false);
       });
-    }
-  };
+    }, 5000); // Hide after 5 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Set header icons and search bar
   React.useLayoutEffect(() => {
@@ -208,8 +208,6 @@ const RenterHomeScreen = () => {
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
       >
       {/* Search Results */}
       {searchQuery.trim() && (
@@ -252,7 +250,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 key={car.id}
                 onPress={() => handleCarPress(car)}
-                activeOpacity={0.8}
+                activeOpacity={1}
                 style={styles.carCardWrapper}
               >
                 <Card style={styles.carCard}>
@@ -340,8 +338,9 @@ const RenterHomeScreen = () => {
           </Text>
         </View>
       ) : null}
+      </ScrollView>
 
-      {/* No Hidden Fees Message Banner - Bottom */}
+      {/* No Hidden Fees Message Banner - Bottom Above Navbar */}
       {showNoFeesMessage && (
         <Animated.View
           style={[
@@ -352,14 +351,13 @@ const RenterHomeScreen = () => {
           ]}
         >
           <View style={styles.noFeesContent}>
-            <Ionicons name="shield-checkmark" size={20} color="#E91E63" />
+            <Ionicons name="shield-checkmark" size={20} color="#4CAF50" />
             <Text style={styles.noFeesText}>
               No hidden fees, unless personal insurance
             </Text>
           </View>
         </Animated.View>
       )}
-      </ScrollView>
     </View>
   );
 };
@@ -373,32 +371,34 @@ const styles = StyleSheet.create({
   },
   noFeesBanner: {
     position: 'absolute',
-    bottom: 20,
-    left: 24,
-    right: 24,
+    bottom: 80,
+    left: 0,
+    right: 0,
     zIndex: 1000,
-    backgroundColor: '#FFF5F8',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#FFE5EC',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    paddingHorizontal: 24,
+    paddingBottom: 8,
   },
   noFeesContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   noFeesText: {
     fontSize: 13,
     fontFamily: 'Nunito_600SemiBold',
-    color: '#E91E63',
+    color: '#4CAF50',
     textAlign: 'center',
   },
   contentContainer: {

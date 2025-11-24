@@ -11,6 +11,7 @@ import OwnerBookingsScreen from '../../screens/owner/OwnerBookingsScreen';
 import OwnerCarsScreen from '../../screens/owner/OwnerCarsScreen';
 import OwnerFinancesScreen from '../../screens/owner/OwnerFinancesScreen';
 import OwnerSettingsScreen from '../../screens/owner/OwnerSettingsScreen';
+import OwnerProfileScreen from '../../screens/owner/OwnerProfileScreen';
 import AddCarScreen from '../../screens/owner/AddCarScreen';
 import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
 import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
@@ -70,6 +71,14 @@ const HomeStack = () => {
           headerShown: true 
         }}
       />
+      <Stack.Screen 
+        name="OwnerProfile" 
+        component={OwnerProfileScreen}
+        options={{ 
+          title: 'My Profile',
+          headerShown: true 
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -114,6 +123,14 @@ const BookingsStack = () => {
         component={MessagesScreen}
         options={{ 
           title: 'Messages',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="OwnerProfile" 
+        component={OwnerProfileScreen}
+        options={{ 
+          title: 'My Profile',
           headerShown: true 
         }}
       />
@@ -279,6 +296,14 @@ const SettingsStack = () => {
         component={CustomerSupportScreen}
         options={{ 
           title: 'Customer Support',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="OwnerProfile" 
+        component={OwnerProfileScreen}
+        options={{ 
+          title: 'My Profile',
           headerShown: true 
         }}
       />

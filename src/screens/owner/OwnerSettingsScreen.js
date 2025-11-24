@@ -36,8 +36,7 @@ const OwnerSettingsScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              // TODO: Navigate to profile page (to be created)
-              console.log('Profile pressed');
+              navigation.navigate('OwnerProfile');
             }}
             style={styles.profileButton}
             activeOpacity={0.7}

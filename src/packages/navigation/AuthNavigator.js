@@ -22,7 +22,7 @@ const AuthNavigator = () => {
         },
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
-          fontWeight: '600',
+          fontFamily: 'Nunito_600SemiBold',
         },
         contentStyle: {
           backgroundColor: theme.colors.background,

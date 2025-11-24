@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
@@ -22,10 +22,10 @@ const LandingScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Top Section with Car Image */}
+      {/* Luxury Car Image Section */}
       <View style={styles.imageContainer}>
         <Image
-          source={require('../../../assets/images/lp.png')}
+          source={{ uri: 'https://pngimg.com/uploads/tesla_car/tesla_car_PNG29.png' }}
           style={styles.carImage}
           resizeMode="contain"
         />
@@ -38,9 +38,6 @@ const LandingScreen = () => {
         </Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
           Your premium car rental{'\n'}and driver hire experience
-        </Text>
-        <Text style={[styles.description, { color: theme.colors.hint }]}>
-          Rent luxury cars or hire professional{'\n'}drivers with ease
         </Text>
       </View>
 
@@ -73,10 +70,10 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 380,
+    height: 300,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 80,
+    paddingTop: 60,
     paddingHorizontal: 20,
   },
   carImage: {
@@ -90,7 +87,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 38,
-    fontWeight: '700',
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     textAlign: 'center',
@@ -98,7 +94,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 19,
-    fontWeight: '600',
     fontFamily: 'Nunito_600SemiBold',
     marginBottom: 12,
     textAlign: 'center',
@@ -106,7 +101,6 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 15,
-    fontWeight: '400',
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
     lineHeight: 22,

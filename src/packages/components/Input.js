@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: '500',
     fontFamily: 'Nunito_600SemiBold',
     marginBottom: 8,
   },
@@ -94,7 +93,6 @@ const styles = StyleSheet.create({
   },
   eyeText: {
     fontSize: 12,
-    fontWeight: '500',
     fontFamily: 'Nunito_600SemiBold',
   },
   errorText: {

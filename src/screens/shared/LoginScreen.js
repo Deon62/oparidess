@@ -51,9 +51,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 24,
+    paddingTop: 32,
   },
   form: {
-    marginTop: 24,
+    marginTop: 8,
   },
   button: {
     marginTop: 8,

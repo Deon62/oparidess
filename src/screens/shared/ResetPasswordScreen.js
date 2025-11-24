@@ -47,15 +47,17 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 24,
+    paddingTop: 32,
   },
   form: {
-    marginTop: 24,
+    marginTop: 8,
   },
   description: {
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: 15,
+    lineHeight: 22,
     marginBottom: 24,
     textAlign: 'center',
+    fontFamily: 'Nunito_400Regular',
   },
   input: {
     marginBottom: 16,

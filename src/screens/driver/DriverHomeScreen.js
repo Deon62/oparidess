@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: '700',
+    fontFamily: 'Nunito_700Bold',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    fontWeight: '400',
+    fontFamily: 'Nunito_400Regular',
   },
 });
 

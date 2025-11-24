@@ -1,21 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Button, Input } from '../../packages/components';
+import { Button, Input, Toggle } from '../../packages/components';
 
 const SignupScreen = () => {
   const theme = useTheme();
   const [formData, setFormData] = React.useState({
-    name: '',
     email: '',
-    phone: '',
     password: '',
     confirmPassword: '',
   });
+  const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
   const handleSignup = () => {
+    if (!agreeToTerms) {
+      // TODO: Show error that terms must be agreed to
+      return;
+    }
     // TODO: Implement signup logic
     console.log('Signup:', formData);
+  };
+
+  const handleGoogleSignup = () => {
+    // TODO: Implement Google signup
+    console.log('Google signup');
+  };
+
+  const handleAppleSignup = () => {
+    // TODO: Implement Apple signup
+    console.log('Apple signup');
   };
 
   const updateField = (field, value) => {
@@ -26,14 +39,10 @@ const SignupScreen = () => {
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
     >
-      <View style={styles.form}>
-        <Input
-          label="Full Name"
-          placeholder="Enter your full name"
-          value={formData.name}
-          onChangeText={(value) => updateField('name', value)}
-        />
+      {/* Form Section */}
+      <View style={styles.formSection}>
         <Input
           label="Email"
           placeholder="Enter your email"
@@ -41,13 +50,6 @@ const SignupScreen = () => {
           onChangeText={(value) => updateField('email', value)}
           keyboardType="email-address"
           autoCapitalize="none"
-        />
-        <Input
-          label="Phone Number"
-          placeholder="Enter your phone number"
-          value={formData.phone}
-          onChangeText={(value) => updateField('phone', value)}
-          keyboardType="phone-pad"
         />
         <Input
           label="Password"
@@ -63,12 +65,52 @@ const SignupScreen = () => {
           onChangeText={(value) => updateField('confirmPassword', value)}
           secureTextEntry
         />
+
+        {/* Terms Toggle */}
+        <View style={styles.termsContainer}>
+          <Toggle
+            value={agreeToTerms}
+            onValueChange={setAgreeToTerms}
+            label="I agree to the Terms and Conditions"
+          />
+        </View>
+
+        {/* Sign Up Button */}
         <Button
           title="Sign Up"
           onPress={handleSignup}
           variant="primary"
-          style={styles.button}
+          style={styles.signupButton}
+          disabled={!agreeToTerms}
         />
+
+        {/* Divider */}
+        <View style={styles.dividerContainer}>
+          <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
+          <Text style={[styles.dividerText, { color: theme.colors.hint }]}>OR</Text>
+          <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
+        </View>
+
+        {/* Social Login Buttons */}
+        <TouchableOpacity
+          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
+          onPress={handleGoogleSignup}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
+            Continue with Google
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
+          onPress={handleAppleSignup}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
+            Continue with Apple
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -79,13 +121,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 24,
+    flexGrow: 1,
+    paddingBottom: 40,
   },
-  form: {
-    marginTop: 24,
+  formSection: {
+    paddingHorizontal: 24,
+    paddingTop: 32,
   },
-  button: {
+  termsContainer: {
     marginTop: 8,
+    marginBottom: 24,
+  },
+  signupButton: {
+    marginTop: 0,
+    marginBottom: 24,
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 24,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    opacity: 0.3,
+  },
+  dividerText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    paddingHorizontal: 16,
+  },
+  socialButton: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48,
+    marginBottom: 12,
+    backgroundColor: '#FFFFFF',
+  },
+  socialButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

@@ -211,15 +211,15 @@ const CarDetailsScreen = () => {
               </Text>
             </View>
             <View style={styles.locationContainer}>
-              <View style={styles.locationHeader}>
+              <View style={styles.locationRow}>
                 <Ionicons name="location-outline" size={18} color={theme.colors.primary} />
                 <Text style={[styles.locationLabel, { color: theme.colors.textSecondary }]}>
-                  Pickup Location
+                  Pickup
+                </Text>
+                <Text style={[styles.pickupLocation, { color: theme.colors.textPrimary }]}>
+                  {rentalInfo.pickupLocation}
                 </Text>
               </View>
-              <Text style={[styles.pickupLocation, { color: theme.colors.textPrimary }]}>
-                {rentalInfo.pickupLocation}
-              </Text>
             </View>
           </View>
         </View>
@@ -317,19 +317,18 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: 250,
     position: 'relative',
-    paddingHorizontal: 8,
+    paddingHorizontal: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   carouselImageWrapper: {
     width: '100%',
     height: '100%',
-    paddingHorizontal: 4,
   },
   carouselImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 0,
+    borderRadius: 16,
   },
   carouselIndicators: {
     position: 'absolute',
@@ -357,7 +356,8 @@ const styles = StyleSheet.create({
   },
   carSpecs: {
     flexDirection: 'row',
-    gap: 24,
+    flexWrap: 'wrap',
+    gap: 16,
   },
   specItem: {
     flexDirection: 'row',
@@ -395,11 +395,11 @@ const styles = StyleSheet.create({
   locationContainer: {
     marginTop: 8,
   },
-  locationHeader: {
+  locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 8,
+    flexWrap: 'wrap',
   },
   locationLabel: {
     fontSize: 15,
@@ -408,7 +408,6 @@ const styles = StyleSheet.create({
   pickupLocation: {
     fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
-    marginLeft: 26,
   },
   mapContainer: {
     height: 200,

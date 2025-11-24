@@ -439,16 +439,21 @@ const DriverNavigator = () => {
                 />
               );
             },
-            listeners: ({ navigation }) => ({
-              tabPress: (e) => {
-                if (routeName !== 'Settings') {
-                  e.preventDefault();
-                  navigation.navigate('SettingsTab', { screen: 'Settings' });
-                }
-              },
-            }),
           };
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Get the current route name in the SettingsTab stack
+            const routeName = getFocusedRouteNameFromRoute(route) ?? 'Settings';
+            
+            // If we're not on the Settings screen, navigate to it instead
+            if (routeName !== 'Settings') {
+              e.preventDefault();
+              navigation.navigate('SettingsTab', { screen: 'Settings' });
+            }
+            // Otherwise, let the default behavior happen (just focus the tab)
+          },
+        })}
       />
     </Tab.Navigator>
   );

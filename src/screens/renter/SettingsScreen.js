@@ -1,10 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
-import { Toggle } from '../../packages/components';
+import { Toggle, Button } from '../../packages/components';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -16,6 +16,8 @@ const SettingsScreen = () => {
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
   // Set header with profile picture
   useLayoutEffect(() => {
@@ -49,41 +51,45 @@ const SettingsScreen = () => {
   };
 
   const handlePrivacy = () => {
-    // TODO: Navigate to privacy screen
-    console.log('Privacy pressed');
+    navigation.navigate('Privacy');
   };
 
   const handleNotificationPreference = () => {
-    // TODO: Navigate to notification preferences screen
-    console.log('Notification preference pressed');
+    navigation.navigate('NotificationPreferences');
   };
 
   const handleLanguage = () => {
-    // TODO: Show language selection modal
-    console.log('Language pressed');
+    navigation.navigate('Language', {
+      currentLanguage: selectedLanguage,
+      onLanguageSelect: (language) => {
+        setSelectedLanguage(language);
+      },
+    });
   };
 
   const handleAbout = () => {
-    // TODO: Navigate to about screen
-    console.log('About pressed');
+    navigation.navigate('About');
   };
 
   const handleDeleteAccount = () => {
-    Alert.alert(
-      'Delete Account',
-      'Are you sure you want to delete your account? This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            // TODO: Implement account deletion
-            console.log('Account deletion confirmed');
-          },
-        },
-      ]
-    );
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteConfirmText.toLowerCase() === 'delete') {
+      // TODO: Implement account deletion
+      console.log('Account deletion confirmed');
+      setShowDeleteModal(false);
+      setDeleteConfirmText('');
+      Alert.alert('Account Deleted', 'Your account has been permanently deleted.');
+    } else {
+      Alert.alert('Invalid Confirmation', 'Please type "delete" exactly to confirm.');
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setDeleteConfirmText('');
   };
 
   const handleLogout = () => {
@@ -217,6 +223,62 @@ const SettingsScreen = () => {
           }
         />
       </View>
+
+      {/* Delete Account Modal */}
+      <Modal
+        visible={showDeleteModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleDeleteCancel}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
+            <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
+              Delete Account
+            </Text>
+            <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
+              Type "delete" to confirm account deletion. This action cannot be undone.
+            </Text>
+            <TextInput
+              style={[styles.modalInput, { 
+                color: theme.colors.textPrimary,
+                borderColor: theme.colors.hint,
+              }]}
+              placeholder="Type 'delete' to confirm"
+              placeholderTextColor={theme.colors.hint}
+              value={deleteConfirmText}
+              onChangeText={setDeleteConfirmText}
+              autoCapitalize="none"
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalButtonCancel]}
+                onPress={handleDeleteCancel}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalButtonText, { color: theme.colors.textSecondary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.modalButton, 
+                  styles.modalButtonDelete, 
+                  { backgroundColor: '#F44336' },
+                  deleteConfirmText.toLowerCase() !== 'delete' && { opacity: 0.5 }
+                ]}
+                onPress={handleDeleteConfirm}
+                activeOpacity={0.7}
+                disabled={deleteConfirmText.toLowerCase() !== 'delete'}
+              >
+                <Text style={[styles.modalButtonText, { color: theme.colors.white }]}>
+                  Delete
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -293,6 +355,60 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     borderWidth: 2,
     borderColor: '#FFFFFF',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 20,
+    padding: 24,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+  },
+  modalMessage: {
+    fontSize: 15,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 22,
+    marginBottom: 20,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 24,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonCancel: {
+    backgroundColor: '#F0F0F0',
+  },
+  modalButtonDelete: {
+    opacity: 1,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

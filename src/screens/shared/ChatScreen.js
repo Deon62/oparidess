@@ -1,5 +1,6 @@
-import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -8,8 +9,10 @@ const ChatScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { userName, userAvatar } = route.params || {};
   const [message, setMessage] = useState('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -36,6 +39,34 @@ const ChatScreen = () => {
       time: '10:36 AM',
     },
   ]);
+  const scrollViewRef = useRef(null);
+
+  // Handle keyboard show/hide
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [messages]);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -69,15 +100,17 @@ const ChatScreen = () => {
   }, [navigation, theme]);
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.messagesContainer}
-        contentContainerStyle={styles.messagesContent}
+        contentContainerStyle={[
+          styles.messagesContent,
+          { paddingBottom: keyboardHeight > 0 ? keyboardHeight + 80 : 20 },
+        ]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         {messages.map((msg) => (
           <View
@@ -116,43 +149,56 @@ const ChatScreen = () => {
         ))}
       </ScrollView>
 
-      <View style={[styles.inputContainer, { backgroundColor: theme.colors.white }]}>
-        <TouchableOpacity
-          style={styles.attachButton}
-          activeOpacity={0.7}
-          onPress={() => {
-            // TODO: Implement attach functionality
-            console.log('Attach pressed');
-          }}
-        >
-          <Ionicons name="attach-outline" size={24} color={theme.colors.hint} />
-        </TouchableOpacity>
-        <TextInput
-          style={[styles.input, { color: theme.colors.textPrimary }]}
-          placeholder="Type a message..."
-          placeholderTextColor={theme.colors.hint}
-          value={message}
-          onChangeText={setMessage}
-          multiline
-          maxLength={500}
-        />
-        <TouchableOpacity
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      >
+        <View 
           style={[
-            styles.sendButton,
-            { backgroundColor: message.trim() ? theme.colors.primary : theme.colors.hint },
+            styles.inputContainer, 
+            { 
+              backgroundColor: theme.colors.white,
+              paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
+            }
           ]}
-          onPress={handleSend}
-          activeOpacity={0.7}
-          disabled={!message.trim()}
         >
-          <Ionicons
-            name="send"
-            size={20}
-            color={theme.colors.white}
+          <TouchableOpacity
+            style={styles.attachButton}
+            activeOpacity={0.7}
+            onPress={() => {
+              // TODO: Implement attach functionality
+              console.log('Attach pressed');
+            }}
+          >
+            <Ionicons name="attach-outline" size={24} color={theme.colors.hint} />
+          </TouchableOpacity>
+          <TextInput
+            style={[styles.input, { color: theme.colors.textPrimary }]}
+            placeholder="Type a message..."
+            placeholderTextColor={theme.colors.hint}
+            value={message}
+            onChangeText={setMessage}
+            multiline
+            maxLength={500}
           />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              { backgroundColor: message.trim() ? theme.colors.primary : theme.colors.hint },
+            ]}
+            onPress={handleSend}
+            activeOpacity={0.7}
+            disabled={!message.trim()}
+          >
+            <Ionicons
+              name="send"
+              size={20}
+              color={theme.colors.white}
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -162,6 +208,7 @@ const styles = StyleSheet.create({
   },
   messagesContainer: {
     flex: 1,
+    marginBottom: 0,
   },
   messagesContent: {
     padding: 16,
@@ -204,10 +251,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 12,
+    paddingBottom: Platform.OS === 'ios' ? 12 : 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     gap: 8,
+    minHeight: 60,
   },
   attachButton: {
     padding: 8,
@@ -219,8 +268,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     maxHeight: 100,
+    minHeight: 36,
     paddingVertical: 8,
     paddingHorizontal: 12,
+    textAlignVertical: 'center',
   },
   sendButton: {
     width: 40,

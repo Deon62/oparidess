@@ -18,6 +18,7 @@ const SettingsScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   // Set header with notifications and profile picture
   useLayoutEffect(() => {
@@ -103,20 +104,16 @@ const SettingsScreen = () => {
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to logout?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          onPress: () => {
-            logout();
-            // Navigation will happen automatically via MainNavigator
-          },
-        },
-      ]
-    );
+    setShowLogoutModal(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Landing' }],
+    });
   };
 
   const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true }) => (
@@ -233,6 +230,48 @@ const SettingsScreen = () => {
           }
         />
       </View>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        visible={showLogoutModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowLogoutModal(false)}
+      >
+        <View style={styles.logoutModalOverlay}>
+          <View style={[styles.logoutModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.logoutIconCircle, { backgroundColor: '#F44336' + '20' }]}>
+              <Ionicons name="log-out-outline" size={64} color="#F44336" />
+            </View>
+            <Text style={[styles.logoutModalTitle, { color: theme.colors.textPrimary }]}>
+              Logout
+            </Text>
+            <Text style={[styles.logoutModalMessage, { color: theme.colors.textSecondary }]}>
+              Are you sure you want to log out? You'll need to sign in again to access your account.
+            </Text>
+            <View style={styles.logoutModalButtons}>
+              <TouchableOpacity
+                style={[styles.logoutModalButton, styles.logoutModalButtonCancel, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowLogoutModal(false)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.logoutModalButtonText, { color: theme.colors.textSecondary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.logoutModalButton, styles.logoutModalButtonLogout, { backgroundColor: '#F44336' }]}
+                onPress={handleConfirmLogout}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.logoutModalButtonText, { color: theme.colors.white }]}>
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Delete Account Modal */}
       <Modal
@@ -426,6 +465,67 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   modalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Logout Modal Styles
+  logoutModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  logoutModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  logoutIconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  logoutModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  logoutModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  logoutModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  logoutModalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutModalButtonCancel: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  logoutModalButtonLogout: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  logoutModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },

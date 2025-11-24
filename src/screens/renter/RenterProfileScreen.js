@@ -52,11 +52,11 @@ const RenterProfileScreen = () => {
     );
   };
 
-  const handleGetBadge = () => {
-    // TODO: Navigate to badge screen
+  const handleReferFriends = () => {
+    // TODO: Navigate to refer friends screen
     Alert.alert(
-      'Get Badge',
-      'Badge feature will be available soon.',
+      'Refer to Friends',
+      'Refer friends feature will be available soon.',
       [{ text: 'OK' }]
     );
   };
@@ -234,12 +234,12 @@ const RenterProfileScreen = () => {
 
         <TouchableOpacity
           style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
-          onPress={handleGetBadge}
+          onPress={handleReferFriends}
           activeOpacity={0.7}
         >
-          <Ionicons name="trophy-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Get Badge
+            Refer to Friends
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>

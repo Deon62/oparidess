@@ -11,6 +11,8 @@ import OwnerBookingsScreen from '../../screens/owner/OwnerBookingsScreen';
 import OwnerCarsScreen from '../../screens/owner/OwnerCarsScreen';
 import OwnerFinancesScreen from '../../screens/owner/OwnerFinancesScreen';
 import OwnerSettingsScreen from '../../screens/owner/OwnerSettingsScreen';
+import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
+import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -132,6 +134,22 @@ const FinancesStack = () => {
         component={OwnerFinancesScreen}
         options={{ 
           title: 'Finances',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="WithdrawRequest" 
+        component={WithdrawRequestScreen}
+        options={{ 
+          title: 'Withdraw Funds',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="AddPaymentMethod" 
+        component={DriverAddPaymentScreen}
+        options={{ 
+          title: 'Add Payment Method',
           headerShown: true 
         }}
       />

@@ -132,7 +132,7 @@ const OwnerBookingsScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              // TODO: Navigate to profile
+              // TODO: Navigate to profile page (to be created)
               console.log('Profile pressed');
             }}
             style={styles.profileButton}

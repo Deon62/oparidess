@@ -18,6 +18,11 @@ import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen'
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
+import LanguageScreen from '../../screens/shared/LanguageScreen';
+import NotificationPreferencesScreen from '../../screens/shared/NotificationPreferencesScreen';
+import PrivacyScreen from '../../screens/shared/PrivacyScreen';
+import AboutScreen from '../../screens/shared/AboutScreen';
+import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -226,6 +231,54 @@ const SettingsStack = () => {
         component={OwnerSettingsScreen}
         options={{ 
           title: 'Settings',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen}
+        options={{ 
+          title: 'Notifications',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Language" 
+        component={LanguageScreen}
+        options={{ 
+          title: 'Select Language',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="NotificationPreferences" 
+        component={NotificationPreferencesScreen}
+        options={{ 
+          title: 'Notification Preferences',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Privacy" 
+        component={PrivacyScreen}
+        options={{ 
+          title: 'Privacy',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="About" 
+        component={AboutScreen}
+        options={{ 
+          title: 'About',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="CustomerSupport" 
+        component={CustomerSupportScreen}
+        options={{ 
+          title: 'Customer Support',
           headerShown: true 
         }}
       />

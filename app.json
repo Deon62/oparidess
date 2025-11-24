@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Oparides",
+    "slug": "oparides",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F7F7"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.oparides.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F7F7F7"
+      },
+      "package": "com.oparides.app"
+    }
+  }
+}
+

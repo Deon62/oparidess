@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Toggle } from '../../packages/components';
+import { WebView } from 'react-native-webview';
 
 // Import car images
 const carImage1 = require('../../../assets/images/car1.jpg');
@@ -79,7 +80,54 @@ const CarDetailsScreen = () => {
     deposit: '$200',
     minimumDays: 3,
     pickupLocation: 'Nairobi CBD, Kenya',
+    pickupCoordinates: { latitude: -1.2921, longitude: 36.8219 }, // Nairobi CBD coordinates
   };
+
+  // Mapbox HTML with GL JS
+  const mapboxHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+      <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
+        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+      </style>
+    </head>
+    <body>
+      <div id='map'></div>
+      <script>
+        try {
+          mapboxgl.accessToken = 'pk.eyJ1IjoiZGVvbmNoaW5lc2UiLCJhIjoiY21odG82dHVuMDQ1eTJpc2RmdDdlZWZ3NiJ9.W0Nbf6fypzPbXgnMcOcoTA';
+          const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [${rentalInfo.pickupCoordinates.longitude}, ${rentalInfo.pickupCoordinates.latitude}],
+            zoom: 14,
+            interactive: true,
+            attributionControl: false
+          });
+          
+          map.on('load', function() {
+            new mapboxgl.Marker({ color: '#0A1D37' })
+              .setLngLat([${rentalInfo.pickupCoordinates.longitude}, ${rentalInfo.pickupCoordinates.latitude}])
+              .addTo(map);
+          });
+          
+          map.on('error', function(e) {
+            console.error('Mapbox error:', e);
+          });
+        } catch (error) {
+          console.error('Error initializing map:', error);
+          document.getElementById('map').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #666;">Map loading error</div>';
+        }
+      </script>
+    </body>
+    </html>
+  `;
 
   // Features
   const features = [
@@ -229,11 +277,30 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Pickup Location
           </Text>
-          <View style={[styles.mapContainer, { backgroundColor: theme.colors.white }]}>
-            <Ionicons name="map-outline" size={48} color={theme.colors.hint} />
-            <Text style={[styles.mapPlaceholder, { color: theme.colors.textSecondary }]}>
-              Map will be displayed here
-            </Text>
+          <View style={styles.mapContainer}>
+            <WebView
+              source={{ html: mapboxHTML }}
+              style={styles.map}
+              javaScriptEnabled={true}
+              domStorageEnabled={true}
+              startInLoadingState={true}
+              scalesPageToFit={true}
+              scrollEnabled={false}
+              zoomEnabled={true}
+              originWhitelist={['*']}
+              mixedContentMode="always"
+              onError={(syntheticEvent) => {
+                const { nativeEvent } = syntheticEvent;
+                console.warn('WebView error: ', nativeEvent);
+              }}
+              onHttpError={(syntheticEvent) => {
+                const { nativeEvent } = syntheticEvent;
+                console.warn('WebView HTTP error: ', nativeEvent);
+              }}
+              onLoadEnd={() => {
+                console.log('WebView loaded successfully');
+              }}
+            />
           </View>
         </View>
 
@@ -411,14 +478,19 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     height: 200,
+    width: '100%',
     borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+    overflow: 'hidden',
+    backgroundColor: '#E0E0E0',
   },
-  mapPlaceholder: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    marginTop: 8,
+  map: {
+    width: '100%',
+    height: 200,
+    backgroundColor: 'transparent',
+  },
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   featuresGrid: {
     flexDirection: 'row',

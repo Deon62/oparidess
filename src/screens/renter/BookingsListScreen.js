@@ -112,6 +112,15 @@ const BookingsListScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
+              navigation.navigate('HomeTab', { screen: 'Bookmarks' });
+            }}
+            style={styles.iconButton}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="bookmark-outline" size={24} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
               navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
             }}
             style={styles.profileButton}

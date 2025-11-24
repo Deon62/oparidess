@@ -10,9 +10,11 @@ import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
+import PaymentScreen from '../../screens/renter/PaymentScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
+import BookmarksScreen from '../../screens/renter/BookmarksScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -74,6 +76,22 @@ const HomeStack = () => {
         component={BookingScreen}
         options={{ 
           title: 'Book Car',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Payment" 
+        component={PaymentScreen}
+        options={{ 
+          title: 'Payment',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Bookmarks" 
+        component={BookmarksScreen}
+        options={{ 
+          title: 'Bookmarked Cars',
           headerShown: true 
         }}
       />

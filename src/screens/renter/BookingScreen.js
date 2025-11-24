@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -105,15 +105,27 @@ const BookingScreen = () => {
 
   const handlePay = () => {
     if (!pickupDate || !dropoffDate) {
-      // TODO: Show error
+      Alert.alert('Error', 'Please select both pickup and dropoff dates');
       return;
     }
     if (days < rentalInfo.minimumDays) {
-      // TODO: Show error about minimum days
+      Alert.alert(
+        'Error',
+        `Minimum rental period is ${rentalInfo.minimumDays} ${rentalInfo.minimumDays === 1 ? 'day' : 'days'}`
+      );
       return;
     }
-    // TODO: Navigate to payment screen
-    console.log('Proceed to payment', { pickupDate, dropoffDate, totalPrice, specialRequirements });
+    navigation.navigate('Payment', {
+      totalPrice,
+      bookingDetails: {
+        car,
+        pickupDate,
+        dropoffDate,
+        days,
+        specialRequirements,
+        insuranceEnabled,
+      },
+    });
   };
 
   // Calendar Component

@@ -1,12 +1,14 @@
 {
   "expo": {
-    "name": "Oparides",
+    "name": "opa",
     "slug": "oparides",
     "version": "1.0.0",
     "sdkVersion": "54.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "icon": "./assets/logo/logo.png",
     "splash": {
+      "image": "./assets/logo/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#F7F7F7"
     },
@@ -18,11 +20,22 @@
       "bundleIdentifier": "com.oparides.app"
     },
     "android": {
+      "package": "com.oparides.app",
+      "versionCode": 1,
       "adaptiveIcon": {
+        "foregroundImage": "./assets/logo/logo.png",
         "backgroundColor": "#F7F7F7"
       },
-      "package": "com.oparides.app"
-    }
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }
-

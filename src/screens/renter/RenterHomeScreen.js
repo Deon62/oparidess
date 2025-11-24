@@ -149,7 +149,7 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.7}
               >
                 <View style={styles.profileImageContainer}>
-                  <Image source={profileImage} style={styles.profileImage} resizeMode="cover" />
+                  <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
                   <View style={styles.onlineIndicator} />
                 </View>
               </TouchableOpacity>
@@ -310,6 +310,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
+    borderWidth: 2,
   },
   onlineIndicator: {
     position: 'absolute',

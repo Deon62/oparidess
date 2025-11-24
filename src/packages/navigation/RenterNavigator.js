@@ -198,10 +198,7 @@ const RenterNavigator = () => {
         },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.hint,
-        tabBarLabelStyle: {
-          fontFamily: 'Nunito_600SemiBold',
-          fontSize: 12,
-        },
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: theme.colors.white,
           borderTopWidth: 0,

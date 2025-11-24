@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
+
+// Import profile image
+const profileImage = require('../../../assets/logo/profile.jpg');
 
 const MessagesScreen = () => {
   const theme = useTheme();
@@ -57,6 +60,27 @@ const MessagesScreen = () => {
       isOnline: true,
     },
   ];
+
+  // Set header with profile picture
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            // TODO: Navigate to profile
+            console.log('Profile pressed');
+          }}
+          style={styles.profileButton}
+          activeOpacity={0.7}
+        >
+          <View style={styles.profileImageContainer}>
+            <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+            <View style={styles.profileOnlineIndicator} />
+          </View>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, theme]);
 
   const handleMessagePress = (message) => {
     navigation.navigate('Chat', { 
@@ -199,6 +223,31 @@ const styles = StyleSheet.create({
   unreadText: {
     fontSize: 11,
     fontFamily: 'Nunito_700Bold',
+  },
+  profileButton: {
+    marginRight: 8,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    width: 36,
+    height: 36,
+  },
+  profileImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 2,
+  },
+  profileOnlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4CAF50',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
 });
 

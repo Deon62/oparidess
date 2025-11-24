@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 
+// Import profile image
+const profileImage = require('../../../assets/logo/profile.jpg');
+
 const BookingsListScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
   const [bookingType, setBookingType] = useState('cars'); // 'cars' or 'chauffeurs'
   const [statusFilter, setStatusFilter] = useState('pending'); // 'pending', 'active', 'completed', 'cancelled'
 
@@ -90,6 +95,27 @@ const BookingsListScreen = () => {
 
   const bookings = bookingType === 'cars' ? carBookings : chauffeurBookings;
   const filteredBookings = bookings.filter(booking => booking.status === statusFilter);
+
+  // Set header with profile picture
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            // TODO: Navigate to profile
+            console.log('Profile pressed');
+          }}
+          style={styles.profileButton}
+          activeOpacity={0.7}
+        >
+          <View style={styles.profileImageContainer}>
+            <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+            <View style={styles.onlineIndicator} />
+          </View>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, theme]);
 
   const statusOptions = [
     { id: 'pending', label: 'Pending' },
@@ -406,6 +432,31 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginTop: 16,
     textAlign: 'center',
+  },
+  profileButton: {
+    marginRight: 8,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    width: 36,
+    height: 36,
+  },
+  profileImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 2,
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4CAF50',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
 });
 

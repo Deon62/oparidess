@@ -42,7 +42,11 @@
         {
           "android": {
             "enableProguardInReleaseBuilds": true,
-            "enableR8": true
+            "enableR8": true,
+            "gradleProperties": {
+              "android.enableProguardInReleaseBuilds": true,
+              "android.enableR8.fullMode": true
+            }
           }
         }
       ]

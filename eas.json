@@ -7,30 +7,18 @@
       "developmentClient": true,
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "gradleProperties": {
-          "android.enableProguardInReleaseBuilds": true,
-          "android.enableR8.fullMode": true
-        }
+        "buildType": "apk"
       }
     },
     "preview": {
       "distribution": "internal",
       "android": {
-        "buildType": "apk",
-        "gradleProperties": {
-          "android.enableProguardInReleaseBuilds": true,
-          "android.enableR8.fullMode": true
-        }
+        "buildType": "apk"
       }
     },
     "production": {
       "android": {
-        "buildType": "apk",
-        "gradleProperties": {
-          "android.enableProguardInReleaseBuilds": true,
-          "android.enableR8.fullMode": true
-        }
+        "buildType": "apk"
       }
     }
   },

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Card } from '../../packages/components';
+import { Card, Button } from '../../packages/components';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -12,6 +12,11 @@ const DriverHistoryScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'completed', 'cancelled'
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedRide, setSelectedRide] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [ratingText, setRatingText] = useState('');
+  const [ratedRides, setRatedRides] = useState(new Set()); // Track which rides have been rated
 
   // Mock rides data
   const rides = [
@@ -190,6 +195,61 @@ const DriverHistoryScreen = () => {
     }
   };
 
+  const handleRateClient = (ride) => {
+    setSelectedRide(ride);
+    setRating(0);
+    setRatingText('');
+    setShowRatingModal(true);
+  };
+
+  const handleCloseRatingModal = () => {
+    setShowRatingModal(false);
+    setSelectedRide(null);
+    setRating(0);
+    setRatingText('');
+  };
+
+  const handleSubmitRating = () => {
+    if (rating === 0) {
+      Alert.alert('Error', 'Please select a rating');
+      return;
+    }
+
+    // TODO: Implement API call to submit rating
+    const ratingKey = `ride-${selectedRide.id}`;
+    setRatedRides(new Set([...ratedRides, ratingKey]));
+    
+    console.log('Rating submitted:', {
+      rideId: selectedRide.id,
+      clientName: selectedRide.clientName,
+      rating: rating,
+      text: ratingText,
+    });
+
+    Alert.alert('Success', 'Thank you for rating this client!');
+    handleCloseRatingModal();
+  };
+
+  const renderStars = () => {
+    return (
+      <View style={styles.starsContainer}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <TouchableOpacity
+            key={star}
+            onPress={() => setRating(star)}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={star <= rating ? 'star' : 'star-outline'}
+              size={40}
+              color={star <= rating ? '#FFA500' : theme.colors.hint}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* Status Filters */}
@@ -363,24 +423,126 @@ const DriverHistoryScreen = () => {
                   </View>
                 </View>
 
-                {/* Action Button for Active Rides */}
-                {ride.status === 'active' && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
-                    onPress={() => handleRidePress(ride)}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="navigate" size={18} color={theme.colors.white} />
-                    <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
-                      View Active Ride
-                    </Text>
-                  </TouchableOpacity>
-                )}
+                {/* Action Buttons */}
+                <View style={styles.rideActions}>
+                  {ride.status === 'active' && (
+                    <TouchableOpacity
+                      style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
+                      onPress={() => handleRidePress(ride)}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="navigate" size={18} color={theme.colors.white} />
+                      <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
+                        View Active Ride
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  {ride.status === 'completed' && (
+                    (() => {
+                      const ratingKey = `ride-${ride.id}`;
+                      const isRated = ratedRides.has(ratingKey);
+                      return (
+                        <TouchableOpacity
+                          style={[
+                            styles.rateButton,
+                            isRated
+                              ? { backgroundColor: theme.colors.hint + '30', borderWidth: 1, borderColor: theme.colors.hint }
+                              : { backgroundColor: theme.colors.primary }
+                          ]}
+                          onPress={() => !isRated && handleRateClient(ride)}
+                          activeOpacity={isRated ? 1 : 0.7}
+                          disabled={isRated}
+                        >
+                          <Ionicons
+                            name={isRated ? "checkmark-circle" : "star-outline"}
+                            size={16}
+                            color={isRated ? theme.colors.textSecondary : theme.colors.white}
+                          />
+                          <Text style={[
+                            styles.rateButtonText,
+                            { color: isRated ? theme.colors.textSecondary : theme.colors.white }
+                          ]}>
+                            {isRated ? 'Rated' : 'Rate Client'}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })()
+                  )}
+                </View>
               </Card>
             </TouchableOpacity>
           ))
         )}
       </ScrollView>
+
+      {/* Rating Modal */}
+      <Modal
+        visible={showRatingModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCloseRatingModal}
+      >
+        <View style={styles.ratingModalOverlay}>
+          <View style={[styles.ratingModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.ratingModalHeader}>
+              <Text style={[styles.ratingModalTitle, { color: theme.colors.textPrimary }]}>
+                Rate Client
+              </Text>
+              <Text style={[styles.ratingModalSubtitle, { color: theme.colors.textSecondary }]}>
+                {selectedRide?.clientName}
+              </Text>
+            </View>
+
+            {/* Star Rating */}
+            <View style={styles.ratingSection}>
+              <Text style={[styles.ratingLabel, { color: theme.colors.textPrimary }]}>
+                How would you rate this client?
+              </Text>
+              {renderStars()}
+            </View>
+
+            {/* Optional Text Input */}
+            <View style={styles.textInputSection}>
+              <Text style={[styles.textInputLabel, { color: theme.colors.textPrimary }]}>
+                Share your experience (optional)
+              </Text>
+              <TextInput
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: theme.colors.background,
+                    color: theme.colors.textPrimary,
+                    borderColor: theme.colors.hint + '40',
+                  },
+                ]}
+                placeholder="Write a review..."
+                placeholderTextColor={theme.colors.hint}
+                value={ratingText}
+                onChangeText={setRatingText}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+
+            <View style={styles.ratingModalButtons}>
+              <Button
+                title="Cancel"
+                onPress={handleCloseRatingModal}
+                variant="secondary"
+                style={styles.ratingModalButton}
+              />
+              <Button
+                title="Submit"
+                onPress={handleSubmitRating}
+                variant="primary"
+                style={styles.ratingModalButton}
+                disabled={rating === 0}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -574,6 +736,9 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: 4,
   },
+  rideActions: {
+    marginTop: 12,
+  },
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -585,6 +750,85 @@ const styles = StyleSheet.create({
   actionButtonText: {
     fontSize: 14,
     fontFamily: 'Nunito_700Bold',
+  },
+  rateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    gap: 6,
+  },
+  rateButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Rating Modal Styles
+  ratingModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  ratingModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 24,
+    maxHeight: '80%',
+  },
+  ratingModalHeader: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  ratingModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  ratingModalSubtitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textAlign: 'center',
+  },
+  ratingSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  ratingLabel: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  textInputSection: {
+    marginBottom: 24,
+  },
+  textInputLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    minHeight: 100,
+  },
+  ratingModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  ratingModalButton: {
+    flex: 1,
+    marginBottom: 0,
   },
 });
 

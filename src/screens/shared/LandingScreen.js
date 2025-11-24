@@ -39,12 +39,6 @@ const LandingScreen = () => {
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
           Your premium car rental{'\n'}and driver hire experience
         </Text>
-        {/* Price Note */}
-        <View style={[styles.priceNote, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.priceNoteText, { color: theme.colors.textPrimary }]}>
-            Starting from <Text style={[styles.priceAmount, { color: theme.colors.primary }]}>$25/day</Text>
-          </Text>
-        </View>
       </View>
 
       {/* Buttons Section */}
@@ -117,26 +111,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 64,
     gap: 14,
-  },
-  priceNote: {
-    marginTop: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  priceNoteText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    textAlign: 'center',
-  },
-  priceAmount: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
   },
   primaryButton: {
     marginBottom: 0,

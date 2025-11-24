@@ -367,7 +367,7 @@ const BookingTrackingScreen = () => {
           Manage Booking
         </Text>
         <TouchableOpacity
-          style={[styles.manageItem, { borderBottomColor: '#F0F0F0' }]}
+          style={styles.manageItem}
           onPress={handleMessageCarOwner}
           activeOpacity={0.7}
         >
@@ -380,7 +380,7 @@ const BookingTrackingScreen = () => {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.manageItem, { borderBottomColor: '#F0F0F0' }]}
+          style={styles.manageItem}
           onPress={handleDownloadReceipt}
           activeOpacity={0.7}
         >
@@ -682,7 +682,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
-    borderBottomWidth: 1,
   },
   manageItemLeft: {
     flexDirection: 'row',

@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -13,6 +13,7 @@ const UploadDocsScreen = () => {
   const [nationalIdImage, setNationalIdImage] = useState(null);
   const [driversLicenseImage, setDriversLicenseImage] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -113,16 +114,7 @@ const UploadDocsScreen = () => {
       // TODO: Implement actual upload logic
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      Alert.alert(
-        'Success',
-        'Documents uploaded successfully!',
-        [
-          {
-            text: 'OK',
-            onPress: () => navigation.goBack(),
-          },
-        ]
-      );
+      setShowSuccessModal(true);
     } catch (error) {
       Alert.alert('Error', 'Failed to upload documents. Please try again.');
       console.error('Upload error:', error);
@@ -242,6 +234,58 @@ const UploadDocsScreen = () => {
 
       {/* Bottom Spacing */}
       <View style={{ height: 40 }} />
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowSuccessModal(false)}
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Documents Uploaded!
+            </Text>
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              Your documents have been uploaded successfully. We'll review them and notify you once verified.
+            </Text>
+            <View style={styles.successModalDetails}>
+              {nationalIdImage && (
+                <View style={styles.successDetailRow}>
+                  <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+                  <Text style={[styles.successDetailText, { color: theme.colors.textPrimary }]}>
+                    National ID uploaded
+                  </Text>
+                </View>
+              )}
+              {driversLicenseImage && (
+                <View style={styles.successDetailRow}>
+                  <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+                  <Text style={[styles.successDetailText, { color: theme.colors.textPrimary }]}>
+                    Driver's License uploaded
+                  </Text>
+                </View>
+              )}
+            </View>
+            <TouchableOpacity
+              style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                setShowSuccessModal(false);
+                navigation.goBack();
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.successModalButtonText, { color: theme.colors.white }]}>
+                Done
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -350,6 +394,71 @@ const styles = StyleSheet.create({
   },
   uploadButtonMain: {
     marginTop: 24,
+  },
+  // Success Modal Styles
+  successModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  successModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  successIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  successModalDetails: {
+    width: '100%',
+    paddingVertical: 16,
+    marginBottom: 24,
+    gap: 12,
+  },
+  successDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  successDetailText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  successModalButton: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  successModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

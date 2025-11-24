@@ -35,7 +35,7 @@ const SettingsScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('RenterProfile');
+              navigation.navigate('HomeTab', { screen: 'RenterProfile' });
             }}
             style={styles.profileButton}
             activeOpacity={0.7}

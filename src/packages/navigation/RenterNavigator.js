@@ -105,6 +105,30 @@ const HomeStack = () => {
           headerShown: true 
         }}
       />
+      <Stack.Screen 
+        name="RenterProfile" 
+        component={RenterProfileScreen}
+        options={{ 
+          title: 'My Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UpdateProfile" 
+        component={UpdateProfileScreen}
+        options={{ 
+          title: 'Update Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UploadDocs" 
+        component={UploadDocsScreen}
+        options={{ 
+          title: 'Upload Documents',
+          headerShown: true 
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -235,30 +259,6 @@ const SettingsStack = () => {
         component={AboutScreen}
         options={{ 
           title: 'About',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="RenterProfile" 
-        component={RenterProfileScreen}
-        options={{ 
-          title: 'My Profile',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="UpdateProfile" 
-        component={UpdateProfileScreen}
-        options={{ 
-          title: 'Update Profile',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="UploadDocs" 
-        component={UploadDocsScreen}
-        options={{ 
-          title: 'Upload Documents',
           headerShown: true 
         }}
       />

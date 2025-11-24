@@ -66,7 +66,7 @@ const MessagesScreen = () => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
+            navigation.navigate('HomeTab', { screen: 'RenterProfile' });
           }}
           style={styles.profileButton}
           activeOpacity={0.7}

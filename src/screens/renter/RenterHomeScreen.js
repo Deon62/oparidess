@@ -142,7 +142,7 @@ const RenterHomeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
+                  navigation.navigate('RenterProfile');
                 }}
                 style={styles.profileButton}
                 activeOpacity={0.7}

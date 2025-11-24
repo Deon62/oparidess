@@ -44,12 +44,7 @@ const RenterProfileScreen = () => {
   };
 
   const handleUpdateProfile = () => {
-    // TODO: Navigate to edit profile screen
-    Alert.alert(
-      'Update Profile',
-      'Profile editing feature will be available soon.',
-      [{ text: 'OK' }]
-    );
+    navigation.navigate('UpdateProfile', { personalInfo });
   };
 
   const handleAddPayment = () => {

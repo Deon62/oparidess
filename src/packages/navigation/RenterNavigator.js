@@ -12,6 +12,7 @@ import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
+import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -213,6 +214,14 @@ const SettingsStack = () => {
         component={RenterProfileScreen}
         options={{ 
           title: 'My Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UpdateProfile" 
+        component={UpdateProfileScreen}
+        options={{ 
+          title: 'Update Profile',
           headerShown: true 
         }}
       />

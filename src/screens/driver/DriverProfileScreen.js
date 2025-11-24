@@ -340,7 +340,7 @@ const DriverProfileScreen = () => {
             if (driverProfile.id_document_url) {
               handleViewDocument(driverProfile.id_document_url, 'ID Document');
             } else {
-              navigation.navigate('UploadIdDocument');
+              navigation.navigate('SettingsTab', { screen: 'UploadIdDocument' });
             }
           }}
         />
@@ -352,7 +352,7 @@ const DriverProfileScreen = () => {
             if (driverProfile.dl_document_url) {
               handleViewDocument(driverProfile.dl_document_url, 'Driving License');
             } else {
-              navigation.navigate('UploadDrivingLicense');
+              navigation.navigate('SettingsTab', { screen: 'UploadDrivingLicense' });
             }
           }}
         />

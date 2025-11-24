@@ -56,7 +56,7 @@ const DriverHomeScreen = () => {
         <View style={styles.headerRightContainer}>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('SettingsTab', { screen: 'Notifications' });
+              navigation.getParent()?.navigate('SettingsTab', { screen: 'Notifications' });
             }}
             style={styles.iconButton}
             activeOpacity={0.7}
@@ -91,8 +91,8 @@ const DriverHomeScreen = () => {
   };
 
   const handleViewRideDetails = (ride) => {
-    // TODO: Navigate to ride details
-    console.log('View ride details:', ride);
+    // Navigate within the same stack (HomeStack)
+    navigation.navigate('DriverBookingDetails', { ride });
   };
 
   return (

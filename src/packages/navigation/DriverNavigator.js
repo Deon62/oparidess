@@ -16,6 +16,7 @@ import DriverSettingsScreen from '../../screens/driver/DriverSettingsScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 import UploadIdDocumentScreen from '../../screens/driver/UploadIdDocumentScreen';
 import UploadDrivingLicenseScreen from '../../screens/driver/UploadDrivingLicenseScreen';
+import DriverBookingDetailsScreen from '../../screens/driver/DriverBookingDetailsScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -73,6 +74,14 @@ const HomeStack = () => {
           headerShown: true 
         }}
       />
+      <Stack.Screen 
+        name="DriverBookingDetails" 
+        component={DriverBookingDetailsScreen}
+        options={{ 
+          title: 'Booking Details',
+          headerShown: true 
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -117,6 +126,14 @@ const RidesStack = () => {
         component={AvailableRidesScreen}
         options={{ 
           title: 'Available Rides',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="DriverBookingDetails" 
+        component={DriverBookingDetailsScreen}
+        options={{ 
+          title: 'Booking Details',
           headerShown: true 
         }}
       />

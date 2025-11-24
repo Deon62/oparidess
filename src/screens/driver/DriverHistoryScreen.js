@@ -185,8 +185,8 @@ const DriverHistoryScreen = () => {
     if (ride.status === 'active') {
       navigation.navigate('ActiveRide', { ride });
     } else {
-      // TODO: Navigate to ride details screen
-      console.log('View ride details:', ride);
+      // Navigate within the same stack (RidesStack)
+      navigation.navigate('DriverBookingDetails', { ride });
     }
   };
 

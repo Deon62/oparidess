@@ -10,30 +10,42 @@ const DriverFinancesScreen = () => {
   const navigation = useNavigation();
   const [selectedPeriod, setSelectedPeriod] = useState('week'); // week, month, year
 
+  // Commission rate (15%)
+  const COMMISSION_RATE = 0.15;
+
   // Mock financial data
   const earningsData = {
     week: {
-      total: 1250,
+      gross: 1250,
       rides: 18,
       average: 69.44,
     },
     month: {
-      total: 4850,
+      gross: 4850,
       rides: 72,
       average: 67.36,
     },
     year: {
-      total: 58200,
+      gross: 58200,
       rides: 864,
       average: 67.36,
     },
   };
 
+  // Calculate commission and net earnings
+  const calculateCommission = (gross) => {
+    return gross * COMMISSION_RATE;
+  };
+
+  const currentData = earningsData[selectedPeriod];
+  const commissionAmount = calculateCommission(currentData.gross);
+  const netEarnings = currentData.gross - commissionAmount;
+
   const transactions = [
     {
       id: 1,
       type: 'earned',
-      amount: 25,
+      grossAmount: 25,
       description: 'Ride from Nairobi CBD to Airport',
       date: '2024-01-15',
       time: '2:30 PM',
@@ -42,7 +54,7 @@ const DriverFinancesScreen = () => {
     {
       id: 2,
       type: 'earned',
-      amount: 20,
+      grossAmount: 20,
       description: 'Ride from Westlands to Karen',
       date: '2024-01-15',
       time: '3:15 PM',
@@ -60,7 +72,7 @@ const DriverFinancesScreen = () => {
     {
       id: 4,
       type: 'earned',
-      amount: 15,
+      grossAmount: 15,
       description: 'Ride from Parklands to Kilimani',
       date: '2024-01-14',
       time: '4:00 PM',
@@ -69,15 +81,13 @@ const DriverFinancesScreen = () => {
     {
       id: 5,
       type: 'earned',
-      amount: 30,
+      grossAmount: 30,
       description: 'Ride from Karen to Westlands',
       date: '2024-01-13',
       time: '11:30 AM',
       status: 'completed',
     },
   ];
-
-  const currentData = earningsData[selectedPeriod];
 
   const formatCurrency = (amount) => {
     return `$${Math.abs(amount).toFixed(2)}`;
@@ -138,13 +148,52 @@ const DriverFinancesScreen = () => {
         <Card style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
           <View style={styles.summaryHeader}>
             <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
-              Total Earnings
+              Net Earnings
             </Text>
             <Ionicons name="cash-outline" size={24} color={theme.colors.primary} />
           </View>
           <Text style={[styles.summaryAmount, { color: theme.colors.textPrimary }]}>
-            {formatCurrency(currentData.total)}
+            {formatCurrency(netEarnings)}
           </Text>
+          
+          {/* Commission Breakdown */}
+          <View style={[styles.commissionBreakdown, { backgroundColor: theme.colors.background }]}>
+            <View style={styles.commissionRow}>
+              <View style={styles.commissionRowLeft}>
+                <Ionicons name="trending-up-outline" size={16} color={theme.colors.primary} />
+                <Text style={[styles.commissionLabel, { color: theme.colors.textSecondary }]}>
+                  Gross Earnings
+                </Text>
+              </View>
+              <Text style={[styles.commissionValue, { color: theme.colors.textPrimary }]}>
+                {formatCurrency(currentData.gross)}
+              </Text>
+            </View>
+            <View style={styles.commissionRow}>
+              <View style={styles.commissionRowLeft}>
+                <Ionicons name="remove-circle-outline" size={16} color="#FF3B30" />
+                <Text style={[styles.commissionLabel, { color: theme.colors.textSecondary }]}>
+                  Commission ({COMMISSION_RATE * 100}%)
+                </Text>
+              </View>
+              <Text style={[styles.commissionValue, { color: '#FF3B30' }]}>
+                -{formatCurrency(commissionAmount)}
+              </Text>
+            </View>
+            <View style={[styles.commissionDivider, { backgroundColor: theme.colors.hint + '30' }]} />
+            <View style={styles.commissionRow}>
+              <View style={styles.commissionRowLeft}>
+                <Ionicons name="checkmark-circle-outline" size={16} color="#4CAF50" />
+                <Text style={[styles.commissionLabel, { color: theme.colors.textPrimary, fontFamily: 'Nunito_700Bold' }]}>
+                  Net Earnings
+                </Text>
+              </View>
+              <Text style={[styles.commissionValue, { color: '#4CAF50', fontFamily: 'Nunito_700Bold' }]}>
+                {formatCurrency(netEarnings)}
+              </Text>
+            </View>
+          </View>
+
           <View style={styles.summaryStats}>
             <View style={styles.summaryStat}>
               <Text style={[styles.summaryStatValue, { color: theme.colors.textPrimary }]}>
@@ -169,7 +218,7 @@ const DriverFinancesScreen = () => {
       {/* Quick Stats */}
       <View style={styles.statsContainer}>
         <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="trending-up-outline" size={24} color="#4CAF50" />
+          <Ionicons name="trending-up-outline" size={18} color="#4CAF50" />
           <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
             +12%
           </Text>
@@ -178,12 +227,21 @@ const DriverFinancesScreen = () => {
           </Text>
         </View>
         <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="wallet-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="wallet-outline" size={18} color={theme.colors.primary} />
           <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
-            {formatCurrency(850)}
+            {formatCurrency(netEarnings * 0.7)}
           </Text>
           <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
             Available Balance
+          </Text>
+        </View>
+        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
+          <Ionicons name="cut-outline" size={18} color="#FF3B30" />
+          <Text style={[styles.statValue, { color: '#FF3B30' }]}>
+            {formatCurrency(commissionAmount)}
+          </Text>
+          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+            Commission
           </Text>
         </View>
       </View>
@@ -193,55 +251,76 @@ const DriverFinancesScreen = () => {
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Recent Transactions
         </Text>
-        {transactions.map((transaction) => (
-          <Card key={transaction.id} style={[styles.transactionCard, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.transactionHeader}>
-              <View
-                style={[
-                  styles.transactionIcon,
-                  {
-                    backgroundColor:
-                      transaction.type === 'earned'
-                        ? theme.colors.primary + '20'
-                        : '#FF3B30' + '20',
-                  },
-                ]}
-              >
-                <Ionicons
-                  name={transaction.type === 'earned' ? 'arrow-down' : 'arrow-up'}
-                  size={20}
-                  color={transaction.type === 'earned' ? theme.colors.primary : '#FF3B30'}
-                />
-              </View>
-              <View style={styles.transactionInfo}>
-                <Text style={[styles.transactionDescription, { color: theme.colors.textPrimary }]}>
-                  {transaction.description}
-                </Text>
-                <View style={styles.transactionMeta}>
-                  <Text style={[styles.transactionDate, { color: theme.colors.textSecondary }]}>
-                    {formatDate(transaction.date)} • {transaction.time}
+        {transactions.map((transaction) => {
+          const isEarned = transaction.type === 'earned';
+          const grossAmount = isEarned ? transaction.grossAmount : Math.abs(transaction.amount);
+          const commission = isEarned ? calculateCommission(grossAmount) : 0;
+          const netAmount = isEarned ? grossAmount - commission : transaction.amount;
+
+          return (
+            <Card key={transaction.id} style={[styles.transactionCard, { backgroundColor: theme.colors.white }]}>
+              <View style={styles.transactionHeader}>
+                <View
+                  style={[
+                    styles.transactionIcon,
+                    {
+                      backgroundColor:
+                        isEarned
+                          ? theme.colors.primary + '20'
+                          : '#FF3B30' + '20',
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name={isEarned ? 'arrow-down' : 'arrow-up'}
+                    size={20}
+                    color={isEarned ? theme.colors.primary : '#FF3B30'}
+                  />
+                </View>
+                <View style={styles.transactionInfo}>
+                  <Text style={[styles.transactionDescription, { color: theme.colors.textPrimary }]}>
+                    {transaction.description}
                   </Text>
-                  {transaction.status === 'pending' && (
-                    <View style={[styles.statusBadge, { backgroundColor: '#FFA500' + '20' }]}>
-                      <Text style={[styles.statusText, { color: '#FFA500' }]}>Pending</Text>
+                  <View style={styles.transactionMeta}>
+                    <Text style={[styles.transactionDate, { color: theme.colors.textSecondary }]}>
+                      {formatDate(transaction.date)} • {transaction.time}
+                    </Text>
+                    {transaction.status === 'pending' && (
+                      <View style={[styles.statusBadge, { backgroundColor: '#FFA500' + '20' }]}>
+                        <Text style={[styles.statusText, { color: '#FFA500' }]}>Pending</Text>
+                      </View>
+                    )}
+                  </View>
+                  {isEarned && (
+                    <View style={styles.transactionBreakdown}>
+                      <Text style={[styles.breakdownText, { color: theme.colors.textSecondary }]}>
+                        Gross: {formatCurrency(grossAmount)} • Commission: -{formatCurrency(commission)}
+                      </Text>
                     </View>
                   )}
                 </View>
+                <View style={styles.transactionAmountContainer}>
+                  <Text
+                    style={[
+                      styles.transactionAmount,
+                      {
+                        color: isEarned ? '#4CAF50' : '#FF3B30',
+                      },
+                    ]}
+                  >
+                    {isEarned ? '+' : ''}
+                    {formatCurrency(netAmount)}
+                  </Text>
+                  {isEarned && (
+                    <Text style={[styles.transactionNetLabel, { color: theme.colors.textSecondary }]}>
+                      Net
+                    </Text>
+                  )}
+                </View>
               </View>
-              <Text
-                style={[
-                  styles.transactionAmount,
-                  {
-                    color: transaction.type === 'earned' ? theme.colors.primary : '#FF3B30',
-                  },
-                ]}
-              >
-                {transaction.type === 'earned' ? '+' : ''}
-                {formatCurrency(transaction.amount)}
-              </Text>
-            </View>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </View>
 
       {/* Withdrawal Button */}
@@ -334,22 +413,22 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 24,
-    gap: 12,
+    gap: 8,
     marginBottom: 24,
   },
   statCard: {
     flex: 1,
     alignItems: 'center',
-    padding: 16,
+    padding: 12,
     borderRadius: 12,
-    gap: 8,
+    gap: 4,
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'Nunito_700Bold',
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
   },
@@ -405,9 +484,52 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'Nunito_600SemiBold',
   },
+  commissionBreakdown: {
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+    gap: 12,
+  },
+  commissionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  commissionRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  commissionLabel: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+  },
+  commissionValue: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  commissionDivider: {
+    height: 1,
+    marginVertical: 4,
+  },
+  transactionBreakdown: {
+    marginTop: 6,
+  },
+  breakdownText: {
+    fontSize: 11,
+    fontFamily: 'Nunito_400Regular',
+  },
+  transactionAmountContainer: {
+    alignItems: 'flex-end',
+  },
   transactionAmount: {
     fontSize: 16,
     fontFamily: 'Nunito_700Bold',
+  },
+  transactionNetLabel: {
+    fontSize: 10,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 2,
   },
   withdrawalContainer: {
     paddingHorizontal: 24,

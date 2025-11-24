@@ -96,22 +96,33 @@ const BookingsListScreen = () => {
   const bookings = bookingType === 'cars' ? carBookings : chauffeurBookings;
   const filteredBookings = bookings.filter(booking => booking.status === statusFilter);
 
-  // Set header with profile picture
+  // Set header with notifications and profile picture
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
-              }}
-              style={styles.profileButton}
-              activeOpacity={0.7}
-            >
-          <View style={styles.profileImageContainer}>
-            <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-            <View style={styles.onlineIndicator} />
-          </View>
-        </TouchableOpacity>
+        <View style={styles.headerRightContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('SettingsTab', { screen: 'Notifications' });
+            }}
+            style={styles.iconButton}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
+            }}
+            style={styles.profileButton}
+            activeOpacity={0.7}
+          >
+            <View style={styles.profileImageContainer}>
+              <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+              <View style={styles.onlineIndicator} />
+            </View>
+          </TouchableOpacity>
+        </View>
       ),
     });
   }, [navigation, theme]);
@@ -296,6 +307,15 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 40,
+  },
+  headerRightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingRight: 8,
+  },
+  iconButton: {
+    padding: 8,
   },
   typeToggleContainer: {
     flexDirection: 'row',

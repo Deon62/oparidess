@@ -64,13 +64,13 @@ const MessagesScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
-              }}
-              style={styles.profileButton}
-              activeOpacity={0.7}
-            >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('SettingsTab', { screen: 'RenterProfile' });
+          }}
+          style={styles.profileButton}
+          activeOpacity={0.7}
+        >
           <View style={styles.profileImageContainer}>
             <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
             <View style={styles.profileOnlineIndicator} />

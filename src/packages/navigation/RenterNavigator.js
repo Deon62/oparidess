@@ -21,6 +21,7 @@ import LanguageScreen from '../../screens/shared/LanguageScreen';
 import NotificationPreferencesScreen from '../../screens/shared/NotificationPreferencesScreen';
 import PrivacyScreen from '../../screens/shared/PrivacyScreen';
 import AboutScreen from '../../screens/shared/AboutScreen';
+import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -222,6 +223,14 @@ const SettingsStack = () => {
         component={UpdateProfileScreen}
         options={{ 
           title: 'Update Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen}
+        options={{ 
+          title: 'Notifications',
           headerShown: true 
         }}
       />

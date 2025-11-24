@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -22,6 +22,7 @@ const CustomerSupportScreen = () => {
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const scrollViewRef = useRef(null);
 
   // Create Ticket state
@@ -40,6 +41,29 @@ const CustomerSupportScreen = () => {
       title: 'Customer Support',
     });
   }, [navigation]);
+
+  // Handle keyboard show/hide
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -142,16 +166,17 @@ const CustomerSupportScreen = () => {
   };
 
   const renderChatTab = () => (
-    <KeyboardAvoidingView
-      style={styles.chatContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-    >
+    <View style={styles.chatContainer}>
       <ScrollView
         ref={scrollViewRef}
         style={styles.chatMessagesContainer}
-        contentContainerStyle={styles.chatMessagesContent}
+        contentContainerStyle={[
+          styles.chatMessagesContent,
+          { paddingBottom: 100 },
+        ]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
       >
         {chatMessages.map((message) => (
           <View
@@ -199,40 +224,50 @@ const CustomerSupportScreen = () => {
         ))}
       </ScrollView>
 
-      <View
-        style={[
-          styles.chatInputContainer,
-          { backgroundColor: theme.colors.white, borderTopColor: theme.colors.hint + '20' },
-        ]}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+        style={styles.chatInputWrapper}
       >
-        <TextInput
+        <View
           style={[
-            styles.chatInput,
+            styles.chatInputContainer,
             {
-              backgroundColor: theme.colors.background,
-              color: theme.colors.textPrimary,
-              borderColor: theme.colors.hint + '40',
+              backgroundColor: theme.colors.white,
+              borderTopColor: theme.colors.hint + '20',
+              paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
             },
           ]}
-          placeholder="Type your message..."
-          placeholderTextColor={theme.colors.hint}
-          value={chatMessage}
-          onChangeText={setChatMessage}
-          multiline
-        />
-        <TouchableOpacity
-          style={[
-            styles.chatSendButton,
-            { backgroundColor: chatMessage.trim() ? theme.colors.primary : theme.colors.hint },
-          ]}
-          onPress={handleSendChatMessage}
-          activeOpacity={0.7}
-          disabled={!chatMessage.trim()}
         >
-          <Ionicons name="send" size={20} color={theme.colors.white} />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+          <TextInput
+            style={[
+              styles.chatInput,
+              {
+                backgroundColor: theme.colors.background,
+                color: theme.colors.textPrimary,
+                borderColor: theme.colors.hint + '40',
+              },
+            ]}
+            placeholder="Type your message..."
+            placeholderTextColor={theme.colors.hint}
+            value={chatMessage}
+            onChangeText={setChatMessage}
+            multiline
+          />
+          <TouchableOpacity
+            style={[
+              styles.chatSendButton,
+              { backgroundColor: chatMessage.trim() ? theme.colors.primary : theme.colors.hint },
+            ]}
+            onPress={handleSendChatMessage}
+            activeOpacity={0.7}
+            disabled={!chatMessage.trim()}
+          >
+            <Ionicons name="send" size={20} color={theme.colors.white} />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 
   const renderTicketTab = () => (
@@ -604,13 +639,19 @@ const styles = StyleSheet.create({
   // Chat Styles
   chatContainer: {
     flex: 1,
+    position: 'relative',
   },
   chatMessagesContainer: {
     flex: 1,
   },
   chatMessagesContent: {
     padding: 16,
-    paddingBottom: 20,
+  },
+  chatInputWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   chatMessage: {
     marginBottom: 16,
@@ -644,6 +685,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderTopWidth: 1,
     gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
   },
   chatInput: {
     flex: 1,

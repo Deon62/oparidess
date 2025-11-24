@@ -38,6 +38,12 @@ const BookingsListScreen = () => {
       price: '$600',
       status: 'active',
       image: require('../../../assets/images/car2.jpg'),
+      pickupDate: '2024-01-20',
+      dropoffDate: '2024-01-25',
+      days: 5,
+      pickupLocation: 'Nairobi, Kenya',
+      dropoffLocation: 'Nairobi, Kenya',
+      paymentMethod: 'mpesa',
     },
     {
       id: 3,
@@ -326,13 +332,52 @@ const BookingsListScreen = () => {
           </View>
         ) : (
           filteredBookings.map((booking) => (
-            <Card key={booking.id} style={styles.bookingCard}>
-              {bookingType === 'cars' && booking.image && (
-                <View style={styles.bookingImageContainer}>
-                  <Image source={booking.image} style={styles.bookingImage} resizeMode="cover" />
-                </View>
-              )}
-              <View style={styles.bookingContent}>
+            <TouchableOpacity
+              key={booking.id}
+              onPress={() => {
+                if (booking.status === 'active' && bookingType === 'cars') {
+                  // Navigate to booking details screen
+                  // Extract days from duration string (e.g., "5 days" -> 5)
+                  const extractDays = (duration) => {
+                    if (booking.days) return booking.days;
+                    const match = duration?.match(/(\d+)/);
+                    return match ? parseInt(match[1]) : 1;
+                  };
+
+                  const bookingDetails = {
+                    car: {
+                      name: booking.carName,
+                      ownerId: booking.ownerId || '1',
+                      ownerName: booking.ownerName || 'Car Owner',
+                      ownerAvatar: booking.ownerAvatar || null,
+                    },
+                    pickupDate: booking.pickupDate || booking.date,
+                    dropoffDate: booking.dropoffDate || booking.date,
+                    days: extractDays(booking.duration),
+                    pickupLocation: booking.pickupLocation || 'Nairobi, Kenya',
+                    dropoffLocation: booking.dropoffLocation || 'Nairobi, Kenya',
+                  };
+                  
+                  navigation.navigate('HomeTab', {
+                    screen: 'BookingTracking',
+                    params: {
+                      bookingDetails,
+                      paymentMethod: booking.paymentMethod || 'mpesa',
+                      totalPrice: parseFloat(booking.price.replace('$', '')) || 0,
+                    },
+                  });
+                }
+              }}
+              activeOpacity={1}
+              disabled={!(booking.status === 'active' && bookingType === 'cars')}
+            >
+              <Card style={styles.bookingCard}>
+                {bookingType === 'cars' && booking.image && (
+                  <View style={styles.bookingImageContainer}>
+                    <Image source={booking.image} style={styles.bookingImage} resizeMode="cover" />
+                  </View>
+                )}
+                <View style={styles.bookingContent}>
                 <View style={styles.bookingHeader}>
                   <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]}>
                     {bookingType === 'cars' ? booking.carName : booking.driverName}
@@ -401,6 +446,7 @@ const BookingsListScreen = () => {
                 </View>
               </View>
             </Card>
+            </TouchableOpacity>
           ))
         )}
       </View>

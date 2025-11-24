@@ -12,7 +12,7 @@ const defaultProfileImage = require('../../../assets/logo/profile.jpg');
 const OwnerProfileScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { user } = useUser();
+  const { user, logout } = useUser();
 
   // Mock owner profile data - in real app, this would come from API
   const [ownerProfile, setOwnerProfile] = useState({
@@ -114,6 +114,23 @@ const OwnerProfileScreen = () => {
   const handleUpdateProfile = () => {
     // TODO: Navigate to update profile page (to be created)
     console.log('Update profile pressed');
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to log out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: () => {
+            logout();
+          },
+        },
+      ]
+    );
   };
 
   const handleViewDocument = (documentUrl, documentType) => {
@@ -346,8 +363,7 @@ const OwnerProfileScreen = () => {
             if (ownerProfile.id_document_url) {
               handleViewDocument(ownerProfile.id_document_url, 'ID Document');
             } else {
-              // TODO: Navigate to upload ID document page (to be created)
-              Alert.alert('Upload Required', 'Please upload your ID document to complete your profile.');
+              navigation.navigate('UploadIdDocument');
             }
           }}
         />
@@ -359,8 +375,7 @@ const OwnerProfileScreen = () => {
             if (ownerProfile.business_document_url) {
               handleViewDocument(ownerProfile.business_document_url, 'Business Document');
             } else {
-              // TODO: Navigate to upload business document page (to be created)
-              Alert.alert('Upload Required', 'Please upload your business registration document to complete your profile.');
+              navigation.navigate('UploadBusinessDocument');
             }
           }}
         />
@@ -395,6 +410,16 @@ const OwnerProfileScreen = () => {
           icon="refresh-outline"
           label="Last Updated"
           value={formatDateTime(ownerProfile.updated_at)}
+        />
+      </View>
+
+      {/* Logout Button */}
+      <View style={styles.logoutContainer}>
+        <Button
+          title="Logout"
+          onPress={handleLogout}
+          variant="secondary"
+          style={[styles.logoutButton, { borderColor: '#F44336' }]}
         />
       </View>
 
@@ -645,6 +670,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
     marginTop: 16,
+  },
+  logoutContainer: {
+    paddingHorizontal: 24,
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  logoutButton: {
+    borderWidth: 1,
+    marginBottom: 0,
   },
 });
 

@@ -110,10 +110,7 @@ const SettingsScreen = () => {
   const handleConfirmLogout = () => {
     setShowLogoutModal(false);
     logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Landing' }],
-    });
+    // Navigation will happen automatically via MainNavigator
   };
 
   const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true }) => (

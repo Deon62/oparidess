@@ -12,10 +12,7 @@ const ComingSoonScreen = () => {
 
   const handleGoBack = () => {
     logout();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Landing' }],
-    });
+    // Navigation will happen automatically via MainNavigator
   };
 
   return (

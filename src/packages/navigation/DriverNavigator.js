@@ -14,6 +14,8 @@ import DriverProfileScreen from '../../screens/driver/DriverProfileScreen';
 import DriverFinancesScreen from '../../screens/driver/DriverFinancesScreen';
 import DriverSettingsScreen from '../../screens/driver/DriverSettingsScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
+import UploadIdDocumentScreen from '../../screens/driver/UploadIdDocumentScreen';
+import UploadDrivingLicenseScreen from '../../screens/driver/UploadDrivingLicenseScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -280,6 +282,22 @@ const SettingsStack = () => {
         component={AboutScreen}
         options={{ 
           title: 'About',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UploadIdDocument" 
+        component={UploadIdDocumentScreen}
+        options={{ 
+          title: 'Upload ID Document',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UploadDrivingLicense" 
+        component={UploadDrivingLicenseScreen}
+        options={{ 
+          title: 'Upload Driving License',
           headerShown: true 
         }}
       />

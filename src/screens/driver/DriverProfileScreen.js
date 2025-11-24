@@ -333,22 +333,28 @@ const DriverProfileScreen = () => {
           Documents
         </Text>
         <DocumentCard
-          title="Selfie"
-          icon="person-circle-outline"
-          documentUrl={driverProfile.selfie_url}
-          onPress={() => handleViewDocument(driverProfile.selfie_url, 'Selfie')}
-        />
-        <DocumentCard
           title="ID Document"
           icon="id-card-outline"
           documentUrl={driverProfile.id_document_url}
-          onPress={() => handleViewDocument(driverProfile.id_document_url, 'ID Document')}
+          onPress={() => {
+            if (driverProfile.id_document_url) {
+              handleViewDocument(driverProfile.id_document_url, 'ID Document');
+            } else {
+              navigation.navigate('UploadIdDocument');
+            }
+          }}
         />
         <DocumentCard
           title="Driving License"
           icon="card-outline"
           documentUrl={driverProfile.dl_document_url}
-          onPress={() => handleViewDocument(driverProfile.dl_document_url, 'Driving License')}
+          onPress={() => {
+            if (driverProfile.dl_document_url) {
+              handleViewDocument(driverProfile.dl_document_url, 'Driving License');
+            } else {
+              navigation.navigate('UploadDrivingLicense');
+            }
+          }}
         />
       </View>
 

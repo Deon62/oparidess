@@ -15,6 +15,10 @@ import AddCarScreen from '../../screens/owner/AddCarScreen';
 import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
 import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
 
+// Shared screens
+import MessagesScreen from '../../screens/shared/MessagesScreen';
+import NotificationsScreen from '../../screens/shared/NotificationsScreen';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -42,6 +46,22 @@ const HomeStack = () => {
         component={OwnerHomeScreen}
         options={{ 
           title: 'Home',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen}
+        options={{ 
+          title: 'Notifications',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Messages" 
+        component={MessagesScreen}
+        options={{ 
+          title: 'Messages',
           headerShown: true 
         }}
       />
@@ -73,6 +93,22 @@ const BookingsStack = () => {
         component={OwnerBookingsScreen}
         options={{ 
           title: 'Bookings',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Notifications" 
+        component={NotificationsScreen}
+        options={{ 
+          title: 'Notifications',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Messages" 
+        component={MessagesScreen}
+        options={{ 
+          title: 'Messages',
           headerShown: true 
         }}
       />

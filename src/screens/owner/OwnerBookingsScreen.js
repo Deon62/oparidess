@@ -114,8 +114,7 @@ const OwnerBookingsScreen = () => {
         <View style={styles.headerRightContainer}>
           <TouchableOpacity
             onPress={() => {
-              // TODO: Navigate to notifications
-              console.log('Notifications pressed');
+              navigation.navigate('Notifications');
             }}
             style={styles.iconButton}
             activeOpacity={0.7}
@@ -124,8 +123,7 @@ const OwnerBookingsScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              // TODO: Navigate to messages
-              console.log('Messages pressed');
+              navigation.navigate('Messages');
             }}
             style={styles.iconButton}
             activeOpacity={0.7}

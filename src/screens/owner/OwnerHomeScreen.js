@@ -63,8 +63,7 @@ const OwnerHomeScreen = () => {
         <View style={styles.headerRightContainer}>
           <TouchableOpacity
             onPress={() => {
-              // TODO: Navigate to notifications
-              console.log('Notifications pressed');
+              navigation.navigate('Notifications');
             }}
             style={styles.iconButton}
             activeOpacity={0.7}

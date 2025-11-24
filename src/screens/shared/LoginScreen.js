@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button, Input } from '../../packages/components';
@@ -8,24 +8,35 @@ import { Button, Input } from '../../packages/components';
 const LoginScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
   const { login } = useUser();
+  const { userType: routeUserType } = route.params || {};
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [selectedUserType, setSelectedUserType] = React.useState(routeUserType || 'renter');
 
   const handleLogin = () => {
-    // TODO: Implement login logic
-    console.log('Login:', { email, password });
+    // Auto-login with entered details (even if incorrect)
+    login(
+      {
+        email: email || 'user@example.com',
+        name: email.split('@')[0] || 'User',
+      },
+      selectedUserType
+    );
+    // Navigation will happen automatically via MainNavigator
   };
 
   const handleGoogleLogin = () => {
-    // For testing: Navigate to renter home
-    login({ email: 'test@google.com', name: 'Test User' }, 'renter');
+    // Auto-login with Google (using selected userType)
+    login({ email: 'test@google.com', name: 'Test User' }, selectedUserType);
     // Navigation will happen automatically via MainNavigator
   };
 
   const handleAppleLogin = () => {
-    // TODO: Implement Apple login
-    console.log('Apple login');
+    // Auto-login with Apple (using selected userType)
+    login({ email: 'test@apple.com', name: 'Test User' }, selectedUserType);
+    // Navigation will happen automatically via MainNavigator
   };
 
   const handleForgotPassword = () => {
@@ -39,6 +50,83 @@ const LoginScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.formSection}>
+        {/* Role Selection (only if not coming from route) */}
+        {!routeUserType && (
+          <View style={styles.roleSelector}>
+            <Text style={[styles.roleLabel, { color: theme.colors.textPrimary }]}>
+              I want to:
+            </Text>
+            <View style={styles.roleButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.roleButton,
+                  {
+                    backgroundColor: selectedUserType === 'renter' ? theme.colors.primary : theme.colors.white,
+                    borderColor: selectedUserType === 'renter' ? theme.colors.primary : theme.colors.hint,
+                  },
+                ]}
+                onPress={() => setSelectedUserType('renter')}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.roleButtonText,
+                    {
+                      color: selectedUserType === 'renter' ? theme.colors.white : theme.colors.textPrimary,
+                    },
+                  ]}
+                >
+                  Browse Cars
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.roleButton,
+                  {
+                    backgroundColor: selectedUserType === 'owner' ? theme.colors.primary : theme.colors.white,
+                    borderColor: selectedUserType === 'owner' ? theme.colors.primary : theme.colors.hint,
+                  },
+                ]}
+                onPress={() => setSelectedUserType('owner')}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.roleButtonText,
+                    {
+                      color: selectedUserType === 'owner' ? theme.colors.white : theme.colors.textPrimary,
+                    },
+                  ]}
+                >
+                  List Car
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.roleButton,
+                  {
+                    backgroundColor: selectedUserType === 'driver' ? theme.colors.primary : theme.colors.white,
+                    borderColor: selectedUserType === 'driver' ? theme.colors.primary : theme.colors.hint,
+                  },
+                ]}
+                onPress={() => setSelectedUserType('driver')}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.roleButtonText,
+                    {
+                      color: selectedUserType === 'driver' ? theme.colors.white : theme.colors.textPrimary,
+                    },
+                  ]}
+                >
+                  Be Driver
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+
         <Input
           label="Email"
           placeholder="Enter your email"
@@ -160,6 +248,32 @@ const styles = StyleSheet.create({
   socialButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  roleSelector: {
+    marginBottom: 24,
+  },
+  roleLabel: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 12,
+  },
+  roleButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  roleButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roleButtonText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_600SemiBold',
+    textAlign: 'center',
   },
 });
 

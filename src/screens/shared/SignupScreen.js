@@ -2,11 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
+import { useRoute } from '@react-navigation/native';
 import { Button, Input, Toggle } from '../../packages/components';
 
 const SignupScreen = () => {
   const theme = useTheme();
   const { login } = useUser();
+  const route = useRoute();
+  const { userType = 'renter' } = route.params || {};
   const [formData, setFormData] = React.useState({
     email: '',
     password: '',
@@ -19,19 +22,27 @@ const SignupScreen = () => {
       // TODO: Show error that terms must be agreed to
       return;
     }
-    // TODO: Implement signup logic
-    console.log('Signup:', formData);
+    // Auto-login with entered details (even if incorrect)
+    login(
+      {
+        email: formData.email || 'user@example.com',
+        name: formData.email.split('@')[0] || 'User',
+      },
+      userType
+    );
+    // Navigation will happen automatically via MainNavigator
   };
 
   const handleGoogleSignup = () => {
-    // For testing: Navigate to renter home
-    login({ email: 'test@google.com', name: 'Test User' }, 'renter');
+    // Auto-login with Google (using selected userType)
+    login({ email: 'test@google.com', name: 'Test User' }, userType);
     // Navigation will happen automatically via MainNavigator
   };
 
   const handleAppleSignup = () => {
-    // TODO: Implement Apple signup
-    console.log('Apple signup');
+    // Auto-login with Apple (using selected userType)
+    login({ email: 'test@apple.com', name: 'Test User' }, userType);
+    // Navigation will happen automatically via MainNavigator
   };
 
   const updateField = (field, value) => {

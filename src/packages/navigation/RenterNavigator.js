@@ -1,6 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 
@@ -299,6 +300,7 @@ const RenterNavigator = () => {
           } else if (route.name === 'MessagesTab') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name === 'SettingsTab') {
+            // SettingsTab icon is handled in its own options to prevent highlighting when on Notifications
             iconName = focused ? 'settings' : 'settings-outline';
           }
 
@@ -346,10 +348,39 @@ const RenterNavigator = () => {
       <Tab.Screen 
         name="SettingsTab" 
         component={SettingsStack}
-        options={{ 
-          title: 'Settings',
-          tabBarLabel: 'Settings',
+        options={({ route }) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Settings';
+          const isSettingsScreen = routeName === 'Settings';
+          
+          return {
+            title: 'Settings',
+            tabBarLabel: 'Settings',
+            tabBarIcon: ({ focused, color, size }) => {
+              // Only highlight if we're on Settings screen, not on Notifications
+              const shouldHighlight = focused && isSettingsScreen;
+              return (
+                <Ionicons 
+                  name={shouldHighlight ? 'settings' : 'settings-outline'} 
+                  size={size} 
+                  color={shouldHighlight ? theme.colors.primary : theme.colors.hint} 
+                />
+              );
+            },
+          };
         }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            // Get the current route name in the SettingsTab stack
+            const routeName = getFocusedRouteNameFromRoute(route) ?? 'Settings';
+            
+            // If we're not on the Settings screen, navigate to it instead
+            if (routeName !== 'Settings') {
+              e.preventDefault();
+              navigation.navigate('SettingsTab', { screen: 'Settings' });
+            }
+            // Otherwise, let the default behavior happen (just focus the tab)
+          },
+        })}
       />
     </Tab.Navigator>
   );

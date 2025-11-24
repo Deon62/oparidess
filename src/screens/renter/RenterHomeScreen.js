@@ -149,8 +149,7 @@ const RenterHomeScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  // TODO: Navigate to notifications
-                  console.log('Notifications pressed');
+                  navigation.navigate('SettingsTab', { screen: 'Notifications' });
                 }}
                 style={styles.iconButton}
                 activeOpacity={0.7}

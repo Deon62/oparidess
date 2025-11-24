@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
+import * as ImagePicker from 'expo-image-picker';
 
 const AddCarScreen = () => {
   const theme = useTheme();
@@ -29,6 +30,11 @@ const AddCarScreen = () => {
     vin_number: '',
     engine_capacity: '',
     description: '',
+    // Step 2: Documents
+    registration_doc: null,
+    insurance_doc: null,
+    // Step 3: Photos
+    car_photos: [], // Array of up to 5 photo URIs
   });
 
   // Options for dropdowns
@@ -101,18 +107,176 @@ const AddCarScreen = () => {
     return true;
   };
 
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permission Required',
+        'We need access to your photos to upload documents and images.',
+        [{ text: 'OK' }]
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const pickImage = async (type) => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: type === 'photo',
+        aspect: type === 'photo' ? [4, 3] : undefined,
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        if (type === 'registration') {
+          updateFormData('registration_doc', result.assets[0].uri);
+        } else if (type === 'insurance') {
+          updateFormData('insurance_doc', result.assets[0].uri);
+        } else if (type === 'photo') {
+          if (formData.car_photos.length < 5) {
+            updateFormData('car_photos', [...formData.car_photos, result.assets[0].uri]);
+          } else {
+            Alert.alert('Limit Reached', 'You can only upload up to 5 photos');
+          }
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to pick image. Please try again.');
+      console.error('Image picker error:', error);
+    }
+  };
+
+  const takePhoto = async (type) => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permission Required',
+        'We need access to your camera to take photos.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: type === 'photo',
+        aspect: type === 'photo' ? [4, 3] : undefined,
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        if (type === 'registration') {
+          updateFormData('registration_doc', result.assets[0].uri);
+        } else if (type === 'insurance') {
+          updateFormData('insurance_doc', result.assets[0].uri);
+        } else if (type === 'photo') {
+          if (formData.car_photos.length < 5) {
+            updateFormData('car_photos', [...formData.car_photos, result.assets[0].uri]);
+          } else {
+            Alert.alert('Limit Reached', 'You can only upload up to 5 photos');
+          }
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to take photo. Please try again.');
+      console.error('Camera error:', error);
+    }
+  };
+
+  const showImageOptions = (type) => {
+    Alert.alert(
+      'Select Image',
+      'Choose an option',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Take Photo', onPress: () => takePhoto(type) },
+        { text: 'Choose from Gallery', onPress: () => pickImage(type) },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const removeDocument = (type) => {
+    Alert.alert(
+      'Remove Document',
+      'Are you sure you want to remove this document?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            if (type === 'registration') {
+              updateFormData('registration_doc', null);
+            } else if (type === 'insurance') {
+              updateFormData('insurance_doc', null);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const removePhoto = (index) => {
+    Alert.alert(
+      'Remove Photo',
+      'Are you sure you want to remove this photo?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            const newPhotos = formData.car_photos.filter((_, i) => i !== index);
+            updateFormData('car_photos', newPhotos);
+          },
+        },
+      ]
+    );
+  };
+
+  const validateStep2 = () => {
+    if (!formData.registration_doc) {
+      Alert.alert('Validation Error', 'Please upload the registration document');
+      return false;
+    }
+    if (!formData.insurance_doc) {
+      Alert.alert('Validation Error', 'Please upload the insurance document');
+      return false;
+    }
+    return true;
+  };
+
+  const validateStep3 = () => {
+    if (formData.car_photos.length === 0) {
+      Alert.alert('Validation Error', 'Please upload at least one photo of your car');
+      return false;
+    }
+    return true;
+  };
+
   const handleNext = () => {
     if (currentStep === 1) {
       if (!validateStep1()) {
         return;
       }
-      // TODO: Move to step 2
-      Alert.alert('Next Step', 'Step 2 will be implemented next');
+      setCurrentStep(2);
     } else if (currentStep === 2) {
-      // TODO: Move to step 3
-      Alert.alert('Next Step', 'Step 3 will be implemented next');
+      if (!validateStep2()) {
+        return;
+      }
+      setCurrentStep(3);
     } else if (currentStep === 3) {
-      // TODO: Move to step 4
+      if (!validateStep3()) {
+        return;
+      }
+      setCurrentStep(4);
+      // TODO: Step 4 will be implemented next
       Alert.alert('Next Step', 'Step 4 will be implemented next');
     }
   };
@@ -399,11 +563,188 @@ const AddCarScreen = () => {
           </View>
         )}
 
-        {/* Placeholder for other steps */}
-        {currentStep > 1 && (
+        {/* Step 2: Upload Documents */}
+        {currentStep === 2 && (
           <View style={styles.stepContainer}>
             <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
-              Step {currentStep}
+              Upload Documents
+            </Text>
+            <Text style={[styles.stepSubtitle, { color: theme.colors.textSecondary }]}>
+              Upload required documents for your vehicle
+            </Text>
+
+            {/* Info Card */}
+            <View style={[styles.infoCard, { backgroundColor: theme.colors.white }]}>
+              <Ionicons name="information-circle-outline" size={24} color={theme.colors.primary} />
+              <View style={styles.infoTextContainer}>
+                <Text style={[styles.infoTitle, { color: theme.colors.textPrimary }]}>
+                  Upload Requirements
+                </Text>
+                <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
+                  • Ensure documents are clear and all text is visible{'\n'}
+                  • Use good lighting when taking photos{'\n'}
+                  • Make sure the entire document is within the frame{'\n'}
+                  • Avoid glare and shadows
+                </Text>
+              </View>
+            </View>
+
+            {/* Registration Document */}
+            <View style={[styles.uploadCard, { backgroundColor: theme.colors.white }]}>
+              <View style={styles.uploadCardHeader}>
+                <Ionicons name="document-text-outline" size={32} color={theme.colors.primary} />
+                <Text style={[styles.uploadCardTitle, { color: theme.colors.textPrimary }]}>
+                  Registration Document *
+                </Text>
+              </View>
+
+              {formData.registration_doc ? (
+                <View style={styles.imagePreviewContainer}>
+                  <Image source={{ uri: formData.registration_doc }} style={styles.imagePreview} resizeMode="cover" />
+                  <TouchableOpacity
+                    style={[styles.removeImageButton, { backgroundColor: '#F44336' }]}
+                    onPress={() => removeDocument('registration')}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="trash-outline" size={20} color={theme.colors.white} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.changeImageButton, { backgroundColor: theme.colors.primary }]}
+                    onPress={() => showImageOptions('registration')}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="camera-outline" size={18} color={theme.colors.white} />
+                    <Text style={[styles.changeImageText, { color: theme.colors.white }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.uploadButton, { borderColor: theme.colors.primary }]}
+                  onPress={() => showImageOptions('registration')}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="camera-outline" size={48} color={theme.colors.primary} />
+                  <Text style={[styles.uploadButtonText, { color: theme.colors.primary }]}>
+                    Tap to Upload
+                  </Text>
+                  <Text style={[styles.uploadButtonSubtext, { color: theme.colors.hint }]}>
+                    Take a photo or choose from gallery
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {/* Insurance Document */}
+            <View style={[styles.uploadCard, { backgroundColor: theme.colors.white }]}>
+              <View style={styles.uploadCardHeader}>
+                <Ionicons name="shield-outline" size={32} color={theme.colors.primary} />
+                <Text style={[styles.uploadCardTitle, { color: theme.colors.textPrimary }]}>
+                  Insurance Document *
+                </Text>
+              </View>
+
+              {formData.insurance_doc ? (
+                <View style={styles.imagePreviewContainer}>
+                  <Image source={{ uri: formData.insurance_doc }} style={styles.imagePreview} resizeMode="cover" />
+                  <TouchableOpacity
+                    style={[styles.removeImageButton, { backgroundColor: '#F44336' }]}
+                    onPress={() => removeDocument('insurance')}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="trash-outline" size={20} color={theme.colors.white} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.changeImageButton, { backgroundColor: theme.colors.primary }]}
+                    onPress={() => showImageOptions('insurance')}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="camera-outline" size={18} color={theme.colors.white} />
+                    <Text style={[styles.changeImageText, { color: theme.colors.white }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <TouchableOpacity
+                  style={[styles.uploadButton, { borderColor: theme.colors.primary }]}
+                  onPress={() => showImageOptions('insurance')}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="camera-outline" size={48} color={theme.colors.primary} />
+                  <Text style={[styles.uploadButtonText, { color: theme.colors.primary }]}>
+                    Tap to Upload
+                  </Text>
+                  <Text style={[styles.uploadButtonSubtext, { color: theme.colors.hint }]}>
+                    Take a photo or choose from gallery
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* Step 3: Upload Car Photos */}
+        {currentStep === 3 && (
+          <View style={styles.stepContainer}>
+            <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
+              Upload Car Photos
+            </Text>
+            <Text style={[styles.stepSubtitle, { color: theme.colors.textSecondary }]}>
+              Upload up to 5 photos of your car (at least 1 required)
+            </Text>
+
+            {/* Photos Grid */}
+            <View style={styles.photosGrid}>
+              {formData.car_photos.map((photo, index) => (
+                <View key={index} style={styles.photoItem}>
+                  <Image source={{ uri: photo }} style={styles.photoImage} resizeMode="cover" />
+                  <TouchableOpacity
+                    style={[styles.removePhotoButton, { backgroundColor: '#F44336' }]}
+                    onPress={() => removePhoto(index)}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="close" size={16} color={theme.colors.white} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+              {formData.car_photos.length < 5 && (
+                <TouchableOpacity
+                  style={[styles.addPhotoButton, { borderColor: theme.colors.primary }]}
+                  onPress={() => showImageOptions('photo')}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="add" size={32} color={theme.colors.primary} />
+                  <Text style={[styles.addPhotoText, { color: theme.colors.primary }]}>
+                    Add Photo
+                  </Text>
+                  <Text style={[styles.addPhotoSubtext, { color: theme.colors.hint }]}>
+                    {formData.car_photos.length}/5
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            {formData.car_photos.length === 0 && (
+              <View style={[styles.emptyPhotosCard, { backgroundColor: theme.colors.white }]}>
+                <Ionicons name="images-outline" size={48} color={theme.colors.hint} />
+                <Text style={[styles.emptyPhotosText, { color: theme.colors.textSecondary }]}>
+                  No photos uploaded yet
+                </Text>
+                <Text style={[styles.emptyPhotosSubtext, { color: theme.colors.hint }]}>
+                  Add at least one photo of your car
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
+        {/* Placeholder for step 4 */}
+        {currentStep === 4 && (
+          <View style={styles.stepContainer}>
+            <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
+              Step 4
             </Text>
             <Text style={[styles.stepSubtitle, { color: theme.colors.textSecondary }]}>
               This step will be implemented next
@@ -625,6 +966,163 @@ const styles = StyleSheet.create({
   },
   modalOptionText: {
     fontSize: 16,
+  },
+  // Step 2 & 3 Styles
+  infoCard: {
+    flexDirection: 'row',
+    padding: 16,
+    borderRadius: 16,
+    gap: 12,
+    marginBottom: 24,
+  },
+  infoTextContainer: {
+    flex: 1,
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  uploadCard: {
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 20,
+  },
+  uploadCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 20,
+  },
+  uploadCardTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  imagePreviewContainer: {
+    position: 'relative',
+    width: '100%',
+    height: 250,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  imagePreview: {
+    width: '100%',
+    height: '100%',
+  },
+  removeImageButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  changeImageButton: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    gap: 6,
+  },
+  changeImageText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  uploadButton: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    padding: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 250,
+  },
+  uploadButtonText: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
+  },
+  uploadButtonSubtext: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  photosGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginBottom: 24,
+  },
+  photoItem: {
+    position: 'relative',
+    width: '47%',
+    aspectRatio: 1,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  photoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  removePhotoButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addPhotoButton: {
+    width: '47%',
+    aspectRatio: 1,
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  addPhotoText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  addPhotoSubtext: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  emptyPhotosCard: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 24,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  emptyPhotosText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  emptyPhotosSubtext: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
+    textAlign: 'center',
   },
 });
 

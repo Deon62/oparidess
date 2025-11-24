@@ -11,6 +11,7 @@ import OwnerBookingsScreen from '../../screens/owner/OwnerBookingsScreen';
 import OwnerCarsScreen from '../../screens/owner/OwnerCarsScreen';
 import OwnerFinancesScreen from '../../screens/owner/OwnerFinancesScreen';
 import OwnerSettingsScreen from '../../screens/owner/OwnerSettingsScreen';
+import AddCarScreen from '../../screens/owner/AddCarScreen';
 import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
 import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
 
@@ -103,6 +104,14 @@ const CarsStack = () => {
         component={OwnerCarsScreen}
         options={{ 
           title: 'My Cars',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="AddCar" 
+        component={AddCarScreen}
+        options={{ 
+          title: 'Add Car',
           headerShown: true 
         }}
       />

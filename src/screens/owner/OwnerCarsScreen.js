@@ -87,8 +87,9 @@ const OwnerCarsScreen = () => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            // TODO: Navigate to add car screen
-            console.log('Add car pressed');
+            navigation.navigate('CarsTab', {
+              screen: 'AddCar',
+            });
           }}
           style={styles.addButton}
           activeOpacity={0.7}
@@ -222,8 +223,9 @@ const OwnerCarsScreen = () => {
             <Button
               title="Add Car"
               onPress={() => {
-                // TODO: Navigate to add car screen
-                console.log('Add car');
+                navigation.navigate('CarsTab', {
+                  screen: 'AddCar',
+                });
               }}
               variant="primary"
               style={styles.emptyStateButton}

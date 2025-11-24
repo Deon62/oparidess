@@ -28,11 +28,12 @@ const styles = StyleSheet.create({
     padding: 20,
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 2,
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 1,
+    borderWidth: 0,
   },
 });
 

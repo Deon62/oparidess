@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useUser } from '../../packages/context/UserContext';
 import { Button, Input, Toggle } from '../../packages/components';
 
 const SignupScreen = () => {
   const theme = useTheme();
+  const { login } = useUser();
   const [formData, setFormData] = React.useState({
     email: '',
     password: '',
@@ -22,8 +24,9 @@ const SignupScreen = () => {
   };
 
   const handleGoogleSignup = () => {
-    // TODO: Implement Google signup
-    console.log('Google signup');
+    // For testing: Navigate to renter home
+    login({ email: 'test@google.com', name: 'Test User' }, 'renter');
+    // Navigation will happen automatically via MainNavigator
   };
 
   const handleAppleSignup = () => {

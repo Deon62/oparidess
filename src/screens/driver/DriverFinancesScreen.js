@@ -323,18 +323,34 @@ const DriverFinancesScreen = () => {
         })}
       </View>
 
-      {/* Withdrawal Button */}
-      <View style={styles.withdrawalContainer}>
+      {/* Action Buttons */}
+      <View style={styles.actionsContainer}>
         <TouchableOpacity
-          style={[styles.withdrawalButton, { backgroundColor: theme.colors.primary }]}
+          style={[styles.actionButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.primary }]}
           onPress={() => {
-            // TODO: Navigate to withdrawal screen
-            console.log('Withdraw funds');
+            navigation.navigate('FinancesTab', {
+              screen: 'AddPaymentMethod',
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+          <Text style={[styles.actionButtonText, { color: theme.colors.primary }]}>
+            Add Payment Accounts
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
+          onPress={() => {
+            navigation.navigate('FinancesTab', {
+              screen: 'WithdrawRequest',
+              params: { availableBalance: netEarnings * 0.7 },
+            });
           }}
           activeOpacity={0.7}
         >
           <Ionicons name="wallet-outline" size={20} color={theme.colors.white} />
-          <Text style={[styles.withdrawalButtonText, { color: theme.colors.white }]}>
+          <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
             Withdraw Funds
           </Text>
         </TouchableOpacity>
@@ -531,11 +547,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginTop: 2,
   },
-  withdrawalContainer: {
+  actionsContainer: {
     paddingHorizontal: 24,
     marginTop: 24,
+    gap: 12,
   },
-  withdrawalButton: {
+  actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -543,7 +560,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 8,
   },
-  withdrawalButtonText: {
+  actionButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_700Bold',
   },

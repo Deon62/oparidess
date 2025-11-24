@@ -185,8 +185,7 @@ const OwnerBookingsScreen = () => {
   };
 
   const handleBookingPress = (booking) => {
-    // TODO: Navigate to booking details screen
-    console.log('View booking details:', booking);
+    navigation.navigate('OwnerBookingDetails', { booking });
   };
 
   const handleAccept = (booking) => {

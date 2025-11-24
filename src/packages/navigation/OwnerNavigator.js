@@ -15,6 +15,7 @@ import OwnerProfileScreen from '../../screens/owner/OwnerProfileScreen';
 import UploadIdDocumentScreen from '../../screens/owner/UploadIdDocumentScreen';
 import UploadBusinessDocumentScreen from '../../screens/owner/UploadBusinessDocumentScreen';
 import AddCarScreen from '../../screens/owner/AddCarScreen';
+import OwnerBookingDetailsScreen from '../../screens/owner/OwnerBookingDetailsScreen';
 import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
 import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
 
@@ -165,6 +166,14 @@ const BookingsStack = () => {
         component={UploadBusinessDocumentScreen}
         options={{ 
           title: 'Upload Business Document',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="OwnerBookingDetails" 
+        component={OwnerBookingDetailsScreen}
+        options={{ 
+          title: 'Booking Details',
           headerShown: true 
         }}
       />

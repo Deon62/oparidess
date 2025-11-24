@@ -90,7 +90,7 @@ const OwnerHomeScreen = () => {
   };
 
   const handleViewBooking = (booking) => {
-    // TODO: Navigate to booking details
+    navigation.navigate('BookingsTab', { screen: 'OwnerBookingDetails', params: { booking } });
     console.log('View booking:', booking);
   };
 

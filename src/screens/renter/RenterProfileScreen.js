@@ -35,12 +35,7 @@ const RenterProfileScreen = () => {
   }, [navigation]);
 
   const handleUploadDocs = () => {
-    // TODO: Implement document upload functionality
-    Alert.alert(
-      'Upload Documents',
-      'Document upload feature will be available soon.',
-      [{ text: 'OK' }]
-    );
+    navigation.navigate('UploadDocs');
   };
 
   const handleUpdateProfile = () => {
@@ -121,6 +116,13 @@ const RenterProfileScreen = () => {
             resizeMode="cover"
           />
           <View style={styles.onlineIndicator} />
+          <TouchableOpacity
+            style={[styles.cameraButton, { backgroundColor: theme.colors.primary }]}
+            onPress={handleUpdateProfile}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="camera" size={16} color={theme.colors.white} />
+          </TouchableOpacity>
         </View>
         <Text style={[styles.profileName, { color: theme.colors.textPrimary }]}>
           {personalInfo.first_name} {personalInfo.last_name}
@@ -299,6 +301,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     borderWidth: 3,
     borderColor: '#FFFFFF',
+  },
+  cameraButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   profileName: {
     fontSize: 24,

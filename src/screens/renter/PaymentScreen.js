@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -19,6 +19,7 @@ const PaymentScreen = () => {
 
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Form data for different payment methods
   const [mpesaData, setMpesaData] = useState({
@@ -140,19 +141,7 @@ const PaymentScreen = () => {
       // Simulate payment processing
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      Alert.alert(
-        'Payment Initiated',
-        `Your payment of $${totalPrice?.toFixed(2) || '0.00'} has been initiated successfully.`,
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // TODO: Navigate to booking confirmation screen
-              navigation.navigate('RenterHome');
-            },
-          },
-        ]
-      );
+      setShowSuccessModal(true);
     } catch (error) {
       Alert.alert('Error', 'Payment failed. Please try again.');
       console.error('Payment error:', error);
@@ -363,6 +352,59 @@ const PaymentScreen = () => {
           disabled={!selectedMethod || loading}
         />
       </View>
+
+      {/* Success Modal */}
+      <Modal
+        visible={showSuccessModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {}}
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Payment Successful!
+            </Text>
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              Your payment of ${totalPrice?.toFixed(2) || '0.00'} has been processed successfully.
+            </Text>
+            <View style={styles.successModalDetails}>
+              <View style={styles.successDetailRow}>
+                <Text style={[styles.successDetailLabel, { color: theme.colors.hint }]}>
+                  Payment Method
+                </Text>
+                <Text style={[styles.successDetailValue, { color: theme.colors.textPrimary }]}>
+                  {selectedMethod === 'mpesa' ? 'M-PESA' : selectedMethod === 'airtel' ? 'Airtel Money' : 'Card'}
+                </Text>
+              </View>
+              <View style={styles.successDetailRow}>
+                <Text style={[styles.successDetailLabel, { color: theme.colors.hint }]}>
+                  Amount Paid
+                </Text>
+                <Text style={[styles.successDetailValue, { color: theme.colors.primary }]}>
+                  ${totalPrice?.toFixed(2) || '0.00'}
+                </Text>
+              </View>
+            </View>
+            <Button
+              title="View Booking Details"
+              onPress={() => {
+                setShowSuccessModal(false);
+                navigation.navigate('BookingTracking', {
+                  bookingDetails,
+                  paymentMethod: selectedMethod,
+                  totalPrice,
+                });
+              }}
+              variant="primary"
+              style={styles.successModalButton}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -496,6 +538,66 @@ const styles = StyleSheet.create({
   },
   payButton: {
     minWidth: 160,
+  },
+  // Success Modal Styles
+  successModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  successModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  successIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  successModalDetails: {
+    width: '100%',
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    marginBottom: 24,
+    gap: 16,
+  },
+  successDetailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  successDetailLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  successDetailValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  successModalButton: {
+    width: '100%',
   },
 });
 

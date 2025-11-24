@@ -5,6 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 
+// Import profile image
+const profileImage = require('../../../assets/logo/profile.jpg');
+
 // Import car images
 const carImage1 = require('../../../assets/images/car1.jpg');
 const carImage2 = require('../../../assets/images/car2.jpg');
@@ -136,6 +139,19 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.7}
               >
                 <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  // TODO: Navigate to profile
+                  console.log('Profile pressed');
+                }}
+                style={styles.profileButton}
+                activeOpacity={0.7}
+              >
+                <View style={styles.profileImageContainer}>
+                  <Image source={profileImage} style={styles.profileImage} resizeMode="cover" />
+                  <View style={styles.onlineIndicator} />
+                </View>
               </TouchableOpacity>
             </View>
           )}
@@ -281,6 +297,30 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 8,
+  },
+  profileButton: {
+    marginLeft: 4,
+  },
+  profileImageContainer: {
+    position: 'relative',
+    width: 36,
+    height: 36,
+  },
+  profileImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+  },
+  onlineIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#4CAF50',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   headerSearchContainer: {
     flexDirection: 'row',

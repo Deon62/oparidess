@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
-const MessagesScreen = () => {
+const SettingsScreen = () => {
   const theme = useTheme();
 
   return (
@@ -11,10 +11,10 @@ const MessagesScreen = () => {
       contentContainerStyle={styles.contentContainer}
     >
       <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-        Messages
+        Settings
       </Text>
       <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-        Your conversations will appear here
+        Settings options will appear here
       </Text>
     </ScrollView>
   );
@@ -41,5 +41,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessagesScreen;
+export default SettingsScreen;
 

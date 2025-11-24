@@ -10,8 +10,11 @@ import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
-import MessagesScreen from '../../screens/renter/MessagesScreen';
-import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
+import SettingsScreen from '../../screens/renter/SettingsScreen';
+
+// Shared screens
+import MessagesScreen from '../../screens/shared/MessagesScreen';
+import ChatScreen from '../../screens/shared/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -129,12 +132,20 @@ const MessagesStack = () => {
           headerShown: true 
         }}
       />
+      <Stack.Screen 
+        name="Chat" 
+        component={ChatScreen}
+        options={({ route }) => ({ 
+          title: route.params?.userName || 'Chat',
+          headerShown: true 
+        })}
+      />
     </Stack.Navigator>
   );
 };
 
-// Profile Stack Navigator
-const ProfileStack = () => {
+// Settings Stack Navigator
+const SettingsStack = () => {
   const theme = useTheme();
 
   return (
@@ -153,10 +164,10 @@ const ProfileStack = () => {
       }}
     >
       <Stack.Screen 
-        name="RenterProfile" 
-        component={RenterProfileScreen}
+        name="Settings" 
+        component={SettingsScreen}
         options={{ 
-          title: 'Profile',
+          title: 'Settings',
           headerShown: true 
         }}
       />
@@ -179,8 +190,8 @@ const RenterNavigator = () => {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'MessagesTab') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          } else if (route.name === 'ProfileTab') {
-            iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'SettingsTab') {
+            iconName = focused ? 'settings' : 'settings-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -228,11 +239,11 @@ const RenterNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="ProfileTab" 
-        component={ProfileStack}
+        name="SettingsTab" 
+        component={SettingsStack}
         options={{ 
-          title: 'Profile',
-          tabBarLabel: 'Profile',
+          title: 'Settings',
+          tabBarLabel: 'Settings',
         }}
       />
     </Tab.Navigator>

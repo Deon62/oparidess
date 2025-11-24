@@ -17,6 +17,7 @@ import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 import BookmarksScreen from '../../screens/renter/BookmarksScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
+import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -126,6 +127,14 @@ const HomeStack = () => {
         component={UploadDocsScreen}
         options={{ 
           title: 'Upload Documents',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="AddPayment" 
+        component={AddPaymentScreen}
+        options={{ 
+          title: 'Add Payment Method',
           headerShown: true 
         }}
       />

@@ -44,12 +44,7 @@ const RenterProfileScreen = () => {
   };
 
   const handleAddPayment = () => {
-    // TODO: Navigate to add payment method screen
-    Alert.alert(
-      'Add Payment',
-      'Payment method feature will be available soon.',
-      [{ text: 'OK' }]
-    );
+    navigation.navigate('AddPayment');
   };
 
   const handleReferFriends = () => {

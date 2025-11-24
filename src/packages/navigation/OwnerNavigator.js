@@ -2,13 +2,8 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '../theme/ThemeProvider';
 
-// Owner screens
-import OwnerHomeScreen from '../../screens/owner/OwnerHomeScreen';
-import MyCarsScreen from '../../screens/owner/MyCarsScreen';
-import AddCarScreen from '../../screens/owner/AddCarScreen';
-import EditCarScreen from '../../screens/owner/EditCarScreen';
-import OwnerBookingsScreen from '../../screens/owner/OwnerBookingsScreen';
-import OwnerProfileScreen from '../../screens/owner/OwnerProfileScreen';
+// Shared screens
+import ComingSoonScreen from '../../screens/shared/ComingSoonScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,49 +27,9 @@ const OwnerNavigator = () => {
     >
       <Stack.Screen 
         name="OwnerHome" 
-        component={OwnerHomeScreen}
+        component={ComingSoonScreen}
         options={{ 
-          title: 'Dashboard',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="MyCars" 
-        component={MyCarsScreen}
-        options={{ 
-          title: 'My Cars',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="AddCar" 
-        component={AddCarScreen}
-        options={{ 
-          title: 'Add Car',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="EditCar" 
-        component={EditCarScreen}
-        options={{ 
-          title: 'Edit Car',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="OwnerBookings" 
-        component={OwnerBookingsScreen}
-        options={{ 
-          title: 'Bookings',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="OwnerProfile" 
-        component={OwnerProfileScreen}
-        options={{ 
-          title: 'Profile',
+          title: 'Coming Soon',
           headerShown: true 
         }}
       />

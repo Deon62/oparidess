@@ -1,9 +1,9 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Card } from '../../packages/components';
+import { Card, Button } from '../../packages/components';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -13,6 +13,11 @@ const BookingsListScreen = () => {
   const navigation = useNavigation();
   const [bookingType, setBookingType] = useState('cars'); // 'cars' or 'chauffeurs'
   const [statusFilter, setStatusFilter] = useState('pending'); // 'pending', 'active', 'completed', 'cancelled'
+  const [showRatingModal, setShowRatingModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [rating, setRating] = useState(0);
+  const [ratingText, setRatingText] = useState('');
+  const [ratedBookings, setRatedBookings] = useState(new Set()); // Track which bookings have been rated
 
   // Mock bookings data
   const carBookings = [
@@ -158,6 +163,68 @@ const BookingsListScreen = () => {
     }
   };
 
+  const handleRateBooking = (booking) => {
+    setSelectedBooking(booking);
+    setRating(0);
+    setRatingText('');
+    setShowRatingModal(true);
+  };
+
+  const handleSubmitRating = () => {
+    if (rating === 0) {
+      // You could show an alert here
+      return;
+    }
+    
+    // Mark booking as rated using composite key (bookingType-id)
+    if (selectedBooking) {
+      const ratingKey = `${bookingType}-${selectedBooking.id}`;
+      setRatedBookings(prev => new Set(prev).add(ratingKey));
+    }
+    
+    // TODO: Submit rating to backend
+    console.log('Rating submitted:', {
+      bookingId: selectedBooking?.id,
+      rating,
+      text: ratingText,
+      type: bookingType,
+    });
+    
+    // Close modal
+    setShowRatingModal(false);
+    setSelectedBooking(null);
+    setRating(0);
+    setRatingText('');
+  };
+
+  const handleCloseRatingModal = () => {
+    setShowRatingModal(false);
+    setSelectedBooking(null);
+    setRating(0);
+    setRatingText('');
+  };
+
+  const renderStars = () => {
+    return (
+      <View style={styles.starsContainer}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <TouchableOpacity
+            key={star}
+            onPress={() => setRating(star)}
+            activeOpacity={0.7}
+            style={styles.starButton}
+          >
+            <Ionicons
+              name={star <= rating ? 'star' : 'star-outline'}
+              size={40}
+              color={star <= rating ? '#FFA500' : theme.colors.hint}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -300,12 +367,134 @@ const BookingsListScreen = () => {
                 </View>
                 <View style={styles.bookingFooter}>
                   <Text style={[styles.bookingPrice, { color: theme.colors.primary }]}>{booking.price}</Text>
+                  {booking.status === 'completed' && (
+                    (() => {
+                      const ratingKey = `${bookingType}-${booking.id}`;
+                      const isRated = ratedBookings.has(ratingKey);
+                      return (
+                        <TouchableOpacity
+                          style={[
+                            styles.rateButton,
+                            isRated
+                              ? { backgroundColor: theme.colors.hint + '30', borderWidth: 1, borderColor: theme.colors.hint }
+                              : { backgroundColor: theme.colors.primary }
+                          ]}
+                          onPress={() => !isRated && handleRateBooking(booking)}
+                          activeOpacity={isRated ? 1 : 0.7}
+                          disabled={isRated}
+                        >
+                          <Ionicons 
+                            name={isRated ? "checkmark-circle" : "star-outline"} 
+                            size={16} 
+                            color={isRated ? theme.colors.textSecondary : theme.colors.white} 
+                          />
+                          <Text style={[
+                            styles.rateButtonText, 
+                            { color: isRated ? theme.colors.textSecondary : theme.colors.white }
+                          ]}>
+                            {isRated ? 'Rated' : 'Rate'}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })()
+                  )}
                 </View>
               </View>
             </Card>
           ))
         )}
       </View>
+
+      {/* Rating Modal */}
+      <Modal
+        visible={showRatingModal}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCloseRatingModal}
+      >
+        <View style={styles.ratingModalOverlay}>
+          <View style={[styles.ratingModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.ratingModalHeader}>
+              <Text style={[styles.ratingModalTitle, { color: theme.colors.textPrimary }]}>
+                Rate Your Experience
+              </Text>
+              <Text style={[styles.ratingModalSubtitle, { color: theme.colors.textSecondary }]}>
+                {selectedBooking && (
+                  bookingType === 'cars' 
+                    ? selectedBooking.carName 
+                    : selectedBooking.driverName
+                )}
+              </Text>
+            </View>
+
+            {/* Star Rating */}
+            <View style={styles.ratingSection}>
+              <Text style={[styles.ratingLabel, { color: theme.colors.textPrimary }]}>
+                How would you rate this {bookingType === 'cars' ? 'car' : 'driver'}?
+              </Text>
+              {renderStars()}
+            </View>
+
+            {/* Optional Text Input */}
+            <View style={styles.textInputSection}>
+              <Text style={[styles.textInputLabel, { color: theme.colors.textPrimary }]}>
+                Share your experience (optional)
+              </Text>
+              <TextInput
+                style={[
+                  styles.textInput,
+                  {
+                    backgroundColor: theme.colors.background,
+                    color: theme.colors.textPrimary,
+                    borderColor: theme.colors.hint + '40',
+                  },
+                ]}
+                placeholder="Write a review..."
+                placeholderTextColor={theme.colors.hint}
+                value={ratingText}
+                onChangeText={setRatingText}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+
+            {/* Action Buttons */}
+            <View style={styles.ratingModalButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.ratingModalButton,
+                  styles.ratingModalButtonCancel,
+                  { borderColor: theme.colors.hint },
+                ]}
+                onPress={handleCloseRatingModal}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.ratingModalButtonText, { color: theme.colors.textSecondary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.ratingModalButton,
+                  styles.ratingModalButtonSubmit,
+                  { 
+                    backgroundColor: rating > 0 ? theme.colors.primary : theme.colors.hint,
+                    opacity: rating > 0 ? 1 : 0.5,
+                  },
+                ]}
+                onPress={handleSubmitRating}
+                activeOpacity={0.7}
+                disabled={rating === 0}
+              >
+                <Text style={[styles.ratingModalButtonText, { color: theme.colors.white }]}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -445,10 +634,113 @@ const styles = StyleSheet.create({
   },
   bookingFooter: {
     marginTop: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   bookingPrice: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
+  },
+  rateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    gap: 6,
+  },
+  rateButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Rating Modal Styles
+  ratingModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  ratingModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 24,
+    maxHeight: '80%',
+  },
+  ratingModalHeader: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  ratingModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  ratingModalSubtitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textAlign: 'center',
+  },
+  ratingSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  ratingLabel: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+  },
+  starButton: {
+    padding: 4,
+  },
+  textInputSection: {
+    marginBottom: 24,
+  },
+  textInputLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 8,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    minHeight: 100,
+  },
+  ratingModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  ratingModalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ratingModalButtonCancel: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  ratingModalButtonSubmit: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  ratingModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   emptyState: {
     alignItems: 'center',

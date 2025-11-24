@@ -28,6 +28,7 @@ import NotificationPreferencesScreen from '../../screens/shared/NotificationPref
 import PrivacyScreen from '../../screens/shared/PrivacyScreen';
 import AboutScreen from '../../screens/shared/AboutScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
+import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -277,6 +278,14 @@ const SettingsStack = () => {
         component={NotificationsScreen}
         options={{ 
           title: 'Notifications',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="CustomerSupport" 
+        component={CustomerSupportScreen}
+        options={{ 
+          title: 'Customer Support',
           headerShown: true 
         }}
       />

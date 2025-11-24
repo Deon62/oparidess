@@ -57,8 +57,7 @@ const SettingsScreen = () => {
   };
 
   const handleCustomerSupport = () => {
-    // TODO: Navigate to customer support screen
-    console.log('Customer support pressed');
+    navigation.navigate('CustomerSupport');
   };
 
   const handlePrivacy = () => {

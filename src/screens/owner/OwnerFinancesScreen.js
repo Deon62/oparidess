@@ -9,6 +9,7 @@ const OwnerFinancesScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const [selectedPeriod, setSelectedPeriod] = useState('week'); // week, month, year
+  const [hideBalance, setHideBalance] = useState(false);
 
   // Commission rate (15%)
   const COMMISSION_RATE = 0.15;
@@ -19,16 +20,19 @@ const OwnerFinancesScreen = () => {
       gross: 1250,
       bookings: 18,
       average: 69.44,
+      lastPeriod: 1115,
     },
     month: {
       gross: 4850,
       bookings: 72,
       average: 67.36,
+      lastPeriod: 4320,
     },
     year: {
       gross: 58200,
       bookings: 864,
       average: 67.36,
+      lastPeriod: 52000,
     },
   };
 
@@ -40,6 +44,7 @@ const OwnerFinancesScreen = () => {
   const currentData = earningsData[selectedPeriod];
   const commissionAmount = calculateCommission(currentData.gross);
   const netEarnings = currentData.gross - commissionAmount;
+  const availableCash = netEarnings * 0.7; // 70% available for withdrawal
 
   const transactions = [
     {
@@ -108,6 +113,13 @@ const OwnerFinancesScreen = () => {
     }
   };
 
+  const displayAmount = (amount) => {
+    if (hideBalance) {
+      return '••••••';
+    }
+    return formatCurrency(amount);
+  };
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -143,114 +155,108 @@ const OwnerFinancesScreen = () => {
         ))}
       </View>
 
-      {/* Earnings Summary */}
-      <View style={styles.summaryContainer}>
-        <Card style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.summaryHeader}>
-            <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
-              Net Earnings
+      {/* Main Balance Card */}
+      <View style={styles.balanceCardContainer}>
+        <Card style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]}>
+          <View style={styles.balanceHeader}>
+            <Text style={[styles.balanceLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
+              Available Cash for Withdrawal
             </Text>
-            <Ionicons name="cash-outline" size={24} color={theme.colors.primary} />
+            <TouchableOpacity
+              onPress={() => setHideBalance(!hideBalance)}
+              activeOpacity={0.7}
+            >
+              <Ionicons 
+                name={hideBalance ? "eye-off-outline" : "eye-outline"} 
+                size={22} 
+                color="rgba(255, 255, 255, 0.9)" 
+              />
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.summaryAmount, { color: theme.colors.textPrimary }]}>
-            {formatCurrency(netEarnings)}
+          <Text style={[styles.balanceAmount, { color: theme.colors.white }]}>
+            {displayAmount(availableCash)}
           </Text>
-          
-          {/* Commission Breakdown */}
-          <View style={[styles.commissionBreakdown, { backgroundColor: theme.colors.background }]}>
-            <View style={styles.commissionRow}>
-              <View style={styles.commissionRowLeft}>
-                <Ionicons name="trending-up-outline" size={16} color={theme.colors.primary} />
-                <Text style={[styles.commissionLabel, { color: theme.colors.textSecondary }]}>
-                  Gross Earnings
-                </Text>
-              </View>
-              <Text style={[styles.commissionValue, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(currentData.gross)}
-              </Text>
-            </View>
-            <View style={styles.commissionRow}>
-              <View style={styles.commissionRowLeft}>
-                <Ionicons name="remove-circle-outline" size={16} color="#FF3B30" />
-                <Text style={[styles.commissionLabel, { color: theme.colors.textSecondary }]}>
-                  Commission ({COMMISSION_RATE * 100}%)
-                </Text>
-              </View>
-              <Text style={[styles.commissionValue, { color: '#FF3B30' }]}>
-                -{formatCurrency(commissionAmount)}
-              </Text>
-            </View>
-            <View style={[styles.commissionDivider, { backgroundColor: theme.colors.hint + '30' }]} />
-            <View style={styles.commissionRow}>
-              <View style={styles.commissionRowLeft}>
-                <Ionicons name="checkmark-circle-outline" size={16} color="#4CAF50" />
-                <Text style={[styles.commissionLabel, { color: theme.colors.textPrimary, fontFamily: 'Nunito_700Bold' }]}>
-                  Net Earnings
-                </Text>
-              </View>
-              <Text style={[styles.commissionValue, { color: '#4CAF50', fontFamily: 'Nunito_700Bold' }]}>
-                {formatCurrency(netEarnings)}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.summaryStats}>
-            <View style={styles.summaryStat}>
-              <Text style={[styles.summaryStatValue, { color: theme.colors.textPrimary }]}>
-                {currentData.bookings}
-              </Text>
-              <Text style={[styles.summaryStatLabel, { color: theme.colors.textSecondary }]}>
-                Bookings
-              </Text>
-            </View>
-            <View style={styles.summaryStat}>
-              <Text style={[styles.summaryStatValue, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(currentData.average)}
-              </Text>
-              <Text style={[styles.summaryStatLabel, { color: theme.colors.textSecondary }]}>
-                Avg/Booking
-              </Text>
-            </View>
-          </View>
         </Card>
       </View>
 
-      {/* Quick Stats */}
-      <View style={styles.statsContainer}>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="trending-up-outline" size={18} color="#4CAF50" />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
-            +12%
+      {/* Metrics Cards Row */}
+      <View style={styles.metricsContainer}>
+        <Card style={[styles.metricCard, { backgroundColor: '#FF6B35' }]}>
+          <Ionicons name="trending-up-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.metricLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
+            Gross Income
           </Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-            vs Last Period
+          <Text style={[styles.metricAmount, { color: theme.colors.white }]}>
+            {displayAmount(currentData.gross)}
           </Text>
-        </View>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="wallet-outline" size={18} color={theme.colors.primary} />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
-            {formatCurrency(netEarnings * 0.7)}
-          </Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-            Available Balance
-          </Text>
-        </View>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="cut-outline" size={18} color="#FF3B30" />
-          <Text style={[styles.statValue, { color: '#FF3B30' }]}>
-            {formatCurrency(commissionAmount)}
-          </Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
+        </Card>
+
+        <Card style={[styles.metricCard, { backgroundColor: '#FFD93D' }]}>
+          <Ionicons name="cut-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.metricLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
             Commission
           </Text>
-        </View>
+          <Text style={[styles.metricAmount, { color: theme.colors.white }]}>
+            {displayAmount(commissionAmount)}
+          </Text>
+        </Card>
+
+        <Card style={[styles.metricCard, { backgroundColor: '#0A1D37' }]}>
+          <Ionicons name="stats-chart-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.metricLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
+            Trend
+          </Text>
+          <Text style={[styles.metricAmount, { color: theme.colors.white }]}>
+            {displayAmount(currentData.lastPeriod)}
+          </Text>
+        </Card>
+      </View>
+
+      {/* Action Buttons */}
+      <View style={styles.actionButtonsContainer}>
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.primary }]}
+          onPress={() => {
+            navigation.navigate('FinancesTab', {
+              screen: 'AddPaymentMethod',
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+          <Text style={[styles.actionButtonText, { color: theme.colors.primary }]}>
+            Add Payment Method
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
+          onPress={() => {
+            navigation.navigate('FinancesTab', {
+              screen: 'WithdrawRequest',
+              params: { availableBalance: availableCash },
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-down-outline" size={20} color={theme.colors.white} />
+          <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
+            Withdraw
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Transactions */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          Recent Transactions
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Recent Transaction
+          </Text>
+          <TouchableOpacity activeOpacity={0.7}>
+            <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+              View all
+            </Text>
+          </TouchableOpacity>
+        </View>
         {transactions.map((transaction) => {
           const isEarned = transaction.type === 'earned';
           const grossAmount = isEarned ? transaction.grossAmount : Math.abs(transaction.amount);
@@ -323,39 +329,6 @@ const OwnerFinancesScreen = () => {
         })}
       </View>
 
-      {/* Action Buttons */}
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.primary }]}
-          onPress={() => {
-            navigation.navigate('FinancesTab', {
-              screen: 'AddPaymentMethod',
-            });
-          }}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
-          <Text style={[styles.actionButtonText, { color: theme.colors.primary }]}>
-            Add Payment Accounts
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
-          onPress={() => {
-            navigation.navigate('FinancesTab', {
-              screen: 'WithdrawRequest',
-              params: { availableBalance: netEarnings * 0.7 },
-            });
-          }}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="wallet-outline" size={20} color={theme.colors.white} />
-          <Text style={[styles.actionButtonText, { color: theme.colors.white }]}>
-            Withdraw Funds
-          </Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Bottom Spacing */}
       <View style={{ height: 40 }} />
     </ScrollView>
@@ -374,7 +347,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 16,
     gap: 12,
-    marginBottom: 16,
+    marginBottom: 24,
   },
   periodButton: {
     flex: 1,
@@ -387,75 +360,114 @@ const styles = StyleSheet.create({
   periodButtonText: {
     fontSize: 14,
   },
-  summaryContainer: {
+  balanceCardContainer: {
     paddingHorizontal: 24,
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  summaryCard: {
-    padding: 20,
-    borderRadius: 16,
+  balanceCard: {
+    padding: 24,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  summaryHeader: {
+  balanceHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
-  },
-  summaryLabel: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  summaryAmount: {
-    fontSize: 36,
-    fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
   },
-  summaryStats: {
-    flexDirection: 'row',
-    gap: 24,
-  },
-  summaryStat: {
+  balanceLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
     flex: 1,
   },
-  summaryStatValue: {
-    fontSize: 18,
+  balanceAmount: {
+    fontSize: 42,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
+    letterSpacing: -1,
   },
-  summaryStatLabel: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-  },
-  statsContainer: {
+  metricsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 24,
-    gap: 8,
+    gap: 12,
     marginBottom: 24,
   },
-  statCard: {
+  metricCard: {
     flex: 1,
+    padding: 16,
+    borderRadius: 16,
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 12,
-    gap: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
-  statValue: {
-    fontSize: 14,
-    fontFamily: 'Nunito_700Bold',
-  },
-  statLabel: {
-    fontSize: 10,
+  metricLabel: {
+    fontSize: 12,
     fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
+    marginBottom: 4,
     textAlign: 'center',
+  },
+  metricAmount: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    textAlign: 'center',
+  },
+  actionButtonsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 24,
+    gap: 12,
+    marginBottom: 24,
+  },
+  actionButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 14,
+    borderRadius: 12,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
   section: {
     paddingHorizontal: 24,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
     letterSpacing: -0.3,
+  },
+  viewAllText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
   transactionCard: {
     padding: 16,
@@ -500,34 +512,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'Nunito_600SemiBold',
   },
-  commissionBreakdown: {
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
-    gap: 12,
-  },
-  commissionRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  commissionRowLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  commissionLabel: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
-  },
-  commissionValue: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  commissionDivider: {
-    height: 1,
-    marginVertical: 4,
-  },
   transactionBreakdown: {
     marginTop: 6,
   },
@@ -546,23 +530,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'Nunito_400Regular',
     marginTop: 2,
-  },
-  actionsContainer: {
-    paddingHorizontal: 24,
-    marginTop: 24,
-    gap: 12,
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
-    borderRadius: 12,
-    gap: 8,
-  },
-  actionButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
   },
 });
 

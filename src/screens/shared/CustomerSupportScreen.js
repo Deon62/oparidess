@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +24,7 @@ const CustomerSupportScreen = () => {
   ]);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const scrollViewRef = useRef(null);
+  const translateY = useRef(new Animated.Value(0)).current;
 
   // Create Ticket state
   const [ticketUrgency, setTicketUrgency] = useState('medium');
@@ -42,27 +43,47 @@ const CustomerSupportScreen = () => {
     });
   }, [navigation]);
 
-  // Handle keyboard show/hide
+  // Handle keyboard show/hide - Android specific
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => {
-        setKeyboardHeight(e.endCoordinates.height);
+    if (Platform.OS === 'android') {
+      const keyboardDidShow = Keyboard.addListener('keyboardDidShow', (e) => {
+        const height = e.endCoordinates.height;
+        setKeyboardHeight(height);
+        Animated.timing(translateY, {
+          toValue: -height,
+          duration: 250,
+          useNativeDriver: true,
+        }).start();
         setTimeout(() => {
           scrollViewRef.current?.scrollToEnd({ animated: true });
         }, 100);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      () => {
+      });
+
+      const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
         setKeyboardHeight(0);
-      }
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }).start();
+      });
+
+      return () => {
+        keyboardDidShow.remove();
+        keyboardDidHide.remove();
+      };
+    } else {
+      // iOS - use KeyboardAvoidingView
+      const keyboardWillShow = Keyboard.addListener('keyboardWillShow', () => {
+        setTimeout(() => {
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      });
+
+      return () => {
+        keyboardWillShow.remove();
+      };
+    }
   }, []);
 
   // Auto-scroll chat to bottom
@@ -165,110 +186,158 @@ const CustomerSupportScreen = () => {
     return labels[category] || category;
   };
 
-  const renderChatTab = () => (
-    <View style={styles.chatContainer}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.chatMessagesContainer}
-        contentContainerStyle={[
-          styles.chatMessagesContent,
-          { paddingBottom: 100 },
-        ]}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="interactive"
-      >
-        {chatMessages.map((message) => (
-          <View
-            key={message.id}
+  const renderChatTab = () => {
+    // For Android, use Animated.View to move input up
+    const InputContainer = Platform.OS === 'android' ? Animated.View : View;
+
+    return (
+      <View style={styles.chatContainer}>
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.chatMessagesContainer}
+          contentContainerStyle={[
+            styles.chatMessagesContent,
+            { paddingBottom: Platform.OS === 'android' && keyboardHeight > 0 ? keyboardHeight + 80 : 100 },
+          ]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
+        >
+          {chatMessages.map((message) => (
+            <View
+              key={message.id}
+              style={[
+                styles.chatMessage,
+                message.isSent ? styles.chatMessageSent : styles.chatMessageReceived,
+              ]}
+            >
+              <View
+                style={[
+                  styles.chatBubble,
+                  {
+                    backgroundColor: message.isSent
+                      ? theme.colors.primary
+                      : theme.colors.white,
+                    borderColor: message.isSent ? 'transparent' : theme.colors.hint + '30',
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.chatMessageText,
+                    {
+                      color: message.isSent ? theme.colors.white : theme.colors.textPrimary,
+                    },
+                  ]}
+                >
+                  {message.text}
+                </Text>
+                <Text
+                  style={[
+                    styles.chatMessageTime,
+                    {
+                      color: message.isSent
+                        ? theme.colors.white + 'CC'
+                        : theme.colors.hint,
+                    },
+                  ]}
+                >
+                  {message.time}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Input Container - Separated from bottom nav, moves up with keyboard on Android */}
+        {Platform.OS === 'android' ? (
+          <InputContainer
             style={[
-              styles.chatMessage,
-              message.isSent ? styles.chatMessageSent : styles.chatMessageReceived,
+              styles.chatInputContainer,
+              {
+                backgroundColor: theme.colors.white,
+                borderTopColor: theme.colors.hint + '20',
+                paddingBottom: 12,
+                transform: [{ translateY }],
+              },
             ]}
+          >
+            <TextInput
+              style={[
+                styles.chatInput,
+                {
+                  backgroundColor: theme.colors.background,
+                  color: theme.colors.textPrimary,
+                  borderColor: theme.colors.hint + '40',
+                },
+              ]}
+              placeholder="Type your message..."
+              placeholderTextColor={theme.colors.hint}
+              value={chatMessage}
+              onChangeText={setChatMessage}
+              multiline
+              textAlignVertical="center"
+            />
+            <TouchableOpacity
+              style={[
+                styles.chatSendButton,
+                { backgroundColor: chatMessage.trim() ? theme.colors.primary : theme.colors.hint },
+              ]}
+              onPress={handleSendChatMessage}
+              activeOpacity={0.7}
+              disabled={!chatMessage.trim()}
+            >
+              <Ionicons name="send" size={20} color={theme.colors.white} />
+            </TouchableOpacity>
+          </InputContainer>
+        ) : (
+          <KeyboardAvoidingView
+            behavior="padding"
+            keyboardVerticalOffset={90}
           >
             <View
               style={[
-                styles.chatBubble,
+                styles.chatInputContainer,
                 {
-                  backgroundColor: message.isSent
-                    ? theme.colors.primary
-                    : theme.colors.white,
-                  borderColor: message.isSent ? 'transparent' : theme.colors.hint + '30',
+                  backgroundColor: theme.colors.white,
+                  borderTopColor: theme.colors.hint + '20',
+                  paddingBottom: insets.bottom + 8,
                 },
               ]}
             >
-              <Text
+              <TextInput
                 style={[
-                  styles.chatMessageText,
+                  styles.chatInput,
                   {
-                    color: message.isSent ? theme.colors.white : theme.colors.textPrimary,
+                    backgroundColor: theme.colors.background,
+                    color: theme.colors.textPrimary,
+                    borderColor: theme.colors.hint + '40',
                   },
                 ]}
-              >
-                {message.text}
-              </Text>
-              <Text
+                placeholder="Type your message..."
+                placeholderTextColor={theme.colors.hint}
+                value={chatMessage}
+                onChangeText={setChatMessage}
+                multiline
+                textAlignVertical="center"
+              />
+              <TouchableOpacity
                 style={[
-                  styles.chatMessageTime,
-                  {
-                    color: message.isSent
-                      ? theme.colors.white + 'CC'
-                      : theme.colors.hint,
-                  },
+                  styles.chatSendButton,
+                  { backgroundColor: chatMessage.trim() ? theme.colors.primary : theme.colors.hint },
                 ]}
+                onPress={handleSendChatMessage}
+                activeOpacity={0.7}
+                disabled={!chatMessage.trim()}
               >
-                {message.time}
-              </Text>
+                <Ionicons name="send" size={20} color={theme.colors.white} />
+              </TouchableOpacity>
             </View>
-          </View>
-        ))}
-      </ScrollView>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-        style={styles.chatInputWrapper}
-      >
-        <View
-          style={[
-            styles.chatInputContainer,
-            {
-              backgroundColor: theme.colors.white,
-              borderTopColor: theme.colors.hint + '20',
-              paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
-            },
-          ]}
-        >
-          <TextInput
-            style={[
-              styles.chatInput,
-              {
-                backgroundColor: theme.colors.background,
-                color: theme.colors.textPrimary,
-                borderColor: theme.colors.hint + '40',
-              },
-            ]}
-            placeholder="Type your message..."
-            placeholderTextColor={theme.colors.hint}
-            value={chatMessage}
-            onChangeText={setChatMessage}
-            multiline
-          />
-          <TouchableOpacity
-            style={[
-              styles.chatSendButton,
-              { backgroundColor: chatMessage.trim() ? theme.colors.primary : theme.colors.hint },
-            ]}
-            onPress={handleSendChatMessage}
-            activeOpacity={0.7}
-            disabled={!chatMessage.trim()}
-          >
-            <Ionicons name="send" size={20} color={theme.colors.white} />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
-  );
+          </KeyboardAvoidingView>
+        )}
+      </View>
+    );
+  };
 
   const renderTicketTab = () => (
     <ScrollView
@@ -647,12 +716,6 @@ const styles = StyleSheet.create({
   chatMessagesContent: {
     padding: 16,
   },
-  chatInputWrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
   chatMessage: {
     marginBottom: 16,
   },
@@ -679,17 +742,22 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   chatInputContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderTopWidth: 1,
     gap: 12,
+    zIndex: 1000,
+    elevation: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 5,
   },
   chatInput: {
     flex: 1,
@@ -697,6 +765,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderWidth: 1,
+    minHeight: 40,
     maxHeight: 100,
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',

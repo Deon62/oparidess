@@ -11,7 +11,7 @@ const profileImage = require('../../../assets/logo/profile.jpg');
 const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const [bookingType, setBookingType] = useState('cars'); // 'cars' or 'chauffeurs'
+  // Only car bookings - no driver/chauffeur functionality
   const [statusFilter, setStatusFilter] = useState('pending'); // 'pending', 'active', 'completed', 'cancelled'
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -65,46 +65,7 @@ const BookingsListScreen = () => {
     },
   ];
 
-  const chauffeurBookings = [
-    {
-      id: 1,
-      driverName: 'John Smith',
-      date: '2024-01-16',
-      duration: '4 hours',
-      price: '$120',
-      status: 'pending',
-      rating: 4.8,
-    },
-    {
-      id: 2,
-      driverName: 'Sarah Johnson',
-      date: '2024-01-18',
-      duration: '6 hours',
-      price: '$180',
-      status: 'active',
-      rating: 4.9,
-    },
-    {
-      id: 3,
-      driverName: 'Michael Brown',
-      date: '2024-01-08',
-      duration: '3 hours',
-      price: '$90',
-      status: 'completed',
-      rating: 4.7,
-    },
-    {
-      id: 4,
-      driverName: 'Emily Davis',
-      date: '2024-01-14',
-      duration: '2 hours',
-      price: '$60',
-      status: 'cancelled',
-      rating: 4.6,
-    },
-  ];
-
-  const bookings = bookingType === 'cars' ? carBookings : chauffeurBookings;
+  const bookings = carBookings;
   const filteredBookings = bookings.filter(booking => booking.status === statusFilter);
 
   // Set header with notifications and profile picture
@@ -182,9 +143,9 @@ const BookingsListScreen = () => {
       return;
     }
     
-    // Mark booking as rated using composite key (bookingType-id)
+    // Mark booking as rated
     if (selectedBooking) {
-      const ratingKey = `${bookingType}-${selectedBooking.id}`;
+      const ratingKey = `car-${selectedBooking.id}`;
       setRatedBookings(prev => new Set(prev).add(ratingKey));
     }
     
@@ -193,7 +154,7 @@ const BookingsListScreen = () => {
       bookingId: selectedBooking?.id,
       rating,
       text: ratingText,
-      type: bookingType,
+      type: 'car',
     });
     
     // Close modal
@@ -237,53 +198,6 @@ const BookingsListScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Booking Type Toggle */}
-      <View style={styles.typeToggleContainer}>
-        <TouchableOpacity
-          style={[
-            styles.typeToggleButton,
-            bookingType === 'cars' && [styles.typeToggleButtonActive, { backgroundColor: theme.colors.primary }],
-          ]}
-          onPress={() => setBookingType('cars')}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={bookingType === 'cars' ? 'car' : 'car-outline'}
-            size={18}
-            color={bookingType === 'cars' ? theme.colors.white : theme.colors.textPrimary}
-          />
-          <Text
-            style={[
-              styles.typeToggleText,
-              { color: bookingType === 'cars' ? theme.colors.white : theme.colors.textPrimary },
-            ]}
-          >
-            Cars
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.typeToggleButton,
-            bookingType === 'chauffeurs' && [styles.typeToggleButtonActive, { backgroundColor: theme.colors.primary }],
-          ]}
-          onPress={() => setBookingType('chauffeurs')}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={bookingType === 'chauffeurs' ? 'person' : 'person-outline'}
-            size={18}
-            color={bookingType === 'chauffeurs' ? theme.colors.white : theme.colors.textPrimary}
-          />
-          <Text
-            style={[
-              styles.typeToggleText,
-              { color: bookingType === 'chauffeurs' ? theme.colors.white : theme.colors.textPrimary },
-            ]}
-          >
-            Chauffeurs
-          </Text>
-        </TouchableOpacity>
-      </View>
 
       {/* Status Filters */}
       <View style={styles.statusFiltersContainer}>
@@ -327,7 +241,7 @@ const BookingsListScreen = () => {
           <View style={styles.emptyState}>
             <Ionicons name="document-text-outline" size={48} color={theme.colors.hint} />
             <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-              No {statusFilter} {bookingType === 'cars' ? 'car' : 'chauffeur'} bookings found
+              No {statusFilter} car bookings found
             </Text>
           </View>
         ) : (
@@ -335,7 +249,7 @@ const BookingsListScreen = () => {
             <TouchableOpacity
               key={booking.id}
               onPress={() => {
-                if (booking.status === 'active' && bookingType === 'cars') {
+                if (booking.status === 'active') {
                   // Navigate to booking details screen
                   // Extract days from duration string (e.g., "5 days" -> 5)
                   const extractDays = (duration) => {
@@ -369,10 +283,10 @@ const BookingsListScreen = () => {
                 }
               }}
               activeOpacity={1}
-              disabled={!(booking.status === 'active' && bookingType === 'cars')}
+              disabled={booking.status !== 'active'}
             >
               <Card style={styles.bookingCard}>
-                {bookingType === 'cars' && booking.image && (
+                {booking.image && (
                   <View style={styles.bookingImageContainer}>
                     <Image source={booking.image} style={styles.bookingImage} resizeMode="cover" />
                   </View>
@@ -380,7 +294,7 @@ const BookingsListScreen = () => {
                 <View style={styles.bookingContent}>
                 <View style={styles.bookingHeader}>
                   <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]}>
-                    {bookingType === 'cars' ? booking.carName : booking.driverName}
+                    {booking.carName}
                   </Text>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
                     <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
@@ -401,20 +315,12 @@ const BookingsListScreen = () => {
                       {booking.duration}
                     </Text>
                   </View>
-                  {bookingType === 'chauffeurs' && booking.rating && (
-                    <View style={styles.bookingDetailItem}>
-                      <Ionicons name="star" size={16} color="#FFA500" />
-                      <Text style={[styles.bookingDetailText, { color: theme.colors.textSecondary }]}>
-                        {booking.rating}
-                      </Text>
-                    </View>
-                  )}
                 </View>
                 <View style={styles.bookingFooter}>
                   <Text style={[styles.bookingPrice, { color: theme.colors.primary }]}>{booking.price}</Text>
                   {booking.status === 'completed' && (
                     (() => {
-                      const ratingKey = `${bookingType}-${booking.id}`;
+                      const ratingKey = `car-${booking.id}`;
                       const isRated = ratedBookings.has(ratingKey);
                       return (
                         <TouchableOpacity
@@ -466,9 +372,7 @@ const BookingsListScreen = () => {
               </Text>
               <Text style={[styles.ratingModalSubtitle, { color: theme.colors.textSecondary }]}>
                 {selectedBooking && (
-                  bookingType === 'cars' 
-                    ? selectedBooking.carName 
-                    : selectedBooking.driverName
+                  selectedBooking.carName
                 )}
               </Text>
             </View>
@@ -476,7 +380,7 @@ const BookingsListScreen = () => {
             {/* Star Rating */}
             <View style={styles.ratingSection}>
               <Text style={[styles.ratingLabel, { color: theme.colors.textPrimary }]}>
-                How would you rate this {bookingType === 'cars' ? 'car' : 'driver'}?
+                How would you rate this car?
               </Text>
               {renderStars()}
             </View>

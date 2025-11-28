@@ -16,8 +16,8 @@ import UploadIdDocumentScreen from '../../screens/owner/UploadIdDocumentScreen';
 import UploadBusinessDocumentScreen from '../../screens/owner/UploadBusinessDocumentScreen';
 import AddCarScreen from '../../screens/owner/AddCarScreen';
 import OwnerBookingDetailsScreen from '../../screens/owner/OwnerBookingDetailsScreen';
-import WithdrawRequestScreen from '../../screens/driver/WithdrawRequestScreen';
-import DriverAddPaymentScreen from '../../screens/driver/DriverAddPaymentScreen';
+import OwnerWithdrawRequestScreen from '../../screens/owner/OwnerWithdrawRequestScreen';
+import OwnerAddPaymentScreen from '../../screens/owner/OwnerAddPaymentScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -249,7 +249,7 @@ const FinancesStack = () => {
       />
       <Stack.Screen 
         name="WithdrawRequest" 
-        component={WithdrawRequestScreen}
+        component={OwnerWithdrawRequestScreen}
         options={{ 
           title: 'Withdraw Funds',
           headerShown: true 
@@ -257,7 +257,7 @@ const FinancesStack = () => {
       />
       <Stack.Screen 
         name="AddPaymentMethod" 
-        component={DriverAddPaymentScreen}
+        component={OwnerAddPaymentScreen}
         options={{ 
           title: 'Add Payment Method',
           headerShown: true 

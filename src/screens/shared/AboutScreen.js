@@ -13,7 +13,7 @@ const AboutScreen = () => {
   const aboutSections = [
     {
       title: 'About Oparides',
-      content: 'Oparides is your premium destination for car rentals and professional chauffeur services. We connect car owners, renters, and drivers to create a seamless mobility experience.',
+      content: 'Oparides is your premium destination for car rentals. We connect car owners and renters to create a seamless mobility experience.',
     },
     {
       title: 'Our Mission',

@@ -110,13 +110,15 @@ const CustomerSupportScreen = () => {
 
     // Simulate AI response
     setTimeout(() => {
-      const aiResponse = {
-        id: chatMessages.length + 2,
-        text: 'Thank you for your message. I\'m here to help! For more specific assistance, please create a support ticket or share your feedback.',
-        isSent: false,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      };
-      setChatMessages(prev => [...prev, newMessage, aiResponse]);
+      setChatMessages(prev => {
+        const aiResponse = {
+          id: prev.length + 1,
+          text: 'Thank you for your message. I\'m here to help! For more specific assistance, please create a support ticket or share your feedback.',
+          isSent: false,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        };
+        return [...prev, aiResponse];
+      });
     }, 1000);
   };
 

@@ -6,7 +6,6 @@ import { useTheme } from '../theme/ThemeProvider';
 import AuthNavigator from './AuthNavigator';
 import RenterNavigator from './RenterNavigator';
 import OwnerNavigator from './OwnerNavigator';
-import DriverNavigator from './DriverNavigator';
 
 const MainNavigator = () => {
   const { isAuthenticated, userType, isLoading } = useUser();
@@ -31,8 +30,6 @@ const MainNavigator = () => {
       return <RenterNavigator />;
     case 'owner':
       return <OwnerNavigator />;
-    case 'driver':
-      return <DriverNavigator />;
     default:
       return <AuthNavigator />;
   }

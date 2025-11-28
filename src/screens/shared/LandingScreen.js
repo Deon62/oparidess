@@ -37,7 +37,7 @@ const LandingScreen = () => {
           Welcome to Oparides
         </Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-          Your premium car rental{'\n'}and driver hire experience
+          Your premium car rental{'\n'}experience
         </Text>
       </View>
 

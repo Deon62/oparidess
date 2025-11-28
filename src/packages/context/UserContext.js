@@ -12,7 +12,7 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userType, setUserType] = useState(null); // 'renter', 'owner', 'driver'
+  const [userType, setUserType] = useState(null); // 'renter', 'owner'
   const [isLoading, setIsLoading] = useState(true);
 
   // Initialize user state (check for stored auth, etc.)

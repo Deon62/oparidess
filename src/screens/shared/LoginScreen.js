@@ -101,28 +101,6 @@ const LoginScreen = () => {
                   List Car
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.roleButton,
-                  {
-                    backgroundColor: selectedUserType === 'driver' ? theme.colors.primary : theme.colors.white,
-                    borderColor: selectedUserType === 'driver' ? theme.colors.primary : theme.colors.hint,
-                  },
-                ]}
-                onPress={() => setSelectedUserType('driver')}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.roleButtonText,
-                    {
-                      color: selectedUserType === 'driver' ? theme.colors.white : theme.colors.textPrimary,
-                    },
-                  ]}
-                >
-                  Be Driver
-                </Text>
-              </TouchableOpacity>
             </View>
           </View>
         )}

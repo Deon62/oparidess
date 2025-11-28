@@ -24,11 +24,6 @@ const UserTypeSelectionScreen = () => {
       title: 'List a Car',
       description: 'Share your car and earn money when you\'re not using it',
     },
-    {
-      id: 'driver',
-      title: 'Be a Chauffeur',
-      description: 'Offer your professional driving services',
-    },
   ];
 
   return (

@@ -11,7 +11,7 @@ const airtelLogo = require('../../../assets/images/airtel.png');
 const visaLogo = require('../../../assets/images/visa.png');
 const mastercardLogo = require('../../../assets/images/mastercard.png');
 
-const DriverAddPaymentScreen = () => {
+const OwnerAddPaymentScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const [selectedMethod, setSelectedMethod] = useState(null); // 'card', 'mpesa', 'airtel'
@@ -305,7 +305,7 @@ const DriverAddPaymentScreen = () => {
               Payment Method Added!
             </Text>
             <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
-              Your payment method has been added successfully and is ready to use for withdrawals.
+              Your payment method has been added successfully and is ready to use.
             </Text>
             <TouchableOpacity
               style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
@@ -462,5 +462,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DriverAddPaymentScreen;
+export default OwnerAddPaymentScreen;
 

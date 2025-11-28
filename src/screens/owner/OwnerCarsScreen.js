@@ -176,33 +176,33 @@ const OwnerCarsScreen = () => {
     >
       {/* Summary Stats */}
       <View style={styles.summaryContainer}>
-        <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="car-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
+        <Card style={[styles.summaryCard, { backgroundColor: '#FF6B35' }]}>
+          <Ionicons name="car-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.length}
           </Text>
-          <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.summaryLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
             Total Cars
           </Text>
-        </View>
-        <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="checkmark-circle-outline" size={24} color="#4CAF50" />
-          <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
+        </Card>
+        <Card style={[styles.summaryCard, { backgroundColor: '#FFD93D' }]}>
+          <Ionicons name="checkmark-circle-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.filter((c) => c.status === 'available').length}
           </Text>
-          <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.summaryLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
             Available
           </Text>
-        </View>
-        <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="time-outline" size={24} color="#FFA500" />
-          <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
+        </Card>
+        <Card style={[styles.summaryCard, { backgroundColor: '#0A1D37' }]}>
+          <Ionicons name="time-outline" size={24} color={theme.colors.white} />
+          <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.filter((c) => c.status === 'rented').length}
           </Text>
-          <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.summaryLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>
             Rented
           </Text>
-        </View>
+        </Card>
       </View>
 
       {/* Cars List */}
@@ -414,13 +414,24 @@ const styles = StyleSheet.create({
   summaryCard: {
     flex: 1,
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    gap: 8,
+    justifyContent: 'center',
+    padding: 12,
+    borderRadius: 16,
+    aspectRatio: 1, // Make cards square
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   summaryValue: {
-    fontSize: 20,
+    fontSize: 24,
     fontFamily: 'Nunito_700Bold',
+    marginTop: 8,
+    marginBottom: 4,
   },
   summaryLabel: {
     fontSize: 12,

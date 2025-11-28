@@ -1,5 +1,16 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  Animated,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -39,33 +50,60 @@ const ChatScreen = () => {
       time: '10:36 AM',
     },
   ]);
-  const scrollViewRef = useRef(null);
 
-  // Handle keyboard show/hide
+  const flatListRef = useRef(null);
+  const translateY = useRef(new Animated.Value(0)).current;
+
+  // Handle keyboard on Android - manually move input up
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
-      (e) => {
-        setKeyboardHeight(e.endCoordinates.height);
+    if (Platform.OS === 'android') {
+      const keyboardWillShow = Keyboard.addListener('keyboardDidShow', (e) => {
+        const height = e.endCoordinates.height;
+        setKeyboardHeight(height);
+        Animated.timing(translateY, {
+          toValue: -height,
+          duration: 250,
+          useNativeDriver: true,
+        }).start();
         setTimeout(() => {
-          scrollViewRef.current?.scrollToEnd({ animated: true });
+          flatListRef.current?.scrollToEnd({ animated: true });
         }, 100);
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
-      () => {
+      });
+
+      const keyboardWillHide = Keyboard.addListener('keyboardDidHide', () => {
         setKeyboardHeight(0);
-      }
-    );
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }).start();
+      });
+
+      return () => {
+        keyboardWillShow.remove();
+        keyboardWillHide.remove();
+      };
+    } else {
+      // iOS - use KeyboardAvoidingView
+      const keyboardWillShow = Keyboard.addListener('keyboardWillShow', () => {
+        setTimeout(() => {
+          flatListRef.current?.scrollToEnd({ animated: true });
+        }, 100);
+      });
+
+      return () => {
+        keyboardWillShow.remove();
+      };
+    }
   }, []);
 
+  // Scroll to bottom when messages change
   useEffect(() => {
-    scrollViewRef.current?.scrollToEnd({ animated: true });
+    if (messages.length > 0) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
   }, [messages]);
 
   const handleSend = () => {
@@ -87,7 +125,6 @@ const ChatScreen = () => {
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {
-            // TODO: Implement call functionality
             console.log('Call pressed');
           }}
           style={styles.callButton}
@@ -99,92 +136,114 @@ const ChatScreen = () => {
     });
   }, [navigation, theme]);
 
+  const renderMessage = ({ item }) => (
+    <View
+      style={[
+        styles.messageBubble,
+        item.isSent ? styles.sentMessage : styles.receivedMessage,
+      ]}
+    >
+      <View
+        style={[
+          styles.messageContent,
+          item.isSent
+            ? { backgroundColor: theme.colors.primary }
+            : { backgroundColor: theme.colors.white },
+        ]}
+      >
+        <Text
+          style={[
+            styles.messageText,
+            { color: item.isSent ? theme.colors.white : theme.colors.textPrimary },
+          ]}
+        >
+          {item.text}
+        </Text>
+        <Text
+          style={[
+            styles.messageTime,
+            { color: item.isSent ? 'rgba(255, 255, 255, 0.7)' : theme.colors.hint },
+          ]}
+        >
+          {item.time}
+        </Text>
+      </View>
+    </View>
+  );
+
+  // For Android, use Animated.View to move input up
+  const InputContainer = Platform.OS === 'android' ? Animated.View : View;
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView
-        ref={scrollViewRef}
-        style={styles.messagesContainer}
+      {/* Messages List */}
+      <FlatList
+        ref={flatListRef}
+        data={messages}
+        renderItem={renderMessage}
+        keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={[
           styles.messagesContent,
-          { paddingBottom: keyboardHeight > 0 ? keyboardHeight + 80 : 20 },
+          { paddingBottom: Platform.OS === 'android' && keyboardHeight > 0 ? keyboardHeight + 80 : 20 },
         ]}
+        style={styles.messagesList}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
-      >
-        {messages.map((msg) => (
-          <View
-            key={msg.id}
-            style={[
-              styles.messageBubble,
-              msg.isSent ? styles.sentMessage : styles.receivedMessage,
-            ]}
-          >
-            <View
-              style={[
-                styles.messageContent,
-                msg.isSent
-                  ? { backgroundColor: theme.colors.primary }
-                  : { backgroundColor: theme.colors.white },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.messageText,
-                  { color: msg.isSent ? theme.colors.white : theme.colors.textPrimary },
-                ]}
-              >
-                {msg.text}
-              </Text>
-              <Text
-                style={[
-                  styles.messageTime,
-                  { color: msg.isSent ? theme.colors.white + 'CC' : theme.colors.hint },
-                ]}
-              >
-                {msg.time}
-              </Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+      />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
-      >
-        <View 
+      {/* Input Container - Separated from bottom nav, moves up with keyboard on Android */}
+      {Platform.OS === 'android' ? (
+        <InputContainer
           style={[
-            styles.inputContainer, 
-            { 
+            styles.inputContainer,
+            {
               backgroundColor: theme.colors.white,
-              paddingBottom: Platform.OS === 'ios' ? insets.bottom : 12,
-            }
+              paddingBottom: 12,
+              borderTopColor: theme.colors.hint + '20',
+              transform: [{ translateY }],
+            },
           ]}
         >
           <TouchableOpacity
             style={styles.attachButton}
             activeOpacity={0.7}
             onPress={() => {
-              // TODO: Implement attach functionality
               console.log('Attach pressed');
             }}
           >
-            <Ionicons name="attach-outline" size={24} color={theme.colors.hint} />
+            <Ionicons name="attach-outline" size={22} color={theme.colors.hint} />
           </TouchableOpacity>
-          <TextInput
-            style={[styles.input, { color: theme.colors.textPrimary }]}
-            placeholder="Type a message..."
-            placeholderTextColor={theme.colors.hint}
-            value={message}
-            onChangeText={setMessage}
-            multiline
-            maxLength={500}
-          />
+
+          <View
+            style={[
+              styles.inputWrapper,
+              {
+                backgroundColor: theme.colors.background,
+                borderColor: theme.colors.hint + '30',
+              },
+            ]}
+          >
+            <TextInput
+              style={[styles.input, { color: theme.colors.textPrimary }]}
+              placeholder="Type a message..."
+              placeholderTextColor={theme.colors.hint}
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              maxLength={500}
+              textAlignVertical="center"
+            />
+          </View>
+
           <TouchableOpacity
             style={[
               styles.sendButton,
-              { backgroundColor: message.trim() ? theme.colors.primary : theme.colors.hint },
+              {
+                backgroundColor: message.trim()
+                  ? theme.colors.primary
+                  : theme.colors.hint + '40',
+              },
             ]}
             onPress={handleSend}
             activeOpacity={0.7}
@@ -192,12 +251,79 @@ const ChatScreen = () => {
           >
             <Ionicons
               name="send"
-              size={20}
-              color={theme.colors.white}
+              size={18}
+              color={message.trim() ? theme.colors.white : theme.colors.hint}
             />
           </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
+        </InputContainer>
+      ) : (
+        <KeyboardAvoidingView
+          behavior="padding"
+          keyboardVerticalOffset={90}
+        >
+          <View
+            style={[
+              styles.inputContainer,
+              {
+                backgroundColor: theme.colors.white,
+                paddingBottom: insets.bottom + 8,
+                borderTopColor: theme.colors.hint + '20',
+              },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.attachButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                console.log('Attach pressed');
+              }}
+            >
+              <Ionicons name="attach-outline" size={22} color={theme.colors.hint} />
+            </TouchableOpacity>
+
+            <View
+              style={[
+                styles.inputWrapper,
+                {
+                  backgroundColor: theme.colors.background,
+                  borderColor: theme.colors.hint + '30',
+                },
+              ]}
+            >
+              <TextInput
+                style={[styles.input, { color: theme.colors.textPrimary }]}
+                placeholder="Type a message..."
+                placeholderTextColor={theme.colors.hint}
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                maxLength={500}
+                textAlignVertical="center"
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.sendButton,
+                {
+                  backgroundColor: message.trim()
+                    ? theme.colors.primary
+                    : theme.colors.hint + '40',
+                },
+              ]}
+              onPress={handleSend}
+              activeOpacity={0.7}
+              disabled={!message.trim()}
+            >
+              <Ionicons
+                name="send"
+                size={18}
+                color={message.trim() ? theme.colors.white : theme.colors.hint}
+              />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+      )}
     </View>
   );
 };
@@ -206,13 +332,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  messagesContainer: {
+  messagesList: {
     flex: 1,
-    marginBottom: 0,
   },
   messagesContent: {
     padding: 16,
-    paddingBottom: 20,
+    paddingTop: 16,
   },
   messageBubble: {
     marginBottom: 12,
@@ -246,32 +371,46 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'Nunito_400Regular',
     alignSelf: 'flex-end',
+    marginTop: 2,
   },
   inputContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingHorizontal: 12,
-    paddingVertical: 12,
-    paddingBottom: Platform.OS === 'ios' ? 12 : 12,
+    paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
     gap: 8,
-    minHeight: 60,
+    zIndex: 1000,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   attachButton: {
     padding: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  inputWrapper: {
+    flex: 1,
+    borderRadius: 20,
+    borderWidth: 1,
+    minHeight: 40,
+    maxHeight: 100,
+  },
   input: {
     flex: 1,
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    minHeight: 40,
     maxHeight: 100,
-    minHeight: 36,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    textAlignVertical: 'center',
   },
   sendButton: {
     width: 40,
@@ -279,6 +418,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 2,
   },
   callButton: {
     padding: 8,
@@ -287,4 +427,3 @@ const styles = StyleSheet.create({
 });
 
 export default ChatScreen;
-

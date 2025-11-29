@@ -54,3 +54,4 @@ export const parseCurrency = (currencyString) => {
   return parseFloat(cleaned) || 0;
 };
 
+

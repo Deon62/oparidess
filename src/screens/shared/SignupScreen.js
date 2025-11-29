@@ -1,14 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { Button, Input, Toggle } from '../../packages/components';
 
 const SignupScreen = () => {
   const theme = useTheme();
   const { login } = useUser();
   const route = useRoute();
+  const navigation = useNavigation();
   const { userType = 'renter' } = route.params || {};
   const [formData, setFormData] = React.useState({
     email: '',
@@ -106,6 +108,21 @@ const SignupScreen = () => {
           disabled={!agreeToTerms}
         />
 
+        {/* Login Link */}
+        <View style={styles.loginLinkContainer}>
+          <Text style={[styles.loginLinkText, { color: theme.colors.textSecondary }]}>
+            Already have an account?{' '}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Login', { userType })}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.loginLinkButton, { color: theme.colors.primary }]}>
+              Login
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Divider */}
         <View style={styles.dividerContainer}>
           <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
@@ -119,6 +136,7 @@ const SignupScreen = () => {
           onPress={handleGoogleSignup}
           activeOpacity={0.7}
         >
+          <Ionicons name="logo-google" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
           <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
             Continue with Google
           </Text>
@@ -129,6 +147,7 @@ const SignupScreen = () => {
           onPress={handleAppleSignup}
           activeOpacity={0.7}
         >
+          <Ionicons name="logo-apple" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
           <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
             Continue with Apple
           </Text>
@@ -183,9 +202,28 @@ const styles = StyleSheet.create({
     minHeight: 48,
     marginBottom: 12,
     backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+  },
+  socialIcon: {
+    marginRight: 12,
   },
   socialButtonText: {
     fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  loginLinkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 24,
+  },
+  loginLinkText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  loginLinkButton: {
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
   },
 });

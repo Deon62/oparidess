@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
@@ -140,6 +141,21 @@ const LoginScreen = () => {
           style={styles.loginButton}
         />
 
+        {/* Sign Up Link */}
+        <View style={styles.signupLinkContainer}>
+          <Text style={[styles.signupLinkText, { color: theme.colors.textSecondary }]}>
+            Don't have an account?{' '}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Signup', { userType: selectedUserType })}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.signupLinkButton, { color: theme.colors.primary }]}>
+              Sign Up
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Divider */}
         <View style={styles.dividerContainer}>
           <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
@@ -153,6 +169,7 @@ const LoginScreen = () => {
           onPress={handleGoogleLogin}
           activeOpacity={0.7}
         >
+          <Ionicons name="logo-google" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
           <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
             Continue with Google
           </Text>
@@ -163,6 +180,7 @@ const LoginScreen = () => {
           onPress={handleAppleLogin}
           activeOpacity={0.7}
         >
+          <Ionicons name="logo-apple" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
           <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
             Continue with Apple
           </Text>
@@ -222,9 +240,28 @@ const styles = StyleSheet.create({
     minHeight: 48,
     marginBottom: 12,
     backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+  },
+  socialIcon: {
+    marginRight: 12,
   },
   socialButtonText: {
     fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  signupLinkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 24,
+  },
+  signupLinkText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  signupLinkButton: {
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
   },
   roleSelector: {

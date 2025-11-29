@@ -131,8 +131,7 @@ const OwnerCarsScreen = () => {
   };
 
   const handleEditCar = (car) => {
-    // TODO: Navigate to edit car screen
-    console.log('Edit car:', car.id);
+    navigation.navigate('AddCar', { car });
   };
 
   const handleDeleteCar = (car) => {

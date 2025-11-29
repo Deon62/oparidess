@@ -21,6 +21,17 @@ const carImage2 = require('../../../assets/images/car2.jpg');
 const carImage3 = require('../../../assets/images/car3.jpg');
 const carImage4 = require('../../../assets/images/car4.jpg');
 
+// Import commercial vehicle images
+const car5 = require('../../../assets/images/car5.png');
+const car6 = require('../../../assets/images/car6.png');
+const car7 = require('../../../assets/images/car7.png');
+const car8 = require('../../../assets/images/car8.png');
+const car9 = require('../../../assets/images/car9.png');
+const car10 = require('../../../assets/images/car10.png');
+const car11 = require('../../../assets/images/car11.png');
+const car12 = require('../../../assets/images/car12.png');
+const car13 = require('../../../assets/images/car13.png');
+
 const RenterHomeScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -35,6 +46,7 @@ const RenterHomeScreen = () => {
   const [showCityPicker, setShowCityPicker] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  
   
   // All 47 Kenyan Counties
   const counties = [
@@ -128,6 +140,40 @@ const RenterHomeScreen = () => {
     },
   ];
 
+  // Commercial vehicles
+  const commercialVehicles = [
+    {
+      id: 'pickups',
+      name: 'Pickups',
+      description: 'Rugged and versatile for work and adventure',
+      vehicles: [
+        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', image: car12 },
+        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', image: car5 },
+        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', image: car6 },
+      ],
+    },
+    {
+      id: 'vans',
+      name: 'Vans',
+      description: 'Spacious and practical for groups and cargo',
+      vehicles: [
+        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', image: car9 },
+        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', image: car10 },
+        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', image: car11 },
+      ],
+    },
+    {
+      id: 'trucks',
+      name: 'Trucks',
+      description: 'Heavy-duty vehicles for commercial transport',
+      vehicles: [
+        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car7 },
+        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car8 },
+        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car13 },
+      ],
+    },
+  ];
+
   const toggleLike = (carId) => {
     setLikedCars(prev => {
       const newSet = new Set(prev);
@@ -144,8 +190,13 @@ const RenterHomeScreen = () => {
     navigation.navigate('CarDetails', { car });
   };
 
-  const handleViewAll = (classId) => {
-    navigation.navigate('CarList', { classId });
+  const handleViewAll = (classId, isCommercial = false) => {
+    if (isCommercial) {
+      // Navigate to commercial vehicle list
+      navigation.navigate('CarList', { categoryId: classId, isCommercial: true });
+    } else {
+      navigation.navigate('CarList', { classId });
+    }
   };
 
   // Filter cars based on search query
@@ -305,27 +356,27 @@ const RenterHomeScreen = () => {
       <View style={[styles.searchOptionsBar, { backgroundColor: theme.colors.white }]}>
         <TouchableOpacity
           style={[styles.citySelector, { 
-            borderColor: '#4CAF50',
-            backgroundColor: '#4CAF50' + '15',
+            backgroundColor: theme.colors.primary,
+            borderColor: theme.colors.primary,
           }]}
           onPress={() => setShowCityPicker(true)}
           activeOpacity={0.7}
         >
-          <Ionicons name="location-outline" size={20} color="#4CAF50" />
+          <Ionicons name="location-outline" size={20} color={theme.colors.white} />
           <Text 
-            style={[styles.citySelectorText, { color: '#4CAF50' }]}
+            style={[styles.citySelectorText, { color: theme.colors.white }]}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
             {selectedCity}
           </Text>
-          <Ionicons name="chevron-down-outline" size={18} color="#4CAF50" />
+          <Ionicons name="chevron-down-outline" size={18} color={theme.colors.white} />
         </TouchableOpacity>
         
         <TouchableOpacity
           style={[styles.locationButton, { 
-            backgroundColor: '#FF9800' + '15',
-            borderColor: '#FF9800',
+            backgroundColor: theme.colors.white,
+            borderColor: theme.colors.primary,
             borderWidth: 1,
           }]}
           onPress={getCurrentLocation}
@@ -333,12 +384,12 @@ const RenterHomeScreen = () => {
           activeOpacity={0.7}
         >
           {isGettingLocation ? (
-            <Ionicons name="hourglass-outline" size={18} color="#FF9800" />
+            <Ionicons name="hourglass-outline" size={18} color={theme.colors.primary} />
           ) : (
-            <Ionicons name="locate-outline" size={18} color="#FF9800" />
+            <Ionicons name="locate-outline" size={18} color={theme.colors.primary} />
           )}
           <Text 
-            style={[styles.locationButtonText, { color: '#FF9800' }]}
+            style={[styles.locationButtonText, { color: theme.colors.primary }]}
             numberOfLines={1}
           >
             {isGettingLocation ? 'Getting...' : 'Current Location'}
@@ -455,11 +506,111 @@ const RenterHomeScreen = () => {
           </ScrollView>
         </View>
       ))
-      ) : searchQuery.trim() ? (
+      ) : null}
+
+      {/* Commercial Vehicles Sections */}
+      {commercialVehicles.length > 0 ? (
+        commercialVehicles.map((category, index) => (
+          <View key={category.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
+            <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
+              <View>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {category.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {category.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAll(category.id, true)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.carsContainer}
+            >
+              {category.vehicles.map((vehicle) => (
+                <TouchableOpacity
+                  key={vehicle.id}
+                  onPress={() => handleCarPress(vehicle)}
+                  activeOpacity={1}
+                  style={styles.carCardWrapper}
+                >
+                  <Card style={styles.carCard}>
+                    <View style={styles.carImageContainer}>
+                      <Image 
+                        source={vehicle.image} 
+                        style={styles.carImage}
+                        resizeMode="cover"
+                      />
+                      {/* Like Icon */}
+                      <View style={styles.carActions}>
+                        <TouchableOpacity
+                          onPress={(e) => {
+                            e.stopPropagation();
+                            toggleLike(vehicle.id);
+                          }}
+                          style={styles.actionButton}
+                          activeOpacity={0.7}
+                        >
+                          <Ionicons
+                            name={likedCars.has(vehicle.id) ? "heart" : "heart-outline"}
+                            size={20}
+                            color={likedCars.has(vehicle.id) ? '#FF3B30' : theme.colors.textPrimary}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <View style={styles.carInfo}>
+                      <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+                        {vehicle.name}
+                      </Text>
+                      <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
+                        {vehicle.price}
+                      </Text>
+                      {/* Vehicle Details Icons */}
+                      <View style={styles.carDetails}>
+                        <View style={styles.carDetailItem}>
+                          <Ionicons name="people-outline" size={16} color={theme.colors.hint} />
+                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
+                            {vehicle.seats}
+                          </Text>
+                        </View>
+                        <View style={styles.carDetailItem}>
+                          <Ionicons name="car-outline" size={16} color={theme.colors.hint} />
+                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
+                            {vehicle.fuel}
+                          </Text>
+                        </View>
+                        <View style={styles.carDetailItem}>
+                          <Ionicons name="color-palette-outline" size={16} color={theme.colors.hint} />
+                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
+                            {vehicle.color}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </Card>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        ))
+      ) : null}
+
+      {/* Search Results / No Results */}
+      {searchQuery.trim() ? (
         <View style={styles.noResultsContainer}>
           <Ionicons name="search-outline" size={64} color={theme.colors.hint} />
           <Text style={[styles.noResultsText, { color: theme.colors.textSecondary }]}>
-            No cars found matching "{searchQuery}"
+            No vehicles found matching "{searchQuery}"
           </Text>
           <Text style={[styles.noResultsSubtext, { color: theme.colors.hint }]}>
             Try searching with a different term

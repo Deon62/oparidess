@@ -10,6 +10,7 @@ import RenterHomeScreen from '../../screens/renter/RenterHomeScreen';
 import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
+import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
@@ -82,6 +83,14 @@ const HomeStack = () => {
         component={BookingScreen}
         options={{ 
           title: 'Book Car',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="BookingConfirmation" 
+        component={BookingConfirmationScreen}
+        options={{ 
+          title: 'Review Booking',
           headerShown: true 
         }}
       />

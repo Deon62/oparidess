@@ -20,6 +20,28 @@ const BookingScreen = () => {
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
   const [isSelectingPickup, setIsSelectingPickup] = useState(true);
   const [payOnSite, setPayOnSite] = useState(false);
+  
+  // Time selection
+  const [pickupTime, setPickupTime] = useState('10:00');
+  const [dropoffTime, setDropoffTime] = useState('10:00');
+  const [showPickupTimePicker, setShowPickupTimePicker] = useState(false);
+  const [showDropoffTimePicker, setShowDropoffTimePicker] = useState(false);
+  
+  // Location selection
+  const [pickupLocation, setPickupLocation] = useState('Nairobi CBD, Kenya');
+  const [dropoffLocation, setDropoffLocation] = useState('Nairobi CBD, Kenya');
+  const [sameDropoffLocation, setSameDropoffLocation] = useState(true);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [isSelectingPickupLocation, setIsSelectingPickupLocation] = useState(true);
+  
+  // Available locations (mock data - in real app, fetch from backend)
+  const availableLocations = [
+    { id: 1, name: 'Nairobi CBD, Kenya', address: 'Moi Avenue, Nairobi CBD', coordinates: { latitude: -1.2921, longitude: 36.8219 } },
+    { id: 2, name: 'Westlands, Nairobi', address: 'Westlands Road, Nairobi', coordinates: { latitude: -1.2634, longitude: 36.8065 } },
+    { id: 3, name: 'Karen, Nairobi', address: 'Karen Road, Nairobi', coordinates: { latitude: -1.3197, longitude: 36.7074 } },
+    { id: 4, name: 'Kilimani, Nairobi', address: 'Argwings Kodhek Road, Nairobi', coordinates: { latitude: -1.2856, longitude: 36.7819 } },
+    { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi', coordinates: { latitude: -1.3192, longitude: 36.9278 } },
+  ];
 
   // Hide bottom tab bar on this screen
   useLayoutEffect(() => {
@@ -110,7 +132,7 @@ const BookingScreen = () => {
     }
   };
 
-  const handlePay = () => {
+  const handleContinue = () => {
     if (!pickupDate || !dropoffDate) {
       Alert.alert('Error', 'Please select both pickup and dropoff dates');
       return;
@@ -122,21 +144,34 @@ const BookingScreen = () => {
       );
       return;
     }
+    if (!pickupLocation) {
+      Alert.alert('Error', 'Please select a pickup location');
+      return;
+    }
+    if (!sameDropoffLocation && !dropoffLocation) {
+      Alert.alert('Error', 'Please select a dropoff location');
+      return;
+    }
     
-    const paymentAmount = payOnSite ? bookingFee : totalPrice;
-    
-    navigation.navigate('Payment', {
-      totalPrice: paymentAmount,
+    // Navigate to confirmation screen
+    navigation.navigate('BookingConfirmation', {
       bookingDetails: {
         car,
         pickupDate,
         dropoffDate,
+        pickupTime,
+        dropoffTime,
+        pickupLocation: pickupLocation,
+        dropoffLocation: sameDropoffLocation ? pickupLocation : dropoffLocation,
         days,
         specialRequirements,
         insuranceEnabled,
         payOnSite,
         bookingFee: payOnSite ? bookingFee : 0,
         totalRentalPrice: totalPrice,
+        basePrice,
+        insuranceCost,
+        rentalInfo,
       },
     });
   };
@@ -362,6 +397,103 @@ const BookingScreen = () => {
           )}
         </View>
 
+        {/* Time Selection */}
+        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Select Times
+          </Text>
+
+          <View style={styles.dateRow}>
+            <View style={styles.dateInputContainer}>
+              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
+                Pickup Time
+              </Text>
+              <TouchableOpacity
+                style={[styles.dateButton, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowPickupTimePicker(true)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+                <Text style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}>
+                  {pickupTime}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.dateInputContainer}>
+              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
+                Dropoff Time
+              </Text>
+              <TouchableOpacity
+                style={[styles.dateButton, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowDropoffTimePicker(true)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+                <Text style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}>
+                  {dropoffTime}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* Location Selection */}
+        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Pickup Location
+          </Text>
+          <TouchableOpacity
+            style={[styles.locationButton, { borderColor: theme.colors.hint }]}
+            onPress={() => {
+              setIsSelectingPickupLocation(true);
+              setShowLocationPicker(true);
+            }}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
+            <Text style={[styles.locationButtonText, { color: theme.colors.textPrimary }]}>
+              {pickupLocation || 'Select pickup location'}
+            </Text>
+            <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.hint} />
+          </TouchableOpacity>
+        </View>
+
+        {/* Dropoff Location */}
+        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.dropoffLocationHeader}>
+            <View style={styles.dropoffLocationHeaderLeft}>
+              <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
+              <View style={styles.dropoffLocationTitleContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                  Dropoff Location
+                </Text>
+                <Text style={[styles.dropoffLocationSubtitle, { color: theme.colors.textSecondary }]}>
+                  {sameDropoffLocation ? 'Same as pickup location' : 'Different location'}
+                </Text>
+              </View>
+            </View>
+            <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
+          </View>
+
+          {!sameDropoffLocation && (
+            <TouchableOpacity
+              style={[styles.locationButton, { borderColor: theme.colors.hint, marginTop: 16 }]}
+              onPress={() => {
+                setIsSelectingPickupLocation(false);
+                setShowLocationPicker(true);
+              }}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
+              <Text style={[styles.locationButtonText, { color: theme.colors.textPrimary }]}>
+                {dropoffLocation || 'Select dropoff location'}
+              </Text>
+              <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.hint} />
+            </TouchableOpacity>
+          )}
+        </View>
+
         {/* Special Requirements */}
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -513,11 +645,11 @@ const BookingScreen = () => {
           </Text>
         </View>
         <Button
-          title={payOnSite ? 'Pay Booking Fee' : 'Pay Now'}
-          onPress={handlePay}
+          title="Continue to Review"
+          onPress={handleContinue}
           variant="primary"
           style={styles.payButton}
-          disabled={!pickupDate || !dropoffDate || days < rentalInfo.minimumDays}
+          disabled={!pickupDate || !dropoffDate || days < rentalInfo.minimumDays || !pickupLocation}
         />
       </View>
 
@@ -533,7 +665,203 @@ const BookingScreen = () => {
         selectedDate={dropoffDate}
         minDate={pickupDate}
       />
+
+      {/* Time Pickers */}
+      <TimePicker
+        visible={showPickupTimePicker}
+        onClose={() => setShowPickupTimePicker(false)}
+        selectedTime={pickupTime}
+        onTimeSelect={setPickupTime}
+        title="Select Pickup Time"
+      />
+      <TimePicker
+        visible={showDropoffTimePicker}
+        onClose={() => setShowDropoffTimePicker(false)}
+        selectedTime={dropoffTime}
+        onTimeSelect={setDropoffTime}
+        title="Select Dropoff Time"
+      />
+
+      {/* Location Picker */}
+      <LocationPicker
+        visible={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        locations={availableLocations}
+        selectedLocation={isSelectingPickupLocation ? pickupLocation : dropoffLocation}
+        onLocationSelect={(location) => {
+          if (isSelectingPickupLocation) {
+            setPickupLocation(location.name);
+            if (sameDropoffLocation) {
+              setDropoffLocation(location.name);
+            }
+          } else {
+            setDropoffLocation(location.name);
+          }
+          setShowLocationPicker(false);
+        }}
+        title={isSelectingPickupLocation ? 'Select Pickup Location' : 'Select Dropoff Location'}
+      />
     </View>
+  );
+};
+
+// Time Picker Component
+const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => {
+  const theme = useTheme();
+  const [hours, setHours] = useState(parseInt(selectedTime.split(':')[0]) || 10);
+  const [minutes, setMinutes] = useState(parseInt(selectedTime.split(':')[1]) || 0);
+
+  React.useEffect(() => {
+    if (selectedTime) {
+      const parts = selectedTime.split(':');
+      setHours(parseInt(parts[0]) || 10);
+      setMinutes(parseInt(parts[1]) || 0);
+    }
+  }, [selectedTime]);
+
+  const handleConfirm = () => {
+    const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    onTimeSelect(timeString);
+    onClose();
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={[styles.timePickerModal, { backgroundColor: theme.colors.white }]}>
+          <Text style={[styles.timePickerTitle, { color: theme.colors.textPrimary }]}>
+            {title}
+          </Text>
+          
+          <View style={styles.timePickerContainer}>
+            <View style={styles.timePickerColumn}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {Array.from({ length: 24 }, (_, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    style={[
+                      styles.timePickerItem,
+                      hours === i && { backgroundColor: theme.colors.primary + '20' },
+                    ]}
+                    onPress={() => setHours(i)}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.timePickerItemText,
+                        { color: hours === i ? theme.colors.primary : theme.colors.textPrimary },
+                        hours === i && { fontFamily: 'Nunito_700Bold' },
+                      ]}
+                    >
+                      {String(i).padStart(2, '0')}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+            <Text style={[styles.timePickerSeparator, { color: theme.colors.textPrimary }]}>:</Text>
+            <View style={styles.timePickerColumn}>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {[0, 15, 30, 45].map((min) => (
+                  <TouchableOpacity
+                    key={min}
+                    style={[
+                      styles.timePickerItem,
+                      minutes === min && { backgroundColor: theme.colors.primary + '20' },
+                    ]}
+                    onPress={() => setMinutes(min)}
+                    activeOpacity={0.7}
+                  >
+                    <Text
+                      style={[
+                        styles.timePickerItemText,
+                        { color: minutes === min ? theme.colors.primary : theme.colors.textPrimary },
+                        minutes === min && { fontFamily: 'Nunito_700Bold' },
+                      ]}
+                    >
+                      {String(min).padStart(2, '0')}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+
+          <View style={styles.timePickerButtons}>
+            <TouchableOpacity
+              style={[styles.timePickerButton, styles.timePickerButtonSecondary, { borderColor: theme.colors.hint }]}
+              onPress={onClose}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.timePickerButtonText, { color: theme.colors.textSecondary }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.timePickerButton, styles.timePickerButtonPrimary, { backgroundColor: theme.colors.primary }]}
+              onPress={handleConfirm}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.timePickerButtonText, { color: theme.colors.white }]}>
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Location Picker Component
+const LocationPicker = ({ visible, onClose, locations, selectedLocation, onLocationSelect, title }) => {
+  const theme = useTheme();
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={[styles.locationPickerModal, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.locationPickerHeader}>
+            <Text style={[styles.locationPickerTitle, { color: theme.colors.textPrimary }]}>
+              {title}
+            </Text>
+            <TouchableOpacity onPress={onClose} activeOpacity={0.7}>
+              <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+          </View>
+          
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {locations.map((location) => (
+              <TouchableOpacity
+                key={location.id}
+                style={[
+                  styles.locationItem,
+                  { borderColor: selectedLocation === location.name ? theme.colors.primary : '#E0E0E0' },
+                  selectedLocation === location.name && { backgroundColor: theme.colors.primary + '10' },
+                ]}
+                onPress={() => onLocationSelect(location)}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.locationIcon, { backgroundColor: theme.colors.primary + '20' }]}>
+                  <Ionicons name="location" size={20} color={theme.colors.primary} />
+                </View>
+                <View style={styles.locationItemContent}>
+                  <Text style={[styles.locationItemName, { color: theme.colors.textPrimary }]}>
+                    {location.name}
+                  </Text>
+                  <Text style={[styles.locationItemAddress, { color: theme.colors.textSecondary }]}>
+                    {location.address}
+                  </Text>
+                </View>
+                {selectedLocation === location.name && (
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
@@ -880,6 +1208,151 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     flexShrink: 0,
     textAlign: 'right',
+  },
+  // Location Selection Styles
+  locationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 12,
+  },
+  locationButtonText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+  },
+  dropoffLocationHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dropoffLocationHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  dropoffLocationTitleContainer: {
+    flex: 1,
+  },
+  dropoffLocationSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 2,
+  },
+  // Time Picker Modal Styles
+  timePickerModal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    maxHeight: '70%',
+  },
+  timePickerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  timePickerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+    marginBottom: 24,
+  },
+  timePickerColumn: {
+    flex: 1,
+    maxHeight: 200,
+  },
+  timePickerItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginVertical: 2,
+    alignItems: 'center',
+  },
+  timePickerItemText: {
+    fontSize: 18,
+    fontFamily: 'Nunito_400Regular',
+  },
+  timePickerSeparator: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginHorizontal: 8,
+  },
+  timePickerButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  timePickerButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  timePickerButtonSecondary: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  timePickerButtonPrimary: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  timePickerButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Location Picker Modal Styles
+  locationPickerModal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    maxHeight: '80%',
+  },
+  locationPickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  locationPickerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    flex: 1,
+  },
+  locationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    gap: 12,
+  },
+  locationIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  locationItemContent: {
+    flex: 1,
+  },
+  locationItemName: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  locationItemAddress: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
   },
 });
 

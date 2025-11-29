@@ -29,6 +29,7 @@ import PrivacyScreen from '../../screens/shared/PrivacyScreen';
 import AboutScreen from '../../screens/shared/AboutScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
+import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -137,6 +138,14 @@ const HomeStack = () => {
         component={AddPaymentScreen}
         options={{ 
           title: 'Add Payment Method',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ReferFriends" 
+        component={ReferFriendsScreen}
+        options={{ 
+          title: 'Refer Friends',
           headerShown: true 
         }}
       />

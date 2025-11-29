@@ -48,12 +48,9 @@ const RenterProfileScreen = () => {
   };
 
   const handleReferFriends = () => {
-    // TODO: Navigate to refer friends screen
-    Alert.alert(
-      'Refer to Friends',
-      'Refer friends feature will be available soon.',
-      [{ text: 'OK' }]
-    );
+    navigation.navigate('HomeTab', {
+      screen: 'ReferFriends',
+    });
   };
 
   const handleLogout = () => {

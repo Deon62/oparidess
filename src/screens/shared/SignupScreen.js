@@ -14,6 +14,7 @@ const SignupScreen = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    referralCode: '',
   });
   const [agreeToTerms, setAgreeToTerms] = React.useState(false);
 
@@ -78,6 +79,13 @@ const SignupScreen = () => {
           value={formData.confirmPassword}
           onChangeText={(value) => updateField('confirmPassword', value)}
           secureTextEntry
+        />
+        <Input
+          label="Referral Code (Optional)"
+          placeholder="Enter referral code if you have one"
+          value={formData.referralCode}
+          onChangeText={(value) => updateField('referralCode', value)}
+          autoCapitalize="characters"
         />
 
         {/* Terms Toggle */}

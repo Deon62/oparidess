@@ -177,7 +177,6 @@ const OwnerCarsScreen = () => {
       {/* Summary Stats */}
       <View style={styles.summaryContainer}>
         <Card style={[styles.summaryCard, { backgroundColor: '#FF6B35' }]}>
-          <Ionicons name="car-outline" size={24} color={theme.colors.white} />
           <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.length}
           </Text>
@@ -186,7 +185,6 @@ const OwnerCarsScreen = () => {
           </Text>
         </Card>
         <Card style={[styles.summaryCard, { backgroundColor: '#FFD93D' }]}>
-          <Ionicons name="checkmark-circle-outline" size={24} color={theme.colors.white} />
           <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.filter((c) => c.status === 'available').length}
           </Text>
@@ -195,7 +193,6 @@ const OwnerCarsScreen = () => {
           </Text>
         </Card>
         <Card style={[styles.summaryCard, { backgroundColor: '#0A1D37' }]}>
-          <Ionicons name="time-outline" size={24} color={theme.colors.white} />
           <Text style={[styles.summaryValue, { color: theme.colors.white }]}>
             {myCars.filter((c) => c.status === 'rented').length}
           </Text>
@@ -430,7 +427,7 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 24,
     fontFamily: 'Nunito_700Bold',
-    marginTop: 8,
+    marginTop: 0,
     marginBottom: 4,
   },
   summaryLabel: {

@@ -136,21 +136,19 @@ const OwnerHomeScreen = () => {
 
       {/* Stats Cards */}
       <View style={styles.statsContainer}>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="cash-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>KSh 245,000</Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>This Month</Text>
-        </View>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="car-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>3</Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Active</Text>
-        </View>
-        <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-          <Ionicons name="star" size={24} color="#FFA500" />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>4.9</Text>
-          <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>Rating</Text>
-        </View>
+        <Card style={[styles.statCard, { backgroundColor: '#FF6B35' }]}>
+          <Text style={[styles.statCurrency, { color: theme.colors.white }]}>KSh</Text>
+          <Text style={[styles.statValue, { color: theme.colors.white }]} numberOfLines={1} ellipsizeMode="tail">245,000</Text>
+          <Text style={[styles.statLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>This Month</Text>
+        </Card>
+        <Card style={[styles.statCard, { backgroundColor: '#FFD93D' }]}>
+          <Text style={[styles.statValue, { color: theme.colors.white }]}>3</Text>
+          <Text style={[styles.statLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>Active</Text>
+        </Card>
+        <Card style={[styles.statCard, { backgroundColor: '#0A1D37' }]}>
+          <Text style={[styles.statValue, { color: theme.colors.white }]}>4.9</Text>
+          <Text style={[styles.statLabel, { color: 'rgba(255, 255, 255, 0.9)' }]}>Rating</Text>
+        </Card>
       </View>
 
       {/* Active Bookings */}
@@ -405,17 +403,38 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    gap: 8,
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 4,
+    borderRadius: 16,
+    aspectRatio: 1, // Make cards square
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  statCurrency: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 0,
+    marginBottom: 4,
+    textAlign: 'center',
   },
   statValue: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
+    marginTop: 0,
+    marginBottom: 4,
+    textAlign: 'center',
   },
   statLabel: {
     fontSize: 12,
     fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
   },
   section: {
     paddingHorizontal: 24,

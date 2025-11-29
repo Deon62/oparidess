@@ -2,20 +2,22 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 
-const Toggle = ({ label, value, onValueChange, style }) => {
+const Toggle = ({ label, value, onValueChange, style, disabled = false }) => {
   const theme = useTheme();
 
   return (
     <TouchableOpacity
-      style={[styles.container, style]}
-      onPress={() => onValueChange(!value)}
+      style={[styles.container, style, disabled && styles.disabled]}
+      onPress={() => !disabled && onValueChange(!value)}
       activeOpacity={0.7}
+      disabled={disabled}
     >
       <View
         style={[
           styles.toggle,
           {
             backgroundColor: value ? theme.colors.primary : '#E0E0E0',
+            opacity: disabled ? 0.5 : 1,
           },
         ]}
       >
@@ -68,6 +70,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     flex: 1,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
 

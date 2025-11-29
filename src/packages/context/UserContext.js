@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { saveLastUser, clearLastUser, getBiometricPreference } from '../utils/biometrics';
 
 const UserContext = createContext();
 
@@ -22,15 +23,19 @@ export const UserProvider = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const login = (userData, type) => {
+  const login = async (userData, type) => {
     setUser(userData);
     setUserType(type);
+    // Save user data for biometric login
+    await saveLastUser(userData, type);
     // TODO: Store authentication token
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
     setUserType(null);
+    // Clear last user data
+    await clearLastUser();
     // TODO: Clear stored authentication token
   };
 

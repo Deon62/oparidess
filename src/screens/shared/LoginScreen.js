@@ -1,10 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button, Input } from '../../packages/components';
+import {
+  isBiometricAvailable,
+  authenticateWithBiometrics,
+  getBiometricPreference,
+  getLastUser,
+} from '../../packages/utils/biometrics';
 
 const LoginScreen = () => {
   const theme = useTheme();
@@ -12,9 +18,13 @@ const LoginScreen = () => {
   const route = useRoute();
   const { login } = useUser();
   const { userType: routeUserType } = route.params || {};
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [selectedUserType, setSelectedUserType] = React.useState(routeUserType || 'renter');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [selectedUserType, setSelectedUserType] = useState(routeUserType || 'renter');
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [biometricEnabled, setBiometricEnabled] = useState(false);
+  const [biometricType, setBiometricType] = useState('Biometric');
+  const [lastUser, setLastUser] = useState(null);
 
   const handleLogin = () => {
     // Auto-login with entered details (even if incorrect)
@@ -42,6 +52,49 @@ const LoginScreen = () => {
 
   const handleForgotPassword = () => {
     navigation.navigate('ResetPassword');
+  };
+
+  // Check biometric availability and preference on mount
+  useEffect(() => {
+    const checkBiometrics = async () => {
+      const availability = await isBiometricAvailable();
+      if (availability.available) {
+        setBiometricAvailable(true);
+        setBiometricType(availability.type);
+        const enabled = await getBiometricPreference();
+        setBiometricEnabled(enabled);
+        
+        // Get last user if biometric is enabled
+        if (enabled) {
+          const lastUserData = await getLastUser();
+          if (lastUserData) {
+            setLastUser(lastUserData);
+          }
+        }
+      }
+    };
+    checkBiometrics();
+  }, []);
+
+  const handleBiometricLogin = async () => {
+    if (!biometricAvailable || !biometricEnabled) {
+      Alert.alert('Biometric Login', 'Biometric authentication is not available or enabled.');
+      return;
+    }
+
+    if (!lastUser) {
+      Alert.alert('Biometric Login', 'No previous login found. Please login with email and password first.');
+      return;
+    }
+
+    const result = await authenticateWithBiometrics();
+    
+    if (result.success) {
+      // Login with last user data
+      await login(lastUser.userData, lastUser.userType);
+    } else if (result.error && result.error !== 'UserCancel') {
+      Alert.alert('Authentication Failed', 'Biometric authentication failed. Please try again or use password.');
+    }
   };
 
   return (
@@ -132,6 +185,34 @@ const LoginScreen = () => {
             Forgot Password?
           </Text>
         </TouchableOpacity>
+
+        {/* Biometric Login Button */}
+        {biometricAvailable && biometricEnabled && lastUser && (
+          <TouchableOpacity
+            style={[styles.biometricButton, { borderColor: theme.colors.primary }]}
+            onPress={handleBiometricLogin}
+            activeOpacity={0.7}
+          >
+            <Ionicons 
+              name={biometricType === 'Face ID' ? 'face-recognition-outline' : 'finger-print-outline'} 
+              size={24} 
+              color={theme.colors.primary} 
+              style={styles.biometricIcon}
+            />
+            <Text style={[styles.biometricButtonText, { color: theme.colors.primary }]}>
+              Login with {biometricType}
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Divider before regular login if biometric is shown */}
+        {biometricAvailable && biometricEnabled && lastUser && (
+          <View style={styles.dividerContainer}>
+            <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
+            <Text style={[styles.dividerText, { color: theme.colors.hint }]}>OR</Text>
+            <View style={[styles.dividerLine, { backgroundColor: theme.colors.hint }]} />
+          </View>
+        )}
 
         {/* Login Button */}
         <Button
@@ -289,6 +370,25 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Nunito_600SemiBold',
     textAlign: 'center',
+  },
+  biometricButton: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48,
+    marginBottom: 16,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+  },
+  biometricIcon: {
+    marginRight: 12,
+  },
+  biometricButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

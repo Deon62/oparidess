@@ -1,10 +1,16 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Toggle } from '../../packages/components';
+import {
+  isBiometricAvailable,
+  getBiometricPreference,
+  setBiometricPreference,
+  authenticateWithBiometrics,
+} from '../../packages/utils/biometrics';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -14,11 +20,58 @@ const OwnerSettingsScreen = () => {
   const navigation = useNavigation();
   const { logout } = useUser();
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
+  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [biometricType, setBiometricType] = useState('Biometric');
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Check biometric availability and load preference
+  useEffect(() => {
+    const checkBiometrics = async () => {
+      const availability = await isBiometricAvailable();
+      if (availability.available) {
+        setBiometricAvailable(true);
+        setBiometricType(availability.type);
+        const enabled = await getBiometricPreference();
+        setBiometricsEnabled(enabled);
+      } else {
+        setBiometricAvailable(false);
+        setBiometricsEnabled(false);
+      }
+    };
+    checkBiometrics();
+  }, []);
+
+  // Handle biometric toggle
+  const handleBiometricToggle = async (value) => {
+    if (value) {
+      // User wants to enable biometrics - authenticate first
+      if (!biometricAvailable) {
+        Alert.alert(
+          'Biometric Not Available',
+          'Biometric authentication is not available on this device. Please ensure you have Face ID, Touch ID, or fingerprint set up.'
+        );
+        return;
+      }
+
+      // Authenticate to enable biometrics
+      const result = await authenticateWithBiometrics();
+      if (result.success) {
+        await setBiometricPreference(true);
+        setBiometricsEnabled(true);
+        Alert.alert('Biometric Login Enabled', `You can now use ${biometricType} to login.`);
+      } else if (result.error && result.error !== 'UserCancel') {
+        Alert.alert('Authentication Failed', 'Failed to enable biometric login. Please try again.');
+      }
+    } else {
+      // User wants to disable biometrics
+      await setBiometricPreference(false);
+      setBiometricsEnabled(false);
+    }
+  };
 
   // Set header with notifications and profile picture
   useLayoutEffect(() => {
@@ -153,14 +206,15 @@ const OwnerSettingsScreen = () => {
           onPress={handleAccountEdit}
         />
         <SettingItem
-          icon="finger-print-outline"
-          title="Biometrics Login"
+          icon={biometricType === 'Face ID' ? 'face-recognition-outline' : 'finger-print-outline'}
+          title={`${biometricType} Login`}
           onPress={null}
           showArrow={false}
           rightComponent={
             <Toggle
               value={biometricsEnabled}
-              onValueChange={setBiometricsEnabled}
+              onValueChange={handleBiometricToggle}
+              disabled={!biometricAvailable}
             />
           }
         />

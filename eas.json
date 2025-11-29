@@ -29,8 +29,7 @@
       },
       "env": {
         "NODE_ENV": "production"
-      },
-      "image": "latest"
+      }
     }
   },
   "submit": {

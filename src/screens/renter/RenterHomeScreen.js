@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
+// Location import - will use expo-location if available
+let Location = null;
+try {
+  Location = require('expo-location');
+} catch (e) {
+  // expo-location not installed, will show alert
+}
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -22,6 +29,63 @@ const RenterHomeScreen = () => {
   const [likedCars, setLikedCars] = useState(new Set());
   const [showNoFeesMessage, setShowNoFeesMessage] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
+  
+  // City and location state
+  const [selectedCity, setSelectedCity] = useState('Nairobi');
+  const [showCityPicker, setShowCityPicker] = useState(false);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  
+  // All 47 Kenyan Counties
+  const counties = [
+    'Baringo',
+    'Bomet',
+    'Bungoma',
+    'Busia',
+    'Elgeyo-Marakwet',
+    'Embu',
+    'Garissa',
+    'Homa Bay',
+    'Isiolo',
+    'Kajiado',
+    'Kakamega',
+    'Kericho',
+    'Kiambu',
+    'Kilifi',
+    'Kirinyaga',
+    'Kisii',
+    'Kisumu',
+    'Kitui',
+    'Kwale',
+    'Laikipia',
+    'Lamu',
+    'Machakos',
+    'Makueni',
+    'Mandera',
+    'Marsabit',
+    'Meru',
+    'Migori',
+    'Mombasa',
+    'Murang\'a',
+    'Nairobi',
+    'Nakuru',
+    'Nandi',
+    'Narok',
+    'Nyamira',
+    'Nyandarua',
+    'Nyeri',
+    'Samburu',
+    'Siaya',
+    'Taita-Taveta',
+    'Tana River',
+    'Tharaka-Nithi',
+    'Trans Nzoia',
+    'Turkana',
+    'Uasin Gishu',
+    'Vihiga',
+    'Wajir',
+    'West Pokot',
+  ];
 
   // Map car images to IDs
   const carImages = {
@@ -111,6 +175,52 @@ const RenterHomeScreen = () => {
       })).filter(carClass => carClass.cars.length > 0)
     : carClasses;
 
+  // Get current location
+  const getCurrentLocation = async () => {
+    if (!Location) {
+      Alert.alert(
+        'Location Service Unavailable',
+        'Location services require expo-location package. Please install it using: npx expo install expo-location',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    setIsGettingLocation(true);
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission Denied',
+          'Location permission is required to use your current location. Please enable it in settings.',
+          [{ text: 'OK' }]
+        );
+        setIsGettingLocation(false);
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      
+      // Reverse geocode to get city name
+      const geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+      if (geocode && geocode.length > 0) {
+        const city = geocode[0].city || geocode[0].subAdministrativeArea || 'Current Location';
+        setCurrentLocation({ latitude, longitude, city });
+        setSelectedCity(city);
+        Alert.alert('Location Updated', `Using location: ${city}`);
+      } else {
+        setCurrentLocation({ latitude, longitude, city: 'Current Location' });
+        setSelectedCity('Current Location');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to get your location. Please try again.');
+      console.error('Location error:', error);
+    } finally {
+      setIsGettingLocation(false);
+    }
+  };
+
   // Auto-hide banner after a few seconds
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -191,6 +301,51 @@ const RenterHomeScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Search Options Bar */}
+      <View style={[styles.searchOptionsBar, { backgroundColor: theme.colors.white }]}>
+        <TouchableOpacity
+          style={[styles.citySelector, { 
+            borderColor: '#4CAF50',
+            backgroundColor: '#4CAF50' + '15',
+          }]}
+          onPress={() => setShowCityPicker(true)}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="location-outline" size={20} color="#4CAF50" />
+          <Text 
+            style={[styles.citySelectorText, { color: '#4CAF50' }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {selectedCity}
+          </Text>
+          <Ionicons name="chevron-down-outline" size={18} color="#4CAF50" />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={[styles.locationButton, { 
+            backgroundColor: '#FF9800' + '15',
+            borderColor: '#FF9800',
+            borderWidth: 1,
+          }]}
+          onPress={getCurrentLocation}
+          disabled={isGettingLocation}
+          activeOpacity={0.7}
+        >
+          {isGettingLocation ? (
+            <Ionicons name="hourglass-outline" size={18} color="#FF9800" />
+          ) : (
+            <Ionicons name="locate-outline" size={18} color="#FF9800" />
+          )}
+          <Text 
+            style={[styles.locationButtonText, { color: '#FF9800' }]}
+            numberOfLines={1}
+          >
+            {isGettingLocation ? 'Getting...' : 'Current Location'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -200,7 +355,7 @@ const RenterHomeScreen = () => {
       {searchQuery.trim() && (
         <View style={styles.searchResultsHeader}>
           <Text style={[styles.searchResultsText, { color: theme.colors.textPrimary }]}>
-            {filteredCars?.length || 0} {filteredCars?.length === 1 ? 'car' : 'cars'} found for "{searchQuery}"
+            {filteredCars?.length || 0} {filteredCars?.length === 1 ? 'car' : 'cars'} found for "{searchQuery}" in {selectedCity}
           </Text>
         </View>
       )}
@@ -331,6 +486,73 @@ const RenterHomeScreen = () => {
           </View>
         </Animated.View>
       )}
+
+      {/* County Picker Modal */}
+      <Modal
+        visible={showCityPicker}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowCityPicker(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.cityPickerModal, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.cityPickerHeader}>
+              <Text style={[styles.cityPickerTitle, { color: theme.colors.textPrimary }]}>
+                Select County
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowCityPicker(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {counties.map((county) => (
+                <TouchableOpacity
+                  key={county}
+                  style={[
+                    styles.cityItem,
+                    {
+                      backgroundColor: selectedCity === county ? '#4CAF50' + '15' : 'transparent',
+                      borderColor: selectedCity === county ? '#4CAF50' : '#E0E0E0',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedCity(county);
+                    setShowCityPicker(false);
+                    if (county !== 'Current Location') {
+                      setCurrentLocation(null);
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name="location"
+                    size={20}
+                    color={selectedCity === county ? '#4CAF50' : theme.colors.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.cityItemText,
+                      {
+                        color: selectedCity === county ? '#4CAF50' : theme.colors.textPrimary,
+                        fontFamily: selectedCity === county ? 'Nunito_600SemiBold' : 'Nunito_400Regular',
+                      },
+                    ]}
+                  >
+                    {county}
+                  </Text>
+                  {selectedCity === county && (
+                    <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -566,6 +788,83 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginTop: 8,
     textAlign: 'center',
+  },
+  searchOptionsBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    gap: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  citySelector: {
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 2,
+    gap: 8,
+    minWidth: 0,
+  },
+  citySelectorText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    minWidth: 0,
+    flexShrink: 1,
+  },
+  locationButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 12,
+    gap: 6,
+    flexShrink: 0,
+  },
+  locationButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  cityPickerModal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    maxHeight: '70%',
+  },
+  cityPickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  cityPickerTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+  },
+  cityItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    marginBottom: 12,
+    gap: 12,
+  },
+  cityItemText: {
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
   },
 });
 

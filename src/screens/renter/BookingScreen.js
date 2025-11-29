@@ -61,6 +61,7 @@ const BookingScreen = () => {
   // Commission rate (15%)
   const COMMISSION_RATE = 0.15;
   const bookingFee = payOnSite ? totalPrice * COMMISSION_RATE : 0;
+  const balanceToPayOnSite = payOnSite ? totalPrice - bookingFee : 0;
 
   // Calendar functions
   const getDaysInMonth = (month, year) => {
@@ -409,6 +410,22 @@ const BookingScreen = () => {
                 </Text>
                 <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
                   {formatCurrency(bookingFee)}
+                </Text>
+              </View>
+              <View style={[styles.balanceOnSiteRow, { backgroundColor: '#FF9800' + '15' }]}>
+                <View style={styles.balanceOnSiteLeft}>
+                  <Ionicons name="cash-outline" size={18} color="#FF9800" />
+                  <View style={styles.balanceOnSiteLabelContainer}>
+                    <Text style={[styles.balanceOnSiteLabel, { color: theme.colors.textPrimary }]}>
+                      Balance to Pay on Site
+                    </Text>
+                    <Text style={[styles.balanceOnSiteSubtext, { color: theme.colors.textSecondary }]}>
+                      Pay directly to owner at pickup
+                    </Text>
+                  </View>
+                </View>
+                <Text style={[styles.balanceOnSiteValue, { color: '#FF9800' }]}>
+                  {formatCurrency(balanceToPayOnSite)}
                 </Text>
               </View>
             </View>
@@ -825,6 +842,41 @@ const styles = StyleSheet.create({
   },
   payNowValue: {
     fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    flexShrink: 0,
+    textAlign: 'right',
+  },
+  balanceOnSiteRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 12,
+    padding: 12,
+    borderRadius: 8,
+    width: '100%',
+  },
+  balanceOnSiteLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    flexShrink: 1,
+    gap: 10,
+    marginRight: 12,
+  },
+  balanceOnSiteLabelContainer: {
+    flex: 1,
+  },
+  balanceOnSiteLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 2,
+  },
+  balanceOnSiteSubtext: {
+    fontSize: 11,
+    fontFamily: 'Nunito_400Regular',
+  },
+  balanceOnSiteValue: {
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
     flexShrink: 0,
     textAlign: 'right',

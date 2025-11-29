@@ -22,6 +22,7 @@ const SettingsScreen = () => {
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricType, setBiometricType] = useState('Biometric');
+  const [showBiometricSuccessModal, setShowBiometricSuccessModal] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -62,7 +63,7 @@ const SettingsScreen = () => {
       if (result.success) {
         await setBiometricPreference(true);
         setBiometricsEnabled(true);
-        Alert.alert('Biometric Login Enabled', `You can now use ${biometricType} to login.`);
+        setShowBiometricSuccessModal(true);
       } else if (result.error && result.error !== 'UserCancel') {
         Alert.alert('Authentication Failed', 'Failed to enable biometric login. Please try again.');
       }
@@ -205,7 +206,7 @@ const SettingsScreen = () => {
           onPress={handleAccountEdit}
         />
         <SettingItem
-          icon={biometricType === 'Face ID' ? 'face-recognition-outline' : 'finger-print-outline'}
+          icon={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}
           title={`${biometricType} Login`}
           onPress={null}
           showArrow={false}
@@ -374,6 +375,41 @@ const SettingsScreen = () => {
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Biometric Success Modal */}
+      <Modal
+        visible={showBiometricSuccessModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowBiometricSuccessModal(false)}
+      >
+        <View style={styles.biometricModalOverlay}>
+          <View style={[styles.biometricModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.biometricIconCircle, { backgroundColor: theme.colors.primary + '20' }]}>
+              <Ionicons 
+                name={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'} 
+                size={64} 
+                color={theme.colors.primary} 
+              />
+            </View>
+            <Text style={[styles.biometricModalTitle, { color: theme.colors.textPrimary }]}>
+              {biometricType} Login Enabled
+            </Text>
+            <Text style={[styles.biometricModalMessage, { color: theme.colors.textSecondary }]}>
+              You can now use {biometricType} to quickly login to your account. This will make your login process faster and more secure.
+            </Text>
+            <TouchableOpacity
+              style={[styles.biometricModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => setShowBiometricSuccessModal(false)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.biometricModalButtonText, { color: theme.colors.white }]}>
+                Got it
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -575,6 +611,60 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   logoutModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Biometric Success Modal Styles
+  biometricModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  biometricModalContent: {
+    width: '85%',
+    maxWidth: 400,
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  biometricIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  biometricModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  biometricModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  biometricModalButton: {
+    width: '100%',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  biometricModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },

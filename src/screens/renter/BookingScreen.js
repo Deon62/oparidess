@@ -154,11 +154,12 @@ const BookingScreen = () => {
     }
     
     // Navigate to confirmation screen
+    // Convert Date objects to ISO strings for navigation (React Navigation requires serializable values)
     navigation.navigate('BookingConfirmation', {
       bookingDetails: {
         car,
-        pickupDate,
-        dropoffDate,
+        pickupDate: pickupDate ? pickupDate.toISOString() : null,
+        dropoffDate: dropoffDate ? dropoffDate.toISOString() : null,
         pickupTime,
         dropoffTime,
         pickupLocation: pickupLocation,

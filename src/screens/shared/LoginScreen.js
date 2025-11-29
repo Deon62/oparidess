@@ -194,7 +194,7 @@ const LoginScreen = () => {
             activeOpacity={0.7}
           >
             <Ionicons 
-              name={biometricType === 'Face ID' ? 'face-recognition-outline' : 'finger-print-outline'} 
+              name={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'} 
               size={24} 
               color={theme.colors.primary} 
               style={styles.biometricIcon}

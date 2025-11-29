@@ -405,7 +405,7 @@ const BookingScreen = () => {
               </View>
               <View style={styles.bookingFeeRow}>
                 <Text style={[styles.bookingFeeLabel, { color: theme.colors.textSecondary }]}>
-                  Booking Fee (15% commission)
+                  Booking Fee
                 </Text>
                 <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
                   {formatCurrency(bookingFee)}
@@ -444,7 +444,7 @@ const BookingScreen = () => {
           {payOnSite && (
             <View style={styles.priceRow}>
               <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Booking Fee (15% commission)
+                Booking Fee
               </Text>
               <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
                 {formatCurrency(bookingFee)}
@@ -462,14 +462,22 @@ const BookingScreen = () => {
           </View>
 
           {payOnSite && (
-            <View style={[styles.priceRow, styles.priceRowTotal, { marginTop: 8 }]}>
-              <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
-                Amount to Pay Now
-              </Text>
-              <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-                {formatCurrency(bookingFee)}
-              </Text>
-            </View>
+            <>
+              <View style={styles.priceSummaryDivider} />
+              <View style={[styles.priceRow, styles.priceRowPayNow]}>
+                <View style={styles.payNowLabelContainer}>
+                  <Text style={[styles.payNowLabel, { color: theme.colors.textPrimary }]}>
+                    Amount to Pay Now
+                  </Text>
+                  <Text style={[styles.payNowSubtext, { color: theme.colors.textSecondary }]}>
+                    Booking fee only
+                  </Text>
+                </View>
+                <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
+                  {formatCurrency(bookingFee)}
+                </Text>
+              </View>
+            </>
           )}
         </View>
 
@@ -542,6 +550,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     padding: 20,
     borderRadius: 16,
+    overflow: 'hidden',
   },
   sectionTitle: {
     fontSize: 20,
@@ -602,28 +611,40 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+    width: '100%',
   },
   priceRowTotal: {
-    marginTop: 8,
+    marginTop: 12,
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#F0F0F0',
+    width: '100%',
   },
   priceLabel: {
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
+    flex: 1,
+    flexShrink: 1,
+    marginRight: 12,
   },
   priceValue: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+    flexShrink: 0,
+    textAlign: 'right',
   },
   priceLabelTotal: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
+    flex: 1,
+    flexShrink: 1,
+    marginRight: 12,
   },
   priceValueTotal: {
     fontSize: 24,
     fontFamily: 'Nunito_700Bold',
+    flexShrink: 0,
+    textAlign: 'right',
   },
   bottomBar: {
     flexDirection: 'row',
@@ -753,17 +774,60 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 12,
+    paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0, 0, 0, 0.1)',
+    width: '100%',
   },
   bookingFeeLabel: {
+    flex: 1,
+    flexShrink: 1,
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+    marginRight: 12,
   },
   bookingFeeValue: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
+    flexShrink: 0,
+    textAlign: 'right',
+  },
+  priceSummaryDivider: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginVertical: 16,
+  },
+  priceRowPayNow: {
+    marginTop: 8,
+    paddingTop: 16,
+    paddingBottom: 8,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  payNowLabelContainer: {
+    flex: 1,
+    flexShrink: 1,
+    marginRight: 12,
+  },
+  payNowLabel: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  payNowSubtext: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  payNowValue: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    flexShrink: 0,
+    textAlign: 'right',
   },
 });
 

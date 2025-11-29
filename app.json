@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "opa",
+    "name": "Oparides",
     "slug": "oparides",
     "version": "1.0.0",
     "sdkVersion": "54.0.0",
@@ -34,7 +34,8 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
-      "enableProguardInReleaseBuilds": true
+      "enableProguardInReleaseBuilds": true,
+      "enableShrinkResourcesInReleaseBuilds": true
     },
     "plugins": [
       [
@@ -43,9 +44,12 @@
           "android": {
             "enableProguardInReleaseBuilds": true,
             "enableR8": true,
+            "enableShrinkResources": true,
+            "enableSeparateBuildPerCPUArchitecture": false,
             "gradleProperties": {
               "android.enableProguardInReleaseBuilds": true,
-              "android.enableR8.fullMode": true
+              "android.enableR8.fullMode": true,
+              "android.enableResourceShrinking": true
             }
           }
         }

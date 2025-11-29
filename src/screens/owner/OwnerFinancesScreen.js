@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
+import { formatCurrency } from '../../packages/utils/currency';
 
 const OwnerFinancesScreen = () => {
   const theme = useTheme();
@@ -94,9 +95,6 @@ const OwnerFinancesScreen = () => {
     },
   ];
 
-  const formatCurrency = (amount) => {
-    return `$${Math.abs(amount).toFixed(2)}`;
-  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

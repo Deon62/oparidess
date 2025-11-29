@@ -21,7 +21,7 @@ const WishlistScreen = () => {
     {
       id: 1,
       name: 'Toyota Corolla',
-      price: '$45/day',
+      price: 'KSh 4,500/day',
       seats: 5,
       fuel: 'Petrol',
       color: 'White',
@@ -32,7 +32,7 @@ const WishlistScreen = () => {
     {
       id: 4,
       name: 'BMW 5 Series',
-      price: '$120/day',
+      price: 'KSh 12,000/day',
       seats: 5,
       fuel: 'Petrol',
       color: 'Black',
@@ -43,7 +43,7 @@ const WishlistScreen = () => {
     {
       id: 7,
       name: 'Tesla Model S',
-      price: '$200/day',
+      price: 'KSh 20,000/day',
       seats: 5,
       fuel: 'Electric',
       color: 'Red',

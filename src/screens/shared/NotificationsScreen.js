@@ -23,7 +23,7 @@ const NotificationsScreen = () => {
       id: 2,
       type: 'payment',
       title: 'Payment Received',
-      message: 'Payment of $135 has been successfully processed',
+      message: 'Payment of KSh 13,500 has been successfully processed',
       time: '5 hours ago',
       isRead: false,
       icon: 'card',

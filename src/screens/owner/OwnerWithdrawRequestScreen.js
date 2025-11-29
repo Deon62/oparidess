@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
+import { formatCurrency } from '../../packages/utils/currency';
 
 const OwnerWithdrawRequestScreen = () => {
   const theme = useTheme();
@@ -27,9 +28,6 @@ const OwnerWithdrawRequestScreen = () => {
     });
   }, [navigation]);
 
-  const formatCurrency = (amount) => {
-    return `$${parseFloat(amount || 0).toFixed(2)}`;
-  };
 
   const handleWithdraw = async () => {
     if (!withdrawAmount || parseFloat(withdrawAmount) <= 0) {
@@ -93,7 +91,7 @@ const OwnerWithdrawRequestScreen = () => {
           value={withdrawAmount}
           onChangeText={(value) => setWithdrawAmount(value.replace(/[^0-9.]/g, ''))}
           keyboardType="decimal-pad"
-          prefix="$"
+          prefix="KSh"
         />
         <View style={styles.quickAmounts}>
           <TouchableOpacity

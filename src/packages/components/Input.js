@@ -10,6 +10,7 @@ const Input = ({
   secureTextEntry = false,
   error,
   style,
+  prefix,
   ...props
 }) => {
   const theme = useTheme();
@@ -36,6 +37,11 @@ const Input = ({
           },
         ]}
       >
+        {prefix && (
+          <Text style={[styles.prefix, { color: theme.colors.textSecondary }]}>
+            {prefix}
+          </Text>
+        )}
         <TextInput
           style={[styles.input, { color: theme.colors.textPrimary }]}
           placeholder={placeholder}
@@ -81,6 +87,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     minHeight: 48,
+  },
+  prefix: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginRight: 8,
   },
   input: {
     flex: 1,

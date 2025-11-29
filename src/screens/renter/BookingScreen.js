@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal,
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Button, Input } from '../../packages/components';
+import { Button, Input, Toggle } from '../../packages/components';
+import { formatCurrency, formatPricePerDay, parseCurrency } from '../../packages/utils/currency';
 
 const BookingScreen = () => {
   const theme = useTheme();
@@ -18,6 +19,7 @@ const BookingScreen = () => {
   const [specialRequirements, setSpecialRequirements] = useState('');
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
   const [isSelectingPickup, setIsSelectingPickup] = useState(true);
+  const [payOnSite, setPayOnSite] = useState(false);
 
   // Hide bottom tab bar on this screen
   useLayoutEffect(() => {
@@ -38,8 +40,8 @@ const BookingScreen = () => {
 
   // Get rental info from car or defaults
   const rentalInfo = {
-    perDay: car?.price?.replace('/day', '')?.replace('$', '') || 45,
-    deposit: 200,
+    perDay: car?.price ? parseCurrency(car.price.replace('/day', '')) : 4500,
+    deposit: 20000,
     minimumDays: 3,
   };
 
@@ -52,9 +54,13 @@ const BookingScreen = () => {
   };
 
   const days = calculateDays();
-  const insuranceCost = insuranceEnabled ? 15 * days : 0;
+  const insuranceCost = insuranceEnabled ? 1500 * days : 0;
   const basePrice = rentalInfo.perDay * days;
   const totalPrice = basePrice + insuranceCost;
+  
+  // Commission rate (15%)
+  const COMMISSION_RATE = 0.15;
+  const bookingFee = payOnSite ? totalPrice * COMMISSION_RATE : 0;
 
   // Calendar functions
   const getDaysInMonth = (month, year) => {
@@ -115,8 +121,11 @@ const BookingScreen = () => {
       );
       return;
     }
+    
+    const paymentAmount = payOnSite ? bookingFee : totalPrice;
+    
     navigation.navigate('Payment', {
-      totalPrice,
+      totalPrice: paymentAmount,
       bookingDetails: {
         car,
         pickupDate,
@@ -124,6 +133,9 @@ const BookingScreen = () => {
         days,
         specialRequirements,
         insuranceEnabled,
+        payOnSite,
+        bookingFee: payOnSite ? bookingFee : 0,
+        totalRentalPrice: totalPrice,
       },
     });
   };
@@ -277,7 +289,7 @@ const BookingScreen = () => {
             {car?.name || 'Toyota Corolla'}
           </Text>
           <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
-            ${rentalInfo.perDay}/day
+            {formatPricePerDay(rentalInfo.perDay)}
           </Text>
         </View>
 
@@ -366,6 +378,43 @@ const BookingScreen = () => {
           />
         </View>
 
+        {/* Pay on Site Option */}
+        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.payOnSiteHeader}>
+            <View style={styles.payOnSiteHeaderLeft}>
+              <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
+              <View style={styles.payOnSiteTitleContainer}>
+                <Text style={[styles.payOnSiteTitle, { color: theme.colors.textPrimary }]}>
+                  Pay on Site
+                </Text>
+                <Text style={[styles.payOnSiteSubtitle, { color: theme.colors.textSecondary }]}>
+                  Reserve now, pay owner at pickup
+                </Text>
+              </View>
+            </View>
+            <Toggle value={payOnSite} onValueChange={setPayOnSite} />
+          </View>
+
+          {payOnSite && (
+            <View style={[styles.payOnSiteInfo, { backgroundColor: theme.colors.primary + '10' }]}>
+              <View style={styles.infoRow}>
+                <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
+                <Text style={[styles.infoText, { color: theme.colors.textPrimary }]}>
+                  Reserve your booking by paying the booking fee (platform commission). You'll pay the car owner directly when you pick up the car.
+                </Text>
+              </View>
+              <View style={styles.bookingFeeRow}>
+                <Text style={[styles.bookingFeeLabel, { color: theme.colors.textSecondary }]}>
+                  Booking Fee (15% commission)
+                </Text>
+                <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
+                  {formatCurrency(bookingFee)}
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
+
         {/* Price Summary */}
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -377,7 +426,7 @@ const BookingScreen = () => {
               Base Price ({days || 0} {days === 1 ? 'day' : 'days'})
             </Text>
             <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-              ${basePrice.toFixed(2)}
+              {formatCurrency(basePrice)}
             </Text>
           </View>
 
@@ -387,19 +436,41 @@ const BookingScreen = () => {
                 Insurance ({days || 0} {days === 1 ? 'day' : 'days'})
               </Text>
               <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                ${insuranceCost.toFixed(2)}
+                {formatCurrency(insuranceCost)}
+              </Text>
+            </View>
+          )}
+
+          {payOnSite && (
+            <View style={styles.priceRow}>
+              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                Booking Fee (15% commission)
+              </Text>
+              <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
+                {formatCurrency(bookingFee)}
               </Text>
             </View>
           )}
 
           <View style={[styles.priceRow, styles.priceRowTotal]}>
             <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
-              Total
+              {payOnSite ? 'Total Rental Price' : 'Total'}
             </Text>
             <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-              ${totalPrice.toFixed(2)}
+              {formatCurrency(totalPrice)}
             </Text>
           </View>
+
+          {payOnSite && (
+            <View style={[styles.priceRow, styles.priceRowTotal, { marginTop: 8 }]}>
+              <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
+                Amount to Pay Now
+              </Text>
+              <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
+                {formatCurrency(bookingFee)}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Bottom Spacing */}
@@ -409,13 +480,15 @@ const BookingScreen = () => {
       {/* Bottom Payment Bar */}
       <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
         <View style={styles.bottomBarPrice}>
-          <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
+          <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
+            {payOnSite ? 'Booking Fee' : 'Total'}
+          </Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            ${totalPrice.toFixed(2)}
+            {formatCurrency(payOnSite ? bookingFee : totalPrice)}
           </Text>
         </View>
         <Button
-          title="Pay Now"
+          title={payOnSite ? 'Pay Booking Fee' : 'Pay Now'}
           onPress={handlePay}
           variant="primary"
           style={styles.payButton}
@@ -634,6 +707,63 @@ const styles = StyleSheet.create({
   },
   calendarCloseButton: {
     marginTop: 8,
+  },
+  // Pay on Site Styles
+  payOnSiteHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  payOnSiteHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  payOnSiteTitleContainer: {
+    flex: 1,
+  },
+  payOnSiteTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  payOnSiteSubtitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  payOnSiteInfo: {
+    marginTop: 16,
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'flex-start',
+  },
+  infoText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  bookingFeeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  bookingFeeLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  bookingFeeValue: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
   },
 });
 

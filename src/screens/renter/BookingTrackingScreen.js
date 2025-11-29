@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
+import { formatCurrency } from '../../packages/utils/currency';
 
 const BookingTrackingScreen = () => {
   const theme = useTheme();
@@ -213,7 +214,7 @@ const BookingTrackingScreen = () => {
         <InfoCard
           icon="cash-outline"
           title="Total Amount"
-          value={`$${totalPrice?.toFixed(2) || '0.00'}`}
+          value={formatCurrency(totalPrice || 0)}
         />
       </View>
 
@@ -456,7 +457,7 @@ const BookingTrackingScreen = () => {
                       Amount Paid
                     </Text>
                     <Text style={[styles.receiptDetailValue, { color: theme.colors.primary }]}>
-                      ${totalPrice?.toFixed(2) || '0.00'}
+                      {formatCurrency(totalPrice || 0)}
                     </Text>
                   </View>
                   <View style={styles.receiptDetailRow}>

@@ -23,7 +23,7 @@ const OwnerHomeScreen = () => {
       carImage: profileImage,
       pickupDate: '2024-01-15',
       dropoffDate: '2024-01-18',
-      totalPrice: '$135',
+      totalPrice: 'KSh 13,500',
       status: 'active',
       daysRemaining: 2,
     },
@@ -35,7 +35,7 @@ const OwnerHomeScreen = () => {
       carImage: profileImage,
       pickupDate: '2024-01-16',
       dropoffDate: '2024-01-20',
-      totalPrice: '$180',
+      totalPrice: 'KSh 18,000',
       status: 'active',
       daysRemaining: 3,
     },
@@ -51,7 +51,7 @@ const OwnerHomeScreen = () => {
       carImage: profileImage,
       pickupDate: '2024-01-20',
       dropoffDate: '2024-01-25',
-      totalPrice: '$225',
+      totalPrice: 'KSh 22,500',
       status: 'pending',
       requestDate: '2024-01-14',
     },
@@ -138,7 +138,7 @@ const OwnerHomeScreen = () => {
       <View style={styles.statsContainer}>
         <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
           <Ionicons name="cash-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>$2,450</Text>
+          <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>KSh 245,000</Text>
           <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>This Month</Text>
         </View>
         <View style={[styles.statCard, { backgroundColor: theme.colors.white }]}>

@@ -25,7 +25,7 @@ const CarListScreen = () => {
       {
         id: 1,
         name: 'Toyota Corolla',
-        price: '$45/day',
+        price: 'KSh 4,500/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'White',
@@ -35,7 +35,7 @@ const CarListScreen = () => {
       {
         id: 2,
         name: 'Honda Civic',
-        price: '$48/day',
+        price: 'KSh 4,800/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Silver',
@@ -45,7 +45,7 @@ const CarListScreen = () => {
       {
         id: 3,
         name: 'Nissan Sentra',
-        price: '$42/day',
+        price: 'KSh 4,200/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Black',
@@ -55,7 +55,7 @@ const CarListScreen = () => {
       {
         id: 10,
         name: 'Mazda 3',
-        price: '$46/day',
+        price: 'KSh 4,600/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Blue',
@@ -67,7 +67,7 @@ const CarListScreen = () => {
       {
         id: 4,
         name: 'BMW 5 Series',
-        price: '$120/day',
+        price: 'KSh 12,000/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Black',
@@ -77,7 +77,7 @@ const CarListScreen = () => {
       {
         id: 5,
         name: 'Mercedes E-Class',
-        price: '$125/day',
+        price: 'KSh 12,500/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Silver',
@@ -87,7 +87,7 @@ const CarListScreen = () => {
       {
         id: 6,
         name: 'Audi A6',
-        price: '$118/day',
+        price: 'KSh 11,800/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'White',
@@ -97,7 +97,7 @@ const CarListScreen = () => {
       {
         id: 11,
         name: 'Lexus ES',
-        price: '$130/day',
+        price: 'KSh 13,000/day',
         seats: 5,
         fuel: 'Petrol',
         color: 'Black',
@@ -109,7 +109,7 @@ const CarListScreen = () => {
       {
         id: 7,
         name: 'Tesla Model S',
-        price: '$200/day',
+        price: 'KSh 20,000/day',
         seats: 5,
         fuel: 'Electric',
         color: 'Red',
@@ -119,7 +119,7 @@ const CarListScreen = () => {
       {
         id: 8,
         name: 'Porsche 911',
-        price: '$350/day',
+        price: 'KSh 35,000/day',
         seats: 2,
         fuel: 'Petrol',
         color: 'Black',
@@ -129,7 +129,7 @@ const CarListScreen = () => {
       {
         id: 9,
         name: 'Bentley Continental',
-        price: '$450/day',
+        price: 'KSh 45,000/day',
         seats: 4,
         fuel: 'Petrol',
         color: 'White',
@@ -139,7 +139,7 @@ const CarListScreen = () => {
       {
         id: 12,
         name: 'Lamborghini Huracán',
-        price: '$500/day',
+        price: 'KSh 50,000/day',
         seats: 2,
         fuel: 'Petrol',
         color: 'Yellow',

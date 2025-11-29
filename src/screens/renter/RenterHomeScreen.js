@@ -37,9 +37,9 @@ const RenterHomeScreen = () => {
       name: 'Essential',
       description: 'Affordable and reliable cars for everyday use',
       cars: [
-        { id: 1, name: 'Toyota Corolla', price: '$45/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1 },
-        { id: 2, name: 'Honda Civic', price: '$48/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2 },
-        { id: 3, name: 'Nissan Sentra', price: '$42/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3 },
+        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1 },
+        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2 },
+        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3 },
       ],
     },
     {
@@ -47,9 +47,9 @@ const RenterHomeScreen = () => {
       name: 'Executive',
       description: 'Premium comfort and style for business travel',
       cars: [
-        { id: 4, name: 'BMW 5 Series', price: '$120/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 5, name: 'Mercedes E-Class', price: '$125/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1 },
-        { id: 6, name: 'Audi A6', price: '$118/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2 },
+        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4 },
+        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1 },
+        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2 },
       ],
     },
     {
@@ -57,9 +57,9 @@ const RenterHomeScreen = () => {
       name: 'Signature',
       description: 'Ultra-luxury vehicles for the ultimate experience',
       cars: [
-        { id: 7, name: 'Tesla Model S', price: '$200/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3 },
-        { id: 8, name: 'Porsche 911', price: '$350/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 9, name: 'Bentley Continental', price: '$450/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1 },
+        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3 },
+        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4 },
+        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1 },
       ],
     },
   ];

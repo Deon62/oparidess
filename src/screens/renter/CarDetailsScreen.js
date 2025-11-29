@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Toggle } from '../../packages/components';
 import { WebView } from 'react-native-webview';
+import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency';
 
 // Import car images
 const carImage1 = require('../../../assets/images/car1.jpg');
@@ -24,7 +25,7 @@ const CarDetailsScreen = () => {
   const carData = car || {
     id: 1,
     name: 'Toyota Corolla',
-    price: '$45/day',
+    price: 'KSh 4,500/day',
     seats: 5,
     fuel: 'Petrol',
     color: 'White',
@@ -74,10 +75,10 @@ const CarDetailsScreen = () => {
 
   // Rental info
   const rentalInfo = {
-    perDay: '$45',
-    perWeek: '$280',
-    perMonth: '$1,100',
-    deposit: '$200',
+    perDay: 'KSh 4,500',
+    perWeek: 'KSh 28,000',
+    perMonth: 'KSh 110,000',
+    deposit: 'KSh 20,000',
     minimumDays: 3,
     pickupLocation: 'Nairobi CBD, Kenya',
     pickupCoordinates: { latitude: -1.2921, longitude: 36.8219 }, // Nairobi CBD coordinates
@@ -329,7 +330,7 @@ const CarDetailsScreen = () => {
                 Additional Insurance
               </Text>
               <Text style={[styles.insuranceDescription, { color: theme.colors.textSecondary }]}>
-                Add comprehensive insurance coverage for extra protection (+$15/day)
+                Add comprehensive insurance coverage for extra protection (+KSh 1,500/day)
               </Text>
             </View>
             <Toggle
@@ -351,7 +352,7 @@ const CarDetailsScreen = () => {
             {rentalInfo.perDay}
             {insuranceEnabled && (
               <Text style={[styles.insurancePrice, { color: theme.colors.textSecondary }]}>
-                {' '}+ $15
+                {' '}+ KSh 1,500
               </Text>
             )}
           </Text>

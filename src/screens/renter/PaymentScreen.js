@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
+import { formatCurrency } from '../../packages/utils/currency';
 
 // Import payment logos
 const mpesaLogo = require('../../../assets/images/mpesa.png');
@@ -16,6 +17,7 @@ const PaymentScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { totalPrice, bookingDetails } = route.params || {};
+  const { payOnSite, bookingFee, totalRentalPrice } = bookingDetails || {};
 
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -178,11 +180,19 @@ const PaymentScreen = () => {
         {/* Amount Summary */}
         <View style={[styles.amountCard, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.amountLabel, { color: theme.colors.textSecondary }]}>
-            Total Amount
+            {payOnSite ? 'Booking Fee' : 'Total Amount'}
           </Text>
           <Text style={[styles.amountValue, { color: theme.colors.primary }]}>
-            ${totalPrice?.toFixed(2) || '0.00'}
+            {formatCurrency(totalPrice || 0)}
           </Text>
+          {payOnSite && totalRentalPrice && (
+            <View style={styles.payOnSiteNote}>
+              <Ionicons name="information-circle-outline" size={16} color={theme.colors.textSecondary} />
+              <Text style={[styles.payOnSiteNoteText, { color: theme.colors.textSecondary }]}>
+                You'll pay {formatCurrency(totalRentalPrice - bookingFee)} directly to the car owner at pickup
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Payment Methods */}
@@ -340,7 +350,7 @@ const PaymentScreen = () => {
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            ${totalPrice?.toFixed(2) || '0.00'}
+            {formatCurrency(totalPrice || 0)}
           </Text>
         </View>
         <Button
@@ -369,7 +379,10 @@ const PaymentScreen = () => {
               Payment Successful!
             </Text>
             <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
-              Your payment of ${totalPrice?.toFixed(2) || '0.00'} has been processed successfully.
+              {payOnSite 
+                ? `Your booking fee of ${formatCurrency(totalPrice || 0)} has been processed. Your booking is confirmed! You'll pay the remaining ${formatCurrency((totalRentalPrice || 0) - (bookingFee || 0))} directly to the car owner at pickup.`
+                : `Your payment of ${formatCurrency(totalPrice || 0)} has been processed successfully.`
+              }
             </Text>
             <View style={styles.successModalDetails}>
               <View style={styles.successDetailRow}>
@@ -385,7 +398,7 @@ const PaymentScreen = () => {
                   Amount Paid
                 </Text>
                 <Text style={[styles.successDetailValue, { color: theme.colors.primary }]}>
-                  ${totalPrice?.toFixed(2) || '0.00'}
+                  {formatCurrency(totalPrice || 0)}
                 </Text>
               </View>
             </View>
@@ -436,6 +449,22 @@ const styles = StyleSheet.create({
   amountValue: {
     fontSize: 36,
     fontFamily: 'Nunito_700Bold',
+  },
+  payOnSiteNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    gap: 8,
+    width: '100%',
+  },
+  payOnSiteNoteText: {
+    flex: 1,
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 16,
   },
   section: {
     marginHorizontal: 24,

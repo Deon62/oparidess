@@ -11,6 +11,7 @@ import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
+import CancellationScreen from '../../screens/renter/CancellationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
@@ -31,6 +32,8 @@ import AboutScreen from '../../screens/shared/AboutScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
+import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
+import DisputeScreen from '../../screens/shared/DisputeScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -107,6 +110,30 @@ const HomeStack = () => {
         component={BookingTrackingScreen}
         options={{ 
           title: 'Booking Details',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Cancellation" 
+        component={CancellationScreen}
+        options={{ 
+          title: 'Cancel Booking',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="CancellationPolicy" 
+        component={CancellationPolicyScreen}
+        options={{ 
+          title: 'Cancellation Policy',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Dispute" 
+        component={DisputeScreen}
+        options={{ 
+          title: 'File a Dispute',
           headerShown: true 
         }}
       />

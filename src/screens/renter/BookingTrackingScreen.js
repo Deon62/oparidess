@@ -395,6 +395,32 @@ const BookingTrackingScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.manageItem}
+          onPress={() => navigation.navigate('Cancellation', { bookingDetails })}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="close-circle-outline" size={24} color="#F44336" />
+            <Text style={[styles.manageItemText, { color: '#F44336' }]}>
+              Cancel Booking
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
+          onPress={() => navigation.navigate('Dispute', { bookingDetails })}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="alert-circle-outline" size={24} color="#FF9800" />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              File a Dispute
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
           onPress={handleContactSupport}
           activeOpacity={0.7}
         >

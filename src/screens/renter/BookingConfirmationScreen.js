@@ -300,16 +300,85 @@ const BookingConfirmationScreen = () => {
             <View style={styles.termsTextContainer}>
               <Text style={[styles.termsText, { color: theme.colors.textPrimary }]}>
                 I agree to the{' '}
-                <Text style={[styles.termsLink, { color: theme.colors.primary }]}>
+                <Text 
+                  style={[styles.termsLink, { color: theme.colors.primary }]}
+                  onPress={() => navigation.navigate('TermsAndConditions')}
+                >
                   Terms and Conditions
                 </Text>
                 {' '}and{' '}
-                <Text style={[styles.termsLink, { color: theme.colors.primary }]}>
+                <Text 
+                  style={[styles.termsLink, { color: theme.colors.primary }]}
+                  onPress={() => navigation.navigate('CancellationPolicy')}
+                >
                   Cancellation Policy
                 </Text>
               </Text>
             </View>
           </View>
+        </Card>
+      </View>
+
+      {/* Cancellation Policy */}
+      <View style={styles.section}>
+        <Card style={[styles.policyCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.policyHeader}>
+            <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.policyTitle, { color: theme.colors.textPrimary }]}>
+              Cancellation Policy
+            </Text>
+          </View>
+          <View style={styles.policyContent}>
+            <View style={styles.policyItem}>
+              <View style={[styles.policyBadge, { backgroundColor: '#4CAF50' + '20' }]}>
+                <Text style={[styles.policyBadgeText, { color: '#4CAF50' }]}>Free</Text>
+              </View>
+              <View style={styles.policyItemContent}>
+                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
+                  More than 48 hours before pickup
+                </Text>
+                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
+                  Full refund (100%)
+                </Text>
+              </View>
+            </View>
+            <View style={styles.policyItem}>
+              <View style={[styles.policyBadge, { backgroundColor: '#FF9800' + '20' }]}>
+                <Text style={[styles.policyBadgeText, { color: '#FF9800' }]}>50%</Text>
+              </View>
+              <View style={styles.policyItemContent}>
+                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
+                  24-48 hours before pickup
+                </Text>
+                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
+                  Partial refund (50% of booking fee)
+                </Text>
+              </View>
+            </View>
+            <View style={styles.policyItem}>
+              <View style={[styles.policyBadge, { backgroundColor: '#F44336' + '20' }]}>
+                <Text style={[styles.policyBadgeText, { color: '#F44336' }]}>No</Text>
+              </View>
+              <View style={styles.policyItemContent}>
+                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
+                  Less than 24 hours before pickup
+                </Text>
+                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
+                  No refund (contact support for disputes)
+                </Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.viewPolicyButton}
+            onPress={() => navigation.navigate('CancellationPolicy')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.viewPolicyText, { color: theme.colors.primary }]}>
+              View Full Policy
+            </Text>
+            <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.primary} />
+          </TouchableOpacity>
         </Card>
       </View>
 
@@ -594,6 +663,65 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+  },
+  policyCard: {
+    padding: 20,
+    borderRadius: 16,
+  },
+  policyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 20,
+  },
+  policyTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  policyContent: {
+    gap: 16,
+    marginBottom: 16,
+  },
+  policyItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  policyBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  policyBadgeText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_700Bold',
+  },
+  policyItemContent: {
+    flex: 1,
+  },
+  policyItemTitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  policyItemDesc: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  viewPolicyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    gap: 8,
+  },
+  viewPolicyText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
   bottomBar: {
     flexDirection: 'row',

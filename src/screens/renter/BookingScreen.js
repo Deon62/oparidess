@@ -246,7 +246,7 @@ const BookingScreen = () => {
 
     return (
       <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-        <View style={styles.modalOverlay}>
+        <View style={styles.calendarModalOverlay}>
           <View style={[styles.calendarModal, { backgroundColor: theme.colors.white }]}>
             <View style={styles.calendarHeader}>
               <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.calendarNavButton}>
@@ -728,7 +728,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.modalOverlay}>
+      <View style={styles.timePickerModalOverlay}>
         <View style={[styles.timePickerModal, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.timePickerTitle, { color: theme.colors.textPrimary }]}>
             {title}
@@ -820,7 +820,7 @@ const LocationPicker = ({ visible, onClose, locations, selectedLocation, onLocat
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.modalOverlay}>
+      <View style={styles.locationPickerModalOverlay}>
         <View style={[styles.locationPickerModal, { backgroundColor: theme.colors.white }]}>
           <View style={styles.locationPickerHeader}>
             <Text style={[styles.locationPickerTitle, { color: theme.colors.textPrimary }]}>
@@ -1022,6 +1022,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  calendarModalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
   },
   calendarModal: {
     borderTopLeftRadius: 20,
@@ -1245,6 +1250,11 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   // Time Picker Modal Styles
+  timePickerModalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
   timePickerModal: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -1310,6 +1320,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   // Location Picker Modal Styles
+  locationPickerModalOverlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
   locationPickerModal: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

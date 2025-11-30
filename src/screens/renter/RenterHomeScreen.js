@@ -949,105 +949,134 @@ const RenterHomeScreen = () => {
             </ScrollView>
           </View>
 
-          {/* User Stories Section */}
+          {/* Opa Blogs Section */}
           <View style={styles.discoverSubsection}>
             <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              User Stories
+              Opa Blogs
             </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.userStoriesContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.blogsContainer}>
               <TouchableOpacity
-                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('User Story', 'Read full story coming soon!');
+                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
                 }}
               >
-                <View style={styles.userStoryHeader}>
-                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
-                    <Ionicons name="person" size={24} color={theme.colors.primary} />
-                  </View>
-                  <View style={styles.userStoryInfo}>
-                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
-                      Sarah M.
-                    </Text>
-                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
-                      Nairobi
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
-                  "Amazing experience! The car was clean and the service was excellent. Perfect for our weekend trip to Mombasa."
-                </Text>
-                <View style={styles.userStoryRating}>
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.blogContent}>
+                  <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
+                    Top 10 Road Trip Destinations in Kenya
+                  </Text>
+                  <Text style={[styles.blogDescription, { color: theme.colors.textSecondary }]}>
+                    Discover the most breathtaking destinations perfect for your next road trip adventure.
+                  </Text>
+                  <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
+                    2 days ago
+                  </Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('User Story', 'Read full story coming soon!');
+                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
                 }}
               >
-                <View style={styles.userStoryHeader}>
-                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
-                    <Ionicons name="person" size={24} color={theme.colors.primary} />
-                  </View>
-                  <View style={styles.userStoryInfo}>
-                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
-                      James K.
-                    </Text>
-                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
-                      Kisumu
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
-                  "Professional driver service made our safari trip smooth and safe. Highly recommend!"
-                </Text>
-                <View style={styles.userStoryRating}>
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.blogContent}>
+                  <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
+                    Car Maintenance Tips for Long Trips
+                  </Text>
+                  <Text style={[styles.blogDescription, { color: theme.colors.textSecondary }]}>
+                    Essential maintenance tips to keep your rental car running smoothly during long journeys.
+                  </Text>
+                  <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
+                    5 days ago
+                  </Text>
                 </View>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('User Story', 'Read full story coming soon!');
+                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
                 }}
               >
-                <View style={styles.userStoryHeader}>
-                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
-                    <Ionicons name="person" size={24} color={theme.colors.primary} />
-                  </View>
-                  <View style={styles.userStoryInfo}>
-                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
-                      Mary W.
-                    </Text>
-                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
-                      Mombasa
-                    </Text>
-                  </View>
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.blogContent}>
+                  <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
+                    Best Time to Visit Kenya's National Parks
+                  </Text>
+                  <Text style={[styles.blogDescription, { color: theme.colors.textSecondary }]}>
+                    Plan your safari adventure with our guide to the best times for wildlife viewing.
+                  </Text>
+                  <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
+                    1 week ago
+                  </Text>
                 </View>
-                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
-                  "VIP wedding fleet service was outstanding! All our guests were impressed with the elegant vehicles."
-                </Text>
-                <View style={styles.userStoryRating}>
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Ionicons name="star" size={16} color="#FFD700" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                }}
+              >
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.blogContent}>
+                  <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
+                    Coastal Getaways: A Complete Guide
+                  </Text>
+                  <Text style={[styles.blogDescription, { color: theme.colors.textSecondary }]}>
+                    Explore Kenya's stunning coastline with our comprehensive travel guide.
+                  </Text>
+                  <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
+                    2 weeks ago
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                }}
+              >
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.blogContent}>
+                  <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
+                    Safety Tips for Driving in Kenya
+                  </Text>
+                  <Text style={[styles.blogDescription, { color: theme.colors.textSecondary }]}>
+                    Important safety guidelines and driving tips for navigating Kenya's roads confidently.
+                  </Text>
+                  <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
+                    3 weeks ago
+                  </Text>
                 </View>
               </TouchableOpacity>
             </ScrollView>
@@ -1989,14 +2018,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
   },
-  userStoriesContainer: {
+  blogsContainer: {
     paddingRight: 24,
     gap: 16,
   },
-  userStoryCard: {
+  blogCard: {
     width: 320,
     borderRadius: 16,
-    padding: 20,
+    overflow: 'hidden',
     marginRight: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -2004,41 +2033,28 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  userStoryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
+  blogImage: {
+    width: '100%',
+    height: 180,
   },
-  userStoryAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
+  blogContent: {
+    padding: 16,
+    gap: 8,
   },
-  userStoryInfo: {
-    flex: 1,
-  },
-  userStoryName: {
+  blogTitle: {
     fontSize: 16,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 2,
+    marginBottom: 4,
   },
-  userStoryLocation: {
-    fontSize: 12,
+  blogDescription: {
+    fontSize: 13,
     fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
+    marginBottom: 4,
   },
-  userStoryText: {
-    fontSize: 14,
+  blogDate: {
+    fontSize: 11,
     fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
-    marginBottom: 12,
-    fontStyle: 'italic',
-  },
-  userStoryRating: {
-    flexDirection: 'row',
-    gap: 4,
   },
 });
 

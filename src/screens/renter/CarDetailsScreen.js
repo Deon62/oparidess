@@ -243,48 +243,46 @@ const CarDetailsScreen = () => {
           )}
         </View>
 
-        {/* Car Details */}
+        {/* Car Details & Description */}
         <View style={styles.section}>
-          <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-            {carData.name}
-          </Text>
-          <View style={styles.carSpecs}>
-            <View style={styles.specItem}>
-              <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
-              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                {carData.seats} Seats
-              </Text>
+          <View style={[styles.carOverviewCard, { backgroundColor: theme.colors.primary + '08' }]}>
+            <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+              {carData.name}
+            </Text>
+            <View style={styles.carSpecs}>
+              <View style={styles.specItem}>
+                <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {carData.seats} Seats
+                </Text>
+              </View>
+              <View style={styles.specItem}>
+                <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {carData.fuel}
+                </Text>
+              </View>
+              <View style={styles.specItem}>
+                <Ionicons 
+                  name={carData.transmission === 'Automatic' ? 'speedometer-outline' : 'git-branch-outline'} 
+                  size={18} 
+                  color={theme.colors.hint} 
+                />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {carData.transmission || 'Automatic'}
+                </Text>
+              </View>
+              <View style={styles.specItem}>
+                <Ionicons name="color-fill-outline" size={18} color={theme.colors.hint} />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {carData.color}
+                </Text>
+              </View>
             </View>
-            <View style={styles.specItem}>
-              <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
-              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                {carData.fuel}
-              </Text>
-            </View>
-            <View style={styles.specItem}>
-              <Ionicons 
-                name={carData.transmission === 'Automatic' ? 'speedometer-outline' : 'git-branch-outline'} 
-                size={18} 
-                color={theme.colors.hint} 
-              />
-              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                {carData.transmission || 'Automatic'}
-              </Text>
-            </View>
-            <View style={styles.specItem}>
-              <Ionicons name="color-fill-outline" size={18} color={theme.colors.hint} />
-              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                {carData.color}
-              </Text>
-            </View>
+            <Text style={[styles.carDescription, { color: theme.colors.textSecondary }]}>
+              {carData.description || 'A reliable and well-maintained vehicle perfect for your travel needs.'}
+            </Text>
           </View>
-        </View>
-
-        {/* Car Description */}
-        <View style={styles.section}>
-          <Text style={[styles.carDescription, { color: theme.colors.textSecondary }]}>
-            {carData.description || 'A reliable and well-maintained vehicle perfect for your travel needs.'}
-          </Text>
         </View>
 
         {/* Features */}
@@ -557,9 +555,7 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={[styles.guaranteesCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-              </View>
+              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Verified Vehicles
@@ -570,9 +566,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-                <Ionicons name="lock-closed" size={24} color={theme.colors.primary} />
-              </View>
+              <Ionicons name="lock-closed" size={24} color={theme.colors.primary} />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Secure Booking
@@ -583,9 +577,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-                <Ionicons name="headset" size={24} color={theme.colors.primary} />
-              </View>
+              <Ionicons name="headset" size={24} color={theme.colors.primary} />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   24/7 Support
@@ -596,9 +588,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-                <Ionicons name="refresh" size={24} color={theme.colors.primary} />
-              </View>
+              <Ionicons name="refresh" size={24} color={theme.colors.primary} />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Easy Cancellation
@@ -812,16 +802,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 24,
   },
+  carOverviewCard: {
+    borderRadius: 16,
+    padding: 20,
+    gap: 16,
+  },
   carName: {
     fontSize: 28,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    marginBottom: 0,
     letterSpacing: -0.5,
   },
   carDescription: {
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 22,
+    marginTop: 4,
   },
   carSpecs: {
     flexDirection: 'row',
@@ -1201,14 +1197,7 @@ const styles = StyleSheet.create({
   guaranteeItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 16,
-  },
-  guaranteeIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    justifyContent: 'center',
-    alignItems: 'center',
+    gap: 12,
   },
   guaranteeContent: {
     flex: 1,

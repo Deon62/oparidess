@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
-import { Button, Input } from '../../packages/components';
+import { Button, Input, Toggle } from '../../packages/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   isBiometricAvailable,
   authenticateWithBiometrics,
@@ -16,11 +17,11 @@ const LoginScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { login } = useUser();
-  const { userType: routeUserType } = route.params || {};
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [selectedUserType, setSelectedUserType] = useState(routeUserType || 'renter');
+  const [rememberMe, setRememberMe] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricEnabled, setBiometricEnabled] = useState(false);
   const [biometricType, setBiometricType] = useState('Biometric');
@@ -28,31 +29,48 @@ const LoginScreen = () => {
 
   const handleLogin = () => {
     // Auto-login with entered details (even if incorrect)
+    // User type will be determined by credentials in the future
     login(
       {
         email: email || 'user@example.com',
         name: email.split('@')[0] || 'User',
       },
-      selectedUserType
+      'renter' // Always renter for now - will be auto-detected from credentials later
     );
     // Navigation will happen automatically via MainNavigator
   };
 
   const handleGoogleLogin = () => {
-    // Auto-login with Google (using selected userType)
-    login({ email: 'test@google.com', name: 'Test User' }, selectedUserType);
+    // Auto-login with Google
+    // User type will be determined by credentials in the future
+    login({ email: 'test@google.com', name: 'Test User' }, 'renter');
     // Navigation will happen automatically via MainNavigator
   };
 
   const handleAppleLogin = () => {
-    // Auto-login with Apple (using selected userType)
-    login({ email: 'test@apple.com', name: 'Test User' }, selectedUserType);
+    // Auto-login with Apple
+    // User type will be determined by credentials in the future
+    login({ email: 'test@apple.com', name: 'Test User' }, 'renter');
     // Navigation will happen automatically via MainNavigator
+  };
+
+  const handleMobileLogin = () => {
+    // Auto-login with Mobile
+    // User type will be determined by credentials in the future
+    Alert.alert('Mobile Login', 'Mobile number login will be implemented soon.');
+    // login({ email: 'mobile@example.com', name: 'Mobile User' }, 'renter');
   };
 
   const handleForgotPassword = () => {
     navigation.navigate('ResetPassword');
   };
+
+  // Hide header
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   // Check biometric availability and preference on mount
   useEffect(() => {
@@ -98,93 +116,74 @@ const LoginScreen = () => {
   };
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.formSection}>
-        {/* Role Selection (only if not coming from route) */}
-        {!routeUserType && (
-          <View style={styles.roleSelector}>
-            <Text style={[styles.roleLabel, { color: theme.colors.textPrimary }]}>
-              I want to:
-            </Text>
-            <View style={styles.roleButtons}>
-              <TouchableOpacity
-                style={[
-                  styles.roleButton,
-                  {
-                    backgroundColor: selectedUserType === 'renter' ? theme.colors.primary : theme.colors.white,
-                    borderColor: selectedUserType === 'renter' ? theme.colors.primary : theme.colors.hint,
-                  },
-                ]}
-                onPress={() => setSelectedUserType('renter')}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.roleButtonText,
-                    {
-                      color: selectedUserType === 'renter' ? theme.colors.white : theme.colors.textPrimary,
-                    },
-                  ]}
-                >
-                  Browse Cars
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.roleButton,
-                  {
-                    backgroundColor: selectedUserType === 'owner' ? theme.colors.primary : theme.colors.white,
-                    borderColor: selectedUserType === 'owner' ? theme.colors.primary : theme.colors.hint,
-                  },
-                ]}
-                onPress={() => setSelectedUserType('owner')}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.roleButtonText,
-                    {
-                      color: selectedUserType === 'owner' ? theme.colors.white : theme.colors.textPrimary,
-                    },
-                  ]}
-                >
-                  List Car
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Sticky Back Button */}
+      <TouchableOpacity
+        style={[styles.backButton, { paddingTop: insets.top + 12 }]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="arrow-back" size={26} color="#000000" />
+      </TouchableOpacity>
 
-        <Input
-          label="Email"
-          placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Input
-          label="Password"
-          placeholder="Enter your password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-
-        {/* Forgot Password Link */}
-        <TouchableOpacity
-          onPress={handleForgotPassword}
-          style={styles.forgotPasswordContainer}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.forgotPasswordText, { color: theme.colors.primary }]}>
-            Forgot Password?
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Tagline */}
+        <View style={styles.taglineContainer}>
+          <Text 
+            style={[styles.taglineText, { color: theme.colors.textPrimary }]}
+            allowFontScaling={false}
+          >
+            Glad to see you😊
           </Text>
-        </TouchableOpacity>
+        </View>
+
+        <View style={styles.formSection}>
+        <View style={styles.inputWrapper}>
+          <Input
+            label="Email"
+            placeholder="Enter your email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={styles.centeredInput}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Input
+            label="Password"
+            placeholder="Enter your password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.centeredInput}
+          />
+        </View>
+
+        {/* Remember Me and Forgot Password Row */}
+        <View style={styles.rememberForgotRow}>
+          <View style={styles.toggleWrapper}>
+            <Toggle
+              label="Remember Me"
+              value={rememberMe}
+              onValueChange={setRememberMe}
+              style={styles.rememberMeToggle}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={handleForgotPassword}
+            activeOpacity={0.7}
+            style={styles.forgotPasswordWrapper}
+          >
+            <Text style={[styles.forgotPasswordText, { color: theme.colors.primary }]}>
+              Forgot Password?
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Biometric Login Button */}
         {biometricAvailable && biometricEnabled && lastUser && (
@@ -228,7 +227,7 @@ const LoginScreen = () => {
             Don't have an account?{' '}
           </Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Signup', { userType: selectedUserType })}
+            onPress={() => navigation.navigate('Signup')}
             activeOpacity={0.7}
           >
             <Text style={[styles.signupLinkButton, { color: theme.colors.primary }]}>
@@ -247,10 +246,25 @@ const LoginScreen = () => {
         {/* Social Login Buttons */}
         <TouchableOpacity
           style={[styles.socialButton, { borderColor: theme.colors.hint }]}
+          onPress={handleMobileLogin}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="phone-portrait-outline" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
+          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
+            Continue with Mobile
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
           onPress={handleGoogleLogin}
           activeOpacity={0.7}
         >
-          <Ionicons name="logo-google" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
+          <Image
+            source={{ uri: 'https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png' }}
+            style={styles.googleLogo}
+            resizeMode="contain"
+          />
           <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
             Continue with Google
           </Text>
@@ -267,7 +281,8 @@ const LoginScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -275,18 +290,69 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
   contentContainer: {
     flexGrow: 1,
     paddingBottom: 40,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  taglineContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 80,
+    paddingBottom: 32,
+    alignItems: 'center',
+  },
+  taglineText: {
+    fontSize: 24,
+    fontFamily: 'Nunito_600SemiBold',
+    textAlign: 'center',
   },
   formSection: {
     paddingHorizontal: 24,
     paddingTop: 32,
   },
-  forgotPasswordContainer: {
-    alignItems: 'flex-end',
+  inputWrapper: {
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  centeredInput: {
+    width: '100%',
+    maxWidth: 400,
+  },
+  rememberForgotRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: -8,
     marginBottom: 24,
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
+  },
+  toggleWrapper: {
+    flex: 1,
+    flexShrink: 1,
+    marginRight: 8,
+  },
+  rememberMeToggle: {
+    flex: 0,
+  },
+  forgotPasswordWrapper: {
+    flexShrink: 0,
+  },
+  forgotPasswordContainer: {
+    alignItems: 'flex-end',
   },
   forgotPasswordText: {
     fontSize: 14,
@@ -326,6 +392,11 @@ const styles = StyleSheet.create({
   socialIcon: {
     marginRight: 12,
   },
+  googleLogo: {
+    width: 20,
+    height: 20,
+    marginRight: 12,
+  },
   socialButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
@@ -344,32 +415,6 @@ const styles = StyleSheet.create({
   signupLinkButton: {
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
-  },
-  roleSelector: {
-    marginBottom: 24,
-  },
-  roleLabel: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 12,
-  },
-  roleButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  roleButton: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  roleButtonText: {
-    fontSize: 13,
-    fontFamily: 'Nunito_600SemiBold',
-    textAlign: 'center',
   },
   biometricButton: {
     borderWidth: 1,

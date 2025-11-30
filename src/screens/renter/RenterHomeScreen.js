@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
+import { parseCurrency } from '../../packages/utils/currency';
 // Location import - will use expo-location if available
 let Location = null;
 try {
@@ -75,6 +76,16 @@ const RenterHomeScreen = () => {
   const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
+  
+  // Filter state
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filters, setFilters] = useState({
+    priceRange: { min: 0, max: 50000 },
+    categories: [],
+    fuelTypes: [],
+    seatCounts: [],
+  });
+  const [hasActiveFilters, setHasActiveFilters] = useState(false);
   
   
   // All 47 Kenyan Counties
@@ -239,6 +250,71 @@ const RenterHomeScreen = () => {
     );
   };
 
+  // Extract price number from price string (e.g., "KSh 4,500/day" -> 4500)
+  const getPriceFromString = (priceString) => {
+    if (!priceString) return 0;
+    return parseCurrency(priceString.replace('/day', ''));
+  };
+
+  // Filter cars based on all filters (price, categories, fuel, seats)
+  const filterCarsByFilters = (cars) => {
+    let filtered = cars;
+
+    // Filter by price range
+    if (filters.priceRange.min > 0 || filters.priceRange.max < 50000) {
+      filtered = filtered.filter(car => {
+        const price = getPriceFromString(car.price);
+        return price >= filters.priceRange.min && price <= filters.priceRange.max;
+      });
+    }
+
+    // Filter by categories (if any selected)
+    if (filters.categories.length > 0) {
+      filtered = filtered.filter(car => {
+        // Find which category this car belongs to
+        for (const carClass of carClasses) {
+          if (filters.categories.includes(carClass.id) && carClass.cars.some(c => c.id === car.id)) {
+            return true;
+          }
+        }
+        // Check commercial vehicles
+        for (const category of commercialVehicles) {
+          if (filters.categories.includes(category.id) && category.vehicles.some(v => v.id === car.id)) {
+            return true;
+          }
+        }
+        return false;
+      });
+    }
+
+    // Filter by fuel types
+    if (filters.fuelTypes.length > 0) {
+      filtered = filtered.filter(car => 
+        filters.fuelTypes.includes(car.fuel.toLowerCase())
+      );
+    }
+
+    // Filter by seat counts
+    if (filters.seatCounts.length > 0) {
+      filtered = filtered.filter(car => 
+        filters.seatCounts.includes(car.seats.toString())
+      );
+    }
+
+    return filtered;
+  };
+
+  // Check if filters are active
+  useEffect(() => {
+    const hasFilters = 
+      filters.priceRange.min > 0 || 
+      filters.priceRange.max < 50000 ||
+      filters.categories.length > 0 ||
+      filters.fuelTypes.length > 0 ||
+      filters.seatCounts.length > 0;
+    setHasActiveFilters(hasFilters);
+  }, [filters]);
+
   // Get all cars from all classes
   const allCars = carClasses.flatMap(carClass => carClass.cars);
   
@@ -247,13 +323,51 @@ const RenterHomeScreen = () => {
     ? filterCarsBySearch(allCars, searchQuery)
     : null;
 
-  // Filter car classes to show only classes with matching cars when searching
-  const filteredCarClasses = searchQuery.trim()
-    ? carClasses.map(carClass => ({
+  // Filter car classes to show only classes with matching cars when searching or filtering
+  const filteredCarClasses = (() => {
+    let classes = carClasses;
+    
+    // Apply search filter first
+    if (searchQuery.trim()) {
+      classes = classes.map(carClass => ({
         ...carClass,
         cars: filterCarsBySearch(carClass.cars, searchQuery)
-      })).filter(carClass => carClass.cars.length > 0)
-    : carClasses;
+      })).filter(carClass => carClass.cars.length > 0);
+    }
+    
+    // Then apply other filters
+    if (hasActiveFilters) {
+      classes = classes.map(carClass => ({
+        ...carClass,
+        cars: filterCarsByFilters(carClass.cars)
+      })).filter(carClass => carClass.cars.length > 0);
+    }
+    
+    return classes;
+  })();
+
+  // Filter commercial vehicles
+  const filteredCommercialVehicles = (() => {
+    let vehicles = commercialVehicles;
+    
+    // Apply search filter first
+    if (searchQuery.trim()) {
+      vehicles = vehicles.map(category => ({
+        ...category,
+        vehicles: filterCarsBySearch(category.vehicles, searchQuery)
+      })).filter(category => category.vehicles.length > 0);
+    }
+    
+    // Then apply other filters
+    if (hasActiveFilters) {
+      vehicles = vehicles.map(category => ({
+        ...category,
+        vehicles: filterCarsByFilters(category.vehicles)
+      })).filter(category => category.vehicles.length > 0);
+    }
+    
+    return vehicles;
+  })();
 
   // Get current location
   const getCurrentLocation = async () => {
@@ -368,15 +482,22 @@ const RenterHomeScreen = () => {
                   >
                     <Ionicons name="search-outline" size={24} color={theme.colors.textPrimary} />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('SettingsTab', { screen: 'Notifications' });
-                    }}
-                    style={styles.iconButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-                  </TouchableOpacity>
+                  {activeTab === 'cars' && (
+                    <TouchableOpacity
+                      onPress={() => setShowFilterModal(true)}
+                      style={[styles.iconButton, hasActiveFilters && styles.filterIconActive]}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons 
+                        name="filter-outline" 
+                        size={24} 
+                        color={hasActiveFilters ? theme.colors.primary : theme.colors.textPrimary} 
+                      />
+                      {hasActiveFilters && (
+                        <View style={[styles.filterBadge, { backgroundColor: theme.colors.primary }]} />
+                      )}
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('RenterProfile');
@@ -466,7 +587,7 @@ const RenterHomeScreen = () => {
         </View>
       ),
     });
-  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top]);
+  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top, hasActiveFilters]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -1184,8 +1305,8 @@ const RenterHomeScreen = () => {
       ) : null}
 
         {/* Commercial Vehicles Sections */}
-        {commercialVehicles.length > 0 ? (
-          commercialVehicles.map((category, index) => (
+        {filteredCommercialVehicles.length > 0 ? (
+          filteredCommercialVehicles.map((category, index) => (
           <View key={category.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
             <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
               <View>
@@ -1445,6 +1566,214 @@ const RenterHomeScreen = () => {
                   )}
                 </TouchableOpacity>
               ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Filter Modal */}
+      <Modal
+        visible={showFilterModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowFilterModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.filterModalContainer, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.filterModalHeader}>
+              <Text style={[styles.filterModalTitle, { color: theme.colors.textPrimary }]}>
+                Filter Vehicles
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowFilterModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              style={styles.filterModalScrollView}
+              contentContainerStyle={styles.filterModalContentContainer}
+            >
+              {/* Price Range Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Price Range (per day)
+                </Text>
+                <View style={styles.priceRangeContainer}>
+                  <View style={styles.priceInputContainer}>
+                    <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Min</Text>
+                    <TextInput
+                      style={[styles.priceInput, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="0"
+                      placeholderTextColor={theme.colors.hint}
+                      keyboardType="numeric"
+                      value={filters.priceRange.min > 0 ? filters.priceRange.min.toString() : ''}
+                      onChangeText={(text) => {
+                        const value = text === '' ? 0 : parseInt(text) || 0;
+                        setFilters(prev => ({
+                          ...prev,
+                          priceRange: { ...prev.priceRange, min: value }
+                        }));
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.priceRangeSeparator, { color: theme.colors.textSecondary }]}>-</Text>
+                  <View style={styles.priceInputContainer}>
+                    <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Max</Text>
+                    <TextInput
+                      style={[styles.priceInput, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="50000"
+                      placeholderTextColor={theme.colors.hint}
+                      keyboardType="numeric"
+                      value={filters.priceRange.max < 50000 ? filters.priceRange.max.toString() : ''}
+                      onChangeText={(text) => {
+                        const value = text === '' ? 50000 : parseInt(text) || 50000;
+                        setFilters(prev => ({
+                          ...prev,
+                          priceRange: { ...prev.priceRange, max: value }
+                        }));
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              {/* Categories Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Vehicle Categories
+                </Text>
+                <View style={styles.filterChipsContainer}>
+                  {[
+                    ...carClasses.map(c => ({ id: c.id, name: c.name })),
+                    ...commercialVehicles.map(c => ({ id: c.id, name: c.name }))
+                  ].map((category) => (
+                    <TouchableOpacity
+                      key={category.id}
+                      style={[
+                        styles.filterChip,
+                        {
+                          backgroundColor: filters.categories.includes(category.id)
+                            ? theme.colors.primary
+                            : theme.colors.background,
+                          borderColor: filters.categories.includes(category.id)
+                            ? theme.colors.primary
+                            : theme.colors.hint,
+                        }
+                      ]}
+                      onPress={() => {
+                        setFilters(prev => {
+                          const newCategories = prev.categories.includes(category.id)
+                            ? prev.categories.filter(id => id !== category.id)
+                            : [...prev.categories, category.id];
+                          return { ...prev, categories: newCategories };
+                        });
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.filterChipText,
+                          {
+                            color: filters.categories.includes(category.id)
+                              ? theme.colors.white
+                              : theme.colors.textPrimary,
+                          }
+                        ]}
+                      >
+                        {category.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Fuel Types Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Fuel Type
+                </Text>
+                <View style={styles.filterChipsContainer}>
+                  {['Petrol', 'Diesel', 'Electric'].map((fuelType) => (
+                    <TouchableOpacity
+                      key={fuelType}
+                      style={[
+                        styles.filterChip,
+                        {
+                          backgroundColor: filters.fuelTypes.includes(fuelType.toLowerCase())
+                            ? theme.colors.primary
+                            : theme.colors.background,
+                          borderColor: filters.fuelTypes.includes(fuelType.toLowerCase())
+                            ? theme.colors.primary
+                            : theme.colors.hint,
+                        }
+                      ]}
+                      onPress={() => {
+                        setFilters(prev => {
+                          const newFuelTypes = prev.fuelTypes.includes(fuelType.toLowerCase())
+                            ? prev.fuelTypes.filter(ft => ft !== fuelType.toLowerCase())
+                            : [...prev.fuelTypes, fuelType.toLowerCase()];
+                          return { ...prev, fuelTypes: newFuelTypes };
+                        });
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.filterChipText,
+                          {
+                            color: filters.fuelTypes.includes(fuelType.toLowerCase())
+                              ? theme.colors.white
+                              : theme.colors.textPrimary,
+                          }
+                        ]}
+                      >
+                        {fuelType}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Filter Modal Footer */}
+              <View style={styles.filterModalFooter}>
+                <TouchableOpacity
+                  style={[styles.filterResetButton, { borderColor: theme.colors.hint }]}
+                  onPress={() => {
+                    setFilters({
+                      priceRange: { min: 0, max: 50000 },
+                      categories: [],
+                      fuelTypes: [],
+                      seatCounts: [],
+                    });
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.filterResetText, { color: theme.colors.textPrimary }]}>
+                    Reset
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.filterApplyButton, { backgroundColor: theme.colors.primary }]}
+                  onPress={() => setShowFilterModal(false)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.filterApplyText, { color: theme.colors.white }]}>
+                    Apply Filters
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </ScrollView>
           </View>
         </View>
@@ -2055,6 +2384,127 @@ const styles = StyleSheet.create({
   blogDate: {
     fontSize: 11,
     fontFamily: 'Nunito_400Regular',
+  },
+  filterIconActive: {
+    position: 'relative',
+  },
+  filterBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  filterModalContainer: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '85%',
+    paddingBottom: 0,
+  },
+  filterModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  filterModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+  },
+  filterModalScrollView: {
+    maxHeight: 500,
+  },
+  filterModalContentContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 20,
+  },
+  filterSection: {
+    marginBottom: 32,
+  },
+  filterSectionTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 16,
+  },
+  priceRangeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  priceInputContainer: {
+    flex: 1,
+  },
+  priceLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 8,
+  },
+  priceInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+  },
+  priceRangeSeparator: {
+    fontSize: 18,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 24,
+  },
+  filterChipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  filterChip: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  filterChipText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  filterModalFooter: {
+    flexDirection: 'row',
+    gap: 12,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 24,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+    flexShrink: 0,
+  },
+  filterResetButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterResetText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  filterApplyButton: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterApplyText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

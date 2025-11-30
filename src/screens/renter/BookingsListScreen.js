@@ -498,6 +498,7 @@ const styles = StyleSheet.create({
   },
   statusFiltersContainer: {
     marginBottom: 20,
+    paddingTop: 16,
   },
   statusFiltersScroll: {
     paddingLeft: 24,

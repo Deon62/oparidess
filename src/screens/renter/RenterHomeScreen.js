@@ -49,6 +49,10 @@ const nakuruImage = require('../../../assets/images/lNakuru.png');
 const egertonImage = require('../../../assets/images/LEgerton.png');
 const hellsgateImage = require('../../../assets/images/hellsgate.png');
 const pejetaImage = require('../../../assets/images/pejeta.png');
+const eventsImage = require('../../../assets/images/events.png');
+const events1Image = require('../../../assets/images/events1.png');
+const events2Image = require('../../../assets/images/events2.png');
+const events3Image = require('../../../assets/images/events3.png');
 
 const RenterHomeScreen = () => {
   const theme = useTheme();
@@ -745,7 +749,7 @@ const RenterHomeScreen = () => {
             <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
               Popular Destinations
             </Text>
-            <View style={styles.destinationsGrid}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.destinationsContainer}>
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
@@ -850,33 +854,99 @@ const RenterHomeScreen = () => {
                   </Text>
                 </View>
               </TouchableOpacity>
-            </View>
+            </ScrollView>
           </View>
 
-          {/* Weekend Getaways Section */}
+          {/* Car Events Near Me Section */}
           <View style={styles.discoverSubsection}>
             <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Weekend Getaways
+              Car Events Near Me
             </Text>
-            <View style={styles.weekendGetawaysContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
               <TouchableOpacity
-                style={[styles.weekendGetawayCard, { backgroundColor: theme.colors.white }]}
+                style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Travel Guide', 'Weekend getaway guide coming soon!');
+                  Alert.alert('Nairobi Auto Show', 'Join us for the biggest automotive exhibition in the region!');
                 }}
               >
-                <View style={styles.weekendGetawayIconContainer}>
-                  <Ionicons name="calendar-outline" size={40} color={theme.colors.primary} />
+                <View style={styles.carEventsImageContainer}>
+                  <Image source={eventsImage} style={styles.carEventsImage} resizeMode="cover" />
+                  <View style={styles.carEventsOverlay} />
                 </View>
-                <Text style={[styles.weekendGetawayTitle, { color: theme.colors.textPrimary }]}>
-                  Weekend Getaways
-                </Text>
-                <Text style={[styles.weekendGetawayDescription, { color: theme.colors.textSecondary }]}>
-                  Perfect destinations for a quick escape
-                </Text>
+                <View style={styles.carEventsContent}>
+                  <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                    Nairobi Auto Show
+                  </Text>
+                  <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary }]}>
+                    Biggest automotive exhibition in the region
+                  </Text>
+                </View>
               </TouchableOpacity>
-            </View>
+
+              <TouchableOpacity
+                style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Classic Car Exhibition', 'Explore vintage and classic vehicles from different eras!');
+                }}
+              >
+                <View style={styles.carEventsImageContainer}>
+                  <Image source={events1Image} style={styles.carEventsImage} resizeMode="cover" />
+                  <View style={styles.carEventsOverlay} />
+                </View>
+                <View style={styles.carEventsContent}>
+                  <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                    Classic Car Exhibition
+                  </Text>
+                  <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary }]}>
+                    Vintage and classic vehicles showcase
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Supercar Rally', 'Experience high-performance supercars up close!');
+                }}
+              >
+                <View style={styles.carEventsImageContainer}>
+                  <Image source={events2Image} style={styles.carEventsImage} resizeMode="cover" />
+                  <View style={styles.carEventsOverlay} />
+                </View>
+                <View style={styles.carEventsContent}>
+                  <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                    Supercar Rally
+                  </Text>
+                  <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary }]}>
+                    High-performance supercars showcase
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Motor Expo', 'Discover the latest innovations in automotive technology!');
+                }}
+              >
+                <View style={styles.carEventsImageContainer}>
+                  <Image source={events3Image} style={styles.carEventsImage} resizeMode="cover" />
+                  <View style={styles.carEventsOverlay} />
+                </View>
+                <View style={styles.carEventsContent}>
+                  <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                    Motor Expo
+                  </Text>
+                  <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary }]}>
+                    Latest automotive technology and innovations
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
 
           {/* User Stories Section */}
@@ -1827,13 +1897,15 @@ const styles = StyleSheet.create({
     marginTop: 4,
     opacity: 0.9,
   },
-  destinationsGrid: {
+  destinationsContainer: {
+    paddingRight: 24,
     gap: 16,
   },
   destinationCard: {
+    width: 280,
     borderRadius: 16,
     overflow: 'hidden',
-    marginBottom: 16,
+    marginRight: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -1871,32 +1943,50 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
   },
-  weekendGetawaysContainer: {
+  carEventsContainer: {
+    paddingRight: 24,
     gap: 16,
   },
-  weekendGetawayCard: {
+  carEventsCard: {
+    width: 280,
     borderRadius: 16,
-    padding: 24,
-    alignItems: 'center',
+    overflow: 'hidden',
+    marginRight: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 3,
   },
-  weekendGetawayIconContainer: {
-    marginBottom: 16,
+  carEventsImageContainer: {
+    width: '100%',
+    height: 200,
+    position: 'relative',
+    overflow: 'hidden',
   },
-  weekendGetawayTitle: {
+  carEventsImage: {
+    width: '100%',
+    height: '100%',
+  },
+  carEventsOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  carEventsContent: {
+    padding: 16,
+  },
+  carEventsTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-    textAlign: 'center',
+    marginBottom: 4,
   },
-  weekendGetawayDescription: {
+  carEventsDescription: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
     lineHeight: 20,
   },
   userStoriesContainer: {

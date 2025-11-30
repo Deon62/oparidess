@@ -288,6 +288,8 @@ const CarDetailsScreen = () => {
           )}
         </View>
 
+        {/* Content Container with Curved Top */}
+        <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
         {/* Car Details & Description */}
         <View style={styles.section}>
           <View style={[styles.carOverviewCard, { backgroundColor: theme.colors.primary + '08' }]}>
@@ -772,6 +774,7 @@ const CarDetailsScreen = () => {
 
         {/* Bottom spacing for fixed bar */}
         <View style={{ height: 100 }} />
+        </View>
       </ScrollView>
 
       {/* Fixed Bottom Bar */}
@@ -810,6 +813,12 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 20,
+  },
+  contentContainer: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -20,
+    paddingTop: 20,
   },
   carouselContainer: {
     width: SCREEN_WIDTH,

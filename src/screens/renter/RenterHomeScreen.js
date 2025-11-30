@@ -35,7 +35,12 @@ const car13 = require('../../../assets/images/car13.png');
 
 // Import service images
 const roadtripsImage = require('../../../assets/images/roadtrips.png');
-const safariImage = require('../../../assets/images/safari.png');
+const convoyImage = require('../../../assets/images/convoy.png');
+const driverImage = require('../../../assets/images/driver.png');
+const moversImage = require('../../../assets/images/movers.png');
+const mechanicsImage = require('../../../assets/images/mechanics.png');
+const partsImage = require('../../../assets/images/parts.png');
+const detailingImage = require('../../../assets/images/detailing.png');
 
 const RenterHomeScreen = () => {
   const theme = useTheme();
@@ -54,7 +59,7 @@ const RenterHomeScreen = () => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   
-  // Toggle state for Cars, Services, and Discover
+  // Toggle state for Vehicles, Services, and Discover
   const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
@@ -388,10 +393,14 @@ const RenterHomeScreen = () => {
                 {!isScrolled && <Text style={styles.toggleEmoji}>🚗</Text>}
                 <Text style={[
                   styles.toggleText, 
-                  { color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textPrimary }, 
-                  isScrolled && styles.toggleTextSmall
+                  { 
+                    color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textPrimary,
+                    fontWeight: activeTab === 'cars' ? '700' : '400',
+                    fontSize: activeTab === 'cars' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
+                    fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                  }
                 ]}>
-                  Cars
+                  Vehicles
                 </Text>
               </View>
             </TouchableOpacity>
@@ -406,8 +415,12 @@ const RenterHomeScreen = () => {
                 <Text 
                   style={[
                     styles.toggleText, 
-                    { color: activeTab === 'services' ? theme.colors.primary : theme.colors.textPrimary }, 
-                    isScrolled && styles.toggleTextSmall
+                    { 
+                      color: activeTab === 'services' ? theme.colors.primary : theme.colors.textPrimary,
+                      fontWeight: activeTab === 'services' ? '700' : '400',
+                      fontSize: activeTab === 'services' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
+                      fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                    }
                   ]}
                   numberOfLines={1}
                   ellipsizeMode="tail"
@@ -426,8 +439,12 @@ const RenterHomeScreen = () => {
                 {!isScrolled && <Text style={styles.toggleEmoji}>🔍</Text>}
                 <Text style={[
                   styles.toggleText, 
-                  { color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textPrimary }, 
-                  isScrolled && styles.toggleTextSmall
+                  { 
+                    color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textPrimary,
+                    fontWeight: activeTab === 'discover' ? '700' : '400',
+                    fontSize: activeTab === 'discover' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
+                    fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                  }
                 ]}>
                   Discover
                 </Text>
@@ -487,6 +504,28 @@ const RenterHomeScreen = () => {
               </View>
             </TouchableOpacity>
 
+            {/* VIP Wedding Fleet Hire Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to VIP wedding fleet screen
+                Alert.alert('Coming Soon', 'VIP wedding fleet hire will be available soon.');
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={convoyImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  VIP Wedding Fleet Hire
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Luxury vehicle convoy for your special day
+                </Text>
+              </View>
+            </TouchableOpacity>
+
             {/* Professional Drivers Card */}
             <TouchableOpacity
               style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
@@ -496,8 +535,8 @@ const RenterHomeScreen = () => {
                 Alert.alert('Coming Soon', 'Professional drivers booking will be available soon.');
               }}
             >
-              <View style={styles.serviceIconContainer}>
-                <Text style={styles.serviceIconEmoji}>🚗</Text>
+              <View style={styles.serviceImageContainer}>
+                <Image source={driverImage} style={styles.serviceImage} resizeMode="cover" />
               </View>
               <View style={styles.serviceContent}>
                 <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
@@ -518,8 +557,8 @@ const RenterHomeScreen = () => {
                 Alert.alert('Coming Soon', 'Moving services will be available soon.');
               }}
             >
-              <View style={styles.serviceIconContainer}>
-                <Text style={styles.serviceIconEmoji}>📦</Text>
+              <View style={styles.serviceImageContainer}>
+                <Image source={moversImage} style={styles.serviceImage} resizeMode="cover" />
               </View>
               <View style={styles.serviceContent}>
                 <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
@@ -527,6 +566,72 @@ const RenterHomeScreen = () => {
                 </Text>
                 <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
                   Professional moving and relocation services
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Mechanic Services Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to mechanic services screen
+                Alert.alert('Coming Soon', 'Mechanic services will be available soon.');
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={mechanicsImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Mechanic Services
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Professional automotive repair and maintenance services
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Automobile Parts Shop Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to parts shop screen
+                Alert.alert('Coming Soon', 'Automobile parts shop will be available soon.');
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={partsImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Automobile Parts Shop
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Quality auto parts and accessories for your vehicle
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* VIP Car Detailing Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to car detailing screen
+                Alert.alert('Coming Soon', 'VIP car detailing services will be available soon.');
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={detailingImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  VIP Car Detailing
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Premium car cleaning and detailing services
                 </Text>
               </View>
             </TouchableOpacity>

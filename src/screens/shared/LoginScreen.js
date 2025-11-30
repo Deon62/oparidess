@@ -5,7 +5,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button, Input, Toggle } from '../../packages/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   isBiometricAvailable,
   authenticateWithBiometrics,
@@ -17,7 +16,6 @@ const LoginScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const insets = useSafeAreaInsets();
   const { login } = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -117,15 +115,6 @@ const LoginScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Sticky Back Button */}
-      <TouchableOpacity
-        style={[styles.backButton, { paddingTop: insets.top + 12 }]}
-        onPress={() => navigation.goBack()}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="arrow-back" size={26} color="#000000" />
-      </TouchableOpacity>
-
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -296,16 +285,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     paddingBottom: 40,
-  },
-  backButton: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    zIndex: 1000,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   taglineContainer: {
     paddingHorizontal: 24,

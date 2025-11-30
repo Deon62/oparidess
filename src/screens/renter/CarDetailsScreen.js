@@ -6,6 +6,7 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Toggle } from '../../packages/components';
 import { WebView } from 'react-native-webview';
 import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import car images
 const carImage1 = require('../../../assets/images/car1.jpg');
@@ -22,6 +23,7 @@ const CarDetailsScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { car } = route.params || {};
   
   // Default car data if not provided
@@ -48,6 +50,7 @@ const CarDetailsScreen = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [showMoreRules, setShowMoreRules] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   // Auto-swap images every 3 seconds
   useEffect(() => {
@@ -59,12 +62,18 @@ const CarDetailsScreen = () => {
     }
   }, [carImages.length]);
 
-  // Hide bottom tab bar on this screen
+  // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
     navigation.getParent()?.setOptions({
       tabBarStyle: { display: 'none' },
     });
     return () => {
+      navigation.setOptions({
+        headerShown: true,
+      });
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,
       });
@@ -224,6 +233,42 @@ const CarDetailsScreen = () => {
               resizeMode="cover"
             />
           </View>
+          
+          {/* Floating Action Buttons */}
+          <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
+            <TouchableOpacity
+              style={styles.floatingButton}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            
+            <View style={styles.rightButtons}>
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={() => setIsLiked(!isLiked)}
+                activeOpacity={0.8}
+              >
+                <Ionicons 
+                  name={isLiked ? "heart" : "heart-outline"} 
+                  size={20} 
+                  color={isLiked ? "#FF3B30" : theme.colors.textPrimary} 
+                />
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={() => {
+                  Alert.alert('Share', 'Share this car listing with your friends!');
+                }}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="share-outline" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          
           {carImages.length > 1 && (
             <View style={styles.carouselIndicators}>
               {carImages.map((_, index) => (
@@ -767,11 +812,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   carouselContainer: {
-    width: '100%',
-    height: 250,
+    width: SCREEN_WIDTH,
+    height: 300,
     position: 'relative',
-    paddingHorizontal: 24,
-    paddingTop: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -782,7 +825,35 @@ const styles = StyleSheet.create({
   carouselImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 16,
+  },
+  floatingButtons: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  floatingButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  rightButtons: {
+    flexDirection: 'row',
+    gap: 12,
   },
   carouselIndicators: {
     position: 'absolute',

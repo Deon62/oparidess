@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -110,7 +110,12 @@ const LoginScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* Tagline */}
         <LinearGradient
           colors={[theme.colors.primary, theme.colors.primary + 'F5', theme.colors.primary + 'EA']}
@@ -261,7 +266,7 @@ const LoginScreen = () => {
           </TouchableOpacity>
         </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -270,11 +275,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentContainer: {
+  scrollView: {
     flex: 1,
   },
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
   taglineContainer: {
-    paddingTop: 80,
+    paddingTop: 60,
     paddingBottom: 0,
     marginBottom: -1,
     overflow: 'hidden',
@@ -282,7 +291,7 @@ const styles = StyleSheet.create({
   },
   taglineContent: {
     paddingHorizontal: 24,
-    paddingBottom: 28,
+    paddingBottom: 20,
     alignItems: 'center',
     position: 'relative',
   },
@@ -308,7 +317,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 20,
   },
   inputWrapper: {
     alignItems: 'center',
@@ -372,7 +381,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     alignSelf: 'center',
     gap: 12,
-    paddingHorizontal: 24,
+    marginBottom: 20,
   },
   socialButton: {
     flex: 1,

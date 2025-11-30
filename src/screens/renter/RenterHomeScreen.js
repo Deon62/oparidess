@@ -1578,7 +1578,7 @@ const RenterHomeScreen = () => {
         animationType="slide"
         onRequestClose={() => setShowFilterModal(false)}
       >
-        <View style={styles.modalOverlay}>
+        <View style={styles.filterModalOverlay}>
           <View style={[styles.filterModalContainer, { backgroundColor: theme.colors.white }]}>
             <View style={styles.filterModalHeader}>
               <Text style={[styles.filterModalTitle, { color: theme.colors.textPrimary }]}>
@@ -1691,6 +1691,8 @@ const RenterHomeScreen = () => {
                               : theme.colors.textPrimary,
                           }
                         ]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                       >
                         {category.name}
                       </Text>
@@ -1772,8 +1774,8 @@ const RenterHomeScreen = () => {
                   <Text style={[styles.filterApplyText, { color: theme.colors.white }]}>
                     Apply Filters
                   </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
+            </View>
             </ScrollView>
           </View>
         </View>
@@ -2396,11 +2398,22 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
   },
+  filterModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    justifyContent: 'flex-end',
+  },
   filterModalContainer: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '85%',
-    paddingBottom: 0,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: '75%',
+    minHeight: '60%',
+    flexDirection: 'column',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 10,
   },
   filterModalHeader: {
     flexDirection: 'row',
@@ -2411,26 +2424,27 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
+    flexShrink: 0,
   },
   filterModalTitle: {
     fontSize: 24,
     fontFamily: 'Nunito_700Bold',
   },
   filterModalScrollView: {
-    maxHeight: 500,
+    flex: 1,
   },
   filterModalContentContainer: {
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingTop: 20,
     paddingBottom: 20,
   },
   filterSection: {
-    marginBottom: 32,
+    marginBottom: 24,
   },
   filterSectionTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   priceRangeContainer: {
     flexDirection: 'row',
@@ -2461,13 +2475,17 @@ const styles = StyleSheet.create({
   filterChipsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
+    justifyContent: 'flex-start',
   },
   filterChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    borderWidth: 1,
+    width: '31%',
+    paddingVertical: 12,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
   },
   filterChipText: {
     fontSize: 14,
@@ -2477,8 +2495,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 12,
+    paddingBottom: 20,
     borderTopWidth: 1,
     borderTopColor: '#F0F0F0',
     flexShrink: 0,

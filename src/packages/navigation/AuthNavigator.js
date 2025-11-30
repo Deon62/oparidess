@@ -26,8 +26,7 @@ const AuthNavigator = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
-        animation: 'fade',
-        animationDuration: 300,
+        animation: 'none',
         gestureEnabled: false,
         headerBackTitleVisible: false,
         statusBarStyle: 'dark',
@@ -39,7 +38,6 @@ const AuthNavigator = () => {
         component={LandingScreen}
         options={{ 
           headerShown: false,
-          animation: 'fade',
           gestureEnabled: false,
         }}
       />
@@ -49,7 +47,6 @@ const AuthNavigator = () => {
         options={{ 
           title: 'Login',
           headerShown: false,
-          animation: 'fade',
           gestureEnabled: false,
         }}
       />
@@ -59,7 +56,6 @@ const AuthNavigator = () => {
         options={{ 
           title: 'Sign Up',
           headerShown: false,
-          animation: 'fade',
           gestureEnabled: false,
         }}
       />
@@ -69,7 +65,6 @@ const AuthNavigator = () => {
         options={{ 
           title: 'Reset Password',
           headerShown: true,
-          animation: 'fade',
         }}
       />
     </Stack.Navigator>

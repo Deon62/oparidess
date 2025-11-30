@@ -6,7 +6,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-google-fonts/nunito';
 
-import { ThemeProvider } from './src/packages/theme/ThemeProvider';
+import { ThemeProvider, useTheme } from './src/packages/theme/ThemeProvider';
 import { UserProvider } from './src/packages/context/UserContext';
 import MainNavigator from './src/packages/navigation/MainNavigator';
 
@@ -33,14 +33,34 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <UserProvider>
-          <NavigationContainer>
-            <StatusBar style="dark" />
-            <MainNavigator />
-          </NavigationContainer>
-        </UserProvider>
+        <AppContent />
       </ThemeProvider>
     </SafeAreaProvider>
+  );
+}
+
+const AppContent = () => {
+  const theme = useTheme();
+
+  return (
+    <UserProvider>
+      <NavigationContainer
+        theme={{
+          dark: false,
+          colors: {
+            primary: theme.colors.primary,
+            background: theme.colors.background,
+            card: theme.colors.background,
+            text: theme.colors.textPrimary,
+            border: 'transparent',
+            notification: theme.colors.primary,
+          },
+        }}
+      >
+        <StatusBar style="dark" />
+        <MainNavigator />
+      </NavigationContainer>
+    </UserProvider>
   );
 }
 

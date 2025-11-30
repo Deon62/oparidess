@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
@@ -9,11 +9,15 @@ const LandingScreen = () => {
   const navigation = useNavigation();
 
   const handleGetStarted = () => {
-    navigation.navigate('UserTypeSelection');
+    navigation.navigate('Signup', { userType: 'renter' });
   };
 
   const handleLogin = () => {
     navigation.navigate('Login');
+  };
+
+  const handleCarOwnerRegister = () => {
+    navigation.navigate('Signup', { userType: 'owner' });
   };
 
   return (
@@ -55,6 +59,22 @@ const LandingScreen = () => {
           variant="secondary"
           style={styles.secondaryButton}
         />
+      </View>
+
+      {/* Car Owner Register Link */}
+      <View style={styles.carOwnerContainer}>
+        <TouchableOpacity
+          onPress={handleCarOwnerRegister}
+          activeOpacity={0.7}
+          style={styles.carOwnerLinkContainer}
+        >
+          <Text style={[styles.carOwnerText, { color: theme.colors.textSecondary }]}>
+            List your car?{' '}
+            <Text style={[styles.carOwnerLink, { color: theme.colors.primary }]}>
+              Become a Car Owner
+            </Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -117,6 +137,24 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     marginBottom: 0,
+  },
+  carOwnerContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 40,
+    alignItems: 'center',
+  },
+  carOwnerLinkContainer: {
+    alignItems: 'center',
+  },
+  carOwnerText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+  },
+  carOwnerLink: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

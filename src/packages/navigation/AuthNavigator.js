@@ -7,7 +7,6 @@ import LandingScreen from '../../screens/shared/LandingScreen';
 import LoginScreen from '../../screens/shared/LoginScreen';
 import SignupScreen from '../../screens/shared/SignupScreen';
 import ResetPasswordScreen from '../../screens/shared/ResetPasswordScreen';
-import UserTypeSelectionScreen from '../../screens/shared/UserTypeSelectionScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,14 +32,6 @@ const AuthNavigator = () => {
         name="Landing" 
         component={LandingScreen}
         options={{ headerShown: false }}
-      />
-      <Stack.Screen 
-        name="UserTypeSelection" 
-        component={UserTypeSelectionScreen}
-        options={{ 
-          title: 'Select User Type',
-          headerShown: true 
-        }}
       />
       <Stack.Screen 
         name="Login" 

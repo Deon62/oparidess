@@ -44,6 +44,7 @@ const RenterHomeScreen = () => {
   // City and location state
   const [selectedCity, setSelectedCity] = useState('Nairobi');
   const [showCityPicker, setShowCityPicker] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   
@@ -259,7 +260,6 @@ const RenterHomeScreen = () => {
         const city = geocode[0].city || geocode[0].subAdministrativeArea || 'Current Location';
         setCurrentLocation({ latitude, longitude, city });
         setSelectedCity(city);
-        Alert.alert('Location Updated', `Using location: ${city}`);
       } else {
         setCurrentLocation({ latitude, longitude, city: 'Current Location' });
         setSelectedCity('Current Location');
@@ -290,6 +290,23 @@ const RenterHomeScreen = () => {
   // Set header icons and search bar
   React.useLayoutEffect(() => {
     navigation.setOptions({
+      title: '', // Hide the title since we have location icon
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => setShowLocationModal(true)}
+          style={styles.headerLocationButton}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="location" size={24} color={theme.colors.primary} />
+          <Text 
+            style={[styles.headerLocationText, { color: theme.colors.textPrimary }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {selectedCity}
+          </Text>
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <View style={styles.headerRightContainer}>
           {showSearch ? (
@@ -348,55 +365,10 @@ const RenterHomeScreen = () => {
         </View>
       ),
     });
-  }, [navigation, theme, showSearch, searchQuery]);
+  }, [navigation, theme, showSearch, searchQuery, selectedCity]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Search Options Bar */}
-      <View style={[styles.searchOptionsBar, { backgroundColor: theme.colors.white }]}>
-        <TouchableOpacity
-          style={[styles.citySelector, { 
-            backgroundColor: theme.colors.primary,
-            borderColor: theme.colors.primary,
-          }]}
-          onPress={() => setShowCityPicker(true)}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="location-outline" size={20} color={theme.colors.white} />
-          <Text 
-            style={[styles.citySelectorText, { color: theme.colors.white }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {selectedCity}
-          </Text>
-          <Ionicons name="chevron-down-outline" size={18} color={theme.colors.white} />
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          style={[styles.locationButton, { 
-            backgroundColor: theme.colors.white,
-            borderColor: theme.colors.primary,
-            borderWidth: 1,
-          }]}
-          onPress={getCurrentLocation}
-          disabled={isGettingLocation}
-          activeOpacity={0.7}
-        >
-          {isGettingLocation ? (
-            <Ionicons name="hourglass-outline" size={18} color={theme.colors.primary} />
-          ) : (
-            <Ionicons name="locate-outline" size={18} color={theme.colors.primary} />
-          )}
-          <Text 
-            style={[styles.locationButtonText, { color: theme.colors.primary }]}
-            numberOfLines={1}
-          >
-            {isGettingLocation ? 'Getting...' : 'Current Location'}
-          </Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
@@ -638,6 +610,74 @@ const RenterHomeScreen = () => {
         </Animated.View>
       )}
 
+      {/* Location Options Modal */}
+      <Modal
+        visible={showLocationModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowLocationModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.locationModal, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.locationModalHeader}>
+              <Text style={[styles.locationModalTitle, { color: theme.colors.textPrimary }]}>
+                Choose Location
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowLocationModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.locationOptionsContainer}>
+              {/* Current Location Button */}
+              <TouchableOpacity
+                style={[styles.locationOptionButton, {
+                  backgroundColor: theme.colors.primary,
+                  borderColor: theme.colors.primary,
+                }]}
+                onPress={async () => {
+                  await getCurrentLocation();
+                  setShowLocationModal(false);
+                }}
+                disabled={isGettingLocation}
+                activeOpacity={0.7}
+              >
+                {isGettingLocation ? (
+                  <Ionicons name="hourglass-outline" size={24} color={theme.colors.white} />
+                ) : (
+                  <Ionicons name="locate-outline" size={24} color={theme.colors.white} />
+                )}
+                <Text style={[styles.locationOptionText, { color: theme.colors.white }]}>
+                  {isGettingLocation ? 'Getting Location...' : 'Use Current Location'}
+                </Text>
+              </TouchableOpacity>
+
+              {/* Select County Button */}
+              <TouchableOpacity
+                style={[styles.locationOptionButton, {
+                  backgroundColor: theme.colors.white,
+                  borderColor: theme.colors.primary,
+                  borderWidth: 2,
+                }]}
+                onPress={() => {
+                  setShowLocationModal(false);
+                  setShowCityPicker(true);
+                }}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
+                <Text style={[styles.locationOptionText, { color: theme.colors.primary }]}>
+                  Select County
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* County Picker Modal */}
       <Modal
         visible={showCityPicker}
@@ -666,8 +706,8 @@ const RenterHomeScreen = () => {
                   style={[
                     styles.cityItem,
                     {
-                      backgroundColor: selectedCity === county ? '#4CAF50' + '15' : 'transparent',
-                      borderColor: selectedCity === county ? '#4CAF50' : '#E0E0E0',
+                      backgroundColor: selectedCity === county ? theme.colors.primary + '15' : 'transparent',
+                      borderColor: selectedCity === county ? theme.colors.primary : '#E0E0E0',
                     },
                   ]}
                   onPress={() => {
@@ -682,13 +722,13 @@ const RenterHomeScreen = () => {
                   <Ionicons
                     name="location"
                     size={20}
-                    color={selectedCity === county ? '#4CAF50' : theme.colors.textSecondary}
+                    color={selectedCity === county ? theme.colors.primary : theme.colors.textSecondary}
                   />
                   <Text
                     style={[
                       styles.cityItemText,
                       {
-                        color: selectedCity === county ? '#4CAF50' : theme.colors.textPrimary,
+                        color: selectedCity === county ? theme.colors.primary : theme.colors.textPrimary,
                         fontFamily: selectedCity === county ? 'Nunito_600SemiBold' : 'Nunito_400Regular',
                       },
                     ]}
@@ -696,7 +736,7 @@ const RenterHomeScreen = () => {
                     {county}
                   </Text>
                   {selectedCity === county && (
-                    <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
+                    <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>
               ))}
@@ -940,47 +980,49 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
-  searchOptionsBar: {
+  headerLocationButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    gap: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    paddingLeft: 16,
+    gap: 6,
+    maxWidth: 150,
   },
-  citySelector: {
-    flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 2,
-    gap: 8,
-    minWidth: 0,
-  },
-  citySelectorText: {
-    flex: 1,
+  headerLocationText: {
     fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    minWidth: 0,
-    flexShrink: 1,
-  },
-  locationButton: {
+    fontFamily: 'Nunito_600SemiBold',
     flex: 1,
+  },
+  locationModal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 24,
+    maxHeight: '40%',
+  },
+  locationModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  locationModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+  },
+  locationOptionsContainer: {
+    gap: 16,
+  },
+  locationOptionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     borderRadius: 12,
-    gap: 6,
-    flexShrink: 0,
+    gap: 12,
   },
-  locationButtonText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_700Bold',
+  locationOptionText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   modalOverlay: {
     flex: 1,

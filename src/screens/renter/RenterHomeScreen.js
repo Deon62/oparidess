@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated, Modal, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -32,9 +33,14 @@ const car11 = require('../../../assets/images/car11.png');
 const car12 = require('../../../assets/images/car12.png');
 const car13 = require('../../../assets/images/car13.png');
 
+// Import service images
+const roadtripsImage = require('../../../assets/images/roadtrips.png');
+const safariImage = require('../../../assets/images/safari.png');
+
 const RenterHomeScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [likedCars, setLikedCars] = useState(new Set());
@@ -47,6 +53,11 @@ const RenterHomeScreen = () => {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
+  
+  // Toggle state for Cars, Services, and Discover
+  const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
+  const [isScrolled, setIsScrolled] = useState(false);
+  const scrollViewRef = useRef(null);
   
   
   // All 47 Kenyan Counties
@@ -290,92 +301,159 @@ const RenterHomeScreen = () => {
   // Set header icons and search bar
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: '', // Hide the title since we have location icon
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => setShowLocationModal(true)}
-          style={styles.headerLocationButton}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="location" size={24} color={theme.colors.primary} />
-          <Text 
-            style={[styles.headerLocationText, { color: theme.colors.textPrimary }]}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {selectedCity}
-          </Text>
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <View style={styles.headerRightContainer}>
-          {showSearch ? (
-            <View style={[styles.headerSearchContainer, { backgroundColor: theme.colors.white }]}>
-              <TextInput
-                style={[styles.headerSearchInput, { color: theme.colors.textPrimary }]}
-                placeholder="Search cars..."
-                placeholderTextColor={theme.colors.hint}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                autoFocus
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setShowSearch(false);
-                  setSearchQuery('');
-                }}
-                style={styles.headerCloseButton}
-                activeOpacity={0.7}
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+          {/* Top Row: Location and Action Icons */}
+          <View style={styles.headerTopRow}>
+            <TouchableOpacity
+              onPress={() => setShowLocationModal(true)}
+              style={styles.headerLocationButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="location" size={24} color={theme.colors.primary} />
+              <Text 
+                style={[styles.headerLocationText, { color: theme.colors.textPrimary }]}
+                numberOfLines={1}
+                ellipsizeMode="tail"
               >
-                <Ionicons name="close" size={20} color={theme.colors.textPrimary} />
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.headerIcons}>
-              <TouchableOpacity
-                onPress={() => setShowSearch(true)}
-                style={styles.iconButton}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="search-outline" size={24} color={theme.colors.textPrimary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SettingsTab', { screen: 'Notifications' });
-                }}
-                style={styles.iconButton}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('RenterProfile');
-                }}
-                style={styles.profileButton}
-                activeOpacity={0.7}
-              >
-                <View style={styles.profileImageContainer}>
-                  <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-                  <View style={styles.onlineIndicator} />
+                {selectedCity}
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.headerRightContainer}>
+              {showSearch ? (
+                <View style={[styles.headerSearchContainer, { backgroundColor: theme.colors.white }]}>
+                  <TextInput
+                    style={[styles.headerSearchInput, { color: theme.colors.textPrimary }]}
+                    placeholder="Search cars..."
+                    placeholderTextColor={theme.colors.hint}
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    autoFocus
+                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowSearch(false);
+                      setSearchQuery('');
+                    }}
+                    style={styles.headerCloseButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="close" size={20} color={theme.colors.textPrimary} />
+                  </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              ) : (
+                <View style={styles.headerIcons}>
+                  <TouchableOpacity
+                    onPress={() => setShowSearch(true)}
+                    style={styles.iconButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="search-outline" size={24} color={theme.colors.textPrimary} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('SettingsTab', { screen: 'Notifications' });
+                    }}
+                    style={styles.iconButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('RenterProfile');
+                    }}
+                    style={styles.profileButton}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.profileImageContainer}>
+                      <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+                      <View style={styles.onlineIndicator} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
-          )}
+          </View>
+
+          {/* Bottom Row: Toggle Buttons */}
+          <View style={[styles.headerBottomRow, isScrolled && styles.headerBottomRowSmall]}>
+            <TouchableOpacity
+              style={styles.toggleButton}
+              onPress={() => setActiveTab('cars')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.toggleContent}>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🚗</Text>}
+                <Text style={[
+                  styles.toggleText, 
+                  { color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textPrimary }, 
+                  isScrolled && styles.toggleTextSmall
+                ]}>
+                  Cars
+                </Text>
+              </View>
+            </TouchableOpacity>
+            
+            <TouchableOpacity
+              style={styles.toggleButton}
+              onPress={() => setActiveTab('services')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.toggleContent}>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🛠️</Text>}
+                <Text 
+                  style={[
+                    styles.toggleText, 
+                    { color: activeTab === 'services' ? theme.colors.primary : theme.colors.textPrimary }, 
+                    isScrolled && styles.toggleTextSmall
+                  ]}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  Services
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.toggleButton}
+              onPress={() => setActiveTab('discover')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.toggleContent}>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🔍</Text>}
+                <Text style={[
+                  styles.toggleText, 
+                  { color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textPrimary }, 
+                  isScrolled && styles.toggleTextSmall
+                ]}>
+                  Discover
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       ),
     });
-  }, [navigation, theme, showSearch, searchQuery, selectedCity]);
+  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          const scrollY = event.nativeEvent.contentOffset.y;
+          setIsScrolled(scrollY > 50);
+        }}
+        scrollEventThrottle={16}
       >
       {/* Search Results */}
-      {searchQuery.trim() && (
+      {searchQuery.trim() && activeTab === 'cars' && (
         <View style={styles.searchResultsHeader}>
           <Text style={[styles.searchResultsText, { color: theme.colors.textPrimary }]}>
             {filteredCars?.length || 0} {filteredCars?.length === 1 ? 'car' : 'cars'} found for "{searchQuery}" in {selectedCity}
@@ -383,8 +461,97 @@ const RenterHomeScreen = () => {
         </View>
       )}
 
+      {/* Services Section */}
+      {activeTab === 'services' && (
+        <View style={styles.servicesSection}>
+          <View style={styles.servicesGrid}>
+            {/* Road Trips Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to road trips screen
+                navigation.navigate('CarList', { categoryId: 'roadtrips' });
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={roadtripsImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Road Trips
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Plan your perfect adventure with our road trip packages
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Professional Drivers Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to drivers screen
+                Alert.alert('Coming Soon', 'Professional drivers booking will be available soon.');
+              }}
+            >
+              <View style={styles.serviceIconContainer}>
+                <Text style={styles.serviceIconEmoji}>🚗</Text>
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Hire Professional Drivers
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Get experienced drivers for your rental vehicle
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Movers Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to movers screen
+                Alert.alert('Coming Soon', 'Moving services will be available soon.');
+              }}
+            >
+              <View style={styles.serviceIconContainer}>
+                <Text style={styles.serviceIconEmoji}>📦</Text>
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Movers
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  Professional moving and relocation services
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
+      {/* Discover Section */}
+      {activeTab === 'discover' && (
+        <View style={styles.servicesSection}>
+          <View style={styles.servicesGrid}>
+            <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary, textAlign: 'center', marginBottom: 24 }]}>
+              Discover
+            </Text>
+            <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary, textAlign: 'center' }]}>
+              Discover new destinations, experiences, and more coming soon.
+            </Text>
+          </View>
+        </View>
+      )}
+
       {/* Car Classes Sections */}
-      {filteredCarClasses.length > 0 ? (
+      {activeTab === 'cars' && (
+        <>
+        {filteredCarClasses.length > 0 ? (
         filteredCarClasses.map((carClass, index) => (
         <View key={carClass.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
           <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
@@ -480,9 +647,9 @@ const RenterHomeScreen = () => {
       ))
       ) : null}
 
-      {/* Commercial Vehicles Sections */}
-      {commercialVehicles.length > 0 ? (
-        commercialVehicles.map((category, index) => (
+        {/* Commercial Vehicles Sections */}
+        {commercialVehicles.length > 0 ? (
+          commercialVehicles.map((category, index) => (
           <View key={category.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
             <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
               <View>
@@ -574,21 +741,23 @@ const RenterHomeScreen = () => {
               ))}
             </ScrollView>
           </View>
-        ))
-      ) : null}
+          ))
+        ) : null}
 
-      {/* Search Results / No Results */}
-      {searchQuery.trim() ? (
-        <View style={styles.noResultsContainer}>
-          <Ionicons name="search-outline" size={64} color={theme.colors.hint} />
-          <Text style={[styles.noResultsText, { color: theme.colors.textSecondary }]}>
-            No vehicles found matching "{searchQuery}"
-          </Text>
-          <Text style={[styles.noResultsSubtext, { color: theme.colors.hint }]}>
-            Try searching with a different term
-          </Text>
-        </View>
-      ) : null}
+        {/* Search Results / No Results */}
+        {searchQuery.trim() ? (
+          <View style={styles.noResultsContainer}>
+            <Ionicons name="search-outline" size={64} color={theme.colors.hint} />
+            <Text style={[styles.noResultsText, { color: theme.colors.textSecondary }]}>
+              No vehicles found matching "{searchQuery}"
+            </Text>
+            <Text style={[styles.noResultsSubtext, { color: theme.colors.hint }]}>
+              Try searching with a different term
+            </Text>
+          </View>
+        ) : null}
+        </>
+      )}
       </ScrollView>
 
       {/* No Hidden Fees Message Banner - Bottom Above Navbar */}
@@ -980,10 +1149,22 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  customHeader: {
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  headerTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 8,
+  },
   headerLocationButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 16,
     gap: 6,
     maxWidth: 150,
   },
@@ -991,6 +1172,45 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
     flex: 1,
+  },
+  headerBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingTop: 4,
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  headerBottomRowSmall: {
+    paddingTop: 2,
+    paddingBottom: 4,
+  },
+  toggleButton: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    maxWidth: '33.33%',
+  },
+  toggleContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  toggleIndicator: {
+    width: 40,
+    height: 3,
+    borderRadius: 2,
+    marginTop: 4,
+    alignSelf: 'center',
+    position: 'relative',
+  },
+  toggleTextSmall: {
+    fontSize: 12,
   },
   locationModal: {
     borderTopLeftRadius: 20,
@@ -1058,6 +1278,71 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
+  },
+  toggleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    gap: 6,
+  },
+  toggleEmoji: {
+    fontSize: 20,
+  },
+  toggleText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  servicesSection: {
+    paddingTop: 24,
+    paddingBottom: 40,
+  },
+  servicesGrid: {
+    paddingHorizontal: 24,
+    gap: 16,
+  },
+  serviceCard: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  serviceImageContainer: {
+    width: '100%',
+    height: 180,
+    overflow: 'hidden',
+  },
+  serviceImage: {
+    width: '100%',
+    height: '100%',
+  },
+  serviceIconContainer: {
+    width: '100%',
+    height: 180,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  serviceIconEmoji: {
+    fontSize: 64,
+  },
+  serviceContent: {
+    padding: 20,
+  },
+  serviceTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+  },
+  serviceDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
   },
 });
 

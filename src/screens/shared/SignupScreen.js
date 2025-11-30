@@ -1,5 +1,6 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
@@ -48,11 +49,6 @@ const SignupScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
-  const handleMobileSignup = () => {
-    // Auto-signup with Mobile
-    Alert.alert('Mobile Signup', 'Mobile number signup will be implemented soon.');
-    // login({ email: 'mobile@example.com', name: 'Mobile User' }, userType);
-  };
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -67,20 +63,25 @@ const SignupScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
+      <View style={styles.contentContainer}>
         {/* Tagline */}
-        <View style={styles.taglineContainer}>
-          <Text 
-            style={[styles.taglineText, { color: theme.colors.textPrimary }]}
-            allowFontScaling={false}
-          >
-            Welcome to Opa😉
-          </Text>
-        </View>
+        <LinearGradient
+          colors={[theme.colors.primary, theme.colors.primary + 'F5', theme.colors.primary + 'EA']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+          style={styles.taglineContainer}
+        >
+          <View style={styles.taglineContent}>
+            <View style={styles.decorativeCircle} />
+            <Text 
+              style={[styles.taglineText, { color: theme.colors.white }]}
+              allowFontScaling={false}
+            >
+              Welcome to Opa😉
+            </Text>
+          </View>
+          <View style={[styles.taglineCurve, { backgroundColor: theme.colors.background }]} />
+        </LinearGradient>
 
         {/* Form Section */}
         <View style={styles.formSection}>
@@ -182,44 +183,35 @@ const SignupScreen = () => {
         </View>
 
         {/* Social Login Buttons */}
-        <TouchableOpacity
-          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
-          onPress={handleMobileSignup}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="phone-portrait-outline" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
-          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
-            Continue with Mobile
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.socialButtonsRow}>
+          <TouchableOpacity
+            style={[styles.socialButton, { borderColor: theme.colors.hint }]}
+            onPress={handleGoogleSignup}
+            activeOpacity={0.7}
+          >
+            <Image
+              source={{ uri: 'https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png' }}
+              style={styles.googleLogo}
+              resizeMode="contain"
+            />
+            <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
+              Google
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
-          onPress={handleGoogleSignup}
-          activeOpacity={0.7}
-        >
-          <Image
-            source={{ uri: 'https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png' }}
-            style={styles.googleLogo}
-            resizeMode="contain"
-          />
-          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
-            Continue with Google
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.socialButton, { borderColor: theme.colors.hint }]}
-          onPress={handleAppleSignup}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="logo-apple" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
-          <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
-            Continue with Apple
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.socialButton, { borderColor: theme.colors.hint }]}
+            onPress={handleAppleSignup}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="logo-apple" size={20} color={theme.colors.textPrimary} style={styles.socialIcon} />
+            <Text style={[styles.socialButtonText, { color: theme.colors.textPrimary }]}>
+              Apple
+            </Text>
+          </TouchableOpacity>
+        </View>
+        </View>
       </View>
-      </ScrollView>
     </View>
   );
 };
@@ -228,18 +220,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollView: {
+  contentContainer: {
     flex: 1,
   },
-  contentContainer: {
-    flexGrow: 1,
-    paddingBottom: 40,
-  },
   taglineContainer: {
-    paddingHorizontal: 24,
     paddingTop: 120,
+    paddingBottom: 0,
+    marginBottom: -1,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  taglineContent: {
+    paddingHorizontal: 24,
     paddingBottom: 28,
     alignItems: 'center',
+    position: 'relative',
+  },
+  decorativeCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    position: 'absolute',
+    top: -20,
+    right: -10,
+  },
+  taglineCurve: {
+    height: 35,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    marginTop: -1,
   },
   taglineText: {
     fontSize: 22,
@@ -307,25 +317,35 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     paddingHorizontal: 16,
   },
+  socialButtonsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 400,
+    alignSelf: 'center',
+    gap: 12,
+    paddingHorizontal: 24,
+  },
   socialButton: {
+    flex: 1,
     borderWidth: 1,
     borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 48,
-    marginBottom: 8,
+    minHeight: 40,
     backgroundColor: '#FFFFFF',
     flexDirection: 'row',
+    gap: 8,
   },
   socialIcon: {
-    marginRight: 12,
+    marginRight: 0,
   },
   googleLogo: {
     width: 20,
     height: 20,
-    marginRight: 12,
+    marginRight: 0,
   },
   socialButtonText: {
     fontSize: 16,

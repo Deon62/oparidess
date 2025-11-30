@@ -233,12 +233,12 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    paddingBottom: 20,
+    paddingBottom: 40,
   },
   taglineContainer: {
     paddingHorizontal: 24,
-    paddingTop: 70,
-    paddingBottom: 20,
+    paddingTop: 120,
+    paddingBottom: 28,
     alignItems: 'center',
   },
   taglineText: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingTop: 32,
   },
   inputWrapper: {
     alignItems: 'center',

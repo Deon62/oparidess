@@ -38,10 +38,10 @@ const LandingScreen = () => {
       {/* Content Section */}
       <View style={styles.contentSection}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-          Welcome to Oparides
+          Welcome to Opa
         </Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-          Your premium car rental{'\n'}experience
+          Alles Gut mit Opa
         </Text>
       </View>
 

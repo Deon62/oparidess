@@ -649,7 +649,7 @@ const BookingScreen = () => {
           title="Continue to Review"
           onPress={handleContinue}
           variant="primary"
-          style={styles.payButton}
+          style={[styles.payButton, { backgroundColor: '#FF8A3D' }]}
           disabled={!pickupDate || !dropoffDate || days < rentalInfo.minimumDays || !pickupLocation}
         />
       </View>

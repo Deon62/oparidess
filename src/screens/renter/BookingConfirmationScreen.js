@@ -439,7 +439,7 @@ const BookingConfirmationScreen = () => {
         title="Proceed to Payment"
         onPress={handleProceedToPayment}
         variant="primary"
-        style={styles.proceedButton}
+        style={[styles.proceedButton, { backgroundColor: '#FF8A3D' }]}
         disabled={!agreeToTerms}
       />
     </View>

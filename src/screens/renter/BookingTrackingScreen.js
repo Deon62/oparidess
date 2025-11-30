@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -109,6 +109,63 @@ const BookingTrackingScreen = () => {
     Linking.openURL('tel:+254702248984').catch((err) =>
       console.error('Failed to open phone:', err)
     );
+  };
+
+  const handleAddToCalendar = () => {
+    if (!bookingDetails?.pickupDate || !bookingDetails?.dropoffDate) {
+      Alert.alert('Error', 'Booking dates are not available');
+      return;
+    }
+
+    try {
+      const pickupDate = typeof bookingDetails.pickupDate === 'string' 
+        ? new Date(bookingDetails.pickupDate) 
+        : bookingDetails.pickupDate;
+      const dropoffDate = typeof bookingDetails.dropoffDate === 'string' 
+        ? new Date(bookingDetails.dropoffDate) 
+        : bookingDetails.dropoffDate;
+
+      // Format dates for Google Calendar URL (YYYYMMDDTHHMMSS)
+      const formatCalendarDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(bookingDetails?.pickupTime?.split(':')[0] || 10).padStart(2, '0');
+        const minutes = String(bookingDetails?.pickupTime?.split(':')[1] || '00').padStart(2, '0');
+        return `${year}${month}${day}T${hours}${minutes}00`;
+      };
+
+      const formatEndDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(bookingDetails?.dropoffTime?.split(':')[0] || 10).padStart(2, '0');
+        const minutes = String(bookingDetails?.dropoffTime?.split(':')[1] || '00').padStart(2, '0');
+        return `${year}${month}${day}T${hours}${minutes}00`;
+      };
+
+      const startDate = formatCalendarDate(pickupDate);
+      const endDate = formatEndDate(dropoffDate);
+      
+      // Get booking details
+      const carName = bookingDetails?.car?.name || 'Car Rental';
+      const title = `Car Rental: ${carName}`;
+      const location = bookingDetails?.pickupLocation || 'Pickup Location';
+      const notes = `Booking ID: ${bookingDetails?.bookingId || 'N/A'}\n` +
+                   `Pickup: ${formatDate(pickupDate)} at ${location}\n` +
+                   `Dropoff: ${formatDate(dropoffDate)}\n` +
+                   `Total: ${formatCurrency(bookingDetails?.totalRentalPrice || 0)}`;
+
+      // Create Google Calendar URL (works on both Android and iOS)
+      const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(notes)}&location=${encodeURIComponent(location)}`;
+      
+      Linking.openURL(calendarUrl).catch(() => {
+        Alert.alert('Error', 'Unable to open calendar. Please add the event manually to your calendar app.');
+      });
+    } catch (error) {
+      console.error('Error adding to calendar:', error);
+      Alert.alert('Error', 'Unable to add event to calendar. Please try again.');
+    }
   };
 
   const InfoCard = ({ icon, title, value, onPress }) => (
@@ -376,6 +433,19 @@ const BookingTrackingScreen = () => {
             <Ionicons name="chatbubbles-outline" size={24} color={theme.colors.primary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               Message Car Owner
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
+          onPress={handleAddToCalendar}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              Add to Calendar
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />

@@ -791,7 +791,7 @@ const CarDetailsScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-          style={[styles.reserveButton, { backgroundColor: theme.colors.primary }]}
+          style={[styles.reserveButton, { backgroundColor: '#FF8A3D' }]}
           onPress={handleReserveCar}
           activeOpacity={0.8}
         >

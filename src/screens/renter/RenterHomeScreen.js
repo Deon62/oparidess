@@ -41,6 +41,14 @@ const moversImage = require('../../../assets/images/movers.png');
 const mechanicsImage = require('../../../assets/images/mechanics.png');
 const partsImage = require('../../../assets/images/parts.png');
 const detailingImage = require('../../../assets/images/detailing.png');
+const roadsideImage = require('../../../assets/images/roadside.png');
+
+// Import destination images
+const mombasaImage = require('../../../assets/images/mombasa.png');
+const nakuruImage = require('../../../assets/images/lNakuru.png');
+const egertonImage = require('../../../assets/images/LEgerton.png');
+const hellsgateImage = require('../../../assets/images/hellsgate.png');
+const pejetaImage = require('../../../assets/images/pejeta.png');
 
 const RenterHomeScreen = () => {
   const theme = useTheme();
@@ -635,20 +643,344 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            {/* Roadside Assistance Card */}
+            <TouchableOpacity
+              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
+              onPress={() => {
+                // Navigate to roadside assistance screen
+                Alert.alert('Coming Soon', 'Roadside assistance services will be available soon.');
+              }}
+            >
+              <View style={styles.serviceImageContainer}>
+                <Image source={roadsideImage} style={styles.serviceImage} resizeMode="cover" />
+              </View>
+              <View style={styles.serviceContent}>
+                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
+                  Roadside Assistance
+                </Text>
+                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+                  24/7 emergency support and vehicle recovery services
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       )}
 
       {/* Discover Section */}
       {activeTab === 'discover' && (
-        <View style={styles.servicesSection}>
-          <View style={styles.servicesGrid}>
-            <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary, textAlign: 'center', marginBottom: 24 }]}>
-              Discover
+        <View style={styles.discoverSection}>
+          {/* Special Offers Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              Special Offers
             </Text>
-            <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary, textAlign: 'center' }]}>
-              Discover new destinations, experiences, and more coming soon.
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.offersContainer}>
+              <TouchableOpacity
+                style={[styles.offerCard, { backgroundColor: theme.colors.primary }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'special-offer' });
+                }}
+              >
+                <View style={styles.offerContent}>
+                  <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
+                    Weekend Special
+                  </Text>
+                  <Text style={[styles.offerDescription, { color: theme.colors.white }]}>
+                    Get 20% off on weekend rentals
+                  </Text>
+                  <Text style={[styles.offerCode, { color: theme.colors.white }]}>
+                    Use code: WEEKEND20
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.offerCard, { backgroundColor: theme.colors.textPrimary }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'long-term' });
+                }}
+              >
+                <View style={styles.offerContent}>
+                  <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
+                    Long Term Deal
+                  </Text>
+                  <Text style={[styles.offerDescription, { color: theme.colors.white }]}>
+                    Save up to 30% on monthly rentals
+                  </Text>
+                  <Text style={[styles.offerCode, { color: theme.colors.white }]}>
+                    Book 30+ days
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.offerCard, { backgroundColor: '#4CAF50' }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'first-time' });
+                }}
+              >
+                <View style={styles.offerContent}>
+                  <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
+                    First Time User
+                  </Text>
+                  <Text style={[styles.offerDescription, { color: theme.colors.white }]}>
+                    Get 15% off your first booking
+                  </Text>
+                  <Text style={[styles.offerCode, { color: theme.colors.white }]}>
+                    New users only
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+
+          {/* Popular Destinations Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              Popular Destinations
             </Text>
+            <View style={styles.destinationsGrid}>
+              <TouchableOpacity
+                style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'mombasa' });
+                }}
+              >
+                <View style={styles.destinationImageContainer}>
+                  <Image source={mombasaImage} style={styles.destinationImage} resizeMode="cover" />
+                  <View style={styles.destinationOverlay} />
+                </View>
+                <View style={styles.destinationContent}>
+                  <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
+                    Mombasa Beaches
+                  </Text>
+                  <Text style={[styles.destinationDescription, { color: theme.colors.textSecondary }]}>
+                    Coastal paradise with beautiful beaches
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'lake-nakuru' });
+                }}
+              >
+                <View style={styles.destinationImageContainer}>
+                  <Image source={nakuruImage} style={styles.destinationImage} resizeMode="cover" />
+                  <View style={styles.destinationOverlay} />
+                </View>
+                <View style={styles.destinationContent}>
+                  <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
+                    Lake Nakuru
+                  </Text>
+                  <Text style={[styles.destinationDescription, { color: theme.colors.textSecondary }]}>
+                    Wildlife and scenic lake views
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'egerton-castle' });
+                }}
+              >
+                <View style={styles.destinationImageContainer}>
+                  <Image source={egertonImage} style={styles.destinationImage} resizeMode="cover" />
+                  <View style={styles.destinationOverlay} />
+                </View>
+                <View style={styles.destinationContent}>
+                  <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
+                    Lord Egerton Castle
+                  </Text>
+                  <Text style={[styles.destinationDescription, { color: theme.colors.textSecondary }]}>
+                    Historic castle with stunning architecture
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'hells-gate' });
+                }}
+              >
+                <View style={styles.destinationImageContainer}>
+                  <Image source={hellsgateImage} style={styles.destinationImage} resizeMode="cover" />
+                  <View style={styles.destinationOverlay} />
+                </View>
+                <View style={styles.destinationContent}>
+                  <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
+                    Hell's Gate
+                  </Text>
+                  <Text style={[styles.destinationDescription, { color: theme.colors.textSecondary }]}>
+                    Spectacular canyon and geothermal park
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  navigation.navigate('CarList', { categoryId: 'ol-pejeta' });
+                }}
+              >
+                <View style={styles.destinationImageContainer}>
+                  <Image source={pejetaImage} style={styles.destinationImage} resizeMode="cover" />
+                  <View style={styles.destinationOverlay} />
+                </View>
+                <View style={styles.destinationContent}>
+                  <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
+                    Ol Pejeta Conservancy
+                  </Text>
+                  <Text style={[styles.destinationDescription, { color: theme.colors.textSecondary }]}>
+                    Wildlife conservation and safari experience
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Weekend Getaways Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              Weekend Getaways
+            </Text>
+            <View style={styles.weekendGetawaysContainer}>
+              <TouchableOpacity
+                style={[styles.weekendGetawayCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('Travel Guide', 'Weekend getaway guide coming soon!');
+                }}
+              >
+                <View style={styles.weekendGetawayIconContainer}>
+                  <Ionicons name="calendar-outline" size={40} color={theme.colors.primary} />
+                </View>
+                <Text style={[styles.weekendGetawayTitle, { color: theme.colors.textPrimary }]}>
+                  Weekend Getaways
+                </Text>
+                <Text style={[styles.weekendGetawayDescription, { color: theme.colors.textSecondary }]}>
+                  Perfect destinations for a quick escape
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* User Stories Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              User Stories
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.userStoriesContainer}>
+              <TouchableOpacity
+                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('User Story', 'Read full story coming soon!');
+                }}
+              >
+                <View style={styles.userStoryHeader}>
+                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
+                    <Ionicons name="person" size={24} color={theme.colors.primary} />
+                  </View>
+                  <View style={styles.userStoryInfo}>
+                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
+                      Sarah M.
+                    </Text>
+                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
+                      Nairobi
+                    </Text>
+                  </View>
+                </View>
+                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
+                  "Amazing experience! The car was clean and the service was excellent. Perfect for our weekend trip to Mombasa."
+                </Text>
+                <View style={styles.userStoryRating}>
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('User Story', 'Read full story coming soon!');
+                }}
+              >
+                <View style={styles.userStoryHeader}>
+                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
+                    <Ionicons name="person" size={24} color={theme.colors.primary} />
+                  </View>
+                  <View style={styles.userStoryInfo}>
+                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
+                      James K.
+                    </Text>
+                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
+                      Kisumu
+                    </Text>
+                  </View>
+                </View>
+                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
+                  "Professional driver service made our safari trip smooth and safe. Highly recommend!"
+                </Text>
+                <View style={styles.userStoryRating}>
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.userStoryCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.8}
+                onPress={() => {
+                  Alert.alert('User Story', 'Read full story coming soon!');
+                }}
+              >
+                <View style={styles.userStoryHeader}>
+                  <View style={[styles.userStoryAvatar, { backgroundColor: theme.colors.primary + '20' }]}>
+                    <Ionicons name="person" size={24} color={theme.colors.primary} />
+                  </View>
+                  <View style={styles.userStoryInfo}>
+                    <Text style={[styles.userStoryName, { color: theme.colors.textPrimary }]}>
+                      Mary W.
+                    </Text>
+                    <Text style={[styles.userStoryLocation, { color: theme.colors.textSecondary }]}>
+                      Mombasa
+                    </Text>
+                  </View>
+                </View>
+                <Text style={[styles.userStoryText, { color: theme.colors.textPrimary }]}>
+                  "VIP wedding fleet service was outstanding! All our guests were impressed with the elegant vehicles."
+                </Text>
+                <View style={styles.userStoryRating}>
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                  <Ionicons name="star" size={16} color="#FFD700" />
+                </View>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
         </View>
       )}
@@ -1448,6 +1780,175 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+  },
+  discoverSection: {
+    paddingTop: 24,
+    paddingBottom: 40,
+  },
+  discoverSubsection: {
+    marginBottom: 32,
+    paddingHorizontal: 24,
+  },
+  discoverSectionTitle: {
+    fontSize: 22,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 16,
+  },
+  offersContainer: {
+    paddingRight: 24,
+    gap: 16,
+  },
+  offerCard: {
+    width: 280,
+    borderRadius: 16,
+    padding: 20,
+    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  offerContent: {
+    gap: 8,
+  },
+  offerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  offerDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  offerCode: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 4,
+    opacity: 0.9,
+  },
+  destinationsGrid: {
+    gap: 16,
+  },
+  destinationCard: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  destinationImageContainer: {
+    width: '100%',
+    height: 160,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  destinationImage: {
+    width: '100%',
+    height: '100%',
+  },
+  destinationOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+  },
+  destinationContent: {
+    padding: 16,
+  },
+  destinationName: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  destinationDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  weekendGetawaysContainer: {
+    gap: 16,
+  },
+  weekendGetawayCard: {
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  weekendGetawayIconContainer: {
+    marginBottom: 16,
+  },
+  weekendGetawayTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  weekendGetawayDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  userStoriesContainer: {
+    paddingRight: 24,
+    gap: 16,
+  },
+  userStoryCard: {
+    width: 320,
+    borderRadius: 16,
+    padding: 20,
+    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  userStoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  userStoryAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  userStoryInfo: {
+    flex: 1,
+  },
+  userStoryName: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 2,
+  },
+  userStoryLocation: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  userStoryText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+    marginBottom: 12,
+    fontStyle: 'italic',
+  },
+  userStoryRating: {
+    flexDirection: 'row',
+    gap: 4,
   },
 });
 

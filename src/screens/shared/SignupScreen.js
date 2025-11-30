@@ -237,8 +237,8 @@ const styles = StyleSheet.create({
   },
   taglineContainer: {
     paddingHorizontal: 24,
-    paddingTop: 50,
-    paddingBottom: 16,
+    paddingTop: 70,
+    paddingBottom: 20,
     alignItems: 'center',
   },
   taglineText: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 16,
+    paddingTop: 20,
   },
   inputWrapper: {
     alignItems: 'center',
@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
   },
   referralLinkContainer: {
     alignItems: 'center',
-    marginTop: 4,
-    marginBottom: 16,
+    marginTop: 8,
+    marginBottom: 20,
     width: '100%',
     maxWidth: 400,
     alignSelf: 'center',

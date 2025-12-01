@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
 
@@ -41,6 +41,27 @@ const CustomerSupportScreen = () => {
     navigation.setOptions({
       title: 'Customer Support',
     });
+  }, [navigation]);
+
+  // Hide bottom tab bar when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Restore tab bar when leaving this screen
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      });
+    };
   }, [navigation]);
 
   // Handle keyboard show/hide - Android specific

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 
-const Input = ({
+const Input = forwardRef(({
   label,
   placeholder,
   value,
@@ -11,8 +11,9 @@ const Input = ({
   error,
   style,
   prefix,
+  suffix,
   ...props
-}) => {
+}, ref) => {
   const theme = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +44,7 @@ const Input = ({
           </Text>
         )}
         <TextInput
+          ref={ref}
           style={[styles.input, { color: theme.colors.textPrimary }]}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.hint}
@@ -53,7 +55,12 @@ const Input = ({
           onBlur={() => setIsFocused(false)}
           {...props}
         />
-        {secureTextEntry && (
+        {suffix && (
+          <View style={styles.suffix}>
+            {suffix}
+          </View>
+        )}
+        {secureTextEntry && !suffix && (
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
@@ -69,7 +76,9 @@ const Input = ({
       )}
     </View>
   );
-};
+});
+
+Input.displayName = 'Input';
 
 const styles = StyleSheet.create({
   container: {
@@ -98,6 +107,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 12,
     fontFamily: 'Nunito_400Regular',
+  },
+  suffix: {
+    marginLeft: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   eyeIcon: {
     padding: 4,

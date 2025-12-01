@@ -1,5 +1,6 @@
-import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal } from 'react-native';
+import React, { useState, useLayoutEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -16,12 +17,22 @@ const PaymentScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { totalPrice, bookingDetails } = route.params || {};
   const { payOnSite, bookingFee, totalRentalPrice } = bookingDetails || {};
 
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [cardType, setCardType] = useState(null); // 'visa' or 'mastercard'
+  const [cardError, setCardError] = useState(null); // Error message for invalid card
+  
+  const scrollViewRef = useRef(null);
+  const cardNumberInputRef = useRef(null);
+  const expiryInputRef = useRef(null);
+  const cvvInputRef = useRef(null);
+  const mpesaPhoneInputRef = useRef(null);
+  const airtelPhoneInputRef = useRef(null);
 
   // Form data for different payment methods
   const [mpesaData, setMpesaData] = useState({
@@ -120,11 +131,11 @@ const PaymentScreen = () => {
         return false;
       }
       if (!cardData.cvv.trim()) {
-        Alert.alert('Error', 'Please enter CVV');
+        Alert.alert('Error', `Please enter ${cardType === 'visa' ? 'CVC' : 'CVV'}`);
         return false;
       }
       if (cardData.cvv.length < 3) {
-        Alert.alert('Error', 'Please enter a valid CVV');
+        Alert.alert('Error', `Please enter a valid ${cardType === 'visa' ? 'CVC' : 'CVV'}`);
         return false;
       }
     }
@@ -152,12 +163,49 @@ const PaymentScreen = () => {
     }
   };
 
+  const detectCardType = (cardNumber) => {
+    // Remove spaces for detection
+    const cleaned = cardNumber.replace(/\s/g, '');
+    if (cleaned.length === 0) {
+      setCardType(null);
+      setCardError(null);
+      return null;
+    }
+    
+    const firstDigit = cleaned[0];
+    if (firstDigit === '4') {
+      setCardType('visa');
+      setCardError(null);
+      return 'visa';
+    } else if (firstDigit === '5') {
+      setCardType('mastercard');
+      setCardError(null);
+      return 'mastercard';
+    } else {
+      // Invalid card type - show error immediately
+      setCardType(null);
+      setCardError('Card number must start with 4 (Visa) or 5 (Mastercard)');
+      return null;
+    }
+  };
+
   const formatCardNumber = (text) => {
     // Remove all non-digits
     const cleaned = text.replace(/\D/g, '');
+    // Detect card type
+    detectCardType(cleaned);
     // Add spaces every 4 digits
     const formatted = cleaned.match(/.{1,4}/g)?.join(' ') || cleaned;
     return formatted;
+  };
+  
+  const handleInputFocus = (inputRef) => {
+    // Scroll after keyboard appears to ensure input is visible
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    }, 400);
   };
 
   const formatExpiryDate = (text) => {
@@ -172,11 +220,18 @@ const PaymentScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
+      <KeyboardAvoidingView
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
+        <ScrollView
+          ref={scrollViewRef}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
         {/* Amount Summary */}
         <View style={[styles.amountCard, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.amountLabel, { color: theme.colors.textSecondary }]}>
@@ -211,7 +266,19 @@ const PaymentScreen = () => {
                   borderColor: selectedMethod === method.id ? theme.colors.primary : '#E0E0E0',
                 },
               ]}
-              onPress={() => setSelectedMethod(method.id)}
+              onPress={() => {
+                setSelectedMethod(method.id);
+                if (method.id !== 'card') {
+                  setCardType(null);
+                  setCardError(null);
+                  setCardData({
+                    cardNumber: '',
+                    cardholderName: '',
+                    expiryDate: '',
+                    cvv: '',
+                  });
+                }
+              }}
               activeOpacity={0.7}
             >
               <View style={styles.paymentMethodLeft}>
@@ -261,11 +328,13 @@ const PaymentScreen = () => {
               M-PESA Details
             </Text>
             <Input
+              ref={mpesaPhoneInputRef}
               label="Phone Number"
               placeholder="+254 712 345 678"
               value={mpesaData.phoneNumber}
               onChangeText={(value) => setMpesaData({ ...mpesaData, phoneNumber: value })}
               keyboardType="phone-pad"
+              onFocus={() => handleInputFocus(mpesaPhoneInputRef)}
             />
             <Text style={[styles.infoText, { color: theme.colors.hint }]}>
               You will receive an M-PESA prompt on your phone to complete the payment.
@@ -279,11 +348,13 @@ const PaymentScreen = () => {
               Airtel Money Details
             </Text>
             <Input
+              ref={airtelPhoneInputRef}
               label="Phone Number"
               placeholder="+254 712 345 678"
               value={airtelData.phoneNumber}
               onChangeText={(value) => setAirtelData({ ...airtelData, phoneNumber: value })}
               keyboardType="phone-pad"
+              onFocus={() => handleInputFocus(airtelPhoneInputRef)}
             />
             <Text style={[styles.infoText, { color: theme.colors.hint }]}>
               You will receive an Airtel Money prompt on your phone to complete the payment.
@@ -296,16 +367,30 @@ const PaymentScreen = () => {
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Card Details
             </Text>
-            <Input
-              label="Card Number"
-              placeholder="1234 5678 9012 3456"
-              value={cardData.cardNumber}
-              onChangeText={(value) =>
-                setCardData({ ...cardData, cardNumber: formatCardNumber(value) })
-              }
-              keyboardType="numeric"
-              maxLength={19}
-            />
+            <View>
+              <Input
+                ref={cardNumberInputRef}
+                label="Card Number"
+                placeholder="1234 5678 9012 3456"
+                value={cardData.cardNumber}
+                onChangeText={(value) =>
+                  setCardData({ ...cardData, cardNumber: formatCardNumber(value) })
+                }
+                keyboardType="numeric"
+                maxLength={19}
+                onFocus={() => handleInputFocus(cardNumberInputRef)}
+                error={cardError}
+                suffix={
+                  cardData.cardNumber.replace(/\s/g, '').length > 0 && cardType ? (
+                    <Image
+                      source={cardType === 'visa' ? visaLogo : mastercardLogo}
+                      style={styles.cardIcon}
+                      resizeMode="contain"
+                    />
+                  ) : null
+                }
+              />
+            </View>
             <Input
               label="Cardholder Name"
               placeholder="John Doe"
@@ -316,6 +401,7 @@ const PaymentScreen = () => {
             <View style={styles.cardRow}>
               <View style={styles.cardRowItem}>
                 <Input
+                  ref={expiryInputRef}
                   label="Expiry Date"
                   placeholder="MM/YY"
                   value={cardData.expiryDate}
@@ -324,17 +410,20 @@ const PaymentScreen = () => {
                   }
                   keyboardType="numeric"
                   maxLength={5}
+                  onFocus={() => handleInputFocus(expiryInputRef)}
                 />
               </View>
               <View style={styles.cardRowItem}>
                 <Input
-                  label="CVV"
-                  placeholder="123"
+                  ref={cvvInputRef}
+                  label={cardType === 'visa' ? 'CVC' : 'CVV'}
+                  placeholder={cardType === 'visa' ? '123' : '123'}
                   value={cardData.cvv}
                   onChangeText={(value) => setCardData({ ...cardData, cvv: value.replace(/\D/g, '') })}
                   keyboardType="numeric"
                   secureTextEntry
                   maxLength={4}
+                  onFocus={() => handleInputFocus(cvvInputRef)}
                 />
               </View>
             </View>
@@ -343,10 +432,11 @@ const PaymentScreen = () => {
 
         {/* Bottom Spacing */}
         <View style={{ height: 100 }} />
-      </ScrollView>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
-      {/* Bottom Payment Bar */}
-      <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
+      {/* Bottom Payment Bar - Fixed at bottom */}
+      <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 20) }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
@@ -426,11 +516,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  keyboardView: {
+    flex: 1,
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 100, // Add padding for fixed bottom bar
   },
   amountCard: {
     marginHorizontal: 24,
@@ -544,14 +637,29 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   bottomBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 16,
-    paddingBottom: 20,
+    paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     gap: 16,
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   bottomBarPrice: {
     flex: 1,
@@ -627,6 +735,10 @@ const styles = StyleSheet.create({
   },
   successModalButton: {
     width: '100%',
+  },
+  cardIcon: {
+    width: 40,
+    height: 25,
   },
 });
 

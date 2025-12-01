@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform, Image, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Card } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Import profile image for host
 const profileImage = require('../../../assets/logo/profile.jpg');
+// Import default car image
+const defaultCarImage = require('../../../assets/images/car1.jpg');
 
 const BookingTrackingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { bookingDetails, paymentMethod, totalPrice } = route.params || {};
 
   const [daysUntilPickup, setDaysUntilPickup] = useState(0);
@@ -21,12 +27,18 @@ const BookingTrackingScreen = () => {
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [receiptDownloaded, setReceiptDownloaded] = useState(false);
 
-  // Hide bottom tab bar on this screen
+  // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
     navigation.getParent()?.setOptions({
       tabBarStyle: { display: 'none' },
     });
     return () => {
+      navigation.setOptions({
+        headerShown: true,
+      });
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,
       });
@@ -189,23 +201,34 @@ const BookingTrackingScreen = () => {
   );
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      {/* Success Header */}
-      <View style={[styles.successHeader, { backgroundColor: theme.colors.white }]}>
-        <View style={[styles.successIconContainer, { backgroundColor: '#4CAF50' + '20' }]}>
-          <Ionicons name="checkmark-circle" size={64} color="#4CAF50" />
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Car Image */}
+        <View style={styles.carImageContainer}>
+          <Image
+            source={bookingDetails?.car?.image || defaultCarImage}
+            style={styles.carImage}
+            resizeMode="cover"
+          />
+          
+          {/* Sticky Back Button */}
+          <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
+            <TouchableOpacity
+              style={styles.floatingButton}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text style={[styles.successTitle, { color: theme.colors.textPrimary }]}>
-          Booking Confirmed!
-        </Text>
-        <Text style={[styles.successSubtitle, { color: theme.colors.textSecondary }]}>
-          Your payment has been processed successfully
-        </Text>
-      </View>
+
+        {/* Content Container with Curved Top */}
+        <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
 
       {/* Countdown Timer */}
       <View style={[styles.countdownCard, { backgroundColor: theme.colors.white }]}>
@@ -587,6 +610,8 @@ const BookingTrackingScreen = () => {
 
       {/* Bottom Spacing */}
       <View style={{ height: 40 }} />
+        </View>
+      </ScrollView>
 
       {/* Receipt Download Modal */}
       <Modal
@@ -672,7 +697,7 @@ const BookingTrackingScreen = () => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -680,33 +705,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentContainer: {
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
     paddingBottom: 20,
   },
-  successHeader: {
-    alignItems: 'center',
-    paddingVertical: 32,
-    paddingHorizontal: 24,
-    marginBottom: 24,
+  contentContainer: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    marginTop: -20,
+    paddingTop: 20,
   },
-  successIconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+  carImageContainer: {
+    width: SCREEN_WIDTH,
+    height: 300,
+    position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
   },
-  successTitle: {
-    fontSize: 28,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-    textAlign: 'center',
+  carImage: {
+    width: '100%',
+    height: '100%',
   },
-  successSubtitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
+  floatingButtons: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingBottom: 8,
+  },
+  floatingButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   countdownCard: {
     marginHorizontal: 24,

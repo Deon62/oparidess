@@ -3,16 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { useUser } from '../../packages/context/UserContext';
 
 const ComingSoonScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const { logout } = useUser();
 
   const handleGoBack = () => {
-    logout();
-    // Navigation will happen automatically via MainNavigator
+    navigation.goBack();
   };
 
   return (

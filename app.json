@@ -6,9 +6,9 @@
     "sdkVersion": "54.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "icon": "./assets/logo/logo.png",
+    "icon": "./assets/logo/logo.webp",
     "splash": {
-      "image": "./assets/logo/logo.png",
+      "image": "./assets/logo/logo.webp",
       "resizeMode": "contain",
       "backgroundColor": "#F7F7F7"
     },
@@ -24,7 +24,7 @@
       "package": "com.oparides.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo/logo.png",
+        "foregroundImage": "./assets/logo/logo.webp",
         "backgroundColor": "#F7F7F7"
       },
       "permissions": [

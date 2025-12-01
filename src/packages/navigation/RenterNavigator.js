@@ -23,6 +23,9 @@ import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
 import BecomeServiceProviderScreen from '../../screens/renter/BecomeServiceProviderScreen';
+import ServiceProviderStep1Screen from '../../screens/renter/ServiceProviderStep1Screen';
+import ServiceProviderStep2Screen from '../../screens/renter/ServiceProviderStep2Screen';
+import ServiceProviderStep3Screen from '../../screens/renter/ServiceProviderStep3Screen';
 import ServiceDetailsScreen from '../../screens/renter/ServiceDetailsScreen';
 import ServiceBookingScreen from '../../screens/renter/ServiceBookingScreen';
 import ServiceBookingConfirmationScreen from '../../screens/renter/ServiceBookingConfirmationScreen';
@@ -172,6 +175,30 @@ const HomeStack = () => {
         component={AddPaymentScreen}
         options={{ 
           title: 'Add Payment Method',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceProviderStep1" 
+        component={ServiceProviderStep1Screen}
+        options={{ 
+          title: 'Business Information',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceProviderStep2" 
+        component={ServiceProviderStep2Screen}
+        options={{ 
+          title: 'Documents & Verification',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceProviderStep3" 
+        component={ServiceProviderStep3Screen}
+        options={{ 
+          title: 'Review & Submit',
           headerShown: true 
         }}
       />

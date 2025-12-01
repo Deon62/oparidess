@@ -138,7 +138,7 @@ const RenterProfileScreen = () => {
   };
 
   const handleBecomeServiceProvider = () => {
-    navigation.navigate('BecomeServiceProvider');
+    navigation.navigate('ServiceProviderStep1');
   };
 
   const handleAddPayment = () => {

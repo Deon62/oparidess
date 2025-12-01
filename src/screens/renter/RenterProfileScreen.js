@@ -29,7 +29,8 @@ const RenterProfileScreen = () => {
     location: user?.location || 'Nairobi, Kenya',
     address: user?.address || '123 Main Street, Westlands',
     id_number: user?.id_number || '12345678',
-    profile_completeness: user?.profile_completeness || 75,
+    rating: user?.rating || 4.8,
+    totalReviews: user?.totalReviews || 24,
   });
 
   // Update profile image URI when user context changes
@@ -160,10 +161,45 @@ const RenterProfileScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
-  const getCompletenessColor = (percentage) => {
-    if (percentage >= 80) return '#4CAF50';
-    if (percentage >= 50) return '#FFA500';
-    return '#F44336';
+  // Render star rating
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    return (
+      <View style={styles.starsContainer}>
+        {[...Array(5)].map((_, i) => {
+          if (i < fullStars) {
+            return (
+              <Ionicons
+                key={i}
+                name="star"
+                size={16}
+                color="#FFB800"
+              />
+            );
+          } else if (i === fullStars && hasHalfStar) {
+            return (
+              <Ionicons
+                key={i}
+                name="star-half"
+                size={16}
+                color="#FFB800"
+              />
+            );
+          } else {
+            return (
+              <Ionicons
+                key={i}
+                name="star-outline"
+                size={16}
+                color="#FFB800"
+              />
+            );
+          }
+        })}
+      </View>
+    );
   };
 
   const InfoRow = ({ icon, label, value }) => (
@@ -224,32 +260,15 @@ const RenterProfileScreen = () => {
           {personalInfo.phone_number}
         </Text>
 
-        {/* Profile Completeness */}
-        <View style={styles.completenessContainer}>
-          <View style={styles.completenessHeader}>
-            <Text style={[styles.completenessLabel, { color: theme.colors.textSecondary }]}>
-              Profile Completeness
-            </Text>
-            <Text
-              style={[
-                styles.completenessPercentage,
-                { color: getCompletenessColor(personalInfo.profile_completeness) },
-              ]}
-            >
-              {personalInfo.profile_completeness}%
-            </Text>
-          </View>
-          <View style={[styles.progressBarContainer, { backgroundColor: theme.colors.background }]}>
-            <View
-              style={[
-                styles.progressBar,
-                {
-                  width: `${personalInfo.profile_completeness}%`,
-                  backgroundColor: getCompletenessColor(personalInfo.profile_completeness),
-                },
-              ]}
-            />
-          </View>
+        {/* User Rating */}
+        <View style={styles.ratingContainer}>
+          {renderStars(personalInfo.rating)}
+          <Text style={[styles.ratingValue, { color: theme.colors.textPrimary }]}>
+            {personalInfo.rating.toFixed(1)}
+          </Text>
+          <Text style={[styles.ratingCount, { color: theme.colors.textSecondary }]}>
+            ({personalInfo.totalReviews} reviews)
+          </Text>
         </View>
       </View>
 
@@ -499,34 +518,28 @@ const styles = StyleSheet.create({
   profileSubtext: {
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 24,
+    marginBottom: 12,
   },
-  completenessContainer: {
-    width: '100%',
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
     marginTop: 8,
   },
-  completenessHeader: {
+  starsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    gap: 2,
   },
-  completenessLabel: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  completenessPercentage: {
+  ratingValue: {
     fontSize: 16,
     fontFamily: 'Nunito_700Bold',
+    marginLeft: 4,
   },
-  progressBarContainer: {
-    height: 8,
-    borderRadius: 4,
-    overflow: 'hidden',
-  },
-  progressBar: {
-    height: '100%',
-    borderRadius: 4,
+  ratingCount: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
   },
   actionButtonsContainer: {
     flexDirection: 'row',

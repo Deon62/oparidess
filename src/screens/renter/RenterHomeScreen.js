@@ -591,7 +591,7 @@ const RenterHomeScreen = () => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       header: () => (
-        <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
           {/* Top Row: Location and Action Icons */}
           <View style={styles.headerTopRow}>
             <TouchableOpacity
@@ -599,7 +599,7 @@ const RenterHomeScreen = () => {
               style={styles.headerLocationButton}
               activeOpacity={0.7}
             >
-              <Ionicons name="location" size={24} color={theme.colors.primary} />
+              <Ionicons name="location" size={22} color={theme.colors.primary} />
               <Text 
                 style={[styles.headerLocationText, { color: theme.colors.textPrimary }]}
                 numberOfLines={1}
@@ -611,7 +611,7 @@ const RenterHomeScreen = () => {
 
             <View style={styles.headerRightContainer}>
               {showSearch ? (
-                <View style={[styles.headerSearchContainer, { backgroundColor: theme.colors.white }]}>
+                <View style={[styles.headerSearchContainer, { backgroundColor: theme.colors.background }]}>
                   <TextInput
                     style={[styles.headerSearchInput, { color: theme.colors.textPrimary }]}
                     placeholder="Search cars..."
@@ -638,7 +638,7 @@ const RenterHomeScreen = () => {
                     style={styles.iconButton}
                     activeOpacity={0.7}
                   >
-                    <Ionicons name="search-outline" size={24} color={theme.colors.textPrimary} />
+                    <Ionicons name="search-outline" size={22} color={theme.colors.textPrimary} />
                   </TouchableOpacity>
                   {activeTab === 'cars' && (
                     <TouchableOpacity
@@ -648,7 +648,7 @@ const RenterHomeScreen = () => {
                     >
                       <Ionicons 
                         name="filter-outline" 
-                        size={24} 
+                        size={22} 
                         color={hasActiveFilters ? theme.colors.primary : theme.colors.textPrimary} 
                       />
                       {hasActiveFilters && (
@@ -664,7 +664,7 @@ const RenterHomeScreen = () => {
                     >
                       <Ionicons 
                         name="filter-outline" 
-                        size={24} 
+                        size={22} 
                         color={hasActiveServiceFilters ? theme.colors.primary : theme.colors.textPrimary} 
                       />
                       {hasActiveServiceFilters && (
@@ -690,7 +690,7 @@ const RenterHomeScreen = () => {
           </View>
 
           {/* Bottom Row: Toggle Buttons */}
-          <View style={[styles.headerBottomRow, isScrolled && styles.headerBottomRowSmall]}>
+          <View style={styles.headerBottomRow}>
             <TouchableOpacity
               style={styles.toggleButton}
               onPress={() => setActiveTab('cars')}
@@ -701,12 +701,9 @@ const RenterHomeScreen = () => {
                 <Text style={[
                   styles.toggleText, 
                   { 
-                    color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textPrimary,
-                    fontSize: activeTab === 'cars' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                    fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_400Regular',
-                    fontStyle: 'normal',
-                    textTransform: 'none',
-                    fontWeight: 'normal'
+                    color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textSecondary,
+                    fontSize: activeTab === 'cars' ? 16 : 15,
+                    fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                   }
                 ]}>
                   Vehicles
@@ -726,12 +723,9 @@ const RenterHomeScreen = () => {
                   style={[
                     styles.toggleText, 
                     { 
-                      color: activeTab === 'services' ? theme.colors.primary : theme.colors.textPrimary,
-                      fontSize: activeTab === 'services' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                      fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_400Regular',
-                      fontStyle: 'normal',
-                      textTransform: 'none',
-                      fontWeight: 'normal'
+                      color: activeTab === 'services' ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: activeTab === 'services' ? 16 : 15,
+                      fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                     }
                   ]}
                   numberOfLines={1}
@@ -753,12 +747,9 @@ const RenterHomeScreen = () => {
                 <Text style={[
                   styles.toggleText, 
                   { 
-                    color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textPrimary,
-                    fontSize: activeTab === 'discover' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                    fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_400Regular',
-                    fontStyle: 'normal',
-                    textTransform: 'none',
-                    fontWeight: 'normal'
+                    color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textSecondary,
+                    fontSize: activeTab === 'discover' ? 16 : 15,
+                    fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                   }
                 ]}>
                   Discover
@@ -2879,15 +2870,15 @@ const styles = StyleSheet.create({
   headerRightContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 8,
+    paddingRight: 4,
   },
   headerIcons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
   },
   iconButton: {
-    padding: 8,
+    padding: 6,
   },
   profileButton: {
     marginLeft: 4,
@@ -2917,16 +2908,16 @@ const styles = StyleSheet.create({
   headerSearchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
     borderRadius: 12,
     minWidth: 200,
     maxWidth: 280,
   },
   headerSearchInput: {
     flex: 1,
-    fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
     paddingVertical: 0,
     marginRight: 8,
   },
@@ -3072,37 +3063,43 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   customHeader: {
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
   headerTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginTop: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    paddingBottom: 12,
   },
   headerLocationButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     maxWidth: 150,
+    paddingVertical: 4,
   },
   headerLocationText: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
     flex: 1,
+    letterSpacing: -0.2,
   },
   headerBottomRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 4,
-    paddingHorizontal: 8,
-    paddingBottom: 8,
-    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingBottom: 0,
+    alignItems: 'flex-end',
     width: '100%',
+    position: 'relative',
+    minHeight: 44,
   },
   headerBottomRowSmall: {
     paddingTop: 2,
@@ -3112,16 +3109,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 8,
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
     paddingHorizontal: 4,
+    paddingBottom: 8,
     maxWidth: '33.33%',
+    position: 'relative',
   },
   toggleContent: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4,
+    gap: 3,
   },
   toggleIndicator: {
     width: 40,
@@ -3224,10 +3223,12 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
   },
   tabIndicator: {
-    width: '60%',
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    width: 80,
     height: 3,
-    marginTop: 4,
-    borderRadius: 2,
+    borderRadius: 3,
   },
   servicesSection: {
     paddingTop: 24,

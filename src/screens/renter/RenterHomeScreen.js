@@ -85,6 +85,15 @@ const RenterHomeScreen = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading
+  useEffect(() => {
+    // Simulate data loading on mount
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  }, []);
   
   // Services data with 4 businesses per category
   const servicesData = {
@@ -766,13 +775,63 @@ const RenterHomeScreen = () => {
   // Pull to refresh handler
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
+    setIsLoading(true);
     // Simulate data refresh - in a real app, this would fetch new data from API
     setTimeout(() => {
       setRefreshing(false);
+      setIsLoading(false);
       // You can add actual data refresh logic here
       // For example: fetchCars(), fetchServices(), etc.
     }, 1500);
   }, []);
+
+  // Skeleton Components
+  const CarCardSkeleton = () => (
+    <View style={[styles.carCardWrapper, { marginRight: 16 }]}>
+      <View style={[styles.carCard, { backgroundColor: theme.colors.white }]}>
+        <View style={[styles.carImageContainer, { backgroundColor: '#E0E0E0' }]}>
+          <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
+        </View>
+        <View style={styles.carInfo}>
+          <View style={[styles.skeletonLine, { width: '80%', height: 16, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={[styles.skeletonLine, { width: '60%', height: 14, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+
+  const ServiceCardSkeleton = () => (
+    <View style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white, marginRight: 16 }]}>
+      <View style={[styles.serviceBusinessImageContainer, { backgroundColor: '#E0E0E0' }]}>
+        <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
+      </View>
+      <View style={styles.serviceBusinessContent}>
+        <View style={[styles.skeletonLine, { width: '90%', height: 16, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+          <View style={[styles.skeletonLine, { width: 40, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={[styles.skeletonLine, { width: 60, height: 12, marginLeft: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+        </View>
+        <View style={[styles.skeletonLine, { width: '70%', height: 14, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+      </View>
+    </View>
+  );
+
+  const DiscoverCardSkeleton = () => (
+    <View style={[styles.carEventsCard, { backgroundColor: theme.colors.white, marginRight: 16 }]}>
+      <View style={[styles.carEventsImageContainer, { backgroundColor: '#E0E0E0' }]}>
+        <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
+      </View>
+      <View style={styles.carEventsContent}>
+        <View style={[styles.skeletonLine, { width: '85%', height: 16, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+        <View style={[styles.skeletonLine, { width: '70%', height: 14, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+      </View>
+    </View>
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -814,7 +873,10 @@ const RenterHomeScreen = () => {
                 Road Trips Agencies
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('roadTrips').map((business) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadtrips-${index}`} />)
+                ) : (
+                  getFilteredServices('roadTrips').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -862,7 +924,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                  ))
+                )}
               </ScrollView>
             </View>
           )}
@@ -874,7 +937,10 @@ const RenterHomeScreen = () => {
                 VIP Wedding Fleet Hire
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('vipWedding').map((business) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-vipwedding-${index}`} />)
+                ) : (
+                  getFilteredServices('vipWedding').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -922,7 +988,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                ))
+                )}
               </ScrollView>
             </View>
           )}
@@ -934,7 +1001,10 @@ const RenterHomeScreen = () => {
                 Hire Professional Drivers
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('drivers').map((driver) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-drivers-${index}`} />)
+                ) : (
+                  getFilteredServices('drivers').map((driver) => (
                 <TouchableOpacity
                   key={driver.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -981,7 +1051,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                ))
+                )}
               </ScrollView>
             </View>
           )}
@@ -993,7 +1064,10 @@ const RenterHomeScreen = () => {
                 Movers
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('movers').map((business) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-movers-${index}`} />)
+                ) : (
+                  getFilteredServices('movers').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -1041,7 +1115,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                ))
+                )}
               </ScrollView>
             </View>
           )}
@@ -1054,7 +1129,10 @@ const RenterHomeScreen = () => {
                 VIP Car Detailing
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('carDetailing').map((business) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-cardetailing-${index}`} />)
+                ) : (
+                  getFilteredServices('carDetailing').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -1102,7 +1180,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                ))
+                )}
               </ScrollView>
             </View>
           )}
@@ -1114,7 +1193,10 @@ const RenterHomeScreen = () => {
                 Roadside Assistance
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('roadside').map((business) => (
+                {isLoading ? (
+                  [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadside-${index}`} />)
+                ) : (
+                  getFilteredServices('roadside').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -1162,7 +1244,8 @@ const RenterHomeScreen = () => {
                 </Text>
               </View>
             </TouchableOpacity>
-                ))}
+                ))
+                )}
               </ScrollView>
           </View>
           )}
@@ -1929,7 +2012,11 @@ const RenterHomeScreen = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.carsContainer}
           >
-            {carClass.cars.map((car) => (
+            {isLoading ? (
+              // Show skeleton loaders
+              [...Array(4)].map((_, index) => <CarCardSkeleton key={`skeleton-${index}`} />)
+            ) : (
+              carClass.cars.map((car) => (
               <TouchableOpacity
                 key={car.id}
                 onPress={() => handleCarPress(car)}
@@ -1992,7 +2079,8 @@ const RenterHomeScreen = () => {
                   </View>
                 </Card>
               </TouchableOpacity>
-            ))}
+            ))
+            )}
           </ScrollView>
         </View>
       ))
@@ -2045,7 +2133,7 @@ const RenterHomeScreen = () => {
                         <TouchableOpacity
                           onPress={(e) => {
                             e.stopPropagation();
-                            toggleLike(vehicle.id);
+                            toggleCarLike(vehicle.id);
                           }}
                           style={styles.actionButton}
                           activeOpacity={0.7}
@@ -3638,6 +3726,9 @@ const styles = StyleSheet.create({
   filterApplyText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  skeletonLine: {
+    borderRadius: 4,
   },
 });
 

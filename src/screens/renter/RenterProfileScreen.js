@@ -6,6 +6,7 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button } from '../../packages/components';
 import * as ImagePicker from 'expo-image-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -13,6 +14,7 @@ const profileImage = require('../../../assets/logo/profile.jpg');
 const RenterProfileScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { logout, user, updateUser } = useUser();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
@@ -37,10 +39,10 @@ const RenterProfileScreen = () => {
     }
   }, [user?.profile_image_uri]);
 
-  // Set header title
+  // Hide header and show only back button
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'My Profile',
+      headerShown: false,
     });
   }, [navigation]);
 
@@ -181,11 +183,23 @@ const RenterProfileScreen = () => {
   );
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Floating Back Button */}
+      <View style={[styles.backButtonContainer, { paddingTop: insets.top + 8 }]}>
+        <TouchableOpacity
+          style={[styles.backButton, { backgroundColor: theme.colors.white }]}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Profile Header */}
       <View style={[styles.profileHeader, { backgroundColor: theme.colors.white }]}>
         <View style={styles.profileImageContainer}>
@@ -397,7 +411,8 @@ const RenterProfileScreen = () => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -405,8 +420,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
   contentContainer: {
     paddingBottom: 20,
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
+    paddingHorizontal: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
   },
   profileHeader: {
     alignItems: 'center',

@@ -2199,7 +2199,7 @@ const RenterHomeScreen = () => {
       )}
       </ScrollView>
 
-      {/* No Hidden Fees Message Banner - Bottom Above Navbar */}
+      {/* Prices Include All Fees Message Banner - Bottom Above Navbar */}
       {showNoFeesMessage && (
         <Animated.View
           style={[
@@ -2210,9 +2210,9 @@ const RenterHomeScreen = () => {
           ]}
         >
           <View style={styles.noFeesContent}>
-            <Ionicons name="shield-checkmark" size={20} color="#4CAF50" />
+            <Ionicons name="pricetag" size={20} color="#FF1577" />
             <Text style={styles.noFeesText}>
-              No hidden fees, unless personal insurance
+              Prices include all fees
             </Text>
           </View>
         </Animated.View>
@@ -2860,19 +2860,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
+    borderRadius: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.15,
     shadowRadius: 8,
-    elevation: 5,
+    elevation: 8,
   },
   noFeesText: {
-    fontSize: 13,
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
-    color: '#4CAF50',
+    color: '#000000',
     textAlign: 'center',
   },
   contentContainer: {

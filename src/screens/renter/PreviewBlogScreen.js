@@ -24,33 +24,44 @@ const PreviewBlogScreen = () => {
   const [tags, setTags] = useState(initialTags || []);
   const [currentTag, setCurrentTag] = useState('');
 
-  // Hide header
+  // Hide header and ensure tab bar is hidden
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
-  }, [navigation]);
-
-  // Hide bottom tab bar when screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.getParent()?.setOptions({
+    // Immediately hide tab bar
+    const parent = navigation.getParent();
+    if (parent) {
+      parent.setOptions({
         tabBarStyle: { display: 'none' },
       });
+    }
+  }, [navigation]);
+
+  // Hide bottom tab bar when screen is focused - always hide it
+  useFocusEffect(
+    React.useCallback(() => {
+      // Force hide tab bar every time screen is focused
+      const parent = navigation.getParent();
+      if (parent) {
+        parent.setOptions({
+          tabBarStyle: { display: 'none' },
+        });
+      }
       return () => {
-        // Don't restore here to prevent flickering
+        // Restore tab bar when leaving this screen (unless going to WriteBlog)
+        setTimeout(() => {
+          const state = navigation.getState();
+          const currentRoute = state?.routes[state?.index];
+          if (currentRoute?.name !== 'WriteBlog') {
+            navigation.getParent()?.setOptions({
+              tabBarStyle: undefined,
+            });
+          }
+        }, 50);
       };
     }, [navigation])
   );
-
-  // Restore tab bar when component unmounts (navigating away completely)
-  useEffect(() => {
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-    };
-  }, [navigation]);
 
   const handleAddTag = () => {
     if (tags.length >= 4) {

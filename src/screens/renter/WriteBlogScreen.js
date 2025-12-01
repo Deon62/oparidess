@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -46,9 +46,16 @@ const WriteBlogScreen = () => {
         tabBarStyle: { display: 'none' },
       });
       return () => {
-        navigation.getParent()?.setOptions({
-          tabBarStyle: undefined,
-        });
+        // Restore tab bar when leaving this screen (unless going to PreviewBlog)
+        setTimeout(() => {
+          const state = navigation.getState();
+          const currentRoute = state?.routes[state?.index];
+          if (currentRoute?.name !== 'PreviewBlog') {
+            navigation.getParent()?.setOptions({
+              tabBarStyle: undefined,
+            });
+          }
+        }, 50);
       };
     }, [navigation])
   );

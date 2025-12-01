@@ -12,12 +12,12 @@ const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   // Only car bookings - no driver/chauffeur functionality
-  const [statusFilter, setStatusFilter] = useState('pending'); // 'pending', 'active', 'completed', 'cancelled'
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [rating, setRating] = useState(0);
   const [ratingText, setRatingText] = useState('');
   const [ratedBookings, setRatedBookings] = useState(new Set()); // Track which bookings have been rated
+  const [showMore, setShowMore] = useState(false); // Track if past rentals are expanded
 
   // Mock bookings data
   const carBookings = [
@@ -66,7 +66,26 @@ const BookingsListScreen = () => {
   ];
 
   const bookings = carBookings;
-  const filteredBookings = bookings.filter(booking => booking.status === statusFilter);
+  
+  // Separate active and past bookings
+  const activeBookings = bookings.filter(booking => booking.status === 'active');
+  const pastBookings = bookings.filter(booking => booking.status !== 'active');
+  
+  // Sort past bookings by status priority: pending > completed > cancelled
+  const statusPriority = {
+    'pending': 1,
+    'completed': 2,
+    'cancelled': 3,
+  };
+  
+  const sortedPastBookings = [...pastBookings].sort((a, b) => {
+    return (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
+  });
+  
+  // Display bookings: active first, then past bookings if showMore is true
+  const displayedBookings = showMore 
+    ? [...activeBookings, ...sortedPastBookings]
+    : activeBookings;
 
   // Set header with notifications and profile picture
   useLayoutEffect(() => {
@@ -98,13 +117,6 @@ const BookingsListScreen = () => {
       ),
     });
   }, [navigation, theme]);
-
-  const statusOptions = [
-    { id: 'pending', label: 'Pending' },
-    { id: 'active', label: 'Active' },
-    { id: 'completed', label: 'Completed' },
-    { id: 'cancelled', label: 'Cancelled' },
-  ];
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -190,53 +202,18 @@ const BookingsListScreen = () => {
       showsVerticalScrollIndicator={false}
     >
 
-      {/* Status Filters */}
-      <View style={styles.statusFiltersContainer}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.statusFiltersScroll}
-        >
-          {statusOptions.map((option) => (
-            <TouchableOpacity
-              key={option.id}
-              style={[
-                styles.statusFilterButton,
-                statusFilter === option.id && [
-                  styles.statusFilterButtonActive,
-                  { backgroundColor: theme.colors.primary },
-                ],
-                { borderColor: statusFilter === option.id ? theme.colors.primary : theme.colors.hint },
-              ]}
-              onPress={() => setStatusFilter(option.id)}
-              activeOpacity={0.7}
-            >
-              <Text
-                style={[
-                  styles.statusFilterText,
-                  {
-                    color: statusFilter === option.id ? theme.colors.white : theme.colors.textSecondary,
-                  },
-                ]}
-              >
-                {option.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
       {/* Bookings List */}
       <View style={styles.bookingsList}>
-        {filteredBookings.length === 0 ? (
+        {displayedBookings.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="document-text-outline" size={48} color={theme.colors.hint} />
             <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-              No {statusFilter} car bookings found
+              No bookings found
             </Text>
           </View>
         ) : (
-          filteredBookings.map((booking) => (
+          <>
+            {displayedBookings.map((booking) => (
             <TouchableOpacity
               key={booking.id}
               onPress={() => {
@@ -352,7 +329,21 @@ const BookingsListScreen = () => {
               </View>
             </Card>
             </TouchableOpacity>
-          ))
+            ))}
+            
+            {/* Show More Link */}
+            {!showMore && pastBookings.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setShowMore(true)}
+                style={styles.showMoreContainer}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.showMoreText, { color: theme.colors.primary }]}>
+                  Show more
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </View>
 
@@ -495,31 +486,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
   },
-  statusFiltersContainer: {
-    marginBottom: 20,
-    paddingTop: 16,
-  },
-  statusFiltersScroll: {
-    paddingLeft: 24,
-    paddingRight: 24,
-    gap: 12,
-  },
-  statusFilterButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  statusFilterButtonActive: {
-    borderWidth: 0,
-  },
-  statusFilterText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
-  },
   bookingsList: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
+    paddingTop: 16,
     gap: 16,
   },
   bookingCard: {
@@ -528,11 +497,17 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 0,
     alignItems: 'center',
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   bookingImageContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     overflow: 'hidden',
     marginLeft: 16,
     marginVertical: 16,
@@ -727,6 +702,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     borderWidth: 2,
     borderColor: '#FFFFFF',
+  },
+  showMoreContainer: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  showMoreText: {
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

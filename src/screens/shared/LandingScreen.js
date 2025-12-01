@@ -41,7 +41,7 @@ const LandingScreen = () => {
           Welcome to Opa
         </Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-          Alles Gut mit Opa
+          Alles Gut (Everything is Good) with Opa
         </Text>
       </View>
 

@@ -298,7 +298,7 @@ const BookingsStack = () => {
         name="BookingsList" 
         component={BookingsListScreen}
         options={{ 
-          title: 'My Bookings',
+          title: 'Past rentals',
           headerShown: true 
         }}
       />

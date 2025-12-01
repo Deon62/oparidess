@@ -1,74 +1,32 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const NotificationsScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
-  // Mock notifications data
-  const notifications = [
-    {
-      id: 1,
-      type: 'booking',
-      title: 'Booking Confirmed',
-      message: 'Your booking for Toyota Corolla has been confirmed for Jan 15, 2024',
-      time: '2 hours ago',
-      isRead: false,
-      icon: 'checkmark-circle',
-      iconColor: '#4CAF50',
-    },
-    {
-      id: 2,
-      type: 'payment',
-      title: 'Payment Received',
-      message: 'Payment of KSh 13,500 has been successfully processed',
-      time: '5 hours ago',
-      isRead: false,
-      icon: 'card',
-      iconColor: '#2196F3',
-    },
-    {
-      id: 3,
-      type: 'reminder',
-      title: 'Pickup Reminder',
-      message: 'Don\'t forget! Your car rental pickup is scheduled for tomorrow at 10:00 AM',
-      time: '1 day ago',
-      isRead: true,
-      icon: 'time',
-      iconColor: '#FFA500',
-    },
-    {
-      id: 4,
-      type: 'message',
-      title: 'New Message',
-      message: 'You have a new message from John Smith',
-      time: '2 days ago',
-      isRead: true,
-      icon: 'chatbubble',
-      iconColor: '#0A1D37',
-    },
-    {
-      id: 5,
-      type: 'promotion',
-      title: 'Special Offer',
-      message: 'Get 20% off on your next booking! Use code SAVE20',
-      time: '3 days ago',
-      isRead: true,
-      icon: 'gift',
-      iconColor: '#E91E63',
-    },
-    {
-      id: 6,
-      type: 'system',
-      title: 'Profile Update',
-      message: 'Your profile has been successfully updated',
-      time: '4 days ago',
-      isRead: true,
-      icon: 'person',
-      iconColor: '#6D6D6D',
-    },
-  ];
+  // Notifications data - will be fetched from API
+  const notifications = [];
+
+  // Set custom header with status bar
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+          <View style={styles.headerContent}>
+            <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+              Notifications
+            </Text>
+          </View>
+        </View>
+      ),
+    });
+  }, [navigation, theme, insets.top]);
 
   const handleNotificationPress = (notification) => {
     // TODO: Handle notification press - navigate to relevant screen
@@ -114,8 +72,11 @@ const NotificationsScreen = () => {
         {notifications.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="notifications-off-outline" size={64} color={theme.colors.hint} />
+            <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
+              No notifications yet
+            </Text>
             <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-              No notifications
+              When you get notifications about your bookings, messages, and updates, they'll appear here.
             </Text>
           </View>
         ) : (
@@ -130,6 +91,27 @@ const NotificationsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  customHeader: {
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
     flex: 1,
   },
   scrollView: {
@@ -182,12 +164,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 80,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 24,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   emptyStateText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 16,
     textAlign: 'center',
+    lineHeight: 20,
   },
 });
 

@@ -454,7 +454,10 @@ const SettingsStack = () => {
         component={NotificationsScreen}
         options={{ 
           title: 'Notifications',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 

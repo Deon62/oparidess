@@ -14,6 +14,13 @@ try {
 } catch (e) {
   // expo-location not installed, will show alert
 }
+// BlurView import - will use expo-blur if available
+let BlurView = null;
+try {
+  BlurView = require('expo-blur').BlurView;
+} catch (e) {
+  // expo-blur not installed, will use fallback
+}
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -77,7 +84,7 @@ const RenterHomeScreen = () => {
   const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
-
+  
   // Services data with 4 businesses per category
   const servicesData = {
     roadTrips: [
@@ -779,16 +786,16 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('roadTrips').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                     <View style={styles.serviceBusinessActions}>
-                      <TouchableOpacity
+            <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
                           toggleServiceLike(`roadtrips-${business.id}`);
@@ -802,12 +809,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`roadtrips-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -820,9 +827,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -836,10 +843,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('vipWedding').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -859,12 +866,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`vipwedding-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -877,9 +884,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -893,10 +900,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('drivers').map((driver) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={driver.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -916,12 +923,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`drivers-${driver.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {driver.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -933,9 +940,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {driver.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -949,10 +956,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('movers').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -972,12 +979,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`movers-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -990,9 +997,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -1006,10 +1013,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('autoParts').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -1029,12 +1036,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`autoparts-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -1047,9 +1054,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -1063,10 +1070,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('carDetailing').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -1086,12 +1093,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`cardetailing-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -1104,9 +1111,9 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
             </View>
@@ -1120,10 +1127,10 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('roadside').map((business) => (
-                <TouchableOpacity
+            <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-                  activeOpacity={0.8}
+              activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
@@ -1143,12 +1150,12 @@ const RenterHomeScreen = () => {
                           color={likedServices.has(`roadside-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
-                    </View>
+              </View>
                   </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                    </Text>
+                </Text>
                     <View style={styles.serviceBusinessInfo}>
                       <Ionicons name="star" size={14} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
@@ -1161,12 +1168,12 @@ const RenterHomeScreen = () => {
                     </View>
                     <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
                       {business.price}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                </Text>
+              </View>
+            </TouchableOpacity>
                 ))}
               </ScrollView>
-            </View>
+          </View>
           )}
         </View>
       )}
@@ -1581,11 +1588,11 @@ const RenterHomeScreen = () => {
                 }}
               >
                 <View style={styles.blogImageContainer}>
-                  <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
-                    style={styles.blogImage}
-                    resizeMode="cover"
-                  />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
                   <View style={styles.blogActions}>
                     <TouchableOpacity
                       onPress={(e) => {
@@ -1624,11 +1631,11 @@ const RenterHomeScreen = () => {
                 }}
               >
                 <View style={styles.blogImageContainer}>
-                  <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400' }}
-                    style={styles.blogImage}
-                    resizeMode="cover"
-                  />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
                   <View style={styles.blogActions}>
                     <TouchableOpacity
                       onPress={(e) => {
@@ -1667,11 +1674,11 @@ const RenterHomeScreen = () => {
                 }}
               >
                 <View style={styles.blogImageContainer}>
-                  <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
-                    style={styles.blogImage}
-                    resizeMode="cover"
-                  />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
                   <View style={styles.blogActions}>
                     <TouchableOpacity
                       onPress={(e) => {
@@ -1710,11 +1717,11 @@ const RenterHomeScreen = () => {
                 }}
               >
                 <View style={styles.blogImageContainer}>
-                  <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400' }}
-                    style={styles.blogImage}
-                    resizeMode="cover"
-                  />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
                   <View style={styles.blogActions}>
                     <TouchableOpacity
                       onPress={(e) => {
@@ -1753,11 +1760,11 @@ const RenterHomeScreen = () => {
                 }}
               >
                 <View style={styles.blogImageContainer}>
-                  <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400' }}
-                    style={styles.blogImage}
-                    resizeMode="cover"
-                  />
+                <Image
+                  source={{ uri: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400' }}
+                  style={styles.blogImage}
+                  resizeMode="cover"
+                />
                   <View style={styles.blogActions}>
                     <TouchableOpacity
                       onPress={(e) => {
@@ -2031,6 +2038,11 @@ const RenterHomeScreen = () => {
         onRequestClose={() => setShowLocationModal(false)}
       >
         <View style={styles.modalOverlay}>
+          {BlurView ? (
+            <BlurView intensity={20} style={StyleSheet.absoluteFill} />
+          ) : (
+            <View style={styles.modalBlurFallback} />
+          )}
           <View style={[styles.locationModal, { backgroundColor: theme.colors.white }]}>
             <View style={styles.locationModalHeader}>
               <Text style={[styles.locationModalTitle, { color: theme.colors.textPrimary }]}>
@@ -2099,6 +2111,11 @@ const RenterHomeScreen = () => {
         onRequestClose={() => setShowCityPicker(false)}
       >
         <View style={styles.modalOverlay}>
+          {BlurView ? (
+            <BlurView intensity={20} style={StyleSheet.absoluteFill} />
+          ) : (
+            <View style={styles.modalBlurFallback} />
+          )}
           <View style={[styles.cityPickerModal, { backgroundColor: theme.colors.white }]}>
             <View style={styles.cityPickerHeader}>
               <Text style={[styles.cityPickerTitle, { color: theme.colors.textPrimary }]}>
@@ -2621,8 +2638,8 @@ const RenterHomeScreen = () => {
                   <Text style={[styles.filterApplyText, { color: theme.colors.white }]}>
                     Apply Filters
                   </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
+            </View>
             </ScrollView>
           </View>
         </View>
@@ -2963,6 +2980,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'flex-end',
   },
+  modalBlurFallback: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  },
   cityPickerModal: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -3002,7 +3023,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   toggleEmoji: {
-    fontSize: 20,
+    fontSize: 28,
   },
   toggleText: {
     fontSize: 16,

@@ -796,7 +796,7 @@ const RenterHomeScreen = () => {
   );
 
   const ServiceCardSkeleton = () => (
-    <View style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white, marginRight: 16 }]}>
+    <View style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white, marginRight: 12 }]}>
       <View style={[styles.serviceBusinessImageContainer, { backgroundColor: '#E0E0E0' }]}>
         <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
       </View>
@@ -812,7 +812,7 @@ const RenterHomeScreen = () => {
   );
 
   const DiscoverCardSkeleton = () => (
-    <View style={[styles.carEventsCard, { backgroundColor: theme.colors.white, marginRight: 16 }]}>
+    <View style={[styles.carEventsCard, { backgroundColor: theme.colors.white, marginRight: 12 }]}>
       <View style={[styles.carEventsImageContainer, { backgroundColor: '#E0E0E0' }]}>
         <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
       </View>
@@ -889,7 +889,7 @@ const RenterHomeScreen = () => {
                       >
                         <Ionicons
                           name={likedServices.has(`roadtrips-${business.id}`) ? "heart" : "heart-outline"}
-                          size={18}
+                          size={16}
                           color={likedServices.has(`roadtrips-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
@@ -900,11 +900,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
                         {business.location}
                       </Text>
@@ -964,11 +964,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
                         {business.location}
                       </Text>
@@ -1028,7 +1028,7 @@ const RenterHomeScreen = () => {
                       {driver.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {driver.rating}
                       </Text>
@@ -1091,11 +1091,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
                         {business.location}
                       </Text>
@@ -1156,11 +1156,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
                         {business.location}
                       </Text>
@@ -1220,11 +1220,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                 </Text>
                     <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
                         {business.location}
                       </Text>
@@ -1332,7 +1332,7 @@ const RenterHomeScreen = () => {
                     >
                       <Ionicons
                         name={likedDiscover.has('destination-mombasa') ? "heart" : "heart-outline"}
-                        size={18}
+                        size={16}
                         color={likedDiscover.has('destination-mombasa') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
@@ -1676,11 +1676,11 @@ const RenterHomeScreen = () => {
                       {business.name}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary, marginLeft: 4 }]}>
                         {business.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.carEventsDescription, { color: theme.colors.hint, marginLeft: 4 }]}>
                         {business.location}
                       </Text>
@@ -1729,11 +1729,11 @@ const RenterHomeScreen = () => {
                       {mechanic.name}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Ionicons name="star" size={12} color="#FFB800" />
                       <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary, marginLeft: 4 }]}>
                         {mechanic.rating}
                       </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Ionicons name="location" size={12} color={theme.colors.hint} />
                       <Text style={[styles.carEventsDescription, { color: theme.colors.hint, marginLeft: 4 }]}>
                         {mechanic.location}
                       </Text>
@@ -1777,7 +1777,7 @@ const RenterHomeScreen = () => {
                     >
                       <Ionicons
                         name={likedDiscover.has('blog-roadtrip') ? "heart" : "heart-outline"}
-                        size={18}
+                        size={16}
                         color={likedDiscover.has('blog-roadtrip') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
@@ -3307,13 +3307,13 @@ const styles = StyleSheet.create({
   serviceScrollContainer: {
     paddingHorizontal: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   serviceBusinessCard: {
-    width: 200,
-    borderRadius: 16,
+    width: 150,
+    borderRadius: 12,
     overflow: 'hidden',
-    marginRight: 16,
+    marginRight: 12,
     borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -3323,7 +3323,7 @@ const styles = StyleSheet.create({
   },
   serviceBusinessImageContainer: {
     width: '100%',
-    height: 140,
+    height: 85,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -3333,19 +3333,19 @@ const styles = StyleSheet.create({
   },
   serviceBusinessActions: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 6,
+    right: 6,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
   },
   serviceActionButton: {
-    width: 28,
-    height: 28,
+    width: 26,
+    height: 26,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 4,
     backgroundColor: '#FFFFFF',
-    borderRadius: 14,
+    borderRadius: 13,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -3353,37 +3353,40 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   serviceBusinessContent: {
-    padding: 12,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    padding: 10,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   serviceBusinessName: {
-    fontSize: 16,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
+    marginBottom: 4,
+    lineHeight: 16,
   },
   serviceBusinessInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 2,
+    gap: 3,
   },
   serviceBusinessRating: {
-    fontSize: 13,
-    fontFamily: 'Nunito_600SemiBold',
-    marginLeft: 4,
+    fontSize: 10,
+    fontFamily: 'Nunito_400Regular',
+    marginLeft: 3,
   },
   serviceBusinessLocation: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
-    marginLeft: 4,
+    marginLeft: 3,
     flex: 1,
   },
   serviceBusinessPrice: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginTop: 4,
+    marginTop: 2,
+    marginBottom: 6,
   },
   discoverSection: {
     paddingTop: 24,
@@ -3391,22 +3394,23 @@ const styles = StyleSheet.create({
   },
   discoverSubsection: {
     marginBottom: 32,
-    paddingHorizontal: 24,
   },
   discoverSectionTitle: {
     fontSize: 22,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
+    paddingHorizontal: 24,
   },
   offersContainer: {
+    paddingLeft: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   offerCard: {
-    width: 280,
-    borderRadius: 16,
-    padding: 20,
-    marginRight: 16,
+    width: 220,
+    borderRadius: 12,
+    padding: 16,
+    marginRight: 12,
     borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -3418,52 +3422,53 @@ const styles = StyleSheet.create({
   },
   offerActions: {
     position: 'absolute',
-    top: 12,
-    right: 12,
+    top: 8,
+    right: 8,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
   },
   discoverActionButton: {
-    width: 32,
-    height: 32,
+    width: 26,
+    height: 26,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 4,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 13,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   offerContent: {
-    gap: 8,
+    gap: 6,
   },
   offerTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: 'Nunito_700Bold',
   },
   offerDescription: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
+    lineHeight: 18,
   },
   offerCode: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Nunito_600SemiBold',
     marginTop: 4,
     opacity: 0.9,
   },
   destinationsContainer: {
+    paddingLeft: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   destinationCard: {
-    width: 280,
-    borderRadius: 16,
+    width: 150,
+    borderRadius: 12,
     overflow: 'hidden',
-    marginRight: 16,
+    marginRight: 12,
     borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -3473,16 +3478,16 @@ const styles = StyleSheet.create({
   },
   destinationImageContainer: {
     width: '100%',
-    height: 160,
+    height: 85,
     position: 'relative',
     overflow: 'hidden',
   },
   destinationActions: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 6,
+    right: 6,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
     zIndex: 20,
   },
   destinationImage: {
@@ -3498,31 +3503,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   destinationContent: {
-    padding: 16,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    padding: 10,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   destinationName: {
-    fontSize: 18,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 4,
+    lineHeight: 16,
   },
   destinationDescription: {
-    fontSize: 14,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
+    lineHeight: 14,
   },
   carEventsContainer: {
+    paddingLeft: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   carEventsCard: {
-    width: 280,
-    borderRadius: 16,
+    width: 150,
+    borderRadius: 12,
     overflow: 'hidden',
-    marginRight: 16,
+    marginRight: 12,
     borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -3532,16 +3539,16 @@ const styles = StyleSheet.create({
   },
   carEventsImageContainer: {
     width: '100%',
-    height: 200,
+    height: 85,
     position: 'relative',
     overflow: 'hidden',
   },
   carEventsActions: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 6,
+    right: 6,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
     zIndex: 20,
   },
   carEventsImage: {
@@ -3557,31 +3564,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
   carEventsContent: {
-    padding: 16,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    padding: 10,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   carEventsTitle: {
-    fontSize: 18,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 4,
+    lineHeight: 16,
   },
   carEventsDescription: {
-    fontSize: 14,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
+    lineHeight: 14,
   },
   blogsContainer: {
+    paddingLeft: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   blogCard: {
-    width: 280,
-    borderRadius: 16,
+    width: 150,
+    borderRadius: 12,
     overflow: 'hidden',
-    marginRight: 16,
+    marginRight: 12,
     borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -3591,7 +3600,7 @@ const styles = StyleSheet.create({
   },
   blogImageContainer: {
     width: '100%',
-    height: 200,
+    height: 85,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -3601,33 +3610,34 @@ const styles = StyleSheet.create({
   },
   blogActions: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 6,
+    right: 6,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
     zIndex: 20,
   },
   blogContent: {
-    padding: 16,
-    gap: 8,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    padding: 10,
+    gap: 4,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   blogTitle: {
-    fontSize: 16,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 4,
+    lineHeight: 16,
   },
   blogDescription: {
-    fontSize: 13,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
-    lineHeight: 18,
+    lineHeight: 14,
     marginBottom: 4,
   },
   blogDate: {
-    fontSize: 11,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
   },
   filterIconActive: {

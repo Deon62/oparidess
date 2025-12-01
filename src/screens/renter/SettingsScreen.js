@@ -271,15 +271,19 @@ const SettingsScreen = () => {
             <Ionicons name="trash-outline" size={20} color="#F44336" />
           }
         />
-        <SettingItem
-          icon="log-out-outline"
-          title="Logout"
-          onPress={handleLogout}
-          rightComponent={
-            <Ionicons name="log-out-outline" size={20} color={theme.colors.primary} />
-          }
-        />
       </View>
+
+      {/* Logout Button */}
+      <TouchableOpacity
+        style={[styles.logoutButton, { backgroundColor: theme.colors.white }]}
+        onPress={handleLogout}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="log-out-outline" size={24} color="#F44336" />
+        <Text style={[styles.logoutText, { color: '#F44336' }]}>
+          Logout
+        </Text>
+      </TouchableOpacity>
 
       {/* Logout Confirmation Modal */}
       <Modal
@@ -609,6 +613,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    marginHorizontal: 24,
+    borderRadius: 16,
+    gap: 12,
+    marginTop: 24,
+  },
+  logoutText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   logoutModalButtonText: {
     fontSize: 16,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform, Image, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Card } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
@@ -24,6 +24,7 @@ const BookingTrackingScreen = () => {
   const [daysUntilPickup, setDaysUntilPickup] = useState(0);
   const [hoursUntilPickup, setHoursUntilPickup] = useState(0);
   const [minutesUntilPickup, setMinutesUntilPickup] = useState(0);
+  const [isPickedUp, setIsPickedUp] = useState(false);
   const [showReceiptModal, setShowReceiptModal] = useState(false);
   const [receiptDownloaded, setReceiptDownloaded] = useState(false);
 
@@ -32,20 +33,31 @@ const BookingTrackingScreen = () => {
     navigation.setOptions({
       headerShown: false,
     });
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
-    return () => {
-      navigation.setOptions({
-        headerShown: true,
+  }, [navigation]);
+
+  // Hide tab bar when screen is focused (including when returning from other screens)
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
       });
+      return () => {
+        // Only restore tab bar when navigating away from this screen completely
+        // Don't restore it here to prevent flickering when navigating to child screens
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
+    return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,
       });
     };
   }, [navigation]);
 
-  // Calculate countdown to pickup
+  // Calculate countdown to pickup or dropoff
   useEffect(() => {
     if (!bookingDetails?.pickupDate) return;
 
@@ -54,20 +66,48 @@ const BookingTrackingScreen = () => {
       const pickup = new Date(bookingDetails.pickupDate);
       pickup.setHours(10, 0, 0, 0); // Set pickup time to 10:00 AM
 
-      const diff = pickup.getTime() - now.getTime();
+      const pickupDiff = pickup.getTime() - now.getTime();
 
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      // Check if pickup time has passed
+      if (pickupDiff <= 0) {
+        setIsPickedUp(true);
+        
+        // Calculate dropoff countdown
+        if (bookingDetails?.dropoffDate) {
+          const dropoff = new Date(bookingDetails.dropoffDate);
+          dropoff.setHours(10, 0, 0, 0); // Set dropoff time to 10:00 AM
+          
+          const dropoffDiff = dropoff.getTime() - now.getTime();
+          
+          if (dropoffDiff > 0) {
+            const days = Math.floor(dropoffDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((dropoffDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((dropoffDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+            setDaysUntilPickup(days);
+            setHoursUntilPickup(hours);
+            setMinutesUntilPickup(minutes);
+          } else {
+            // Dropoff time has passed
+            setDaysUntilPickup(0);
+            setHoursUntilPickup(0);
+            setMinutesUntilPickup(0);
+          }
+        } else {
+          setDaysUntilPickup(0);
+          setHoursUntilPickup(0);
+          setMinutesUntilPickup(0);
+        }
+      } else {
+        // Still counting down to pickup
+        setIsPickedUp(false);
+        const days = Math.floor(pickupDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((pickupDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((pickupDiff % (1000 * 60 * 60)) / (1000 * 60));
 
         setDaysUntilPickup(days);
         setHoursUntilPickup(hours);
         setMinutesUntilPickup(minutes);
-      } else {
-        setDaysUntilPickup(0);
-        setHoursUntilPickup(0);
-        setMinutesUntilPickup(0);
       }
     };
 
@@ -75,7 +115,7 @@ const BookingTrackingScreen = () => {
     const interval = setInterval(updateCountdown, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, [bookingDetails?.pickupDate]);
+  }, [bookingDetails?.pickupDate, bookingDetails?.dropoffDate]);
 
   const formatDate = (date) => {
     if (!date) return 'N/A';
@@ -233,7 +273,7 @@ const BookingTrackingScreen = () => {
       {/* Countdown Timer */}
       <View style={[styles.countdownCard, { backgroundColor: theme.colors.white }]}>
         <Text style={[styles.countdownTitle, { color: theme.colors.textPrimary }]}>
-          Pickup in
+          {isPickedUp ? 'Dropoff in' : 'Pickup in'}
         </Text>
         <View style={styles.countdownContainer}>
           <View style={styles.countdownItem}>

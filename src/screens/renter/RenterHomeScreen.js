@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 import { parseCurrency } from '../../packages/utils/currency';
+import { useWishlist } from '../../packages/context/WishlistContext';
 // Location import - will use expo-location if available
 let Location = null;
 try {
@@ -61,9 +62,7 @@ const RenterHomeScreen = () => {
   const insets = useSafeAreaInsets();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [likedCars, setLikedCars] = useState(new Set());
-  const [likedServices, setLikedServices] = useState(new Set());
-  const [likedDiscover, setLikedDiscover] = useState(new Set());
+  const { likedCars, likedServices, likedDiscover, toggleCarLike, toggleServiceLike, toggleDiscoverLike } = useWishlist();
   const [showNoFeesMessage, setShowNoFeesMessage] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
   
@@ -262,41 +261,6 @@ const RenterHomeScreen = () => {
     },
   ];
 
-  const toggleLike = (carId) => {
-    setLikedCars(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(carId)) {
-        newSet.delete(carId);
-      } else {
-        newSet.add(carId);
-      }
-      return newSet;
-    });
-  };
-
-  const toggleServiceLike = (serviceId) => {
-    setLikedServices(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(serviceId)) {
-        newSet.delete(serviceId);
-      } else {
-        newSet.add(serviceId);
-      }
-      return newSet;
-    });
-  };
-
-  const toggleDiscoverLike = (discoverId) => {
-    setLikedDiscover(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(discoverId)) {
-        newSet.delete(discoverId);
-      } else {
-        newSet.add(discoverId);
-      }
-      return newSet;
-    });
-  };
 
   const handleCarPress = (car) => {
     navigation.navigate('CarDetails', { car });
@@ -1095,22 +1059,6 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
-                <View style={styles.offerActions}>
-                  <TouchableOpacity
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      toggleDiscoverLike('offer-weekend');
-                    }}
-                    style={styles.discoverActionButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons
-                      name={likedDiscover.has('offer-weekend') ? "heart" : "heart-outline"}
-                      size={18}
-                      color={likedDiscover.has('offer-weekend') ? '#FF3B30' : theme.colors.white}
-                    />
-                  </TouchableOpacity>
-                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     Weekend Special
@@ -1129,22 +1077,6 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
-                <View style={styles.offerActions}>
-                  <TouchableOpacity
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      toggleDiscoverLike('offer-longterm');
-                    }}
-                    style={styles.discoverActionButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons
-                      name={likedDiscover.has('offer-longterm') ? "heart" : "heart-outline"}
-                      size={18}
-                      color={likedDiscover.has('offer-longterm') ? '#FF3B30' : theme.colors.white}
-                    />
-                  </TouchableOpacity>
-                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     Long Term Deal
@@ -1163,22 +1095,6 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
-                <View style={styles.offerActions}>
-                  <TouchableOpacity
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      toggleDiscoverLike('offer-firsttime');
-                    }}
-                    style={styles.discoverActionButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons
-                      name={likedDiscover.has('offer-firsttime') ? "heart" : "heart-outline"}
-                      size={18}
-                      color={likedDiscover.has('offer-firsttime') ? '#FF3B30' : theme.colors.white}
-                    />
-                  </TouchableOpacity>
-                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     First Time User
@@ -1220,7 +1136,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('destination-mombasa') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('destination-mombasa') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('destination-mombasa') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1255,7 +1171,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('destination-nakuru') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('destination-nakuru') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('destination-nakuru') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1290,7 +1206,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('destination-egerton') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('destination-egerton') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('destination-egerton') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1325,7 +1241,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('destination-hellsgate') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('destination-hellsgate') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('destination-hellsgate') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1360,7 +1276,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('destination-pejeta') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('destination-pejeta') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('destination-pejeta') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1403,7 +1319,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('event-nairobi') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('event-nairobi') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('event-nairobi') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1438,7 +1354,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('event-classic') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('event-classic') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('event-classic') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1473,7 +1389,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('event-supercar') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('event-supercar') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('event-supercar') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1508,7 +1424,7 @@ const RenterHomeScreen = () => {
                       <Ionicons
                         name={likedDiscover.has('event-motor') ? "heart" : "heart-outline"}
                         size={18}
-                        color={likedDiscover.has('event-motor') ? '#FF3B30' : theme.colors.white}
+                        color={likedDiscover.has('event-motor') ? '#FF3B30' : theme.colors.textPrimary}
                       />
                     </TouchableOpacity>
                   </View>
@@ -1799,7 +1715,7 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleLike(car.id);
+                          toggleCarLike(car.id);
                         }}
                         style={styles.actionButton}
                         activeOpacity={0.7}
@@ -2888,18 +2804,18 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   discoverActionButton: {
-    width: 28,
-    height: 28,
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
   offerContent: {
     gap: 8,
@@ -2946,7 +2862,7 @@ const styles = StyleSheet.create({
     right: 8,
     flexDirection: 'row',
     gap: 8,
-    zIndex: 10,
+    zIndex: 20,
   },
   destinationImage: {
     width: '100%',
@@ -3000,7 +2916,7 @@ const styles = StyleSheet.create({
     right: 8,
     flexDirection: 'row',
     gap: 8,
-    zIndex: 10,
+    zIndex: 20,
   },
   carEventsImage: {
     width: '100%',
@@ -3058,7 +2974,7 @@ const styles = StyleSheet.create({
     right: 8,
     flexDirection: 'row',
     gap: 8,
-    zIndex: 10,
+    zIndex: 20,
   },
   blogContent: {
     padding: 16,

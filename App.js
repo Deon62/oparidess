@@ -8,6 +8,7 @@ import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-goo
 
 import { ThemeProvider, useTheme } from './src/packages/theme/ThemeProvider';
 import { UserProvider } from './src/packages/context/UserContext';
+import { WishlistProvider } from './src/packages/context/WishlistContext';
 import MainNavigator from './src/packages/navigation/MainNavigator';
 
 // Keep the splash screen visible while we fetch resources
@@ -44,22 +45,24 @@ const AppContent = () => {
 
   return (
     <UserProvider>
-      <NavigationContainer
-        theme={{
-          dark: false,
-          colors: {
-            primary: theme.colors.primary,
-            background: theme.colors.background,
-            card: theme.colors.background,
-            text: theme.colors.textPrimary,
-            border: 'transparent',
-            notification: theme.colors.primary,
-          },
-        }}
-      >
-        <StatusBar style="dark" />
-        <MainNavigator />
-      </NavigationContainer>
+      <WishlistProvider>
+        <NavigationContainer
+          theme={{
+            dark: false,
+            colors: {
+              primary: theme.colors.primary,
+              background: theme.colors.background,
+              card: theme.colors.background,
+              text: theme.colors.textPrimary,
+              border: 'transparent',
+              notification: theme.colors.primary,
+            },
+          }}
+        >
+          <StatusBar style="dark" />
+          <MainNavigator />
+        </NavigationContainer>
+      </WishlistProvider>
     </UserProvider>
   );
 }

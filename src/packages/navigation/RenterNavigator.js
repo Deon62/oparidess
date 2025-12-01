@@ -29,6 +29,8 @@ import ServiceProviderStep3Screen from '../../screens/renter/ServiceProviderStep
 import ServiceDetailsScreen from '../../screens/renter/ServiceDetailsScreen';
 import ServiceBookingScreen from '../../screens/renter/ServiceBookingScreen';
 import ServiceBookingConfirmationScreen from '../../screens/renter/ServiceBookingConfirmationScreen';
+import WriteBlogScreen from '../../screens/renter/WriteBlogScreen';
+import PreviewBlogScreen from '../../screens/renter/PreviewBlogScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -250,6 +252,22 @@ const HomeStack = () => {
           headerShown: true 
         }}
       />
+      <Stack.Screen 
+        name="WriteBlog" 
+        component={WriteBlogScreen}
+        options={{ 
+          title: 'Write Blog',
+          headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="PreviewBlog" 
+        component={PreviewBlogScreen}
+        options={{ 
+          title: 'Preview Blog',
+          headerShown: false 
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -436,6 +454,22 @@ const SettingsStack = () => {
         options={{ 
           title: 'Customer Support',
           headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="WriteBlog" 
+        component={WriteBlogScreen}
+        options={{ 
+          title: 'Write Blog',
+          headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="PreviewBlog" 
+        component={PreviewBlogScreen}
+        options={{ 
+          title: 'Preview Blog',
+          headerShown: false 
         }}
       />
     </Stack.Navigator>

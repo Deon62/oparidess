@@ -372,6 +372,18 @@ const RenterProfileScreen = () => {
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          onPress={() => navigation.navigate('WriteBlog')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="create-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Write Opa Blog
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
       </View>
 
       {/* Logout Button */}

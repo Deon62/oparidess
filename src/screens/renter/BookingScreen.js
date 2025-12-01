@@ -1,7 +1,7 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay, parseCurrency } from '../../packages/utils/currency';
@@ -44,11 +44,21 @@ const BookingScreen = () => {
     { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi', coordinates: { latitude: -1.3192, longitude: 36.9278 } },
   ];
 
-  // Hide bottom tab bar on this screen
-  useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+  // Hide tab bar when screen is focused (including when returning from other screens)
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Only restore tab bar when navigating away from this screen completely
+        // Don't restore it here to prevent flickering when navigating to child screens
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,

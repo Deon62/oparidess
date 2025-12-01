@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
@@ -51,11 +51,21 @@ const PaymentScreen = () => {
     cvv: '',
   });
 
-  // Hide bottom tab bar on this screen
-  useLayoutEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+  // Hide tab bar when screen is focused (including when returning from other screens)
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Only restore tab bar when navigating away from this screen completely
+        // Don't restore it here to prevent flickering when navigating to child screens
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,

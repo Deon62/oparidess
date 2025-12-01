@@ -1,7 +1,7 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Card, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay } from '../../packages/utils/currency';
@@ -18,9 +18,23 @@ const BookingConfirmationScreen = () => {
     navigation.setOptions({
       title: 'Review Booking',
     });
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+  }, [navigation]);
+
+  // Hide tab bar when screen is focused (including when returning from other screens)
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Only restore tab bar when navigating away from this screen completely
+        // Don't restore it here to prevent flickering when navigating to child screens
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
     return () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: undefined,

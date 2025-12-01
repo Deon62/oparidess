@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Linking, Modal, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Button } from '../../packages/components';
+import { Button, Card } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
+
+// Import profile image for host
+const profileImage = require('../../../assets/logo/profile.jpg');
 
 const BookingTrackingScreen = () => {
   const theme = useTheme();
@@ -419,24 +422,95 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Message Car Owner Section with Host Card */}
+      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Message Car Owner
+        </Text>
+        <View style={styles.hostCard}>
+          <View style={styles.hostHeader}>
+            <Image 
+              source={bookingDetails?.car?.ownerAvatar || profileImage} 
+              style={styles.hostPhoto} 
+              resizeMode="cover" 
+            />
+            <View style={styles.hostInfo}>
+              <Text style={[styles.hostName, { color: theme.colors.textPrimary }]}>
+                {bookingDetails?.car?.ownerName || 'Car Owner'}
+              </Text>
+              <View style={styles.hostRatingRow}>
+                <Ionicons name="star" size={16} color="#FFD700" />
+                <Text style={[styles.hostRating, { color: theme.colors.textPrimary }]}>
+                  4.8
+                </Text>
+                <Text style={[styles.hostTrips, { color: theme.colors.textSecondary }]}>
+                  (47 trips)
+                </Text>
+              </View>
+              <View style={styles.hostResponseTime}>
+                <Ionicons name="time-outline" size={14} color={theme.colors.hint} />
+                <Text style={[styles.responseTimeText, { color: theme.colors.textSecondary }]}>
+                  Usually responds in 15 minutes
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.verificationBadges}>
+            <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
+              <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+              <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
+                ID Verified
+              </Text>
+            </View>
+            <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
+              <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+              <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
+                Phone Verified
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={[styles.messageButton, { backgroundColor: theme.colors.primary }]}
+            onPress={handleMessageCarOwner}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="chatbubbles-outline" size={20} color={theme.colors.white} />
+            <Text style={[styles.messageButtonText, { color: theme.colors.white }]}>
+              Message Owner
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Add Rental Days Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <TouchableOpacity
+          style={styles.addDaysCard}
+          onPress={handleMessageCarOwner}
+          activeOpacity={0.7}
+        >
+          <View style={styles.addDaysContent}>
+            <View style={[styles.addDaysIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
+              <Ionicons name="calendar-add-outline" size={28} color={theme.colors.primary} />
+            </View>
+            <View style={styles.addDaysTextContainer}>
+              <Text style={[styles.addDaysTitle, { color: theme.colors.textPrimary }]}>
+                Add Rental Days
+              </Text>
+              <Text style={[styles.addDaysDescription, { color: theme.colors.textSecondary }]}>
+                Extend your booking by messaging the car owner
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
       {/* Manage Booking Section */}
       <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Manage Booking
         </Text>
-        <TouchableOpacity
-          style={styles.manageItem}
-          onPress={handleMessageCarOwner}
-          activeOpacity={0.7}
-        >
-          <View style={styles.manageItemLeft}>
-            <Ionicons name="chatbubbles-outline" size={24} color={theme.colors.primary} />
-            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
-              Message Car Owner
-            </Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
         <TouchableOpacity
           style={styles.manageItem}
           onPress={handleAddToCalendar}
@@ -463,6 +537,13 @@ const BookingTrackingScreen = () => {
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
+      </View>
+
+      {/* Booking Actions Section */}
+      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Booking Actions
+        </Text>
         <TouchableOpacity
           style={styles.manageItem}
           onPress={() => navigation.navigate('Cancellation', { bookingDetails })}
@@ -883,6 +964,112 @@ const styles = StyleSheet.create({
   receiptModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  // Host Card Styles
+  hostCard: {
+    gap: 16,
+    marginTop: 4,
+  },
+  hostHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  hostPhoto: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+  },
+  hostInfo: {
+    flex: 1,
+    gap: 6,
+  },
+  hostName: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  hostRatingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  hostRating: {
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  hostTrips: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  hostResponseTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  responseTimeText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+  },
+  verificationBadges: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  badge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 6,
+  },
+  badgeText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  messageButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    borderRadius: 12,
+    gap: 8,
+    marginTop: 8,
+  },
+  messageButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Add Rental Days Card Styles
+  addDaysCard: {
+    width: '100%',
+  },
+  addDaysContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  addDaysIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addDaysTextContainer: {
+    flex: 1,
+    gap: 4,
+  },
+  addDaysTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  addDaysDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
   },
 });
 

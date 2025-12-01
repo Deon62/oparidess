@@ -73,7 +73,10 @@ const HomeStack = () => {
         component={RenterHomeScreen}
         options={{ 
           title: 'Home',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 

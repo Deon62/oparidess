@@ -234,8 +234,8 @@ const RenterHomeScreen = () => {
   const carClasses = [
     {
       id: 'essential',
-      name: 'Essential',
-      description: 'Affordable and reliable cars for everyday use',
+      name: 'Everyday Picks',
+      description: 'Affordable and reliable rides for daily movement.',
       cars: [
         { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1 },
         { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2 },
@@ -244,8 +244,8 @@ const RenterHomeScreen = () => {
     },
     {
       id: 'executive',
-      name: 'Executive',
-      description: 'Premium comfort and style for business travel',
+      name: 'Premium & Luxury',
+      description: 'Elevated comfort for business or special events.',
       cars: [
         { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4 },
         { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1 },
@@ -254,8 +254,8 @@ const RenterHomeScreen = () => {
     },
     {
       id: 'signature',
-      name: 'Signature',
-      description: 'Ultra-luxury vehicles for the ultimate experience',
+      name: 'Elite Collection',
+      description: 'Ultimate luxury and prestige for extraordinary moments.',
       cars: [
         { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3 },
         { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4 },
@@ -1979,7 +1979,7 @@ const RenterHomeScreen = () => {
         filteredCarClasses.map((carClass, index) => (
         <View key={carClass.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
           <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
-            <View>
+            <View style={styles.classHeaderLeft}>
               <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
                 {carClass.name}
               </Text>
@@ -1990,6 +1990,7 @@ const RenterHomeScreen = () => {
             <TouchableOpacity
               onPress={() => handleViewAll(carClass.id)}
               activeOpacity={0.7}
+              style={styles.viewAllButton}
             >
               <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
                 View All
@@ -2925,7 +2926,7 @@ const styles = StyleSheet.create({
   },
   classSection: {
     marginTop: 0,
-    marginBottom: 24,
+    marginBottom: 8,
   },
   firstSection: {
     marginTop: 0,
@@ -2938,8 +2939,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingHorizontal: 24,
-    marginBottom: 16,
-    paddingTop: 24,
+    marginBottom: 12,
+    paddingTop: 12,
+    gap: 12,
+  },
+  classHeaderLeft: {
+    flex: 1,
+    flexShrink: 1,
+    minWidth: 0,
   },
   className: {
     fontSize: 20,
@@ -2951,6 +2958,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+  },
+  viewAllButton: {
+    flexShrink: 0,
+    paddingLeft: 8,
   },
   viewAllText: {
     fontSize: 14,

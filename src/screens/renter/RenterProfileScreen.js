@@ -1,10 +1,11 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button } from '../../packages/components';
+import * as ImagePicker from 'expo-image-picker';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -14,6 +15,7 @@ const RenterProfileScreen = () => {
   const navigation = useNavigation();
   const { logout, user, updateUser } = useUser();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
 
   // Mock user data - in real app, this would come from context/API
   const [personalInfo, setPersonalInfo] = useState({
@@ -28,33 +30,18 @@ const RenterProfileScreen = () => {
     profile_completeness: user?.profile_completeness || 75,
   });
 
+  // Update profile image URI when user context changes
+  useEffect(() => {
+    if (user?.profile_image_uri) {
+      setProfileImageUri(user.profile_image_uri);
+    }
+  }, [user?.profile_image_uri]);
+
   // Set header title
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'My Profile',
     });
-  }, [navigation]);
-
-  // Hide tab bar when screen is focused (including when returning from other screens)
-  useFocusEffect(
-    React.useCallback(() => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: { display: 'none' },
-      });
-      return () => {
-        // Only restore tab bar when navigating away from this screen completely
-        // Don't restore it here to prevent flickering when navigating to child screens
-      };
-    }, [navigation])
-  );
-
-  // Restore tab bar when component unmounts (navigating away completely)
-  useEffect(() => {
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-    };
   }, [navigation]);
 
   const handleUploadDocs = () => {
@@ -63,6 +50,88 @@ const RenterProfileScreen = () => {
 
   const handleUpdateProfile = () => {
     navigation.navigate('UpdateProfile', { personalInfo });
+  };
+
+  const requestPermissions = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permission Required',
+        'We need access to your photos to update your profile picture.',
+        [{ text: 'OK' }]
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const pickImage = async () => {
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const imageUri = result.assets[0].uri;
+        setProfileImageUri(imageUri);
+        // Update user context with profile image
+        updateUser({ profile_image_uri: imageUri });
+        Alert.alert('Success', 'Profile picture updated successfully!');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to pick image. Please try again.');
+      console.error('Image picker error:', error);
+    }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permission Required',
+        'We need access to your camera to take a photo.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const imageUri = result.assets[0].uri;
+        setProfileImageUri(imageUri);
+        // Update user context with profile image
+        updateUser({ profile_image_uri: imageUri });
+        Alert.alert('Success', 'Profile picture updated successfully!');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to take photo. Please try again.');
+      console.error('Camera error:', error);
+    }
+  };
+
+  const showImageOptions = () => {
+    Alert.alert(
+      'Update Profile Picture',
+      'Choose an option',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Take Photo', onPress: takePhoto },
+        { text: 'Choose from Gallery', onPress: pickImage },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleBecomeServiceProvider = () => {
@@ -121,14 +190,14 @@ const RenterProfileScreen = () => {
       <View style={[styles.profileHeader, { backgroundColor: theme.colors.white }]}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={profileImage}
+            source={profileImageUri ? { uri: profileImageUri } : profileImage}
             style={[styles.profileImage, { borderColor: theme.colors.primary }]}
             resizeMode="cover"
           />
           <View style={styles.onlineIndicator} />
           <TouchableOpacity
             style={[styles.cameraButton, { backgroundColor: theme.colors.primary }]}
-            onPress={handleUpdateProfile}
+            onPress={showImageOptions}
             activeOpacity={0.7}
           >
             <Ionicons name="camera" size={16} color={theme.colors.white} />

@@ -2023,7 +2023,7 @@ const RenterHomeScreen = () => {
                 activeOpacity={1}
                 style={styles.carCardWrapper}
               >
-                <Card style={styles.carCard}>
+                <Card style={[styles.carCard, { borderRadius: 16, borderWidth: 0 }]}>
                   <View style={styles.carImageContainer}>
                     <Image 
                       source={car.image || carImages[car.id] || carImage1} 
@@ -2121,7 +2121,7 @@ const RenterHomeScreen = () => {
                   activeOpacity={1}
                   style={styles.carCardWrapper}
                 >
-                  <Card style={styles.carCard}>
+                  <Card style={[styles.carCard, { borderRadius: 16, borderWidth: 0 }]}>
                     <View style={styles.carImageContainer}>
                       <Image 
                         source={vehicle.image} 
@@ -2981,6 +2981,7 @@ const styles = StyleSheet.create({
     padding: 0,
     overflow: 'hidden',
     borderWidth: 0,
+    borderRadius: 16,
   },
   carImageContainer: {
     width: '100%',
@@ -3015,6 +3016,10 @@ const styles = StyleSheet.create({
   },
   carInfo: {
     padding: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   carName: {
     fontSize: 16,
@@ -3296,6 +3301,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginRight: 16,
+    borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -3335,6 +3341,10 @@ const styles = StyleSheet.create({
   },
   serviceBusinessContent: {
     padding: 12,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   serviceBusinessName: {
     fontSize: 16,
@@ -3384,12 +3394,14 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginRight: 16,
+    borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
     position: 'relative',
+    overflow: 'hidden',
   },
   offerActions: {
     position: 'absolute',
@@ -3439,6 +3451,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginRight: 16,
+    borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -3473,6 +3486,10 @@ const styles = StyleSheet.create({
   },
   destinationContent: {
     padding: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   destinationName: {
     fontSize: 18,
@@ -3493,6 +3510,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginRight: 16,
+    borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -3527,6 +3545,10 @@ const styles = StyleSheet.create({
   },
   carEventsContent: {
     padding: 16,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   carEventsTitle: {
     fontSize: 18,
@@ -3547,6 +3569,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     marginRight: 16,
+    borderWidth: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -3574,6 +3597,10 @@ const styles = StyleSheet.create({
   blogContent: {
     padding: 16,
     gap: 8,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   blogTitle: {
     fontSize: 16,

@@ -730,7 +730,9 @@ const CarDetailsScreen = () => {
             </View>
             <TouchableOpacity
               onPress={() => {
-                Alert.alert('Report Listing', 'If you believe this listing violates our community guidelines, please report it. Our team will review it promptly.');
+                navigation.navigate('Dispute', { 
+                  car: carData,
+                });
               }}
               style={styles.reportButton}
               activeOpacity={0.7}

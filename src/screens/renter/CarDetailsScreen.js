@@ -566,7 +566,9 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={[styles.whyChooseCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.whyChooseItem}>
-              <Ionicons name="shield-checkmark" size={24} color={theme.colors.primary} />
+              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.whyChooseNumber}>1</Text>
+              </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
                   Well Maintained
@@ -577,7 +579,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <Ionicons name="star" size={24} color={theme.colors.primary} />
+              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.whyChooseNumber}>2</Text>
+              </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
                   Highly Rated
@@ -588,7 +592,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <Ionicons name="location" size={24} color={theme.colors.primary} />
+              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.whyChooseNumber}>3</Text>
+              </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
                   Convenient Location
@@ -599,7 +605,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <Ionicons name="flash" size={24} color={theme.colors.primary} />
+              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.whyChooseNumber}>4</Text>
+              </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
                   Fuel Efficient
@@ -619,7 +627,9 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={[styles.guaranteesCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.guaranteeItem}>
-              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.guaranteeLabel}>A</Text>
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Verified Vehicles
@@ -630,7 +640,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Ionicons name="lock-closed" size={24} color={theme.colors.primary} />
+              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.guaranteeLabel}>B</Text>
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Secure Booking
@@ -641,7 +653,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Ionicons name="headset" size={24} color={theme.colors.primary} />
+              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.guaranteeLabel}>C</Text>
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   24/7 Support
@@ -652,7 +666,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Ionicons name="refresh" size={24} color={theme.colors.primary} />
+              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
+                <Text style={styles.guaranteeLabel}>D</Text>
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Easy Cancellation
@@ -704,16 +720,13 @@ const CarDetailsScreen = () => {
             Safety
           </Text>
           <View style={[styles.safetyCard, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.safetyInfo}>
-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.colors.primary} />
-              <View style={styles.safetyContent}>
-                <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
-                  Safe & Verified
-                </Text>
-                <Text style={[styles.safetyDescription, { color: theme.colors.textSecondary }]}>
-                  This listing has been verified and meets our safety standards.
-                </Text>
-              </View>
+            <View style={styles.safetyContent}>
+              <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
+                Safe & Verified
+              </Text>
+              <Text style={[styles.safetyDescription, { color: theme.colors.textSecondary }]}>
+                This listing has been verified and meets our safety standards.
+              </Text>
             </View>
             <TouchableOpacity
               onPress={() => {
@@ -734,11 +747,13 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Reviews
           </Text>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            contentContainerStyle={styles.reviewsContainer}
-          >
+        </View>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          contentContainerStyle={styles.reviewsContainer}
+          style={styles.reviewsScrollView}
+        >
             {reviews.map((review) => (
               <View key={review.id} style={[styles.reviewCard, { backgroundColor: theme.colors.white }]}>
                 <View style={styles.reviewHeader}>
@@ -767,8 +782,7 @@ const CarDetailsScreen = () => {
                 </Text>
               </View>
             ))}
-          </ScrollView>
-        </View>
+        </ScrollView>
 
 
         {/* Bottom spacing for fixed bar */}
@@ -1254,13 +1268,7 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 16,
   },
-  safetyInfo: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
   safetyContent: {
-    flex: 1,
     gap: 4,
   },
   safetyTitle: {
@@ -1282,16 +1290,20 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   // Reviews section styles
+  reviewsScrollView: {
+    marginTop: -8,
+  },
   reviewsContainer: {
+    paddingLeft: 24,
     paddingRight: 24,
-    gap: 16,
+    gap: 12,
   },
   reviewCard: {
-    width: 320,
+    width: 270,
     borderRadius: 16,
-    padding: 16,
-    marginRight: 16,
-    gap: 12,
+    padding: 20,
+    marginRight: 12,
+    gap: 14,
   },
   reviewHeader: {
     flexDirection: 'row',
@@ -1327,52 +1339,82 @@ const styles = StyleSheet.create({
   // Why Choose This Car section styles
   whyChooseCard: {
     borderRadius: 16,
-    padding: 20,
-    gap: 20,
+    padding: 24,
+    gap: 24,
   },
   whyChooseItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 16,
   },
+  whyChooseNumberBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  whyChooseNumber: {
+    fontSize: 15,
+    fontFamily: 'Nunito_700Bold',
+    color: '#FFFFFF',
+  },
   whyChooseContent: {
     flex: 1,
-    gap: 4,
+    gap: 6,
   },
   whyChooseTitle: {
     fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 4,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 2,
+    letterSpacing: -0.2,
   },
   whyChooseDescription: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+    letterSpacing: -0.1,
   },
   // Opa Guarantees section styles
   guaranteesCard: {
     borderRadius: 16,
-    padding: 20,
-    gap: 20,
+    padding: 24,
+    gap: 24,
   },
   guaranteeItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: 16,
+  },
+  guaranteeBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  guaranteeLabel: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    color: '#FFFFFF',
   },
   guaranteeContent: {
     flex: 1,
-    gap: 4,
+    gap: 6,
   },
   guaranteeTitle: {
     fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 4,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 2,
+    letterSpacing: -0.2,
   },
   guaranteeDescription: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+    letterSpacing: -0.1,
   },
 });
 

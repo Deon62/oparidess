@@ -141,14 +141,6 @@ const HomeStack = () => {
         }}
       />
       <Stack.Screen 
-        name="Wishlist" 
-        component={WishlistScreen}
-        options={{ 
-          title: 'Wishlist',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
         name="RenterProfile" 
         component={RenterProfileScreen}
         options={{ 
@@ -241,6 +233,37 @@ const BookingsStack = () => {
         options={{ 
           title: 'Past Rental Details',
           headerShown: false 
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+// Wishlist Stack Navigator
+const WishlistStack = () => {
+  const theme = useTheme();
+
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: theme.colors.background,
+        },
+        headerTintColor: theme.colors.textPrimary,
+        headerTitleStyle: {
+          fontFamily: 'Nunito_600SemiBold',
+        },
+        contentStyle: {
+          backgroundColor: theme.colors.background,
+        },
+      }}
+    >
+      <Stack.Screen 
+        name="Wishlist" 
+        component={WishlistScreen}
+        options={{ 
+          title: 'Wishlist',
+          headerShown: true 
         }}
       />
     </Stack.Navigator>
@@ -376,6 +399,8 @@ const RenterNavigator = () => {
 
           if (route.name === 'HomeTab') {
             iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'WishlistTab') {
+            iconName = focused ? 'heart' : 'heart-outline';
           } else if (route.name === 'BookingsTab') {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'MessagesTab') {
@@ -408,6 +433,14 @@ const RenterNavigator = () => {
         options={{ 
           title: 'Home',
           tabBarLabel: 'Home',
+        }}
+      />
+      <Tab.Screen 
+        name="WishlistTab" 
+        component={WishlistStack}
+        options={{ 
+          title: 'Wishlist',
+          tabBarLabel: 'Wishlist',
         }}
       />
       <Tab.Screen 

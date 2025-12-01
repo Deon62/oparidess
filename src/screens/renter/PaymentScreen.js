@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,6 +26,7 @@ const PaymentScreen = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [cardType, setCardType] = useState(null); // 'visa' or 'mastercard'
   const [cardError, setCardError] = useState(null); // Error message for invalid card
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
   
   const scrollViewRef = useRef(null);
   const cardNumberInputRef = useRef(null);
@@ -33,6 +34,8 @@ const PaymentScreen = () => {
   const cvvInputRef = useRef(null);
   const mpesaPhoneInputRef = useRef(null);
   const airtelPhoneInputRef = useRef(null);
+  const cardholderNameInputRef = useRef(null);
+  const inputPositionsRef = useRef({});
 
   // Form data for different payment methods
   const [mpesaData, setMpesaData] = useState({
@@ -199,13 +202,37 @@ const PaymentScreen = () => {
     return formatted;
   };
   
-  const handleInputFocus = (inputRef) => {
-    // Scroll after keyboard appears to ensure input is visible
-    setTimeout(() => {
-      if (scrollViewRef.current) {
-        scrollViewRef.current.scrollToEnd({ animated: true });
+  // Keyboard listeners to handle scroll when keyboard appears
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        const height = e.endCoordinates.height;
+        setKeyboardHeight(height);
+        // Don't auto-scroll here - let handleInputFocus handle it
       }
-    }, 400);
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const handleInputFocus = (inputRef, inputKey) => {
+    // Store input reference for scrolling
+    if (inputKey && inputRef) {
+      inputPositionsRef.current[inputKey] = inputRef;
+    }
+    // Don't auto-scroll - let KeyboardAvoidingView handle it naturally
+    // This prevents the extra scrolling issue
   };
 
   const formatExpiryDate = (text) => {
@@ -222,8 +249,8 @@ const PaymentScreen = () => {
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
         <ScrollView
           ref={scrollViewRef}
@@ -231,6 +258,8 @@ const PaymentScreen = () => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled={true}
+          scrollEnabled={true}
         >
         {/* Amount Summary */}
         <View style={[styles.amountCard, { backgroundColor: theme.colors.white }]}>
@@ -334,7 +363,7 @@ const PaymentScreen = () => {
               value={mpesaData.phoneNumber}
               onChangeText={(value) => setMpesaData({ ...mpesaData, phoneNumber: value })}
               keyboardType="phone-pad"
-              onFocus={() => handleInputFocus(mpesaPhoneInputRef)}
+              onFocus={() => handleInputFocus(mpesaPhoneInputRef, 'mpesaPhone')}
             />
             <Text style={[styles.infoText, { color: theme.colors.hint }]}>
               You will receive an M-PESA prompt on your phone to complete the payment.
@@ -354,7 +383,7 @@ const PaymentScreen = () => {
               value={airtelData.phoneNumber}
               onChangeText={(value) => setAirtelData({ ...airtelData, phoneNumber: value })}
               keyboardType="phone-pad"
-              onFocus={() => handleInputFocus(airtelPhoneInputRef)}
+              onFocus={() => handleInputFocus(airtelPhoneInputRef, 'airtelPhone')}
             />
             <Text style={[styles.infoText, { color: theme.colors.hint }]}>
               You will receive an Airtel Money prompt on your phone to complete the payment.
@@ -378,7 +407,7 @@ const PaymentScreen = () => {
                 }
                 keyboardType="numeric"
                 maxLength={19}
-                onFocus={() => handleInputFocus(cardNumberInputRef)}
+                onFocus={() => handleInputFocus(cardNumberInputRef, 'cardNumber')}
                 error={cardError}
                 suffix={
                   cardData.cardNumber.replace(/\s/g, '').length > 0 && cardType ? (
@@ -392,11 +421,13 @@ const PaymentScreen = () => {
               />
             </View>
             <Input
+              ref={cardholderNameInputRef}
               label="Cardholder Name"
               placeholder="John Doe"
               value={cardData.cardholderName}
               onChangeText={(value) => setCardData({ ...cardData, cardholderName: value })}
               autoCapitalize="words"
+              onFocus={() => handleInputFocus(cardholderNameInputRef, 'cardholderName')}
             />
             <View style={styles.cardRow}>
               <View style={styles.cardRowItem}>
@@ -410,7 +441,7 @@ const PaymentScreen = () => {
                   }
                   keyboardType="numeric"
                   maxLength={5}
-                  onFocus={() => handleInputFocus(expiryInputRef)}
+                  onFocus={() => handleInputFocus(expiryInputRef, 'expiryDate')}
                 />
               </View>
               <View style={styles.cardRowItem}>
@@ -423,15 +454,15 @@ const PaymentScreen = () => {
                   keyboardType="numeric"
                   secureTextEntry
                   maxLength={4}
-                  onFocus={() => handleInputFocus(cvvInputRef)}
+                  onFocus={() => handleInputFocus(cvvInputRef, 'cvv')}
                 />
               </View>
             </View>
           </View>
         )}
 
-        {/* Bottom Spacing */}
-        <View style={{ height: 100 }} />
+        {/* Bottom Spacing - Extra space for keyboard and bottom bar */}
+        <View style={{ height: 120 }} />
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -523,7 +554,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 100, // Add padding for fixed bottom bar
+    paddingBottom: 200, // Add extra padding for fixed bottom bar and keyboard
+    flexGrow: 1,
   },
   amountCard: {
     marginHorizontal: 24,

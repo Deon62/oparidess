@@ -102,18 +102,18 @@ const WriteBlogScreen = () => {
       {/* Sticky Back Button and Image Icon */}
       <View style={[styles.backButtonContainer, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
-          style={[styles.backButton, { backgroundColor: theme.colors.white }]}
+          style={styles.backButton}
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
         >
-          <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.imageIconButton, { backgroundColor: theme.colors.white }]}
+          style={styles.imageIconButton}
           onPress={handleImagePicker}
           activeOpacity={0.8}
         >
-          <Ionicons name="image-outline" size={22} color={theme.colors.primary} />
+          <Ionicons name="image" size={24} color={theme.colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -129,7 +129,7 @@ const WriteBlogScreen = () => {
           keyboardShouldPersistTaps="handled"
         >
           {/* Combined Title and Content Input */}
-          <View style={[styles.combinedSection, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.combinedSection}>
             <TextInput
               ref={titleInputRef}
               style={[
@@ -151,7 +151,7 @@ const WriteBlogScreen = () => {
               {title.length}/100
             </Text>
             
-            <View style={styles.divider} />
+            <View style={[styles.divider, { backgroundColor: theme.colors.hint + '30' }]} />
             
             <TextInput
               ref={contentInputRef}
@@ -164,9 +164,6 @@ const WriteBlogScreen = () => {
               textAlignVertical="top"
               maxLength={5000}
             />
-            <Text style={[styles.charCount, { color: theme.colors.hint }]}>
-              {content.length}/5000
-            </Text>
           </View>
 
         {/* Selected Image */}
@@ -239,26 +236,14 @@ const styles = StyleSheet.create({
   backButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   imageIconButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   keyboardView: {
     flex: 1,
@@ -278,8 +263,7 @@ const styles = StyleSheet.create({
   combinedSection: {
     marginHorizontal: 24,
     marginTop: 8,
-    borderRadius: 16,
-    padding: 20,
+    paddingTop: 8,
   },
   titleInput: {
     fontSize: 22,
@@ -289,7 +273,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     height: 1,
-    backgroundColor: '#E0E0E0',
     marginVertical: 16,
   },
   contentInput: {

@@ -726,7 +726,7 @@ const RenterHomeScreen = () => {
               <View style={styles.toggleContent}>
                 {!isScrolled && (
                   <Ionicons 
-                    name={activeTab === 'services' ? 'construct' : 'construct-outline'} 
+                    name={activeTab === 'services' ? 'briefcase' : 'briefcase-outline'} 
                     size={22} 
                     color={activeTab === 'services' ? theme.colors.primary : theme.colors.textSecondary} 
                   />

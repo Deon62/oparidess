@@ -28,7 +28,7 @@ const BookingsListScreen = () => {
       duration: '3 days',
       price: 'KSh 13,500',
       status: 'pending',
-      image: require('../../../assets/images/car1.jpg'),
+      image: require('../../../assets/images/car1.webp'),
     },
     {
       id: 2,
@@ -37,7 +37,7 @@ const BookingsListScreen = () => {
       duration: '5 days',
       price: 'KSh 60,000',
       status: 'active',
-      image: require('../../../assets/images/car2.jpg'),
+      image: require('../../../assets/images/car2.webp'),
       pickupDate: '2024-01-20',
       dropoffDate: '2024-01-25',
       days: 5,
@@ -52,7 +52,7 @@ const BookingsListScreen = () => {
       duration: '2 days',
       price: 'KSh 40,000',
       status: 'completed',
-      image: require('../../../assets/images/car3.jpg'),
+      image: require('../../../assets/images/car3.webp'),
     },
     {
       id: 4,
@@ -61,7 +61,7 @@ const BookingsListScreen = () => {
       duration: '1 day',
       price: 'KSh 4,800',
       status: 'cancelled',
-      image: require('../../../assets/images/car4.jpg'),
+      image: require('../../../assets/images/car4.webp'),
     },
   ];
 

@@ -9,10 +9,10 @@ import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import car images
-const carImage1 = require('../../../assets/images/car1.jpg');
-const carImage2 = require('../../../assets/images/car2.jpg');
-const carImage3 = require('../../../assets/images/car3.jpg');
-const carImage4 = require('../../../assets/images/car4.jpg');
+const carImage1 = require('../../../assets/images/car1.webp');
+const carImage2 = require('../../../assets/images/car2.webp');
+const carImage3 = require('../../../assets/images/car3.webp');
+const carImage4 = require('../../../assets/images/car4.webp');
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');

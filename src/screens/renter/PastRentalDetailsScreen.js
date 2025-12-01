@@ -12,7 +12,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 // Import profile image for host
 const profileImage = require('../../../assets/logo/profile.jpg');
 // Import default car image
-const defaultCarImage = require('../../../assets/images/car1.jpg');
+const defaultCarImage = require('../../../assets/images/car1.webp');
 
 const PastRentalDetailsScreen = () => {
   const theme = useTheme();

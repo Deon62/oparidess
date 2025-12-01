@@ -6,11 +6,11 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card, Button } from '../../packages/components';
 
 // Import car images
-const carImage1 = require('../../../assets/images/car1.jpg');
-const carImage2 = require('../../../assets/images/car2.jpg');
-const carImage3 = require('../../../assets/images/car3.jpg');
-const carImage4 = require('../../../assets/images/car4.jpg');
-const carImage = require('../../../assets/images/car.jpg');
+const carImage1 = require('../../../assets/images/car1.webp');
+const carImage2 = require('../../../assets/images/car2.webp');
+const carImage3 = require('../../../assets/images/car3.webp');
+const carImage4 = require('../../../assets/images/car4.webp');
+const carImage = require('../../../assets/images/car.webp');
 
 const OwnerCarsScreen = () => {
   const theme = useTheme();

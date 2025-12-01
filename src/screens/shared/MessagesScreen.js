@@ -20,7 +20,7 @@ const MessagesScreen = () => {
       lastMessage: 'Thanks for the ride! The car was perfect.',
       time: '2h ago',
       unread: 2,
-      avatar: require('../../../assets/images/car1.jpg'), // Using car image as placeholder
+      avatar: require('../../../assets/images/car1.webp'), // Using car image as placeholder
       isOnline: true,
     },
     {
@@ -29,7 +29,7 @@ const MessagesScreen = () => {
       lastMessage: 'Can we reschedule the booking?',
       time: '5h ago',
       unread: 0,
-      avatar: require('../../../assets/images/car2.jpg'),
+      avatar: require('../../../assets/images/car2.webp'),
       isOnline: false,
     },
     {
@@ -38,7 +38,7 @@ const MessagesScreen = () => {
       lastMessage: 'The car is ready for pickup.',
       time: '1d ago',
       unread: 1,
-      avatar: require('../../../assets/images/car3.jpg'),
+      avatar: require('../../../assets/images/car3.webp'),
       isOnline: true,
     },
     {
@@ -47,7 +47,7 @@ const MessagesScreen = () => {
       lastMessage: 'Thank you for choosing our service!',
       time: '2d ago',
       unread: 0,
-      avatar: require('../../../assets/images/car4.jpg'),
+      avatar: require('../../../assets/images/car4.webp'),
       isOnline: false,
     },
     {
@@ -56,7 +56,7 @@ const MessagesScreen = () => {
       lastMessage: 'I\'ll be there in 10 minutes.',
       time: '3d ago',
       unread: 0,
-      avatar: require('../../../assets/images/car1.jpg'),
+      avatar: require('../../../assets/images/car1.webp'),
       isOnline: true,
     },
   ];

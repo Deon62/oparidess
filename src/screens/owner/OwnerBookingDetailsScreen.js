@@ -26,7 +26,7 @@ const OwnerBookingDetailsScreen = () => {
     renterPhone: '+254 712 345 678',
     renterEmail: 'john.doe@example.com',
     carName: 'Toyota Corolla',
-    carImage: require('../../../assets/images/car1.jpg'),
+    carImage: require('../../../assets/images/car1.webp'),
     pickupDate: '2024-01-15',
     dropoffDate: '2024-01-18',
     pickupLocation: 'Nairobi, Kenya',

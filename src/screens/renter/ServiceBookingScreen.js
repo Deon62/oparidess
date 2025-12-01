@@ -18,6 +18,23 @@ const ServiceBookingScreen = () => {
   const [timeInput, setTimeInput] = useState('');
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [contactPhone, setContactPhone] = useState('');
+  
+  // Conditional fields based on service category
+  const [pickupLocation, setPickupLocation] = useState('');
+  const [destination, setDestination] = useState('');
+  const [numberOfPassengers, setNumberOfPassengers] = useState('');
+  const [duration, setDuration] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
+  const [numberOfGuests, setNumberOfGuests] = useState('');
+  const [numberOfItems, setNumberOfItems] = useState('');
+  const [partName, setPartName] = useState('');
+  const [vehicleModel, setVehicleModel] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+  const [vehicleLocation, setVehicleLocation] = useState('');
+  const [serviceType, setServiceType] = useState('');
+  const [vehicleType, setVehicleType] = useState('');
+  const [currentLocation, setCurrentLocation] = useState('');
+  const [issueType, setIssueType] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -84,6 +101,56 @@ const ServiceBookingScreen = () => {
       return;
     }
 
+    // Validate category-specific required fields
+    const categoryStr = (category || '').toLowerCase();
+    if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+      if (!pickupLocation.trim()) {
+        Alert.alert('Required', 'Please enter pickup location');
+        return;
+      }
+      if (!destination.trim()) {
+        Alert.alert('Required', 'Please enter destination');
+        return;
+      }
+    } else if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+      if (!eventLocation.trim()) {
+        Alert.alert('Required', 'Please enter event location');
+        return;
+      }
+    } else if (categoryStr.includes('movers')) {
+      if (!pickupLocation.trim()) {
+        Alert.alert('Required', 'Please enter pickup location');
+        return;
+      }
+      if (!destination.trim()) {
+        Alert.alert('Required', 'Please enter destination');
+        return;
+      }
+    } else if (categoryStr.includes('parts') || categoryStr.includes('automobile parts')) {
+      if (!partName.trim()) {
+        Alert.alert('Required', 'Please enter part name');
+        return;
+      }
+      if (!deliveryAddress.trim()) {
+        Alert.alert('Required', 'Please enter delivery address');
+        return;
+      }
+    } else if (categoryStr.includes('detailing') || categoryStr.includes('car detailing')) {
+      if (!vehicleLocation.trim()) {
+        Alert.alert('Required', 'Please enter vehicle location');
+        return;
+      }
+    } else if (categoryStr.includes('roadside')) {
+      if (!currentLocation.trim()) {
+        Alert.alert('Required', 'Please enter current location');
+        return;
+      }
+      if (!issueType.trim()) {
+        Alert.alert('Required', 'Please select issue type');
+        return;
+      }
+    }
+
     const bookingDetails = {
       service: service,
       category: category,
@@ -93,6 +160,22 @@ const ServiceBookingScreen = () => {
       additionalNotes: additionalNotes.trim(),
       serviceDate: formatDate(selectedDate),
       serviceTime: formatTime(selectedTime),
+      // Category-specific fields
+      pickupLocation: pickupLocation.trim(),
+      destination: destination.trim(),
+      numberOfPassengers: numberOfPassengers.trim(),
+      duration: duration.trim(),
+      eventLocation: eventLocation.trim(),
+      numberOfGuests: numberOfGuests.trim(),
+      numberOfItems: numberOfItems.trim(),
+      partName: partName.trim(),
+      vehicleModel: vehicleModel.trim(),
+      deliveryAddress: deliveryAddress.trim(),
+      vehicleLocation: vehicleLocation.trim(),
+      serviceType: serviceType.trim(),
+      vehicleType: vehicleType.trim(),
+      currentLocation: currentLocation.trim(),
+      issueType: issueType.trim(),
     };
 
     navigation.navigate('Payment', {
@@ -122,17 +205,34 @@ const ServiceBookingScreen = () => {
           <Text style={[styles.summaryTitle, { color: theme.colors.textPrimary }]}>
             Service Summary
           </Text>
-          <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
-            {service?.name || 'Service'}
-          </Text>
-          <Text style={[styles.serviceCategory, { color: theme.colors.textSecondary }]}>
-            {category || service?.category || ''}
-          </Text>
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Price:</Text>
-            <Text style={[styles.price, { color: theme.colors.primary }]}>
-              {service?.price || 'KSh 0'}
-            </Text>
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryContent}>
+            <View style={styles.summaryRow}>
+              <View style={styles.summaryIconContainer}>
+                <Ionicons name="business-outline" size={20} color={theme.colors.primary} />
+              </View>
+              <View style={styles.summaryTextContainer}>
+                <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+                  Service Name
+                </Text>
+                <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
+                  {service?.name || 'Service'}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.summaryRow}>
+              <View style={styles.summaryIconContainer}>
+                <Ionicons name="pricetag-outline" size={20} color={theme.colors.primary} />
+              </View>
+              <View style={styles.summaryTextContainer}>
+                <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+                  Category
+                </Text>
+                <Text style={[styles.serviceCategory, { color: theme.colors.textPrimary }]}>
+                  {category || service?.category || ''}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
 
@@ -186,6 +286,351 @@ const ServiceBookingScreen = () => {
           </Text>
         </View>
 
+        {/* Conditional Fields Based on Service Category */}
+        {(() => {
+          const categoryStr = (category || '').toLowerCase();
+          
+          // Drivers & Road Trips
+          if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter pickup location"
+                    placeholderTextColor={theme.colors.hint}
+                    value={pickupLocation}
+                    onChangeText={setPickupLocation}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Destination <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter destination"
+                    placeholderTextColor={theme.colors.hint}
+                    value={destination}
+                    onChangeText={setDestination}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Number of Passengers
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter number of passengers"
+                    placeholderTextColor={theme.colors.hint}
+                    value={numberOfPassengers}
+                    onChangeText={setNumberOfPassengers}
+                    keyboardType="numeric"
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Duration
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., 2 hours, 1 day, 3 days"
+                    placeholderTextColor={theme.colors.hint}
+                    value={duration}
+                    onChangeText={setDuration}
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          // VIP Wedding
+          if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Event Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter event location"
+                    placeholderTextColor={theme.colors.hint}
+                    value={eventLocation}
+                    onChangeText={setEventLocation}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Number of Guests
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter expected number of guests"
+                    placeholderTextColor={theme.colors.hint}
+                    value={numberOfGuests}
+                    onChangeText={setNumberOfGuests}
+                    keyboardType="numeric"
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          // Movers
+          if (categoryStr.includes('movers')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter pickup location"
+                    placeholderTextColor={theme.colors.hint}
+                    value={pickupLocation}
+                    onChangeText={setPickupLocation}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Destination <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter destination"
+                    placeholderTextColor={theme.colors.hint}
+                    value={destination}
+                    onChangeText={setDestination}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Number of Items/Rooms
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., 2 bedrooms, 10 boxes"
+                    placeholderTextColor={theme.colors.hint}
+                    value={numberOfItems}
+                    onChangeText={setNumberOfItems}
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          // Auto Parts
+          if (categoryStr.includes('parts') || categoryStr.includes('automobile parts')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Part Name <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter part name"
+                    placeholderTextColor={theme.colors.hint}
+                    value={partName}
+                    onChangeText={setPartName}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Vehicle Model
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., Toyota Corolla 2018"
+                    placeholderTextColor={theme.colors.hint}
+                    value={vehicleModel}
+                    onChangeText={setVehicleModel}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Delivery Address <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter delivery address"
+                    placeholderTextColor={theme.colors.hint}
+                    value={deliveryAddress}
+                    onChangeText={setDeliveryAddress}
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          // Car Detailing
+          if (categoryStr.includes('detailing') || categoryStr.includes('car detailing')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Vehicle Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter vehicle location"
+                    placeholderTextColor={theme.colors.hint}
+                    value={vehicleLocation}
+                    onChangeText={setVehicleLocation}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Service Type
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., Interior, Exterior, Both"
+                    placeholderTextColor={theme.colors.hint}
+                    value={serviceType}
+                    onChangeText={setServiceType}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Vehicle Type
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., Sedan, SUV, Hatchback"
+                    placeholderTextColor={theme.colors.hint}
+                    value={vehicleType}
+                    onChangeText={setVehicleType}
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          // Roadside Assistance
+          if (categoryStr.includes('roadside')) {
+            return (
+              <>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Current Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="Enter your current location"
+                    placeholderTextColor={theme.colors.hint}
+                    value={currentLocation}
+                    onChangeText={setCurrentLocation}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Issue Type <Text style={{ color: '#FF3B30' }}>*</Text>
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., Flat tire, Battery dead, Out of fuel, Engine trouble"
+                    placeholderTextColor={theme.colors.hint}
+                    value={issueType}
+                    onChangeText={setIssueType}
+                  />
+                </View>
+                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                    Vehicle Type
+                  </Text>
+                  <TextInput
+                    style={[styles.input, { 
+                      borderColor: theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background
+                    }]}
+                    placeholder="e.g., Sedan, SUV, Truck"
+                    placeholderTextColor={theme.colors.hint}
+                    value={vehicleType}
+                    onChangeText={setVehicleType}
+                  />
+                </View>
+              </>
+            );
+          }
+          
+          return null;
+        })()}
+
         {/* Contact Phone */}
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -228,17 +673,22 @@ const ServiceBookingScreen = () => {
 
       </ScrollView>
 
-      {/* Continue Button */}
+      {/* Bottom Bar with Price and Pay Now Button */}
       <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: insets.bottom }]}>
+        <View style={styles.bottomBarPrice}>
+          <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
+          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
+            {service?.price || 'KSh 0'}
+          </Text>
+        </View>
         <TouchableOpacity
-          style={[styles.continueButton, { backgroundColor: theme.colors.primary }]}
+          style={[styles.payNowButton, { backgroundColor: '#FF1577' }]}
           onPress={handleContinue}
           activeOpacity={0.8}
         >
-          <Text style={[styles.continueButtonText, { color: theme.colors.white }]}>
-            Continue to Payment
+          <Text style={[styles.payNowButtonText, { color: theme.colors.white }]}>
+            Pay Now
           </Text>
-          <Ionicons name="arrow-forward" size={20} color={theme.colors.white} />
         </TouchableOpacity>
       </View>
     </View>
@@ -262,32 +712,47 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   summaryTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 12,
-  },
-  serviceName: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
+    marginBottom: 16,
+  },
+  summaryDivider: {
+    height: 1,
+    backgroundColor: '#E0E0E0',
+    marginBottom: 16,
+  },
+  summaryContent: {
+    gap: 16,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  summaryIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  summaryTextContainer: {
+    flex: 1,
+  },
+  summaryLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
     marginBottom: 4,
   },
-  serviceCategory: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    marginBottom: 12,
-  },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  priceLabel: {
+  serviceName: {
     fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
-  },
-  price: {
-    fontSize: 20,
     fontFamily: 'Nunito_700Bold',
+  },
+  serviceCategory: {
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
   },
   section: {
     padding: 20,
@@ -340,16 +805,32 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
-  },
-  continueButton: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+  },
+  bottomBarPrice: {
+    flex: 1,
+  },
+  bottomBarLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 4,
+  },
+  bottomBarPriceValue: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  payNowButton: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
     borderRadius: 12,
-    gap: 8,
+    maxWidth: 200,
   },
-  continueButtonText: {
+  payNowButtonText: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
   },

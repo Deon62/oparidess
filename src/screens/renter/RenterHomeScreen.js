@@ -111,12 +111,6 @@ const RenterHomeScreen = () => {
       { id: 3, name: 'Professional Movers', price: 'KSh 9,000/trip', image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e4?w=400', rating: 4.8, location: 'Nairobi' },
       { id: 4, name: 'Express Moving Services', price: 'KSh 8,500/trip', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400', rating: 4.7, location: 'Nairobi' },
     ],
-    autoParts: [
-      { id: 1, name: 'Auto Parts Hub', price: 'Various', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.6, location: 'Nairobi' },
-      { id: 2, name: 'Car Parts Express', price: 'Various', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.7, location: 'Nairobi' },
-      { id: 3, name: 'Premium Auto Parts', price: 'Various', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 4, name: 'Quality Parts Store', price: 'Various', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.5, location: 'Nairobi' },
-    ],
     carDetailing: [
       { id: 1, name: 'Elite Car Spa', price: 'KSh 3,500/service', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.9, location: 'Nairobi' },
       { id: 2, name: 'Premium Detailing', price: 'KSh 4,000/service', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.8, location: 'Nairobi' },
@@ -128,6 +122,22 @@ const RenterHomeScreen = () => {
       { id: 2, name: 'Emergency Assist', price: 'KSh 2,200/call', image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400', rating: 4.7, location: 'Nairobi' },
       { id: 3, name: 'Quick Rescue Service', price: 'KSh 1,800/call', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', rating: 4.6, location: 'Nairobi' },
       { id: 4, name: 'Reliable Roadside', price: 'KSh 2,100/call', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.8, location: 'Nairobi' },
+    ],
+  };
+
+  // Discover data for Automobile Parts Shop and Mechanics
+  const discoverBusinesses = {
+    autoParts: [
+      { id: 1, name: 'Auto Parts Hub', price: 'Various', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.6, location: 'Nairobi' },
+      { id: 2, name: 'Car Parts Express', price: 'Various', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 3, name: 'Premium Auto Parts', price: 'Various', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 4, name: 'Quality Parts Store', price: 'Various', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.5, location: 'Nairobi' },
+    ],
+    mechanics: [
+      { id: 1, name: 'AutoCare Garage', rating: 4.8, location: 'Nairobi', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', experience: '15 years' },
+      { id: 2, name: 'Pro Mechanics Kenya', rating: 4.7, location: 'Nairobi', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', experience: '12 years' },
+      { id: 3, name: 'Expert Auto Repair', rating: 4.9, location: 'Mombasa', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', experience: '18 years' },
+      { id: 4, name: 'Reliable Car Service', rating: 4.6, location: 'Nairobi', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', experience: '10 years' },
     ],
   };
   
@@ -405,7 +415,6 @@ const RenterHomeScreen = () => {
         'vipwedding': 'vipWedding',
         'drivers': 'drivers',
         'movers': 'movers',
-        'autoparts': 'autoParts',
         'cardetailing': 'carDetailing',
         'roadside': 'roadside',
       };
@@ -1017,65 +1026,6 @@ const RenterHomeScreen = () => {
             </View>
           )}
 
-          {/* Automobile Parts Shop Section */}
-          {getFilteredServices('autoParts').length > 0 && (
-            <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                Automobile Parts Shop
-              </Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-                {getFilteredServices('autoParts').map((business) => (
-                <TouchableOpacity
-                  key={business.id}
-                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ServiceDetails', { 
-                    service: business, 
-                    category: 'Automobile Parts Shop' 
-                  })}
-                >
-                  <View style={styles.serviceBusinessImageContainer}>
-                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
-                    <View style={styles.serviceBusinessActions}>
-                      <TouchableOpacity
-                        onPress={(e) => {
-                          e.stopPropagation();
-                          toggleServiceLike(`autoparts-${business.id}`);
-                        }}
-                        style={styles.serviceActionButton}
-                        activeOpacity={0.7}
-                      >
-                        <Ionicons
-                          name={likedServices.has(`autoparts-${business.id}`) ? "heart" : "heart-outline"}
-                          size={18}
-                          color={likedServices.has(`autoparts-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
-                        />
-                      </TouchableOpacity>
-              </View>
-                  </View>
-                  <View style={styles.serviceBusinessContent}>
-                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
-                      {business.name}
-                </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={14} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
-                      {business.price}
-                </Text>
-              </View>
-            </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          )}
 
           {/* VIP Car Detailing Section */}
           {getFilteredServices('carDetailing').length > 0 && (
@@ -1592,6 +1542,115 @@ const RenterHomeScreen = () => {
                   </Text>
                 </View>
               </TouchableOpacity>
+            </ScrollView>
+          </View>
+
+          {/* Automobile Parts Shop Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              Automobile Parts Shop
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
+              {discoverBusinesses.autoParts.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('ComingSoon')}
+                >
+                  <View style={styles.carEventsImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.carEventsImage} resizeMode="cover" />
+                    <View style={styles.carEventsOverlay} />
+                    <View style={styles.carEventsActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleDiscoverLike(`autoparts-${business.id}`);
+                        }}
+                        style={styles.discoverActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedDiscover.has(`autoparts-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedDiscover.has(`autoparts-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={styles.carEventsContent}>
+                    <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                      {business.name}
+                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary, marginLeft: 4 }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.carEventsDescription, { color: theme.colors.hint, marginLeft: 4 }]}>
+                        {business.location}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Mechanics Near Me Section */}
+          <View style={styles.discoverSubsection}>
+            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
+              Mechanics Near Me
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
+              {discoverBusinesses.mechanics.map((mechanic) => (
+                <TouchableOpacity
+                  key={mechanic.id}
+                  style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('ComingSoon')}
+                >
+                  <View style={styles.carEventsImageContainer}>
+                    <Image source={{ uri: mechanic.image }} style={styles.carEventsImage} resizeMode="cover" />
+                    <View style={styles.carEventsOverlay} />
+                    <View style={styles.carEventsActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleDiscoverLike(`mechanic-${mechanic.id}`);
+                        }}
+                        style={styles.discoverActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedDiscover.has(`mechanic-${mechanic.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedDiscover.has(`mechanic-${mechanic.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                  <View style={styles.carEventsContent}>
+                    <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
+                      {mechanic.name}
+                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary, marginLeft: 4 }]}>
+                        {mechanic.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.carEventsDescription, { color: theme.colors.hint, marginLeft: 4 }]}>
+                        {mechanic.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.carEventsDescription, { color: theme.colors.textSecondary, marginTop: 4, fontSize: 12 }]}>
+                      {mechanic.experience} experience
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
             </ScrollView>
           </View>
 

@@ -3069,6 +3069,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 8,
     elevation: 3,
+    overflow: 'visible',
   },
   headerTopRow: {
     flexDirection: 'row',
@@ -3100,6 +3101,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'relative',
     minHeight: 44,
+    overflow: 'visible',
   },
   headerBottomRowSmall: {
     paddingTop: 2,
@@ -3112,7 +3114,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingVertical: 10,
     paddingHorizontal: 4,
-    paddingBottom: 8,
+    paddingBottom: 0,
     maxWidth: '33.33%',
     position: 'relative',
   },
@@ -3121,6 +3123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
+    marginBottom: 10,
   },
   toggleIndicator: {
     width: 40,

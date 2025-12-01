@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -11,6 +12,7 @@ const opaLogo = require('../../../assets/logo/logo.webp');
 const MessagesScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   // Mock messages data
   const messages = [
@@ -61,25 +63,32 @@ const MessagesScreen = () => {
     },
   ];
 
-  // Set header with profile picture
+  // Set custom header with profile picture and status bar
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('HomeTab', { screen: 'RenterProfile' });
-          }}
-          style={styles.profileButton}
-          activeOpacity={0.7}
-        >
-          <View style={styles.profileImageContainer}>
-            <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-            <View style={styles.profileOnlineIndicator} />
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+          <View style={styles.headerContent}>
+            <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+              Messages
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HomeTab', { screen: 'RenterProfile' });
+              }}
+              style={styles.profileButton}
+              activeOpacity={0.7}
+            >
+              <View style={styles.profileImageContainer}>
+                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+                <View style={styles.profileOnlineIndicator} />
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       ),
     });
-  }, [navigation, theme]);
+  }, [navigation, theme, insets.top]);
 
   const handleMessagePress = (message) => {
     navigation.navigate('Chat', { 
@@ -192,6 +201,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 8,
     paddingBottom: 40,
+  },
+  customHeader: {
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
   },
   messageItem: {
     flexDirection: 'row',

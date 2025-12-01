@@ -372,7 +372,10 @@ const MessagesStack = () => {
         component={MessagesScreen}
         options={{ 
           title: 'Messages',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 

@@ -709,7 +709,7 @@ const RenterHomeScreen = () => {
                   Vehicles
                 </Text>
               </View>
-              {activeTab === 'cars' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
+              {activeTab === 'cars' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -734,7 +734,7 @@ const RenterHomeScreen = () => {
                   Services
                 </Text>
               </View>
-              {activeTab === 'services' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
+              {activeTab === 'services' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -755,7 +755,7 @@ const RenterHomeScreen = () => {
                   Discover
                 </Text>
               </View>
-              {activeTab === 'discover' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
+              {activeTab === 'discover' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
             </TouchableOpacity>
           </View>
         </View>

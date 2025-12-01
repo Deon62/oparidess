@@ -299,7 +299,10 @@ const BookingsStack = () => {
         component={BookingsListScreen}
         options={{ 
           title: 'Past rentals',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 

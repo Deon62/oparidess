@@ -3,11 +3,13 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, Tex
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, Button } from '../../packages/components';
 
 const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   // Only car bookings - no driver/chauffeur functionality
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -84,27 +86,32 @@ const BookingsListScreen = () => {
     ? [...activeBookings, ...sortedPastBookings]
     : activeBookings;
 
-  // Set header with notifications
+  // Set custom header with notifications and status bar
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <View style={styles.headerRightContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('SettingsTab', { screen: 'Notifications' });
-            }}
-            style={styles.iconButton}
-            activeOpacity={0.7}
-          >
-            <View style={styles.notificationIconContainer}>
-              <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-              <View style={styles.notificationDot} />
-            </View>
-          </TouchableOpacity>
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+          <View style={styles.headerContent}>
+            <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+              Past rentals
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SettingsTab', { screen: 'Notifications' });
+              }}
+              style={styles.iconButton}
+              activeOpacity={0.7}
+            >
+              <View style={styles.notificationIconContainer}>
+                <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+                <View style={styles.notificationDot} />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       ),
     });
-  }, [navigation, theme]);
+  }, [navigation, theme, insets.top]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -433,6 +440,27 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 40,
+  },
+  customHeader: {
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
   },
   headerRightContainer: {
     flexDirection: 'row',

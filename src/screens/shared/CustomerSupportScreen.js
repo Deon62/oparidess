@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Modal, Alert, Keyboard, Animated, Linking } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -39,9 +39,90 @@ const CustomerSupportScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Customer Support',
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+          <View style={styles.headerContent}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+              Customer Support
+            </Text>
+            <TouchableOpacity
+              onPress={() => Linking.openURL('tel:0702248984')}
+              style={styles.callButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="call-outline" size={22} color={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
+          {/* Tabs */}
+          <View style={styles.headerTabsContainer}>
+            <TouchableOpacity
+              style={styles.headerTab}
+              onPress={() => setActiveTab('chat')}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.headerTabText,
+                  {
+                    color: activeTab === 'chat' ? theme.colors.primary : theme.colors.textSecondary,
+                    fontFamily: activeTab === 'chat' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
+                  },
+                ]}
+              >
+                Chat with AI
+              </Text>
+              {activeTab === 'chat' && <View style={[styles.headerTabIndicator, { backgroundColor: theme.colors.primary }]} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.headerTab}
+              onPress={() => setActiveTab('ticket')}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.headerTabText,
+                  {
+                    color: activeTab === 'ticket' ? theme.colors.primary : theme.colors.textSecondary,
+                    fontFamily: activeTab === 'ticket' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
+                  },
+                ]}
+              >
+                Create Ticket
+              </Text>
+              {activeTab === 'ticket' && <View style={[styles.headerTabIndicator, { backgroundColor: theme.colors.primary }]} />}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.headerTab}
+              onPress={() => setActiveTab('feedback')}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.headerTabText,
+                  {
+                    color: activeTab === 'feedback' ? theme.colors.primary : theme.colors.textSecondary,
+                    fontFamily: activeTab === 'feedback' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
+                  },
+                ]}
+              >
+                Share Feedback
+              </Text>
+              {activeTab === 'feedback' && <View style={[styles.headerTabIndicator, { backgroundColor: theme.colors.primary }]} />}
+            </TouchableOpacity>
+          </View>
+        </View>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, theme, activeTab, insets.top]);
 
   // Hide bottom tab bar when screen is focused
   useFocusEffect(
@@ -550,87 +631,6 @@ const CustomerSupportScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Tab Selector */}
-      <View style={[styles.tabContainer, { backgroundColor: theme.colors.white }]}>
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === 'chat' && [styles.tabActive, { backgroundColor: theme.colors.primary }],
-          ]}
-          onPress={() => setActiveTab('chat')}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={activeTab === 'chat' ? 'chatbubbles' : 'chatbubbles-outline'}
-            size={20}
-            color={activeTab === 'chat' ? theme.colors.white : theme.colors.textSecondary}
-          />
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: activeTab === 'chat' ? theme.colors.white : theme.colors.textSecondary,
-              },
-            ]}
-          >
-            Chat with AI
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === 'ticket' && [styles.tabActive, { backgroundColor: theme.colors.primary }],
-          ]}
-          onPress={() => setActiveTab('ticket')}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={activeTab === 'ticket' ? 'ticket' : 'ticket-outline'}
-            size={20}
-            color={activeTab === 'ticket' ? theme.colors.white : theme.colors.textSecondary}
-          />
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: activeTab === 'ticket' ? theme.colors.white : theme.colors.textSecondary,
-              },
-            ]}
-          >
-            Create Ticket
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.tab,
-            activeTab === 'feedback' && [
-              styles.tabActive,
-              { backgroundColor: theme.colors.primary },
-            ],
-          ]}
-          onPress={() => setActiveTab('feedback')}
-          activeOpacity={0.7}
-        >
-          <Ionicons
-            name={activeTab === 'feedback' ? 'star' : 'star-outline'}
-            size={20}
-            color={activeTab === 'feedback' ? theme.colors.white : theme.colors.textSecondary}
-          />
-          <Text
-            style={[
-              styles.tabText,
-              {
-                color: activeTab === 'feedback' ? theme.colors.white : theme.colors.textSecondary,
-              },
-            ]}
-          >
-            Share Feedback
-          </Text>
-        </TouchableOpacity>
-      </View>
-
       {/* Tab Content */}
       {activeTab === 'chat' && renderChatTab()}
       {activeTab === 'ticket' && renderTicketTab()}
@@ -699,34 +699,61 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  tabContainer: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    gap: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  tab: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    gap: 6,
-  },
-  tabActive: {
+  customHeader: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  tabText: {
-    fontSize: 12,
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
     fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
+  },
+  callButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  headerTabsContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingBottom: 0,
+    gap: 24,
+  },
+  headerTab: {
+    paddingBottom: 12,
+    position: 'relative',
+  },
+  headerTabText: {
+    fontSize: 15,
+  },
+  headerTabIndicator: {
+    position: 'absolute',
+    bottom: -1,
+    left: 0,
+    right: 0,
+    height: 2,
+    borderRadius: 1,
   },
   // Chat Styles
   chatContainer: {

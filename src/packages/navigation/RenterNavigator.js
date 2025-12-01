@@ -45,6 +45,7 @@ import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
 import DisputeScreen from '../../screens/shared/DisputeScreen';
 import ComingSoonScreen from '../../screens/shared/ComingSoonScreen';
+import ImageRepositoryScreen from '../../screens/shared/ImageRepositoryScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -229,6 +230,14 @@ const HomeStack = () => {
         options={{ 
           title: 'Coming Soon',
           headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ImageRepository" 
+        component={ImageRepositoryScreen}
+        options={{ 
+          title: 'Image Repository',
+          headerShown: false 
         }}
       />
       <Stack.Screen 

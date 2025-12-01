@@ -350,7 +350,10 @@ const CarDetailsScreen = () => {
           <TouchableOpacity
             style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
             onPress={() => {
-              navigation.navigate('ComingSoon');
+              navigation.navigate('ImageRepository', {
+                images: carImages,
+                title: `${carData.name} - Images`,
+              });
             }}
             activeOpacity={0.7}
           >

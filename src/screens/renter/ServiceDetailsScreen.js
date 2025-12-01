@@ -229,7 +229,11 @@ const ServiceDetailsScreen = () => {
           <TouchableOpacity
             style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
             onPress={() => {
-              navigation.navigate('ComingSoon');
+              const serviceImages = serviceData.image ? [{ uri: serviceData.image }] : [];
+              navigation.navigate('ImageRepository', {
+                images: serviceImages,
+                title: `${serviceData.name} - Images`,
+              });
             }}
             activeOpacity={0.7}
           >

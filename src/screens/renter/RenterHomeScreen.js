@@ -76,6 +76,52 @@ const RenterHomeScreen = () => {
   const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
+
+  // Services data with 4 businesses per category
+  const servicesData = {
+    roadTrips: [
+      { id: 1, name: 'Safari Adventures Kenya', price: 'KSh 15,000/day', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 2, name: 'Coastal Road Trips', price: 'KSh 12,000/day', image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400', rating: 4.6, location: 'Mombasa' },
+      { id: 3, name: 'Mountain View Tours', price: 'KSh 18,000/day', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', rating: 4.9, location: 'Nakuru' },
+      { id: 4, name: 'Wildlife Explorer', price: 'KSh 20,000/day', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.7, location: 'Nairobi' },
+    ],
+    vipWedding: [
+      { id: 1, name: 'Luxury Wedding Fleet', price: 'KSh 50,000/event', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400', rating: 4.9, location: 'Nairobi' },
+      { id: 2, name: 'Royal Wedding Cars', price: 'KSh 45,000/event', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 3, name: 'Elite Wedding Services', price: 'KSh 55,000/event', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.9, location: 'Mombasa' },
+      { id: 4, name: 'Premium Wedding Convoys', price: 'KSh 48,000/event', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.7, location: 'Nairobi' },
+    ],
+    drivers: [
+      { id: 1, name: 'John Kamau', price: 'KSh 2,500/day', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', rating: 4.8, experience: '10 years' },
+      { id: 2, name: 'Peter Ochieng', price: 'KSh 2,200/day', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400', rating: 4.7, experience: '8 years' },
+      { id: 3, name: 'David Mwangi', price: 'KSh 2,800/day', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400', rating: 4.9, experience: '12 years' },
+      { id: 4, name: 'James Kariuki', price: 'KSh 2,400/day', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400', rating: 4.6, experience: '7 years' },
+    ],
+    movers: [
+      { id: 1, name: 'Quick Move Kenya', price: 'KSh 8,000/trip', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 2, name: 'Reliable Movers', price: 'KSh 7,500/trip', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400', rating: 4.6, location: 'Nairobi' },
+      { id: 3, name: 'Professional Movers', price: 'KSh 9,000/trip', image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e4?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 4, name: 'Express Moving Services', price: 'KSh 8,500/trip', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400', rating: 4.7, location: 'Nairobi' },
+    ],
+    autoParts: [
+      { id: 1, name: 'Auto Parts Hub', price: 'Various', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.6, location: 'Nairobi' },
+      { id: 2, name: 'Car Parts Express', price: 'Various', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 3, name: 'Premium Auto Parts', price: 'Various', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 4, name: 'Quality Parts Store', price: 'Various', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.5, location: 'Nairobi' },
+    ],
+    carDetailing: [
+      { id: 1, name: 'Elite Car Spa', price: 'KSh 3,500/service', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.9, location: 'Nairobi' },
+      { id: 2, name: 'Premium Detailing', price: 'KSh 4,000/service', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 3, name: 'Luxury Car Care', price: 'KSh 3,800/service', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.9, location: 'Nairobi' },
+      { id: 4, name: 'VIP Auto Detailing', price: 'KSh 4,200/service', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.7, location: 'Nairobi' },
+    ],
+    roadside: [
+      { id: 1, name: '24/7 Roadside Help', price: 'KSh 2,000/call', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 2, name: 'Emergency Assist', price: 'KSh 2,200/call', image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 3, name: 'Quick Rescue Service', price: 'KSh 1,800/call', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', rating: 4.6, location: 'Nairobi' },
+      { id: 4, name: 'Reliable Roadside', price: 'KSh 2,100/call', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.8, location: 'Nairobi' },
+    ],
+  };
   
   // Filter state
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -623,182 +669,262 @@ const RenterHomeScreen = () => {
       {/* Services Section */}
       {activeTab === 'services' && (
         <View style={styles.servicesSection}>
-          <View style={styles.servicesGrid}>
-            {/* Road Trips Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to road trips screen
-                navigation.navigate('CarList', { categoryId: 'roadtrips' });
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={roadtripsImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Road Trips
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Plan your perfect adventure with our road trip packages
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* Road Trips Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              Road Trips Agencies
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.roadTrips.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => navigation.navigate('CarList', { categoryId: 'roadtrips', businessId: business.id })}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* VIP Wedding Fleet Hire Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to VIP wedding fleet screen
-                Alert.alert('Coming Soon', 'VIP wedding fleet hire will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={convoyImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  VIP Wedding Fleet Hire
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Luxury vehicle convoy for your special day
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* VIP Wedding Fleet Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              VIP Wedding Fleet Hire
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.vipWedding.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'VIP wedding fleet hire will be available soon.')}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* Professional Drivers Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to drivers screen
-                Alert.alert('Coming Soon', 'Professional drivers booking will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={driverImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Hire Professional Drivers
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Get experienced drivers for your rental vehicle
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* Professional Drivers Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              Hire Professional Drivers
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.drivers.map((driver) => (
+                <TouchableOpacity
+                  key={driver.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'Professional drivers booking will be available soon.')}
+                >
+                  <Image source={{ uri: driver.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {driver.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {driver.rating}
+                      </Text>
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint, marginLeft: 8 }]} numberOfLines={1}>
+                        {driver.experience}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {driver.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* Movers Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to movers screen
-                Alert.alert('Coming Soon', 'Moving services will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={moversImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Movers
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Professional moving and relocation services
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* Movers Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              Movers
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.movers.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'Moving services will be available soon.')}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* Mechanic Services Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to mechanic services screen
-                Alert.alert('Coming Soon', 'Mechanic services will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={mechanicsImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Mechanic Services
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Professional automotive repair and maintenance services
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* Automobile Parts Shop Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              Automobile Parts Shop
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.autoParts.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'Automobile parts shop will be available soon.')}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* Automobile Parts Shop Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to parts shop screen
-                Alert.alert('Coming Soon', 'Automobile parts shop will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={partsImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Automobile Parts Shop
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Quality auto parts and accessories for your vehicle
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* VIP Car Detailing Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              VIP Car Detailing
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.carDetailing.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'VIP car detailing services will be available soon.')}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
 
-            {/* VIP Car Detailing Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to car detailing screen
-                Alert.alert('Coming Soon', 'VIP car detailing services will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={detailingImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  VIP Car Detailing
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  Premium car cleaning and detailing services
-                </Text>
-              </View>
-            </TouchableOpacity>
-
-            {/* Roadside Assistance Card */}
-            <TouchableOpacity
-              style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}
-              activeOpacity={0.8}
-              onPress={() => {
-                // Navigate to roadside assistance screen
-                Alert.alert('Coming Soon', 'Roadside assistance services will be available soon.');
-              }}
-            >
-              <View style={styles.serviceImageContainer}>
-                <Image source={roadsideImage} style={styles.serviceImage} resizeMode="cover" />
-              </View>
-              <View style={styles.serviceContent}>
-                <Text style={[styles.serviceTitle, { color: theme.colors.textPrimary }]}>
-                  Roadside Assistance
-                </Text>
-                <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-                  24/7 emergency support and vehicle recovery services
-                </Text>
-              </View>
-            </TouchableOpacity>
+          {/* Roadside Assistance Section */}
+          <View style={styles.serviceCategorySection}>
+            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+              Roadside Assistance
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+              {servicesData.roadside.map((business) => (
+                <TouchableOpacity
+                  key={business.id}
+                  style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
+                  activeOpacity={0.8}
+                  onPress={() => Alert.alert('Coming Soon', 'Roadside assistance services will be available soon.')}
+                >
+                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessContent}>
+                    <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {business.name}
+                    </Text>
+                    <View style={styles.serviceBusinessInfo}>
+                      <Ionicons name="star" size={14} color="#FFB800" />
+                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
+                        {business.rating}
+                      </Text>
+                      <Ionicons name="location" size={14} color={theme.colors.hint} style={{ marginLeft: 8 }} />
+                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
+                        {business.location}
+                      </Text>
+                    </View>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                      {business.price}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </View>
         </View>
       )}
@@ -2229,6 +2355,65 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
   },
+  serviceCategorySection: {
+    marginBottom: 32,
+    paddingTop: 8,
+  },
+  serviceCategoryTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 16,
+    paddingHorizontal: 24,
+  },
+  serviceScrollContainer: {
+    paddingHorizontal: 24,
+    paddingRight: 24,
+    gap: 16,
+  },
+  serviceBusinessCard: {
+    width: 200,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  serviceBusinessImage: {
+    width: '100%',
+    height: 140,
+  },
+  serviceBusinessContent: {
+    padding: 12,
+  },
+  serviceBusinessName: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
+  },
+  serviceBusinessInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  serviceBusinessRating: {
+    fontSize: 13,
+    fontFamily: 'Nunito_600SemiBold',
+    marginLeft: 4,
+  },
+  serviceBusinessLocation: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginLeft: 4,
+    flex: 1,
+  },
+  serviceBusinessPrice: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 4,
+  },
   discoverSection: {
     paddingTop: 24,
     paddingBottom: 40,
@@ -2372,7 +2557,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   blogCard: {
-    width: 320,
+    width: 280,
     borderRadius: 16,
     overflow: 'hidden',
     marginRight: 16,
@@ -2384,7 +2569,7 @@ const styles = StyleSheet.create({
   },
   blogImage: {
     width: '100%',
-    height: 180,
+    height: 200,
   },
   blogContent: {
     padding: 16,

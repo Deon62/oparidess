@@ -5,9 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card, Button } from '../../packages/components';
 
-// Import profile image
-const profileImage = require('../../../assets/logo/profile.jpg');
-
 const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -87,7 +84,7 @@ const BookingsListScreen = () => {
     ? [...activeBookings, ...sortedPastBookings]
     : activeBookings;
 
-  // Set header with notifications and profile picture
+  // Set header with notifications
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -99,18 +96,9 @@ const BookingsListScreen = () => {
             style={styles.iconButton}
             activeOpacity={0.7}
           >
-            <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('HomeTab', { screen: 'RenterProfile' });
-            }}
-            style={styles.profileButton}
-            activeOpacity={0.7}
-          >
-            <View style={styles.profileImageContainer}>
-              <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-              <View style={styles.onlineIndicator} />
+            <View style={styles.notificationIconContainer}>
+              <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+              <View style={styles.notificationDot} />
             </View>
           </TouchableOpacity>
         </View>
@@ -331,15 +319,15 @@ const BookingsListScreen = () => {
             </TouchableOpacity>
             ))}
             
-            {/* Show More Link */}
-            {!showMore && pastBookings.length > 0 && (
+            {/* Show More/Less Link */}
+            {pastBookings.length > 0 && (
               <TouchableOpacity
-                onPress={() => setShowMore(true)}
+                onPress={() => setShowMore(!showMore)}
                 style={styles.showMoreContainer}
                 activeOpacity={0.7}
               >
                 <Text style={[styles.showMoreText, { color: theme.colors.primary }]}>
-                  Show more
+                  {showMore ? 'Show less' : 'Show more'}
                 </Text>
               </TouchableOpacity>
             )}
@@ -678,30 +666,17 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: 'center',
   },
-  profileButton: {
-    marginRight: 8,
-  },
-  profileImageContainer: {
+  notificationIconContainer: {
     position: 'relative',
-    width: 36,
-    height: 36,
   },
-  profileImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-  },
-  onlineIndicator: {
+  notificationDot: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#4CAF50',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
+    top: 2,
+    right: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FF1577',
   },
   showMoreContainer: {
     paddingVertical: 16,

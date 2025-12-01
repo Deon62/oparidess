@@ -43,6 +43,10 @@ const RenterProfileScreen = () => {
     navigation.navigate('UpdateProfile', { personalInfo });
   };
 
+  const handleBecomeServiceProvider = () => {
+    navigation.navigate('BecomeServiceProvider');
+  };
+
   const handleAddPayment = () => {
     navigation.navigate('AddPayment');
   };
@@ -209,6 +213,18 @@ const RenterProfileScreen = () => {
 
       {/* Additional Actions */}
       <View style={styles.additionalActionsContainer}>
+        <TouchableOpacity
+          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          onPress={handleBecomeServiceProvider}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="business-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Become Service Provider
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
           onPress={handleAddPayment}

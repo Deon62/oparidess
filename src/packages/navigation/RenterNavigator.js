@@ -22,6 +22,7 @@ import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
+import BecomeServiceProviderScreen from '../../screens/renter/BecomeServiceProviderScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -176,6 +177,14 @@ const HomeStack = () => {
         component={AddPaymentScreen}
         options={{ 
           title: 'Add Payment Method',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="BecomeServiceProvider" 
+        component={BecomeServiceProviderScreen}
+        options={{ 
+          title: 'Become Service Provider',
           headerShown: true 
         }}
       />

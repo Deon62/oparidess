@@ -357,7 +357,7 @@ const PaymentScreen = () => {
           title="Initiate Payment"
           onPress={handleInitiatePayment}
           variant="primary"
-          style={[styles.payButton, { backgroundColor: '#FF8A3D' }]}
+          style={[styles.payButton, { backgroundColor: '#FF1577' }]}
           loading={loading}
           disabled={!selectedMethod || loading}
         />

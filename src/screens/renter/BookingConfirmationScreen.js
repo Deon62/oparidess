@@ -289,36 +289,6 @@ const BookingConfirmationScreen = () => {
         </Card>
       </View>
 
-      {/* Terms and Conditions */}
-      <View style={styles.section}>
-        <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.termsRow}>
-            <Toggle
-              value={agreeToTerms}
-              onValueChange={setAgreeToTerms}
-            />
-            <View style={styles.termsTextContainer}>
-              <Text style={[styles.termsText, { color: theme.colors.textPrimary }]}>
-                I agree to the{' '}
-                <Text 
-                  style={[styles.termsLink, { color: theme.colors.primary }]}
-                  onPress={() => navigation.navigate('TermsAndConditions')}
-                >
-                  Terms and Conditions
-                </Text>
-                {' '}and{' '}
-                <Text 
-                  style={[styles.termsLink, { color: theme.colors.primary }]}
-                  onPress={() => navigation.navigate('CancellationPolicy')}
-                >
-                  Cancellation Policy
-                </Text>
-              </Text>
-            </View>
-          </View>
-        </Card>
-      </View>
-
       {/* Cancellation Policy */}
       <View style={styles.section}>
         <Card style={[styles.policyCard, { backgroundColor: theme.colors.white }]}>
@@ -422,6 +392,36 @@ const BookingConfirmationScreen = () => {
         </View>
       </View>
 
+      {/* Terms and Conditions - Moved to bottom */}
+      <View style={styles.section}>
+        <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.termsRow}>
+            <Toggle
+              value={agreeToTerms}
+              onValueChange={setAgreeToTerms}
+            />
+            <View style={styles.termsTextContainer}>
+              <Text style={[styles.termsText, { color: theme.colors.textPrimary }]}>
+                I agree to the{' '}
+                <Text 
+                  style={[styles.termsLink, { color: theme.colors.primary }]}
+                  onPress={() => navigation.navigate('TermsAndConditions')}
+                >
+                  Terms and Conditions
+                </Text>
+                {' '}and{' '}
+                <Text 
+                  style={[styles.termsLink, { color: theme.colors.primary }]}
+                  onPress={() => navigation.navigate('CancellationPolicy')}
+                >
+                  Cancellation Policy
+                </Text>
+              </Text>
+            </View>
+          </View>
+        </Card>
+      </View>
+
       <View style={{ height: 100 }} />
     </ScrollView>
 
@@ -439,7 +439,7 @@ const BookingConfirmationScreen = () => {
         title="Proceed to Payment"
         onPress={handleProceedToPayment}
         variant="primary"
-        style={[styles.proceedButton, { backgroundColor: '#FF8A3D' }]}
+        style={[styles.proceedButton, { backgroundColor: '#FF1577' }]}
         disabled={!agreeToTerms}
       />
     </View>

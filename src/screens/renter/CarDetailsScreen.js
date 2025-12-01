@@ -48,7 +48,6 @@ const CarDetailsScreen = () => {
   ].slice(0, 4);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [showMoreRules, setShowMoreRules] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -83,7 +82,6 @@ const CarDetailsScreen = () => {
   const handleReserveCar = () => {
     navigation.navigate('Booking', { 
       car: carData,
-      insuranceEnabled,
     });
   };
 
@@ -754,24 +752,6 @@ const CarDetailsScreen = () => {
         </View>
 
 
-        {/* Insurance Toggle */}
-        <View style={styles.section}>
-          <View style={[styles.insuranceCard, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.insuranceInfo}>
-              <Text style={[styles.insuranceTitle, { color: theme.colors.textPrimary }]}>
-                Additional Insurance
-              </Text>
-              <Text style={[styles.insuranceDescription, { color: theme.colors.textSecondary }]}>
-                Add comprehensive insurance coverage for extra protection (+KSh 1,500/day)
-              </Text>
-            </View>
-            <Toggle
-              value={insuranceEnabled}
-              onValueChange={setInsuranceEnabled}
-            />
-          </View>
-        </View>
-
         {/* Bottom spacing for fixed bar */}
         <View style={{ height: 100 }} />
         </View>
@@ -783,15 +763,10 @@ const CarDetailsScreen = () => {
           <Text style={[styles.priceLabel, { color: theme.colors.hint }]}>Price per day</Text>
           <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
             {rentalInfo.perDay}
-            {insuranceEnabled && (
-              <Text style={[styles.insurancePrice, { color: theme.colors.textSecondary }]}>
-                {' '}+ KSh 1,500
-              </Text>
-            )}
           </Text>
         </View>
         <TouchableOpacity
-          style={[styles.reserveButton, { backgroundColor: '#FF8A3D' }]}
+          style={[styles.reserveButton, { backgroundColor: '#FF1577' }]}
           onPress={handleReserveCar}
           activeOpacity={0.8}
         >

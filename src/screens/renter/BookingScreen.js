@@ -10,7 +10,7 @@ const BookingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const { car, insuranceEnabled } = route.params || {};
+  const { car } = route.params || {};
 
   const [pickupDate, setPickupDate] = useState(null);
   const [dropoffDate, setDropoffDate] = useState(null);
@@ -20,6 +20,7 @@ const BookingScreen = () => {
   const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
   const [isSelectingPickup, setIsSelectingPickup] = useState(true);
   const [payOnSite, setPayOnSite] = useState(false);
+  const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   
   // Time selection
   const [pickupTime, setPickupTime] = useState('10:00');
@@ -512,6 +513,24 @@ const BookingScreen = () => {
           />
         </View>
 
+        {/* Insurance Toggle */}
+        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.insuranceCard}>
+            <View style={styles.insuranceInfo}>
+              <Text style={[styles.insuranceTitle, { color: theme.colors.textPrimary }]}>
+                Additional Insurance
+              </Text>
+              <Text style={[styles.insuranceDescription, { color: theme.colors.textSecondary }]}>
+                Add comprehensive insurance coverage for extra protection (+KSh 1,500/day)
+              </Text>
+            </View>
+            <Toggle
+              value={insuranceEnabled}
+              onValueChange={setInsuranceEnabled}
+            />
+          </View>
+        </View>
+
         {/* Pay on Site Option */}
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <View style={styles.payOnSiteHeader}>
@@ -649,7 +668,7 @@ const BookingScreen = () => {
           title="Continue to Review"
           onPress={handleContinue}
           variant="primary"
-          style={[styles.payButton, { backgroundColor: '#FF8A3D' }]}
+          style={[styles.payButton, { backgroundColor: '#FF1577' }]}
           disabled={!pickupDate || !dropoffDate || days < rentalInfo.minimumDays || !pickupLocation}
         />
       </View>
@@ -951,6 +970,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
     minHeight: 100,
+  },
+  insuranceCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  insuranceInfo: {
+    flex: 1,
+    marginRight: 16,
+  },
+  insuranceTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  insuranceDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
   },
   priceRow: {
     flexDirection: 'row',

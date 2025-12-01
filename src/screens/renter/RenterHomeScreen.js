@@ -680,7 +680,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('CarList', { categoryId: 'roadtrips', businessId: business.id })}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -717,7 +717,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'VIP wedding fleet hire will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -754,7 +754,7 @@ const RenterHomeScreen = () => {
                   key={driver.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'Professional drivers booking will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: driver.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -790,7 +790,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'Moving services will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -827,7 +827,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'Automobile parts shop will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -864,7 +864,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'VIP car detailing services will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -901,7 +901,7 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => Alert.alert('Coming Soon', 'Roadside assistance services will be available soon.')}
+                  onPress={() => navigation.navigate('ComingSoon')}
                 >
                   <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
                   <View style={styles.serviceBusinessContent}>
@@ -941,9 +941,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.offerCard, { backgroundColor: theme.colors.primary }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'special-offer' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
@@ -961,9 +959,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.offerCard, { backgroundColor: theme.colors.textPrimary }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'long-term' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
@@ -981,9 +977,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.offerCard, { backgroundColor: '#4CAF50' }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'first-time' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
@@ -1009,9 +1003,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'mombasa' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={mombasaImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1030,9 +1022,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'lake-nakuru' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={nakuruImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1051,9 +1041,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'egerton-castle' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={egertonImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1072,9 +1060,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'hells-gate' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={hellsgateImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1093,9 +1079,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  navigation.navigate('CarList', { categoryId: 'ol-pejeta' });
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={pejetaImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1122,9 +1106,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  Alert.alert('Nairobi Auto Show', 'Join us for the biggest automotive exhibition in the region!');
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={eventsImage} style={styles.carEventsImage} resizeMode="cover" />
@@ -1143,9 +1125,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  Alert.alert('Classic Car Exhibition', 'Explore vintage and classic vehicles from different eras!');
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events1Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1164,9 +1144,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  Alert.alert('Supercar Rally', 'Experience high-performance supercars up close!');
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events2Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1185,9 +1163,7 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => {
-                  Alert.alert('Motor Expo', 'Discover the latest innovations in automotive technology!');
-                }}
+                onPress={() => navigation.navigate('ComingSoon')}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events3Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1215,7 +1191,7 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                  navigation.navigate('ComingSoon');
                 }}
               >
                 <Image
@@ -1240,7 +1216,7 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                  navigation.navigate('ComingSoon');
                 }}
               >
                 <Image
@@ -1265,7 +1241,7 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                  navigation.navigate('ComingSoon');
                 }}
               >
                 <Image
@@ -1290,7 +1266,7 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                  navigation.navigate('ComingSoon');
                 }}
               >
                 <Image
@@ -1315,7 +1291,7 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  Alert.alert('Blog Post', 'Read full blog post coming soon!');
+                  navigation.navigate('ComingSoon');
                 }}
               >
                 <Image

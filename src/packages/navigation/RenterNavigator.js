@@ -35,6 +35,7 @@ import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
 import DisputeScreen from '../../screens/shared/DisputeScreen';
+import ComingSoonScreen from '../../screens/shared/ComingSoonScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -183,6 +184,14 @@ const HomeStack = () => {
         component={ReferFriendsScreen}
         options={{ 
           title: 'Refer Friends',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ComingSoon" 
+        component={ComingSoonScreen}
+        options={{ 
+          title: 'Coming Soon',
           headerShown: true 
         }}
       />

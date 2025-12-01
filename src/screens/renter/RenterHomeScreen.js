@@ -62,6 +62,8 @@ const RenterHomeScreen = () => {
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [likedCars, setLikedCars] = useState(new Set());
+  const [likedServices, setLikedServices] = useState(new Set());
+  const [likedDiscover, setLikedDiscover] = useState(new Set());
   const [showNoFeesMessage, setShowNoFeesMessage] = useState(true);
   const fadeAnim = useState(new Animated.Value(1))[0];
   
@@ -267,6 +269,30 @@ const RenterHomeScreen = () => {
         newSet.delete(carId);
       } else {
         newSet.add(carId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleServiceLike = (serviceId) => {
+    setLikedServices(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(serviceId)) {
+        newSet.delete(serviceId);
+      } else {
+        newSet.add(serviceId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleDiscoverLike = (discoverId) => {
+    setLikedDiscover(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(discoverId)) {
+        newSet.delete(discoverId);
+      } else {
+        newSet.add(discoverId);
       }
       return newSet;
     });
@@ -682,7 +708,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`roadtrips-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`roadtrips-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`roadtrips-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -719,7 +763,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`vipwedding-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`vipwedding-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`vipwedding-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -756,7 +818,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: driver.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: driver.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`drivers-${driver.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`drivers-${driver.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`drivers-${driver.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {driver.name}
@@ -792,7 +872,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`movers-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`movers-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`movers-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -829,7 +927,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`autoparts-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`autoparts-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`autoparts-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -866,7 +982,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`cardetailing-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`cardetailing-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`cardetailing-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -903,7 +1037,25 @@ const RenterHomeScreen = () => {
                   activeOpacity={0.8}
                   onPress={() => navigation.navigate('ComingSoon')}
                 >
-                  <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                  <View style={styles.serviceBusinessImageContainer}>
+                    <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
+                    <View style={styles.serviceBusinessActions}>
+                      <TouchableOpacity
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          toggleServiceLike(`roadside-${business.id}`);
+                        }}
+                        style={styles.serviceActionButton}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons
+                          name={likedServices.has(`roadside-${business.id}`) ? "heart" : "heart-outline"}
+                          size={18}
+                          color={likedServices.has(`roadside-${business.id}`) ? '#FF3B30' : theme.colors.textPrimary}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
@@ -943,6 +1095,22 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
+                <View style={styles.offerActions}>
+                  <TouchableOpacity
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      toggleDiscoverLike('offer-weekend');
+                    }}
+                    style={styles.discoverActionButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={likedDiscover.has('offer-weekend') ? "heart" : "heart-outline"}
+                      size={18}
+                      color={likedDiscover.has('offer-weekend') ? '#FF3B30' : theme.colors.white}
+                    />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     Weekend Special
@@ -961,6 +1129,22 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
+                <View style={styles.offerActions}>
+                  <TouchableOpacity
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      toggleDiscoverLike('offer-longterm');
+                    }}
+                    style={styles.discoverActionButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={likedDiscover.has('offer-longterm') ? "heart" : "heart-outline"}
+                      size={18}
+                      color={likedDiscover.has('offer-longterm') ? '#FF3B30' : theme.colors.white}
+                    />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     Long Term Deal
@@ -979,6 +1163,22 @@ const RenterHomeScreen = () => {
                 activeOpacity={0.8}
                 onPress={() => navigation.navigate('ComingSoon')}
               >
+                <View style={styles.offerActions}>
+                  <TouchableOpacity
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      toggleDiscoverLike('offer-firsttime');
+                    }}
+                    style={styles.discoverActionButton}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={likedDiscover.has('offer-firsttime') ? "heart" : "heart-outline"}
+                      size={18}
+                      color={likedDiscover.has('offer-firsttime') ? '#FF3B30' : theme.colors.white}
+                    />
+                  </TouchableOpacity>
+                </View>
                 <View style={styles.offerContent}>
                   <Text style={[styles.offerTitle, { color: theme.colors.white }]}>
                     First Time User
@@ -1008,6 +1208,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.destinationImageContainer}>
                   <Image source={mombasaImage} style={styles.destinationImage} resizeMode="cover" />
                   <View style={styles.destinationOverlay} />
+                  <View style={styles.destinationActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('destination-mombasa');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('destination-mombasa') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('destination-mombasa') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.destinationContent}>
                   <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
@@ -1027,6 +1243,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.destinationImageContainer}>
                   <Image source={nakuruImage} style={styles.destinationImage} resizeMode="cover" />
                   <View style={styles.destinationOverlay} />
+                  <View style={styles.destinationActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('destination-nakuru');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('destination-nakuru') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('destination-nakuru') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.destinationContent}>
                   <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
@@ -1046,6 +1278,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.destinationImageContainer}>
                   <Image source={egertonImage} style={styles.destinationImage} resizeMode="cover" />
                   <View style={styles.destinationOverlay} />
+                  <View style={styles.destinationActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('destination-egerton');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('destination-egerton') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('destination-egerton') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.destinationContent}>
                   <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
@@ -1065,6 +1313,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.destinationImageContainer}>
                   <Image source={hellsgateImage} style={styles.destinationImage} resizeMode="cover" />
                   <View style={styles.destinationOverlay} />
+                  <View style={styles.destinationActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('destination-hellsgate');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('destination-hellsgate') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('destination-hellsgate') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.destinationContent}>
                   <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
@@ -1084,6 +1348,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.destinationImageContainer}>
                   <Image source={pejetaImage} style={styles.destinationImage} resizeMode="cover" />
                   <View style={styles.destinationOverlay} />
+                  <View style={styles.destinationActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('destination-pejeta');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('destination-pejeta') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('destination-pejeta') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.destinationContent}>
                   <Text style={[styles.destinationName, { color: theme.colors.textPrimary }]}>
@@ -1111,6 +1391,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.carEventsImageContainer}>
                   <Image source={eventsImage} style={styles.carEventsImage} resizeMode="cover" />
                   <View style={styles.carEventsOverlay} />
+                  <View style={styles.carEventsActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('event-nairobi');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('event-nairobi') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('event-nairobi') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.carEventsContent}>
                   <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
@@ -1130,6 +1426,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events1Image} style={styles.carEventsImage} resizeMode="cover" />
                   <View style={styles.carEventsOverlay} />
+                  <View style={styles.carEventsActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('event-classic');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('event-classic') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('event-classic') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.carEventsContent}>
                   <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
@@ -1149,6 +1461,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events2Image} style={styles.carEventsImage} resizeMode="cover" />
                   <View style={styles.carEventsOverlay} />
+                  <View style={styles.carEventsActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('event-supercar');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('event-supercar') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('event-supercar') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.carEventsContent}>
                   <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
@@ -1168,6 +1496,22 @@ const RenterHomeScreen = () => {
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events3Image} style={styles.carEventsImage} resizeMode="cover" />
                   <View style={styles.carEventsOverlay} />
+                  <View style={styles.carEventsActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('event-motor');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('event-motor') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('event-motor') ? '#FF3B30' : theme.colors.white}
+                      />
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.carEventsContent}>
                   <Text style={[styles.carEventsTitle, { color: theme.colors.textPrimary }]}>
@@ -1194,11 +1538,29 @@ const RenterHomeScreen = () => {
                   navigation.navigate('ComingSoon');
                 }}
               >
-                <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
-                  style={styles.blogImage}
-                  resizeMode="cover"
-                />
+                <View style={styles.blogImageContainer}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
+                    style={styles.blogImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.blogActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('blog-roadtrip');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('blog-roadtrip') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('blog-roadtrip') ? '#FF3B30' : theme.colors.textPrimary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <View style={styles.blogContent}>
                   <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
                     Top 10 Road Trip Destinations in Kenya
@@ -1219,11 +1581,29 @@ const RenterHomeScreen = () => {
                   navigation.navigate('ComingSoon');
                 }}
               >
-                <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400' }}
-                  style={styles.blogImage}
-                  resizeMode="cover"
-                />
+                <View style={styles.blogImageContainer}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400' }}
+                    style={styles.blogImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.blogActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('blog-maintenance');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('blog-maintenance') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('blog-maintenance') ? '#FF3B30' : theme.colors.textPrimary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <View style={styles.blogContent}>
                   <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
                     Car Maintenance Tips for Long Trips
@@ -1244,11 +1624,29 @@ const RenterHomeScreen = () => {
                   navigation.navigate('ComingSoon');
                 }}
               >
-                <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
-                  style={styles.blogImage}
-                  resizeMode="cover"
-                />
+                <View style={styles.blogImageContainer}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
+                    style={styles.blogImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.blogActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('blog-parks');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('blog-parks') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('blog-parks') ? '#FF3B30' : theme.colors.textPrimary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <View style={styles.blogContent}>
                   <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
                     Best Time to Visit Kenya's National Parks
@@ -1269,11 +1667,29 @@ const RenterHomeScreen = () => {
                   navigation.navigate('ComingSoon');
                 }}
               >
-                <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400' }}
-                  style={styles.blogImage}
-                  resizeMode="cover"
-                />
+                <View style={styles.blogImageContainer}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400' }}
+                    style={styles.blogImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.blogActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('blog-coastal');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('blog-coastal') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('blog-coastal') ? '#FF3B30' : theme.colors.textPrimary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <View style={styles.blogContent}>
                   <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
                     Coastal Getaways: A Complete Guide
@@ -1294,11 +1710,29 @@ const RenterHomeScreen = () => {
                   navigation.navigate('ComingSoon');
                 }}
               >
-                <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400' }}
-                  style={styles.blogImage}
-                  resizeMode="cover"
-                />
+                <View style={styles.blogImageContainer}>
+                  <Image
+                    source={{ uri: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400' }}
+                    style={styles.blogImage}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.blogActions}>
+                    <TouchableOpacity
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        toggleDiscoverLike('blog-safety');
+                      }}
+                      style={styles.discoverActionButton}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={likedDiscover.has('blog-safety') ? "heart" : "heart-outline"}
+                        size={18}
+                        color={likedDiscover.has('blog-safety') ? '#FF3B30' : theme.colors.textPrimary}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
                 <View style={styles.blogContent}>
                   <Text style={[styles.blogTitle, { color: theme.colors.textPrimary }]}>
                     Safety Tips for Driving in Kenya
@@ -2357,9 +2791,36 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  serviceBusinessImage: {
+  serviceBusinessImageContainer: {
     width: '100%',
     height: 140,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  serviceBusinessImage: {
+    width: '100%',
+    height: '100%',
+  },
+  serviceBusinessActions: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  serviceActionButton: {
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   serviceBusinessContent: {
     padding: 12,
@@ -2417,6 +2878,28 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 4,
+    position: 'relative',
+  },
+  offerActions: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    flexDirection: 'row',
+    gap: 8,
+  },
+  discoverActionButton: {
+    width: 28,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2,
   },
   offerContent: {
     gap: 8,
@@ -2456,6 +2939,14 @@ const styles = StyleSheet.create({
     height: 160,
     position: 'relative',
     overflow: 'hidden',
+  },
+  destinationActions: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+    gap: 8,
+    zIndex: 10,
   },
   destinationImage: {
     width: '100%',
@@ -2503,6 +2994,14 @@ const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
   },
+  carEventsActions: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+    gap: 8,
+    zIndex: 10,
+  },
   carEventsImage: {
     width: '100%',
     height: '100%',
@@ -2543,9 +3042,23 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  blogImage: {
+  blogImageContainer: {
     width: '100%',
     height: 200,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  blogImage: {
+    width: '100%',
+    height: '100%',
+  },
+  blogActions: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    flexDirection: 'row',
+    gap: 8,
+    zIndex: 10,
   },
   blogContent: {
     padding: 16,

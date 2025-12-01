@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated, Modal, Alert, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -84,6 +84,7 @@ const RenterHomeScreen = () => {
   const [activeTab, setActiveTab] = useState('cars'); // 'cars', 'services', or 'discover'
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollViewRef = useRef(null);
+  const [refreshing, setRefreshing] = useState(false);
   
   // Services data with 4 businesses per category
   const servicesData = {
@@ -762,6 +763,17 @@ const RenterHomeScreen = () => {
     });
   }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top, hasActiveFilters, hasActiveServiceFilters]);
 
+  // Pull to refresh handler
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // Simulate data refresh - in a real app, this would fetch new data from API
+    setTimeout(() => {
+      setRefreshing(false);
+      // You can add actual data refresh logic here
+      // For example: fetchCars(), fetchServices(), etc.
+    }, 1500);
+  }, []);
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
@@ -774,6 +786,14 @@ const RenterHomeScreen = () => {
           setIsScrolled(scrollY > 50);
         }}
         scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={theme.colors.primary}
+            colors={[theme.colors.primary]}
+          />
+        }
       >
       {/* Search Results */}
       {searchQuery.trim() && activeTab === 'cars' && (

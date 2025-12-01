@@ -514,7 +514,7 @@ const BookingTrackingScreen = () => {
         >
           <View style={styles.addDaysContent}>
             <View style={[styles.addDaysIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-              <Ionicons name="calendar-add-outline" size={28} color={theme.colors.primary} />
+              <Ionicons name="add-circle-outline" size={28} color={theme.colors.primary} />
             </View>
             <View style={styles.addDaysTextContainer}>
               <Text style={[styles.addDaysTitle, { color: theme.colors.textPrimary }]}>

@@ -2,13 +2,15 @@
   "expo": {
     "name": "Oparides",
     "slug": "oparides",
+    "owner": "orinadeonnn",
     "version": "1.0.0",
     "sdkVersion": "54.0.0",
+    "jsEngine": "hermes",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "icon": "./assets/logo/logo.webp",
+    "icon": "./assets/logo/logo.png",
     "splash": {
-      "image": "./assets/logo/logo.webp",
+      "image": "./assets/logo/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#F7F7F7"
     },
@@ -24,7 +26,7 @@
       "package": "com.oparides.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo/logo.webp",
+        "foregroundImage": "./assets/logo/logo.png",
         "backgroundColor": "#F7F7F7"
       },
       "permissions": [
@@ -33,31 +35,34 @@
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ],
-      "enableProguardInReleaseBuilds": true,
-      "enableShrinkResourcesInReleaseBuilds": true
+      ]
     },
     "plugins": [
       [
         "expo-build-properties",
         {
           "android": {
+            "jsEngine": "hermes",
+            "minifyEnabled": true,
             "enableProguardInReleaseBuilds": true,
             "enableR8": true,
             "enableShrinkResources": true,
-            "enableSeparateBuildPerCPUArchitecture": false,
+            "enableSeparateBuildPerCPUArchitecture": true,
+            "proguardFiles": [
+              "proguard-rules.pro"
+            ],
             "gradleProperties": {
-              "android.enableProguardInReleaseBuilds": true,
               "android.enableR8.fullMode": true,
               "android.enableResourceShrinking": true
-            }
+            },
+            "enableMinifyInReleaseBuilds": true
           }
         }
       ]
     ],
     "extra": {
       "eas": {
-        "projectId": "aa40e38a-05d4-41bf-a2b5-4ef8eb7abdfa"
+        "projectId": "a1abf160-4f92-4e6c-9a14-86f0564ccfef"
       }
     }
   }

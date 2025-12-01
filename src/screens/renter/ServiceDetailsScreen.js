@@ -221,6 +221,27 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Image Repository Link */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Image Repository
+          </Text>
+          <TouchableOpacity
+            style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
+            onPress={() => {
+              navigation.navigate('ComingSoon');
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                View all images
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Price Information */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -395,16 +416,13 @@ const ServiceDetailsScreen = () => {
             Safety
           </Text>
           <View style={[styles.safetyCard, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.safetyInfo}>
-              <Ionicons name="shield-checkmark-outline" size={24} color={theme.colors.primary} />
-              <View style={styles.safetyContent}>
-                <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
-                  Safe & Verified
-                </Text>
-                <Text style={[styles.safetyDescription, { color: theme.colors.textSecondary }]}>
-                  This service provider has been verified and meets our safety standards.
-                </Text>
-              </View>
+            <View style={styles.safetyContent}>
+              <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
+                Safe & Verified
+              </Text>
+              <Text style={[styles.safetyDescription, { color: theme.colors.textSecondary }]}>
+                This service provider has been verified and meets our safety standards.
+              </Text>
             </View>
             <View style={styles.safetyFeaturesList}>
               {safetyFeatures.map((feature, index) => (
@@ -549,6 +567,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     letterSpacing: -0.3,
+  },
+  imageRepositoryCard: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  imageRepositoryLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  imageRepositoryLinkText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
   },
   serviceOverviewCard: {
     borderRadius: 16,
@@ -717,10 +751,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     gap: 16,
-  },
-  safetyInfo: {
-    flexDirection: 'row',
-    gap: 12,
   },
   safetyContent: {
     flex: 1,

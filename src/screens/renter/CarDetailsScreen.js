@@ -342,6 +342,27 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Image Repository Link */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Image Repository
+          </Text>
+          <TouchableOpacity
+            style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
+            onPress={() => {
+              navigation.navigate('ComingSoon');
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                View all images
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         {/* Features */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -969,6 +990,22 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     letterSpacing: -0.3,
+  },
+  imageRepositoryCard: {
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  imageRepositoryLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  imageRepositoryLinkText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
   },
   infoCard: {
     borderRadius: 16,

@@ -218,7 +218,10 @@ const WishlistScreen = () => {
   };
 
   const handleServicePress = (service) => {
-    navigation.navigate('ComingSoon');
+    navigation.navigate('ServiceDetails', { 
+      service: service, 
+      category: service.category 
+    });
   };
 
   const handleDiscoverPress = (item) => {

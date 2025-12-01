@@ -341,7 +341,10 @@ const WishlistStack = () => {
         component={WishlistScreen}
         options={{ 
           title: 'Wishlist',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          statusBarTranslucent: true,
         }}
       />
     </Stack.Navigator>

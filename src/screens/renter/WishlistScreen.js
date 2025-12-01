@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '../../packages/components';
 import { useWishlist } from '../../packages/context/WishlistContext';
 
@@ -35,6 +36,7 @@ const events3Image = require('../../../assets/images/events3.webp');
 const WishlistScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { likedCars, likedServices, likedDiscover, toggleCarLike, toggleServiceLike, toggleDiscoverLike } = useWishlist();
 
   // All cars data (matching RenterHomeScreen structure)
@@ -196,11 +198,20 @@ const WishlistScreen = () => {
   const totalLiked = likedVehicles.length + likedServicesList.length + 
     likedDiscoverList.destinations.length + likedDiscoverList.events.length + likedDiscoverList.blogs.length;
 
+  // Set custom header with status bar
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Wishlist',
+      header: () => (
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+          <View style={styles.headerContent}>
+            <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+              Wishlist
+            </Text>
+          </View>
+        </View>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, theme, insets.top]);
 
   const handleCarPress = (car) => {
     navigation.navigate('CarDetails', { car });
@@ -528,6 +539,27 @@ const WishlistScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  customHeader: {
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
     flex: 1,
   },
   contentContainer: {

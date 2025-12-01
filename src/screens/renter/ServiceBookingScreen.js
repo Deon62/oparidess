@@ -194,11 +194,12 @@ const ServiceBookingScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <KeyboardAvoidingView 
+        style={styles.keyboardView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 120 }]}
@@ -676,10 +677,13 @@ const ServiceBookingScreen = () => {
           />
         </View>
 
+        {/* Bottom Spacing - Extra space for keyboard and bottom bar */}
+        <View style={{ height: 100 }} />
       </ScrollView>
+      </KeyboardAvoidingView>
 
-      {/* Bottom Bar with Price and Pay Now Button */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: insets.bottom }]}>
+      {/* Bottom Bar with Price and Pay Now Button - Fixed at bottom */}
+      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 20) }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
@@ -696,12 +700,15 @@ const ServiceBookingScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  keyboardView: {
     flex: 1,
   },
   scrollView: {

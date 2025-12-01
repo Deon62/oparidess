@@ -11,10 +11,10 @@ const carImage1 = require('../../../assets/images/car1.webp');
 const carImage2 = require('../../../assets/images/car2.webp');
 const carImage3 = require('../../../assets/images/car3.webp');
 const carImage4 = require('../../../assets/images/car4.webp');
-const car5 = require('../../../assets/images/car5.png');
+const car5 = require('../../../assets/images/car5.webp');
 const car6 = require('../../../assets/images/car6.webp');
-const car7 = require('../../../assets/images/car7.png');
-const car8 = require('../../../assets/images/car8.png');
+const car7 = require('../../../assets/images/car7.webp');
+const car8 = require('../../../assets/images/car8.webp');
 const car9 = require('../../../assets/images/car9.webp');
 const car10 = require('../../../assets/images/car10.webp');
 const car11 = require('../../../assets/images/car11.webp');
@@ -22,7 +22,7 @@ const car12 = require('../../../assets/images/car12.webp');
 const car13 = require('../../../assets/images/car13.webp');
 
 // Import destination images
-const mombasaImage = require('../../../assets/images/mombasa.png');
+const mombasaImage = require('../../../assets/images/mombasa.webp');
 const nakuruImage = require('../../../assets/images/lNakuru.webp');
 const egertonImage = require('../../../assets/images/LEgerton.webp');
 const hellsgateImage = require('../../../assets/images/hellsgate.webp');

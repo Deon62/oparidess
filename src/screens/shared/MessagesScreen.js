@@ -6,7 +6,7 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
-const opaLogo = require('../../../assets/logo/logo.png');
+const opaLogo = require('../../../assets/logo/logo.webp');
 
 const MessagesScreen = () => {
   const theme = useTheme();

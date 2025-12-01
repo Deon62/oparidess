@@ -32,10 +32,10 @@ const carImage3 = require('../../../assets/images/car3.webp');
 const carImage4 = require('../../../assets/images/car4.webp');
 
 // Import commercial vehicle images
-const car5 = require('../../../assets/images/car5.png');
+const car5 = require('../../../assets/images/car5.webp');
 const car6 = require('../../../assets/images/car6.webp');
-const car7 = require('../../../assets/images/car7.png');
-const car8 = require('../../../assets/images/car8.png');
+const car7 = require('../../../assets/images/car7.webp');
+const car8 = require('../../../assets/images/car8.webp');
 const car9 = require('../../../assets/images/car9.webp');
 const car10 = require('../../../assets/images/car10.webp');
 const car11 = require('../../../assets/images/car11.webp');
@@ -47,13 +47,13 @@ const roadtripsImage = require('../../../assets/images/roadtrips.webp');
 const convoyImage = require('../../../assets/images/convoy.webp');
 const driverImage = require('../../../assets/images/driver.webp');
 const moversImage = require('../../../assets/images/movers.webp');
-const mechanicsImage = require('../../../assets/images/mechanics.png');
+const mechanicsImage = require('../../../assets/images/mechanics.webp');
 const partsImage = require('../../../assets/images/parts.webp');
 const detailingImage = require('../../../assets/images/detailing.webp');
 const roadsideImage = require('../../../assets/images/roadside.webp');
 
 // Import destination images
-const mombasaImage = require('../../../assets/images/mombasa.png');
+const mombasaImage = require('../../../assets/images/mombasa.webp');
 const nakuruImage = require('../../../assets/images/lNakuru.webp');
 const egertonImage = require('../../../assets/images/LEgerton.webp');
 const hellsgateImage = require('../../../assets/images/hellsgate.webp');

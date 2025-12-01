@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -17,7 +17,7 @@ const carImage4 = require('../../../assets/images/car4.webp');
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const CarDetailsScreen = () => {
   const theme = useTheme();
@@ -50,6 +50,7 @@ const CarDetailsScreen = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMoreRules, setShowMoreRules] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
 
   // Auto-swap images every 3 seconds
   useEffect(() => {
@@ -469,7 +470,11 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Pickup Location
           </Text>
-          <View style={styles.mapContainer}>
+          <TouchableOpacity
+            style={styles.mapContainer}
+            onPress={() => setIsMapFullscreen(true)}
+            activeOpacity={0.9}
+          >
             <WebView
               source={{ html: mapboxHTML }}
               style={styles.map}
@@ -493,7 +498,10 @@ const CarDetailsScreen = () => {
                 console.log('WebView loaded successfully');
               }}
             />
-          </View>
+            <View style={styles.expandMapButton}>
+              <Ionicons name="expand-outline" size={20} color={theme.colors.textPrimary} />
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* Meet Car Owner Section */}
@@ -786,6 +794,47 @@ const CarDetailsScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Fullscreen Map Modal */}
+      <Modal
+        visible={isMapFullscreen}
+        animationType="fade"
+        transparent={false}
+        onRequestClose={() => setIsMapFullscreen(false)}
+      >
+        <View style={styles.fullscreenMapContainer}>
+          <WebView
+            source={{ html: mapboxHTML }}
+            style={styles.fullscreenMap}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState={true}
+            scalesPageToFit={true}
+            scrollEnabled={true}
+            zoomEnabled={true}
+            originWhitelist={['*']}
+            mixedContentMode="always"
+            onError={(syntheticEvent) => {
+              const { nativeEvent } = syntheticEvent;
+              console.warn('WebView error: ', nativeEvent);
+            }}
+            onHttpError={(syntheticEvent) => {
+              const { nativeEvent } = syntheticEvent;
+              console.warn('WebView HTTP error: ', nativeEvent);
+            }}
+            onLoadEnd={() => {
+              console.log('WebView loaded successfully');
+            }}
+          />
+          <TouchableOpacity
+            style={[styles.closeMapButton, { top: insets.top + 16 }]}
+            onPress={() => setIsMapFullscreen(false)}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -946,11 +995,57 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     overflow: 'hidden',
     backgroundColor: '#E0E0E0',
+    position: 'relative',
   },
   map: {
     width: '100%',
     height: 200,
     backgroundColor: 'transparent',
+  },
+  expandMapButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 10,
+  },
+  fullscreenMapContainer: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+    backgroundColor: '#000',
+  },
+  fullscreenMap: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+  },
+  closeMapButton: {
+    position: 'absolute',
+    right: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
   },
   markerContainer: {
     alignItems: 'center',

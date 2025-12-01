@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -194,11 +194,16 @@ const ServiceBookingScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <KeyboardAvoidingView 
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 100 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 120 }]}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {/* Service Summary */}
         <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
@@ -691,7 +696,7 @@ const ServiceBookingScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

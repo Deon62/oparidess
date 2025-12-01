@@ -152,12 +152,7 @@ const ServiceProviderStep2Screen = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!localFormData.businessRegistrationDoc) {
-      newErrors.businessRegistrationDoc = 'Business registration document is required';
-    }
-    if (!localFormData.idDocument) {
-      newErrors.idDocument = 'ID document is required';
-    }
+    // Only profile photo is required, all other documents are optional
     if (!localFormData.profilePhoto) {
       newErrors.profilePhoto = 'Profile photo is required';
     }
@@ -302,11 +297,11 @@ const ServiceProviderStep2Screen = () => {
             {renderDocumentUpload(
               'businessRegistrationDoc',
               'Business Registration Document',
-              true
+              false
             )}
 
             {/* ID Document */}
-            {renderDocumentUpload('idDocument', 'National ID / Passport', true)}
+            {renderDocumentUpload('idDocument', 'National ID / Passport', false)}
 
             {/* Business License (Optional) */}
             {renderDocumentUpload('businessLicense', 'Business License', false)}

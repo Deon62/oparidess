@@ -20,10 +20,19 @@ const ServiceProviderStep1Screen = () => {
     location: formData.location || '',
     email: formData.email || '',
     phone: formData.phone || '',
+    priceSetting: formData.priceSetting || '',
+    price: formData.price || '',
   });
 
   const [showServiceTypeModal, setShowServiceTypeModal] = useState(false);
+  const [showPriceSettingModal, setShowPriceSettingModal] = useState(false);
   const [errors, setErrors] = useState({});
+
+  const priceSettingOptions = [
+    'Fixed Price',
+    'Price Range',
+    'Contact for Pricing',
+  ];
 
   const serviceTypes = [
     'Road Trips Agencies',
@@ -85,6 +94,14 @@ const ServiceProviderStep1Screen = () => {
     }
     if (!localFormData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
+    }
+    if (!localFormData.priceSetting) {
+      newErrors.priceSetting = 'Price setting is required';
+    }
+    if (localFormData.priceSetting === 'Fixed Price' || localFormData.priceSetting === 'Price Range') {
+      if (!localFormData.price.trim()) {
+        newErrors.price = 'Price is required';
+      }
     }
 
     setErrors(newErrors);
@@ -325,6 +342,66 @@ const ServiceProviderStep1Screen = () => {
                 <Text style={styles.errorText}>{errors.phone}</Text>
               )}
             </View>
+
+            {/* Price Setting */}
+            <View style={styles.fieldContainer}>
+              <Text style={[styles.label, { color: theme.colors.textPrimary }]}>
+                Price Setting *
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.selectField,
+                  {
+                    borderColor: errors.priceSetting ? '#F44336' : theme.colors.hint,
+                    backgroundColor: theme.colors.white,
+                  },
+                ]}
+                onPress={() => setShowPriceSettingModal(true)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.selectFieldText,
+                    {
+                      color: localFormData.priceSetting ? theme.colors.textPrimary : theme.colors.hint,
+                    },
+                  ]}
+                >
+                  {localFormData.priceSetting || 'Select price setting'}
+                </Text>
+                <Ionicons name="chevron-down" size={20} color={theme.colors.hint} />
+              </TouchableOpacity>
+              {errors.priceSetting && (
+                <Text style={styles.errorText}>{errors.priceSetting}</Text>
+              )}
+            </View>
+
+            {/* Price Input (shown only if Fixed Price or Price Range is selected) */}
+            {(localFormData.priceSetting === 'Fixed Price' || localFormData.priceSetting === 'Price Range') && (
+              <View style={styles.fieldContainer}>
+                <Text style={[styles.label, { color: theme.colors.textPrimary }]}>
+                  {localFormData.priceSetting === 'Fixed Price' ? 'Price *' : 'Price Range *'}
+                </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      borderColor: errors.price ? '#F44336' : theme.colors.hint,
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.white,
+                    },
+                  ]}
+                  placeholder={localFormData.priceSetting === 'Fixed Price' ? 'e.g., KSh 5,000' : 'e.g., KSh 3,000 - KSh 10,000'}
+                  placeholderTextColor={theme.colors.hint}
+                  value={localFormData.price}
+                  onChangeText={(text) => updateField('price', text)}
+                  keyboardType="numeric"
+                />
+                {errors.price && (
+                  <Text style={styles.errorText}>{errors.price}</Text>
+                )}
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -400,6 +477,72 @@ const ServiceProviderStep1Screen = () => {
                     {type}
                   </Text>
                   {localFormData.serviceType === type && (
+                    <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Price Setting Modal */}
+      <Modal
+        visible={showPriceSettingModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowPriceSettingModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.modalHeader}>
+              <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
+                Select Price Setting
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowPriceSettingModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView>
+              {priceSettingOptions.map((option, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.modalItem,
+                    localFormData.priceSetting === option && {
+                      backgroundColor: theme.colors.primary + '10',
+                    },
+                  ]}
+                  onPress={() => {
+                    updateField('priceSetting', option);
+                    if (option === 'Contact for Pricing') {
+                      updateField('price', '');
+                    }
+                    setShowPriceSettingModal(false);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.modalItemText,
+                      {
+                        color:
+                          localFormData.priceSetting === option
+                            ? theme.colors.primary
+                            : theme.colors.textPrimary,
+                        fontFamily:
+                          localFormData.priceSetting === option
+                            ? 'Nunito_600SemiBold'
+                            : 'Nunito_400Regular',
+                      },
+                    ]}
+                  >
+                    {option}
+                  </Text>
+                  {localFormData.priceSetting === option && (
                     <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
                   )}
                 </TouchableOpacity>

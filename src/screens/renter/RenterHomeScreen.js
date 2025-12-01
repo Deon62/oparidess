@@ -124,7 +124,7 @@ const RenterHomeScreen = () => {
     ],
   };
   
-  // Filter state
+  // Filter state for vehicles
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [filters, setFilters] = useState({
     priceRange: { min: 0, max: 50000 },
@@ -133,6 +133,16 @@ const RenterHomeScreen = () => {
     seatCounts: [],
   });
   const [hasActiveFilters, setHasActiveFilters] = useState(false);
+
+  // Filter state for services
+  const [showServiceFilterModal, setShowServiceFilterModal] = useState(false);
+  const [serviceFilters, setServiceFilters] = useState({
+    priceRange: { min: 0, max: 60000 },
+    categories: [],
+    locations: [],
+    minRating: 0,
+  });
+  const [hasActiveServiceFilters, setHasActiveServiceFilters] = useState(false);
   
   
   // All 47 Kenyan Counties
@@ -351,6 +361,92 @@ const RenterHomeScreen = () => {
     setHasActiveFilters(hasFilters);
   }, [filters]);
 
+  // Check if service filters are active
+  useEffect(() => {
+    const hasFilters = 
+      serviceFilters.priceRange.min > 0 || 
+      serviceFilters.priceRange.max < 60000 ||
+      serviceFilters.categories.length > 0 ||
+      serviceFilters.locations.length > 0 ||
+      serviceFilters.minRating > 0;
+    setHasActiveServiceFilters(hasFilters);
+  }, [serviceFilters]);
+
+  // Get all unique locations from services
+  const getAllServiceLocations = () => {
+    const locations = new Set();
+    Object.values(servicesData).forEach(category => {
+      category.forEach(service => {
+        if (service.location) {
+          locations.add(service.location);
+        }
+      });
+    });
+    return Array.from(locations).sort();
+  };
+
+  const serviceLocations = getAllServiceLocations();
+
+  // Filter services based on all filters
+  const filterServices = (services, categoryKey) => {
+    let filtered = services;
+
+    // Filter by categories - check if this category is selected
+    if (serviceFilters.categories.length > 0) {
+      const categoryMap = {
+        'roadtrips': 'roadTrips',
+        'vipwedding': 'vipWedding',
+        'drivers': 'drivers',
+        'movers': 'movers',
+        'autoparts': 'autoParts',
+        'cardetailing': 'carDetailing',
+        'roadside': 'roadside',
+      };
+      const reverseMap = Object.entries(categoryMap).reduce((acc, [key, value]) => {
+        acc[value] = key;
+        return acc;
+      }, {});
+      const categoryId = reverseMap[categoryKey];
+      if (categoryId && !serviceFilters.categories.includes(categoryId)) {
+        return []; // Return empty if category is not selected
+      }
+    }
+
+    // Filter by price range
+    if (serviceFilters.priceRange.min > 0 || serviceFilters.priceRange.max < 60000) {
+      filtered = filtered.filter(service => {
+        if (service.price === 'Various') return true; // Include "Various" priced items
+        const price = getPriceFromString(service.price);
+        return price >= serviceFilters.priceRange.min && price <= serviceFilters.priceRange.max;
+      });
+    }
+
+    // Filter by locations
+    if (serviceFilters.locations.length > 0) {
+      filtered = filtered.filter(service => 
+        service.location && serviceFilters.locations.includes(service.location)
+      );
+    }
+
+    // Filter by minimum rating
+    if (serviceFilters.minRating > 0) {
+      filtered = filtered.filter(service => 
+        service.rating && service.rating >= serviceFilters.minRating
+      );
+    }
+
+    return filtered;
+  };
+
+  // Get filtered services for each category
+  const getFilteredServices = (categoryKey) => {
+    const categoryServices = servicesData[categoryKey] || [];
+    if (!hasActiveServiceFilters) {
+      return categoryServices;
+    }
+    return filterServices(categoryServices, categoryKey);
+  };
+
   // Get all cars from all classes
   const allCars = carClasses.flatMap(carClass => carClass.cars);
   
@@ -534,6 +630,22 @@ const RenterHomeScreen = () => {
                       )}
                     </TouchableOpacity>
                   )}
+                  {activeTab === 'services' && (
+                    <TouchableOpacity
+                      onPress={() => setShowServiceFilterModal(true)}
+                      style={[styles.iconButton, hasActiveServiceFilters && styles.filterIconActive]}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons 
+                        name="filter-outline" 
+                        size={24} 
+                        color={hasActiveServiceFilters ? theme.colors.primary : theme.colors.textPrimary} 
+                      />
+                      {hasActiveServiceFilters && (
+                        <View style={[styles.filterBadge, { backgroundColor: theme.colors.primary }]} />
+                      )}
+                    </TouchableOpacity>
+                  )}
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate('RenterProfile');
@@ -632,7 +744,7 @@ const RenterHomeScreen = () => {
         </View>
       ),
     });
-  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top, hasActiveFilters]);
+  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top, hasActiveFilters, hasActiveServiceFilters]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -660,12 +772,13 @@ const RenterHomeScreen = () => {
       {activeTab === 'services' && (
         <View style={styles.servicesSection}>
           {/* Road Trips Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              Road Trips Agencies
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.roadTrips.map((business) => (
+          {getFilteredServices('roadTrips').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                Road Trips Agencies
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('roadTrips').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -710,17 +823,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* VIP Wedding Fleet Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              VIP Wedding Fleet Hire
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.vipWedding.map((business) => (
+          {getFilteredServices('vipWedding').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                VIP Wedding Fleet Hire
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('vipWedding').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -765,17 +880,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* Professional Drivers Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              Hire Professional Drivers
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.drivers.map((driver) => (
+          {getFilteredServices('drivers').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                Hire Professional Drivers
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('drivers').map((driver) => (
                 <TouchableOpacity
                   key={driver.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -819,17 +936,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* Movers Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              Movers
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.movers.map((business) => (
+          {getFilteredServices('movers').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                Movers
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('movers').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -874,17 +993,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* Automobile Parts Shop Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              Automobile Parts Shop
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.autoParts.map((business) => (
+          {getFilteredServices('autoParts').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                Automobile Parts Shop
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('autoParts').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -929,17 +1050,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* VIP Car Detailing Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              VIP Car Detailing
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.carDetailing.map((business) => (
+          {getFilteredServices('carDetailing').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                VIP Car Detailing
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('carDetailing').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -984,17 +1107,19 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
 
           {/* Roadside Assistance Section */}
-          <View style={styles.serviceCategorySection}>
-            <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-              Roadside Assistance
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
-              {servicesData.roadside.map((business) => (
+          {getFilteredServices('roadside').length > 0 && (
+            <View style={styles.serviceCategorySection}>
+              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
+                Roadside Assistance
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
+                {getFilteredServices('roadside').map((business) => (
                 <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
@@ -1039,9 +1164,10 @@ const RenterHomeScreen = () => {
                     </Text>
                   </View>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                ))}
+              </ScrollView>
+            </View>
+          )}
         </View>
       )}
 
@@ -2237,6 +2363,266 @@ const RenterHomeScreen = () => {
                   </Text>
               </TouchableOpacity>
             </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Service Filter Modal */}
+      <Modal
+        visible={showServiceFilterModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowServiceFilterModal(false)}
+      >
+        <View style={styles.filterModalOverlay}>
+          <View style={[styles.filterModalContainer, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.filterModalHeader}>
+              <Text style={[styles.filterModalTitle, { color: theme.colors.textPrimary }]}>
+                Filter Services
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowServiceFilterModal(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView 
+              showsVerticalScrollIndicator={false}
+              style={styles.filterModalScrollView}
+              contentContainerStyle={styles.filterModalContentContainer}
+            >
+              {/* Price Range Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Price Range
+                </Text>
+                <View style={styles.priceRangeContainer}>
+                  <View style={styles.priceInputContainer}>
+                    <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Min</Text>
+                    <TextInput
+                      style={[styles.priceInput, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="0"
+                      placeholderTextColor={theme.colors.hint}
+                      keyboardType="numeric"
+                      value={serviceFilters.priceRange.min > 0 ? serviceFilters.priceRange.min.toString() : ''}
+                      onChangeText={(text) => {
+                        const value = text === '' ? 0 : parseInt(text) || 0;
+                        setServiceFilters(prev => ({
+                          ...prev,
+                          priceRange: { ...prev.priceRange, min: value }
+                        }));
+                      }}
+                    />
+                  </View>
+                  <Text style={[styles.priceRangeSeparator, { color: theme.colors.textSecondary }]}>-</Text>
+                  <View style={styles.priceInputContainer}>
+                    <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Max</Text>
+                    <TextInput
+                      style={[styles.priceInput, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="60000"
+                      placeholderTextColor={theme.colors.hint}
+                      keyboardType="numeric"
+                      value={serviceFilters.priceRange.max < 60000 ? serviceFilters.priceRange.max.toString() : ''}
+                      onChangeText={(text) => {
+                        const value = text === '' ? 60000 : parseInt(text) || 60000;
+                        setServiceFilters(prev => ({
+                          ...prev,
+                          priceRange: { ...prev.priceRange, max: value }
+                        }));
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+
+              {/* Service Categories Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Service Categories
+                </Text>
+                <View style={styles.filterChipsContainer}>
+                  {[
+                    { id: 'roadtrips', name: 'Road Trips Agencies' },
+                    { id: 'vipwedding', name: 'VIP Wedding Fleet Hire' },
+                    { id: 'drivers', name: 'Hire Professional Drivers' },
+                    { id: 'movers', name: 'Movers' },
+                    { id: 'autoparts', name: 'Automobile Parts Shop' },
+                    { id: 'cardetailing', name: 'VIP Car Detailing' },
+                    { id: 'roadside', name: 'Roadside Assistance' },
+                  ].map((category) => (
+                    <TouchableOpacity
+                      key={category.id}
+                      style={[
+                        styles.filterChip,
+                        {
+                          backgroundColor: serviceFilters.categories.includes(category.id)
+                            ? theme.colors.primary
+                            : theme.colors.background,
+                          borderColor: serviceFilters.categories.includes(category.id)
+                            ? theme.colors.primary
+                            : theme.colors.hint,
+                        }
+                      ]}
+                      onPress={() => {
+                        setServiceFilters(prev => {
+                          const newCategories = prev.categories.includes(category.id)
+                            ? prev.categories.filter(id => id !== category.id)
+                            : [...prev.categories, category.id];
+                          return { ...prev, categories: newCategories };
+                        });
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.filterChipText,
+                          {
+                            color: serviceFilters.categories.includes(category.id)
+                              ? theme.colors.white
+                              : theme.colors.textPrimary,
+                          }
+                        ]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {category.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Locations Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Location
+                </Text>
+                <View style={styles.filterChipsContainer}>
+                  {serviceLocations.map((location) => (
+                    <TouchableOpacity
+                      key={location}
+                      style={[
+                        styles.filterChip,
+                        {
+                          backgroundColor: serviceFilters.locations.includes(location)
+                            ? theme.colors.primary
+                            : theme.colors.background,
+                          borderColor: serviceFilters.locations.includes(location)
+                            ? theme.colors.primary
+                            : theme.colors.hint,
+                        }
+                      ]}
+                      onPress={() => {
+                        setServiceFilters(prev => {
+                          const newLocations = prev.locations.includes(location)
+                            ? prev.locations.filter(loc => loc !== location)
+                            : [...prev.locations, location];
+                          return { ...prev, locations: newLocations };
+                        });
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.filterChipText,
+                          {
+                            color: serviceFilters.locations.includes(location)
+                              ? theme.colors.white
+                              : theme.colors.textPrimary,
+                          }
+                        ]}
+                      >
+                        {location}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Minimum Rating Section */}
+              <View style={styles.filterSection}>
+                <Text style={[styles.filterSectionTitle, { color: theme.colors.textPrimary }]}>
+                  Minimum Rating
+                </Text>
+                <View style={styles.filterChipsContainer}>
+                  {[0, 4.0, 4.5, 4.7, 4.8, 4.9].map((rating) => (
+                    <TouchableOpacity
+                      key={rating}
+                      style={[
+                        styles.filterChip,
+                        {
+                          backgroundColor: serviceFilters.minRating === rating
+                            ? theme.colors.primary
+                            : theme.colors.background,
+                          borderColor: serviceFilters.minRating === rating
+                            ? theme.colors.primary
+                            : theme.colors.hint,
+                        }
+                      ]}
+                      onPress={() => {
+                        setServiceFilters(prev => ({
+                          ...prev,
+                          minRating: prev.minRating === rating ? 0 : rating
+                        }));
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Text
+                        style={[
+                          styles.filterChipText,
+                          {
+                            color: serviceFilters.minRating === rating
+                              ? theme.colors.white
+                              : theme.colors.textPrimary,
+                          }
+                        ]}
+                      >
+                        {rating === 0 ? 'Any' : `${rating}+`}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+
+              {/* Filter Modal Footer */}
+              <View style={styles.filterModalFooter}>
+                <TouchableOpacity
+                  style={[styles.filterResetButton, { borderColor: theme.colors.hint }]}
+                  onPress={() => {
+                    setServiceFilters({
+                      priceRange: { min: 0, max: 60000 },
+                      categories: [],
+                      locations: [],
+                      minRating: 0,
+                    });
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.filterResetText, { color: theme.colors.textPrimary }]}>
+                    Reset
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.filterApplyButton, { backgroundColor: theme.colors.primary }]}
+                  onPress={() => setShowServiceFilterModal(false)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.filterApplyText, { color: theme.colors.white }]}>
+                    Apply Filters
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </ScrollView>
           </View>
         </View>

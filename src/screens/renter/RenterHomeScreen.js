@@ -523,19 +523,22 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🚗</Text>}
+                <Text style={styles.toggleEmoji}>🚗</Text>
                 <Text style={[
                   styles.toggleText, 
                   { 
                     color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textPrimary,
-                    fontWeight: activeTab === 'cars' ? '700' : '400',
                     fontSize: activeTab === 'cars' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                    fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                    fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_400Regular',
+                    fontStyle: 'normal',
+                    textTransform: 'none',
+                    fontWeight: 'normal'
                   }
                 ]}>
                   Vehicles
                 </Text>
               </View>
+              {activeTab === 'cars' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -544,15 +547,17 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🛠️</Text>}
+                <Text style={styles.toggleEmoji}>🛠️</Text>
                 <Text 
                   style={[
                     styles.toggleText, 
                     { 
                       color: activeTab === 'services' ? theme.colors.primary : theme.colors.textPrimary,
-                      fontWeight: activeTab === 'services' ? '700' : '400',
                       fontSize: activeTab === 'services' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                      fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                      fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_400Regular',
+                      fontStyle: 'normal',
+                      textTransform: 'none',
+                      fontWeight: 'normal'
                     }
                   ]}
                   numberOfLines={1}
@@ -561,6 +566,7 @@ const RenterHomeScreen = () => {
                   Services
                 </Text>
               </View>
+              {activeTab === 'services' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -569,19 +575,22 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🔍</Text>}
+                <Text style={styles.toggleEmoji}>🔍</Text>
                 <Text style={[
                   styles.toggleText, 
                   { 
                     color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textPrimary,
-                    fontWeight: activeTab === 'discover' ? '700' : '400',
                     fontSize: activeTab === 'discover' ? (isScrolled ? 15 : 18) : (isScrolled ? 13 : 16),
-                    fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_400Regular'
+                    fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_400Regular',
+                    fontStyle: 'normal',
+                    textTransform: 'none',
+                    fontWeight: 'normal'
                   }
                 ]}>
                   Discover
                 </Text>
               </View>
+              {activeTab === 'discover' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.primary }]} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -2147,7 +2156,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   toggleButton: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 8,
@@ -2159,7 +2168,16 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontFamily: 'Nunito_400Regular',
+    fontStyle: 'normal',
+    textTransform: 'none',
+    fontWeight: 'normal',
+  },
+  tabIndicator: {
+    width: '60%',
+    height: 3,
+    marginTop: 4,
+    borderRadius: 2,
   },
   servicesSection: {
     paddingTop: 24,

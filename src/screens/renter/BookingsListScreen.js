@@ -280,10 +280,18 @@ const BookingsListScreen = () => {
                       totalPrice: parseFloat(booking.price.replace(/[^\d.]/g, '')) || 0,
                     },
                   });
+                } else if (booking.status === 'completed') {
+                  // Navigate to past rental details screen
+                  navigation.navigate('PastRentalDetails', {
+                    booking: {
+                      ...booking,
+                      bookingId: booking.id,
+                    },
+                  });
                 }
               }}
               activeOpacity={1}
-              disabled={booking.status !== 'active'}
+              disabled={booking.status !== 'active' && booking.status !== 'completed'}
             >
               <Card style={styles.bookingCard}>
                 {booking.image && (

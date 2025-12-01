@@ -15,6 +15,7 @@ import CancellationScreen from '../../screens/renter/CancellationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
+import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
@@ -214,6 +215,14 @@ const BookingsStack = () => {
         options={{ 
           title: 'My Bookings',
           headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="PastRentalDetails" 
+        component={PastRentalDetailsScreen}
+        options={{ 
+          title: 'Past Rental Details',
+          headerShown: false 
         }}
       />
     </Stack.Navigator>

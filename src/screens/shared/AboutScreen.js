@@ -38,10 +38,10 @@ const AboutScreen = () => {
   ];
 
   const socialLinks = [
-    { icon: 'logo-reddit', label: 'Reddit', action: () => handleLinkPress('https://reddit.com/r/oparides') },
-    { icon: 'logo-twitter', label: 'Twitter', action: () => handleLinkPress('https://twitter.com/oparides') },
-    { icon: 'logo-instagram', label: 'Instagram', action: () => handleLinkPress('https://instagram.com/oparides') },
-    { icon: 'logo-linkedin', label: 'LinkedIn', action: () => handleLinkPress('https://linkedin.com/company/oparides') },
+    { icon: 'logo-reddit', label: 'Reddit', action: () => handleLinkPress('https://www.reddit.com/u/Deongideon_/s/3hle5mdWfx') },
+    { icon: 'logo-twitter', label: 'Twitter', action: () => handleLinkPress('https://x.com/oparides?t=pfCVN_VtLwGBRyRUzuhlog&s=09') },
+    { icon: 'logo-instagram', label: 'Instagram', action: () => handleLinkPress('https://instagram.com/deon_lii') },
+    { icon: 'logo-linkedin', label: 'LinkedIn', action: () => handleLinkPress('https://www.linkedin.com/in/deon-orina-4a1722252?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app') },
   ];
 
   return (

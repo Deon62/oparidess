@@ -697,7 +697,13 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🚗</Text>}
+                {!isScrolled && (
+                  <Ionicons 
+                    name={activeTab === 'cars' ? 'car' : 'car-outline'} 
+                    size={22} 
+                    color={activeTab === 'cars' ? theme.colors.primary : theme.colors.textSecondary} 
+                  />
+                )}
                 <Text style={[
                   styles.toggleText, 
                   { 
@@ -718,7 +724,13 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🛠️</Text>}
+                {!isScrolled && (
+                  <Ionicons 
+                    name={activeTab === 'services' ? 'construct' : 'construct-outline'} 
+                    size={22} 
+                    color={activeTab === 'services' ? theme.colors.primary : theme.colors.textSecondary} 
+                  />
+                )}
                 <Text 
                   style={[
                     styles.toggleText, 
@@ -743,7 +755,13 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                {!isScrolled && <Text style={styles.toggleEmoji}>🔍</Text>}
+                {!isScrolled && (
+                  <Ionicons 
+                    name={activeTab === 'discover' ? 'compass' : 'compass-outline'} 
+                    size={22} 
+                    color={activeTab === 'discover' ? theme.colors.primary : theme.colors.textSecondary} 
+                  />
+                )}
                 <Text style={[
                   styles.toggleText, 
                   { 
@@ -3225,9 +3243,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     gap: 6,
-  },
-  toggleEmoji: {
-    fontSize: 28,
   },
   toggleText: {
     fontSize: 16,

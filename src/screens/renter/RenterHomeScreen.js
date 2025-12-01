@@ -523,7 +523,7 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                <Text style={styles.toggleEmoji}>🚗</Text>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🚗</Text>}
                 <Text style={[
                   styles.toggleText, 
                   { 
@@ -547,7 +547,7 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                <Text style={styles.toggleEmoji}>🛠️</Text>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🛠️</Text>}
                 <Text 
                   style={[
                     styles.toggleText, 
@@ -575,7 +575,7 @@ const RenterHomeScreen = () => {
               activeOpacity={0.7}
             >
               <View style={styles.toggleContent}>
-                <Text style={styles.toggleEmoji}>🔍</Text>
+                {!isScrolled && <Text style={styles.toggleEmoji}>🔍</Text>}
                 <Text style={[
                   styles.toggleText, 
                   { 

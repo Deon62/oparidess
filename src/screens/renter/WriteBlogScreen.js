@@ -151,6 +151,20 @@ const WriteBlogScreen = () => {
               {title.length}/100
             </Text>
             
+            {/* Selected Image - appears below title */}
+            {selectedImage && (
+              <View style={styles.imageWrapper}>
+                <Image source={{ uri: selectedImage.uri }} style={styles.selectedImage} />
+                <TouchableOpacity
+                  style={styles.removeImageButton}
+                  onPress={handleRemoveImage}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="close-circle" size={24} color="#F44336" />
+                </TouchableOpacity>
+              </View>
+            )}
+            
             <View style={[styles.divider, { backgroundColor: theme.colors.hint + '30' }]} />
             
             <TextInput
@@ -165,25 +179,6 @@ const WriteBlogScreen = () => {
               maxLength={5000}
             />
           </View>
-
-        {/* Selected Image */}
-        {selectedImage && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Featured Image
-            </Text>
-            <View style={styles.imageWrapper}>
-              <Image source={{ uri: selectedImage.uri }} style={styles.selectedImage} />
-              <TouchableOpacity
-                style={styles.removeImageButton}
-                onPress={handleRemoveImage}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="close-circle" size={24} color="#F44336" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
 
           {/* Bottom spacing for sticky buttons */}
@@ -296,7 +291,8 @@ const styles = StyleSheet.create({
   imageWrapper: {
     position: 'relative',
     width: '100%',
-    marginTop: 12,
+    marginTop: 16,
+    marginBottom: 8,
   },
   selectedImage: {
     width: '100%',

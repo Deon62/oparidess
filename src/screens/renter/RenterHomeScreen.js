@@ -778,18 +778,17 @@ const RenterHomeScreen = () => {
 
   // Skeleton Components
   const CarCardSkeleton = () => (
-    <View style={[styles.carCardWrapper, { marginRight: 16 }]}>
+    <View style={[styles.carCardWrapper]}>
       <View style={[styles.carCard, { backgroundColor: theme.colors.white }]}>
         <View style={[styles.carImageContainer, { backgroundColor: '#E0E0E0' }]}>
           <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
         </View>
         <View style={styles.carInfo}>
-          <View style={[styles.skeletonLine, { width: '80%', height: 16, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
-          <View style={[styles.skeletonLine, { width: '60%', height: 14, marginBottom: 8, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
-            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
-            <View style={[styles.skeletonLine, { width: 50, height: 12, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={[styles.skeletonLine, { width: '80%', height: 13, marginBottom: 4, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={[styles.skeletonLine, { width: '60%', height: 13, marginBottom: 6, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+          <View style={{ flexDirection: 'row', gap: 6 }}>
+            <View style={[styles.skeletonLine, { width: 35, height: 10, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+            <View style={[styles.skeletonLine, { width: 35, height: 10, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
           </View>
         </View>
       </View>
@@ -2014,7 +2013,7 @@ const RenterHomeScreen = () => {
                 activeOpacity={1}
                 style={styles.carCardWrapper}
               >
-                <Card style={[styles.carCard, { borderRadius: 16, borderWidth: 0 }]}>
+                <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
                   <View style={styles.carImageContainer}>
                     <Image 
                       source={car.image || carImages[car.id] || carImage1} 
@@ -2033,7 +2032,7 @@ const RenterHomeScreen = () => {
                       >
                         <Ionicons
                           name={likedCars.has(car.id) ? "heart" : "heart-outline"}
-                          size={20}
+                          size={16}
                           color={likedCars.has(car.id) ? '#FF3B30' : theme.colors.textPrimary}
                         />
                       </TouchableOpacity>
@@ -2049,19 +2048,19 @@ const RenterHomeScreen = () => {
                     {/* Car Details Icons */}
                     <View style={styles.carDetails}>
                       <View style={styles.carDetailItem}>
-                        <Ionicons name="people-outline" size={16} color={theme.colors.hint} />
+                        <Ionicons name="people-outline" size={12} color={theme.colors.hint} />
                         <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                           {car.seats}
                         </Text>
                       </View>
                       <View style={styles.carDetailItem}>
-                        <Ionicons name="car-outline" size={16} color={theme.colors.hint} />
+                        <Ionicons name="car-outline" size={12} color={theme.colors.hint} />
                         <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                           {car.fuel}
                         </Text>
                       </View>
                       <View style={styles.carDetailItem}>
-                        <Ionicons name="color-palette-outline" size={16} color={theme.colors.hint} />
+                        <Ionicons name="color-palette-outline" size={12} color={theme.colors.hint} />
                         <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                           {car.color}
                         </Text>
@@ -2112,7 +2111,7 @@ const RenterHomeScreen = () => {
                   activeOpacity={1}
                   style={styles.carCardWrapper}
                 >
-                  <Card style={[styles.carCard, { borderRadius: 16, borderWidth: 0 }]}>
+                  <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
                     <View style={styles.carImageContainer}>
                       <Image 
                         source={vehicle.image} 
@@ -2131,7 +2130,7 @@ const RenterHomeScreen = () => {
                         >
                           <Ionicons
                             name={likedCars.has(vehicle.id) ? "heart" : "heart-outline"}
-                            size={20}
+                            size={16}
                             color={likedCars.has(vehicle.id) ? '#FF3B30' : theme.colors.textPrimary}
                           />
                         </TouchableOpacity>
@@ -2147,19 +2146,19 @@ const RenterHomeScreen = () => {
                       {/* Vehicle Details Icons */}
                       <View style={styles.carDetails}>
                         <View style={styles.carDetailItem}>
-                          <Ionicons name="people-outline" size={16} color={theme.colors.hint} />
+                          <Ionicons name="people-outline" size={12} color={theme.colors.hint} />
                           <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                             {vehicle.seats}
                           </Text>
                         </View>
                         <View style={styles.carDetailItem}>
-                          <Ionicons name="car-outline" size={16} color={theme.colors.hint} />
+                          <Ionicons name="car-outline" size={12} color={theme.colors.hint} />
                           <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                             {vehicle.fuel}
                           </Text>
                         </View>
                         <View style={styles.carDetailItem}>
-                          <Ionicons name="color-palette-outline" size={16} color={theme.colors.hint} />
+                          <Ionicons name="color-palette-outline" size={12} color={theme.colors.hint} />
                           <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
                             {vehicle.color}
                           </Text>
@@ -2959,22 +2958,22 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   carsContainer: {
-    paddingHorizontal: 24,
-    gap: 16,
+    paddingHorizontal: 20,
+    gap: 12,
   },
   carCardWrapper: {
-    marginRight: 16,
+    marginRight: 12,
   },
   carCard: {
-    width: 200,
+    width: 150,
     padding: 0,
     overflow: 'hidden',
     borderWidth: 0,
-    borderRadius: 16,
+    borderRadius: 12,
   },
   carImageContainer: {
     width: '100%',
-    height: 120,
+    height: 85,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -2984,19 +2983,19 @@ const styles = StyleSheet.create({
   },
   carActions: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    top: 6,
+    right: 6,
     flexDirection: 'row',
-    gap: 8,
+    gap: 6,
   },
   actionButton: {
-    width: 32,
-    height: 32,
+    width: 26,
+    height: 26,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 6,
+    padding: 4,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 13,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
@@ -3004,35 +3003,36 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   carInfo: {
-    padding: 16,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    padding: 10,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   carName: {
-    fontSize: 16,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
+    marginBottom: 4,
+    lineHeight: 16,
   },
   carPrice: {
-    fontSize: 18,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 12,
+    marginBottom: 6,
   },
   carDetails: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginTop: 4,
+    gap: 8,
+    marginTop: 2,
   },
   carDetailItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 3,
   },
   carDetailText: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Nunito_400Regular',
   },
   searchResultsHeader: {

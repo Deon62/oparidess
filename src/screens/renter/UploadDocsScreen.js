@@ -1,7 +1,7 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
 import * as ImagePicker from 'expo-image-picker';
@@ -19,6 +19,27 @@ const UploadDocsScreen = () => {
     navigation.setOptions({
       title: 'Upload Documents',
     });
+  }, [navigation]);
+
+  // Hide bottom tab bar when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Restore tab bar when leaving this screen
+      };
+    }, [navigation])
+  );
+
+  // Restore tab bar when component unmounts (navigating away completely)
+  useEffect(() => {
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: undefined,
+      });
+    };
   }, [navigation]);
 
   const requestPermissions = async () => {

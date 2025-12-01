@@ -527,11 +527,22 @@ const PaymentScreen = () => {
               title="View Booking Details"
               onPress={() => {
                 setShowSuccessModal(false);
-                navigation.navigate('BookingTracking', {
-                  bookingDetails,
-                  paymentMethod: selectedMethod,
-                  totalPrice,
-                });
+                // Check if this is a service booking
+                if (bookingDetails?.type === 'service') {
+                  navigation.navigate('ServiceBookingConfirmation', {
+                    bookingDetails: {
+                      ...bookingDetails,
+                      bookingId: `SRV-${Date.now().toString().slice(-8)}`,
+                    },
+                    paymentMethod: selectedMethod,
+                  });
+                } else {
+                  navigation.navigate('BookingTracking', {
+                    bookingDetails,
+                    paymentMethod: selectedMethod,
+                    totalPrice,
+                  });
+                }
               }}
               variant="primary"
               style={styles.successModalButton}

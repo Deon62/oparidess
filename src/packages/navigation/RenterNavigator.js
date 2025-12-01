@@ -23,6 +23,9 @@ import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
 import BecomeServiceProviderScreen from '../../screens/renter/BecomeServiceProviderScreen';
+import ServiceDetailsScreen from '../../screens/renter/ServiceDetailsScreen';
+import ServiceBookingScreen from '../../screens/renter/ServiceBookingScreen';
+import ServiceBookingConfirmationScreen from '../../screens/renter/ServiceBookingConfirmationScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -193,6 +196,30 @@ const HomeStack = () => {
         component={ComingSoonScreen}
         options={{ 
           title: 'Coming Soon',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceDetails" 
+        component={ServiceDetailsScreen}
+        options={{ 
+          title: 'Service Details',
+          headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceBooking" 
+        component={ServiceBookingScreen}
+        options={{ 
+          title: 'Book Service',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceBookingConfirmation" 
+        component={ServiceBookingConfirmationScreen}
+        options={{ 
+          title: 'Booking Confirmed',
           headerShown: true 
         }}
       />

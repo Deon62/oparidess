@@ -786,11 +786,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('roadTrips').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'Road Trips Agencies' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -843,11 +846,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('vipWedding').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'VIP Wedding Fleet Hire' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -900,11 +906,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('drivers').map((driver) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={driver.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: driver, 
+                    category: 'Hire Professional Drivers' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: driver.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -956,11 +965,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('movers').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'Movers' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -1013,11 +1025,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('autoParts').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'Automobile Parts Shop' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -1070,11 +1085,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('carDetailing').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'VIP Car Detailing' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />
@@ -1127,11 +1145,14 @@ const RenterHomeScreen = () => {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {getFilteredServices('roadside').map((business) => (
-            <TouchableOpacity
+                <TouchableOpacity
                   key={business.id}
                   style={[styles.serviceBusinessCard, { backgroundColor: theme.colors.white }]}
               activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('ServiceDetails', { 
+                    service: business, 
+                    category: 'Roadside Assistance' 
+                  })}
                 >
                   <View style={styles.serviceBusinessImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.serviceBusinessImage} resizeMode="cover" />

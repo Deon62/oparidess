@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
@@ -8,6 +9,27 @@ import Logo from '../../components/Logo';
 const LandingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  
+  // Animation for logo
+  const logoScale = useRef(new Animated.Value(0.9)).current;
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  
+  useEffect(() => {
+    // Logo fade in and scale animation
+    Animated.parallel([
+      Animated.timing(logoOpacity, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.spring(logoScale, {
+        toValue: 1,
+        tension: 50,
+        friction: 7,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   const handleGetStarted = () => {
     navigation.navigate('Signup', { userType: 'renter' });
@@ -22,23 +44,37 @@ const LandingScreen = () => {
   };
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
+    <LinearGradient
+      colors={[theme.colors.background, theme.colors.background + 'F5', theme.colors.background]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+      style={styles.gradientContainer}
     >
-      {/* Logo Section */}
-      <View style={[styles.logoContainer, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.logoAlignLeft}>
-          <Logo width={360} height={360} color={theme.colors.textPrimary} />
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Logo Section */}
+        <View style={styles.logoContainer}>
+          <Animated.View 
+            style={[
+              styles.logoAlignLeft,
+              {
+                opacity: logoOpacity,
+                transform: [{ scale: logoScale }],
+              }
+            ]}
+          >
+            <Logo width={360} height={360} color={theme.colors.textPrimary} />
+          </Animated.View>
+          {/* Tagline Section - Below logo text */}
+          <View style={styles.taglineContainer}>
+            <Text style={[styles.tagline, { color: theme.colors.textPrimary }]}>
+              Your Complete Mobility Solution
+            </Text>
+          </View>
         </View>
-        {/* Tagline Section - Below logo text */}
-        <View style={styles.taglineContainer}>
-          <Text style={[styles.tagline, { color: theme.colors.textPrimary }]}>
-            Your Complete Mobility Solution
-          </Text>
-        </View>
-      </View>
 
       {/* Commented out: Luxury Car Image Section */}
       {/* <View style={styles.imageContainer}>
@@ -91,10 +127,14 @@ const LandingScreen = () => {
         </TouchableOpacity>
       </View>
     </ScrollView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
+  gradientContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
   },
@@ -125,11 +165,19 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   tagline: {
-    fontSize: 20,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 22,
+    fontFamily: 'Nunito_700Bold',
     textAlign: 'center',
-    letterSpacing: 0.5,
-    lineHeight: 28,
+    letterSpacing: 0.8,
+    lineHeight: 30,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   // Commented out: Car image styles
   // imageContainer: {
@@ -193,9 +241,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 16,
-  },
-  carOwnerLinkContainer: {
-    alignItems: 'center',
   },
   carOwnerText: {
     fontSize: 14,

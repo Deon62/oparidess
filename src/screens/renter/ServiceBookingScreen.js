@@ -853,7 +853,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
-    borderRadius: 12,
+    borderRadius: 20,
     maxWidth: 200,
   },
   payNowButtonText: {

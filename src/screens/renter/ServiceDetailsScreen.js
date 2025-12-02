@@ -858,7 +858,7 @@ const styles = StyleSheet.create({
   reserveButton: {
     paddingVertical: 14,
     paddingHorizontal: 32,
-    borderRadius: 12,
+    borderRadius: 20,
   },
   reserveButtonText: {
     fontSize: 16,

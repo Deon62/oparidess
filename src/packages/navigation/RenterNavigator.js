@@ -163,6 +163,8 @@ const HomeStack = () => {
           animation: 'slide_from_bottom',
           animationDuration: 200,
           presentation: 'modal',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -181,7 +183,9 @@ const HomeStack = () => {
         component={BookingTrackingScreen}
         options={{ 
           title: 'Booking Details',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

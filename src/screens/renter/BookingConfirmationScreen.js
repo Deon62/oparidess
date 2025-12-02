@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   firstSection: {
-    marginTop: 40,
+    marginTop: 20,
   },
   sectionTitle: {
     fontSize: 20,

@@ -221,15 +221,15 @@ const ServiceBookingScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         {/* Service Summary */}
-        <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.summaryCard}>
           <Text style={[styles.summaryTitle, { color: theme.colors.textPrimary }]}>
             Service Summary
           </Text>
-          <View style={styles.summaryDivider} />
+          <View style={[styles.summaryDivider, { backgroundColor: theme.colors.hint + '40' }]} />
           <View style={styles.summaryContent}>
             <View style={styles.summaryRow}>
               <View style={styles.summaryIconContainer}>
-                <Ionicons name="business-outline" size={20} color={theme.colors.primary} />
+                <Ionicons name="business-outline" size={18} color={theme.colors.primary} />
               </View>
               <View style={styles.summaryTextContainer}>
                 <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
@@ -242,7 +242,7 @@ const ServiceBookingScreen = () => {
             </View>
             <View style={styles.summaryRow}>
               <View style={styles.summaryIconContainer}>
-                <Ionicons name="pricetag-outline" size={20} color={theme.colors.primary} />
+                <Ionicons name="pricetag-outline" size={18} color={theme.colors.primary} />
               </View>
               <View style={styles.summaryTextContainer}>
                 <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
@@ -256,13 +256,16 @@ const ServiceBookingScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Date Selection */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Select Date
           </Text>
           <View style={[styles.dateTimeInputContainer, { borderColor: theme.colors.hint }]}>
-            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
             <TextInput
               style={[styles.dateTimeInput, { color: theme.colors.textPrimary }]}
               placeholder={formatDate(selectedDate)}
@@ -281,13 +284,16 @@ const ServiceBookingScreen = () => {
           </Text>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Time Selection */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Select Time
           </Text>
           <View style={[styles.dateTimeInputContainer, { borderColor: theme.colors.hint }]}>
-            <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="time-outline" size={18} color={theme.colors.primary} />
             <TextInput
               style={[styles.dateTimeInput, { color: theme.colors.textPrimary }]}
               placeholder={formatTime(selectedTime)}
@@ -314,7 +320,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -330,7 +338,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setPickupLocation}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Destination <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -346,7 +356,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setDestination}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Number of Passengers
                   </Text>
@@ -363,7 +375,9 @@ const ServiceBookingScreen = () => {
                     keyboardType="numeric"
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Duration
                   </Text>
@@ -387,7 +401,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Event Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -403,7 +419,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setEventLocation}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Number of Guests
                   </Text>
@@ -428,7 +446,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('movers')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -444,7 +464,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setPickupLocation}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Destination <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -460,7 +482,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setDestination}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Number of Items/Rooms
                   </Text>
@@ -484,7 +508,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('parts') || categoryStr.includes('automobile parts')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Part Name <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -500,7 +526,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setPartName}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Vehicle Model
                   </Text>
@@ -516,7 +544,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setVehicleModel}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Delivery Address <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -540,7 +570,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('detailing') || categoryStr.includes('car detailing')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Vehicle Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -556,7 +588,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setVehicleLocation}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Service Type
                   </Text>
@@ -572,7 +606,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setServiceType}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Vehicle Type
                   </Text>
@@ -596,7 +632,9 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('roadside')) {
             return (
               <>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Current Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -612,7 +650,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setCurrentLocation}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Issue Type <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
@@ -628,7 +668,9 @@ const ServiceBookingScreen = () => {
                     onChangeText={setIssueType}
                   />
                 </View>
-                <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Vehicle Type
                   </Text>
@@ -651,8 +693,11 @@ const ServiceBookingScreen = () => {
           return null;
         })()}
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Contact Phone */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
           </Text>
@@ -670,8 +715,11 @@ const ServiceBookingScreen = () => {
           />
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Additional Notes */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Additional Notes (Optional)
           </Text>
@@ -730,35 +778,32 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
-    gap: 16,
   },
   summaryCard: {
-    padding: 20,
-    borderRadius: 16,
+    padding: 16,
     marginBottom: 8,
   },
   summaryTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   summaryDivider: {
     height: 1,
-    backgroundColor: '#E0E0E0',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   summaryContent: {
-    gap: 16,
+    gap: 12,
   },
   summaryRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: 10,
   },
   summaryIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
@@ -781,46 +826,52 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   section: {
-    padding: 20,
-    borderRadius: 16,
+    padding: 16,
+    marginTop: 8,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   dateTimeInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
+    padding: 12,
+    borderRadius: 10,
     borderWidth: 1,
-    gap: 12,
+    gap: 10,
   },
   dateTimeInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
   hintText: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 8,
+    marginTop: 6,
   },
   input: {
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
   textArea: {
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    minHeight: 100,
+    minHeight: 80,
   },
   footer: {
     position: 'absolute',

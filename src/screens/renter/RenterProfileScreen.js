@@ -237,7 +237,7 @@ const RenterProfileScreen = () => {
         showsVerticalScrollIndicator={false}
       >
       {/* Profile Header */}
-      <View style={[styles.profileHeader, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.profileHeader}>
         <View style={styles.profileImageContainer}>
           <Image
             source={profileImageUri ? { uri: profileImageUri } : profileImage}
@@ -288,8 +288,11 @@ const RenterProfileScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Personal Information */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Personal Information
         </Text>
@@ -335,10 +338,18 @@ const RenterProfileScreen = () => {
         />
       </View>
 
-      {/* Additional Actions */}
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+      {/* Account Actions */}
       <View style={styles.additionalActionsContainer}>
+        <View style={styles.accountActionsHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Account Actions
+          </Text>
+        </View>
         <TouchableOpacity
-          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          style={styles.additionalActionButton}
           onPress={handleBecomeServiceProvider}
           activeOpacity={0.7}
         >
@@ -350,7 +361,7 @@ const RenterProfileScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          style={styles.additionalActionButton}
           onPress={handleAddPayment}
           activeOpacity={0.7}
         >
@@ -362,7 +373,7 @@ const RenterProfileScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          style={styles.additionalActionButton}
           onPress={handleReferFriends}
           activeOpacity={0.7}
         >
@@ -374,7 +385,7 @@ const RenterProfileScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.additionalActionButton, { backgroundColor: theme.colors.white }]}
+          style={styles.additionalActionButton}
           onPress={() => navigation.navigate('WriteBlog')}
           activeOpacity={0.7}
         >
@@ -386,9 +397,12 @@ const RenterProfileScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Logout Button */}
       <TouchableOpacity
-        style={[styles.logoutButton, { backgroundColor: theme.colors.white }]}
+        style={styles.logoutButton}
         onPress={handleLogout}
         activeOpacity={0.7}
       >
@@ -481,7 +495,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 32,
     paddingHorizontal: 24,
+    paddingTop: 60,
     marginBottom: 24,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 8,
+    marginBottom: 8,
   },
   profileImageContainer: {
     position: 'relative',
@@ -564,9 +585,8 @@ const styles = StyleSheet.create({
   },
   section: {
     marginHorizontal: 24,
-    borderRadius: 16,
     padding: 20,
-    marginBottom: 24,
+    marginBottom: 8,
   },
   sectionTitle: {
     fontSize: 20,
@@ -600,15 +620,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   additionalActionsContainer: {
+    marginBottom: 8,
+    gap: 0,
+  },
+  accountActionsHeader: {
     paddingHorizontal: 24,
-    marginBottom: 24,
-    gap: 12,
+    marginBottom: 16,
   },
   additionalActionButton: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    borderRadius: 16,
+    paddingHorizontal: 24,
     gap: 16,
   },
   additionalActionText: {
@@ -622,8 +645,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     marginHorizontal: 24,
-    borderRadius: 16,
     gap: 12,
+    marginTop: 8,
   },
   logoutText: {
     fontSize: 16,

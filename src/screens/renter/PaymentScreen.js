@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Alert, Modal, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect, CommonActions } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
@@ -605,10 +605,24 @@ const PaymentScreen = () => {
               title="View My Bookings"
               onPress={() => {
                 setShowSuccessModal(false);
-                // Navigate to Bookings tab to show the booking card
-                navigation.getParent()?.navigate('BookingsTab', {
-                  screen: 'BookingsList',
-                });
+                // Reset the HomeTab stack (current navigator) to only have RenterHome
+                // This clears Payment, BookingConfirmation, Booking, etc. from the stack
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'RenterHome' }],
+                  })
+                );
+                
+                // Then navigate to BookingsTab
+                const tabNavigator = navigation.getParent();
+                if (tabNavigator) {
+                  setTimeout(() => {
+                    tabNavigator.navigate('BookingsTab', {
+                      screen: 'BookingsList',
+                    });
+                  }, 100);
+                }
               }}
               variant="primary"
               style={styles.successModalButton}

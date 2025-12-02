@@ -11,8 +11,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Import profile image for host
 const profileImage = require('../../../assets/logo/profile.jpg');
-// Import default car image
-const defaultCarImage = require('../../../assets/images/car1.webp');
+// Import car images
+const carImage1 = require('../../../assets/images/car1.webp');
+const carImage2 = require('../../../assets/images/car2.webp');
+const carImage3 = require('../../../assets/images/car3.webp');
+const carImage4 = require('../../../assets/images/car4.webp');
 
 const PastRentalDetailsScreen = () => {
   const theme = useTheme();
@@ -20,6 +23,14 @@ const PastRentalDetailsScreen = () => {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   const { booking } = route.params || {};
+
+  // Car images for repository (up to 4)
+  const carImages = [
+    booking?.image || carImage1,
+    carImage2,
+    carImage3,
+    carImage4,
+  ].slice(0, 4);
 
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -93,231 +104,251 @@ const PastRentalDetailsScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+          Rental Details
+        </Text>
+        <View style={styles.headerRight} />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Car Image */}
-        <View style={styles.carImageContainer}>
-          <Image
-            source={booking.image || defaultCarImage}
-            style={styles.carImage}
-            resizeMode="cover"
-          />
-          
-          {/* Sticky Back Button */}
-          <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
+        {/* Booking Status */}
+        <View style={styles.section}>
+          <View style={styles.statusContainer}>
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Text style={[styles.statusText, { color: theme.colors.textPrimary }]}>
+              Rental Completed
+            </Text>
           </View>
         </View>
 
-        {/* Content Container with Curved Top */}
-        <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
-          {/* Booking Status */}
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.statusCard, { backgroundColor: '#10B981' + '15' }]}>
-              <Ionicons name="checkmark-circle" size={24} color="#10B981" />
-              <Text style={[styles.statusText, { color: '#10B981' }]}>
-                Rental Completed
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Image Repository Link */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Image Repository
+          </Text>
+          <TouchableOpacity
+            style={styles.imageRepositoryCard}
+            onPress={() => {
+              navigation.navigate('ImageRepository', {
+                images: carImages,
+                title: `${booking.carName || 'Car'} - Images`,
+              });
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                View all images
               </Text>
             </View>
-          </View>
+          </TouchableOpacity>
+        </View>
 
-          {/* Car Details */}
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Car Details
-            </Text>
-            <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-              {booking.carName}
-            </Text>
-            <View style={styles.carSpecs}>
-              {booking.seats && (
-                <View style={styles.specItem}>
-                  <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
-                  <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                    {booking.seats} Seats
-                  </Text>
-                </View>
-              )}
-              {booking.fuel && (
-                <View style={styles.specItem}>
-                  <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
-                  <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                    {booking.fuel}
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-          {/* Rental Period */}
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Rental Period
-            </Text>
-            <View style={styles.infoCard}>
-              <View style={styles.infoRow}>
-                <View style={styles.infoLabelContainer}>
-                  <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Pickup Date
-                  </Text>
-                </View>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {formatDate(booking.pickupDate || booking.date)}
+        {/* Car Details */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Car Details
+          </Text>
+          <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+            {booking.carName}
+          </Text>
+          <View style={styles.carSpecs}>
+            {booking.seats && (
+              <View style={styles.specItem}>
+                <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {booking.seats} Seats
                 </Text>
               </View>
-              {booking.pickupTime && (
-                <View style={styles.infoRow}>
-                  <View style={styles.infoLabelContainer}>
-                    <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-                    <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                      Pickup Time
-                    </Text>
-                  </View>
-                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.pickupTime}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.infoRow}>
-                <View style={styles.infoLabelContainer}>
-                  <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Dropoff Date
-                  </Text>
-                </View>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {formatDate(booking.dropoffDate || booking.date)}
+            )}
+            {booking.fuel && (
+              <View style={styles.specItem}>
+                <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
+                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                  {booking.fuel}
                 </Text>
               </View>
-              {booking.dropoffTime && (
-                <View style={styles.infoRow}>
-                  <View style={styles.infoLabelContainer}>
-                    <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-                    <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                      Dropoff Time
-                    </Text>
-                  </View>
-                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.dropoffTime}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.infoRow}>
-                <View style={styles.infoLabelContainer}>
-                  <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Duration
-                  </Text>
-                </View>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
-                </Text>
-              </View>
-            </View>
+            )}
           </View>
+        </View>
 
-          {/* Locations */}
-          {(booking.pickupLocation || booking.dropoffLocation) && (
-            <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                Locations
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Rental Period */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Rental Period
+          </Text>
+          <View style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                Pickup Date
               </Text>
-              <View style={styles.infoCard}>
-                {booking.pickupLocation && (
-                  <View style={styles.infoRow}>
-                    <View style={styles.infoLabelContainer}>
-                      <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
-                      <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                        Pickup Location
-                      </Text>
-                    </View>
-                    <Text style={[styles.infoValue, { color: theme.colors.textPrimary, flex: 1, textAlign: 'right' }]}>
-                      {booking.pickupLocation}
-                    </Text>
-                  </View>
-                )}
-                {booking.dropoffLocation && (
-                  <View style={styles.infoRow}>
-                    <View style={styles.infoLabelContainer}>
-                      <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
-                      <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                        Dropoff Location
-                      </Text>
-                    </View>
-                    <Text style={[styles.infoValue, { color: theme.colors.textPrimary, flex: 1, textAlign: 'right' }]}>
-                      {booking.dropoffLocation}
-                    </Text>
-                  </View>
-                )}
-              </View>
+              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                {formatDate(booking.pickupDate || booking.date)}
+              </Text>
             </View>
-          )}
-
-          {/* Payment Information */}
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Payment Information
-            </Text>
-            <View style={styles.infoCard}>
+            {booking.pickupTime && (
               <View style={styles.infoRow}>
                 <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Total Paid
+                  Pickup Time
                 </Text>
-                <Text style={[styles.totalPrice, { color: theme.colors.primary }]}>
-                  {booking.price || 'KSh 0'}
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.pickupTime}
                 </Text>
               </View>
-              {booking.paymentMethod && (
+            )}
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                Dropoff Date
+              </Text>
+              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                {formatDate(booking.dropoffDate || booking.date)}
+              </Text>
+            </View>
+            {booking.dropoffTime && (
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                  Dropoff Time
+                </Text>
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.dropoffTime}
+                </Text>
+              </View>
+            )}
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                Duration
+              </Text>
+              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
+              </Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Separator Line */}
+        {(booking.pickupLocation || booking.dropoffLocation) && (
+          <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+        )}
+
+        {/* Locations */}
+        {(booking.pickupLocation || booking.dropoffLocation) && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+              Locations
+            </Text>
+            <View style={styles.infoCard}>
+              {booking.pickupLocation && (
                 <View style={styles.infoRow}>
                   <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Payment Method
+                    Pickup Location
                   </Text>
                   <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.paymentMethod === 'mpesa' ? 'M-PESA' : booking.paymentMethod === 'airtel' ? 'Airtel Money' : booking.paymentMethod === 'card' ? 'Card' : booking.paymentMethod}
+                    {booking.pickupLocation}
                   </Text>
                 </View>
               )}
-              {booking.bookingId && (
+              {booking.dropoffLocation && (
                 <View style={styles.infoRow}>
                   <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Booking ID
+                    Dropoff Location
                   </Text>
                   <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.bookingId}
+                    {booking.dropoffLocation}
                   </Text>
                 </View>
               )}
             </View>
           </View>
+        )}
 
-          {/* Rate Button */}
-          {!isRated && (
-            <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-              <TouchableOpacity
-                style={[styles.rateButton, { backgroundColor: theme.colors.primary }]}
-                onPress={handleRateBooking}
-                activeOpacity={0.8}
-              >
-                <Ionicons name="star-outline" size={24} color={theme.colors.white} />
-                <Text style={[styles.rateButtonText, { color: theme.colors.white }]}>
-                  Rate Your Experience
-                </Text>
-              </TouchableOpacity>
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Payment Information */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Payment Information
+          </Text>
+          <View style={styles.infoCard}>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                Total Paid
+              </Text>
+              <Text style={[styles.totalPrice, { color: theme.colors.primary }]}>
+                {booking.price || 'KSh 0'}
+              </Text>
             </View>
-          )}
+            {booking.paymentMethod && (
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                  Payment Method
+                </Text>
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.paymentMethod === 'mpesa' ? 'M-PESA' : booking.paymentMethod === 'airtel' ? 'Airtel Money' : booking.paymentMethod === 'card' ? 'Card' : booking.paymentMethod}
+                </Text>
+              </View>
+            )}
+            {booking.bookingId && (
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                  Booking ID
+                </Text>
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.bookingId}
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
 
-          {isRated && (
-            <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        {/* Separator Line */}
+        {!isRated && (
+          <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+        )}
+
+        {/* Rate Button */}
+        {!isRated && (
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={[styles.rateButton, { backgroundColor: theme.colors.primary }]}
+              onPress={handleRateBooking}
+              activeOpacity={0.8}
+            >
+              <Ionicons name="star-outline" size={24} color={theme.colors.white} />
+              <Text style={[styles.rateButtonText, { color: theme.colors.white }]}>
+                Rate Your Experience
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {isRated && (
+          <>
+            <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+            <View style={styles.section}>
               <View style={[styles.ratedCard, { backgroundColor: theme.colors.hint + '30' }]}>
                 <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
                 <Text style={[styles.ratedText, { color: theme.colors.textSecondary }]}>
@@ -325,11 +356,11 @@ const PastRentalDetailsScreen = () => {
                 </Text>
               </View>
             </View>
-          )}
+          </>
+        )}
 
-          {/* Bottom Spacing */}
-          <View style={{ height: 40 }} />
-        </View>
+        {/* Bottom Spacing */}
+        <View style={{ height: 40 }} />
       </ScrollView>
 
       {/* Rating Modal */}
@@ -436,76 +467,73 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
+    textAlign: 'center',
+    marginHorizontal: 16,
+  },
+  headerRight: {
+    width: 40,
+  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     paddingBottom: 20,
   },
-  contentContainer: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    marginTop: -20,
-    paddingTop: 20,
-  },
-  carImageContainer: {
-    width: SCREEN_WIDTH,
-    height: 300,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  carImage: {
-    width: '100%',
-    height: '100%',
-  },
-  floatingButtons: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  floatingButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
   section: {
     paddingHorizontal: 24,
     marginTop: 24,
-    borderRadius: 16,
-    paddingVertical: 20,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 24,
   },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
+    letterSpacing: -0.3,
   },
-  statusCard: {
+  imageRepositoryCard: {
+    padding: 16,
+  },
+  imageRepositoryLink: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    gap: 12,
+    gap: 8,
+  },
+  imageRepositoryLinkText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
+  },
+  statusContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
   statusText: {
     fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
+    fontFamily: 'Nunito_600SemiBold',
   },
   carName: {
     fontSize: 24,
@@ -527,6 +555,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   infoCard: {
+    padding: 20,
     gap: 16,
   },
   infoRow: {
@@ -534,18 +563,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  infoLabelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   infoLabel: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 15,
+    fontFamily: 'Nunito_400Regular',
   },
   infoValue: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   totalPrice: {
     fontSize: 20,

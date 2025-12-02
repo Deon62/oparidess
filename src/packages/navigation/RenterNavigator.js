@@ -403,6 +403,14 @@ const BookingsStack = () => {
           animation: 'simple_push',
         }}
       />
+      <Stack.Screen 
+        name="ImageRepository" 
+        component={ImageRepositoryScreen}
+        options={{ 
+          title: 'Image Repository',
+          headerShown: false 
+        }}
+      />
     </Stack.Navigator>
   );
 };

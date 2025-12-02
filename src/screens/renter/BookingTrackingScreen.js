@@ -601,25 +601,23 @@ const BookingTrackingScreen = () => {
 
       {/* Add Rental Days Section */}
       <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Add Rental Days
+        </Text>
         <TouchableOpacity
-          style={styles.addDaysCard}
+          style={styles.addDaysButton}
           onPress={handleMessageCarOwner}
           activeOpacity={0.7}
         >
-          <View style={styles.addDaysContent}>
-            <View style={[styles.addDaysIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-              <Ionicons name="add-circle-outline" size={28} color={theme.colors.primary} />
+          <View style={styles.addDaysIconWrapper}>
+            <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+            <View style={[styles.addDaysPlusIcon, { backgroundColor: theme.colors.primary }]}>
+              <Ionicons name="add" size={14} color={theme.colors.white} />
             </View>
-            <View style={styles.addDaysTextContainer}>
-              <Text style={[styles.addDaysTitle, { color: theme.colors.textPrimary }]}>
-                Add Rental Days
-              </Text>
-              <Text style={[styles.addDaysDescription, { color: theme.colors.textSecondary }]}>
-                Extend your booking by messaging the car owner
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
           </View>
+          <Text style={[styles.addDaysButtonText, { color: theme.colors.textPrimary }]}>
+            Extend your booking
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -1177,29 +1175,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },
-  // Add Rental Days Card Styles
-  addDaysCard: {
-    width: '100%',
-  },
-  addDaysContent: {
+  // Add Rental Days Styles
+  addDaysButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
+    paddingVertical: 12,
   },
-  addDaysIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  addDaysIconWrapper: {
+    position: 'relative',
+    width: 32,
+    height: 32,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  addDaysTextContainer: {
-    flex: 1,
-    gap: 4,
+  addDaysPlusIcon: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
-  addDaysTitle: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
+  addDaysButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   addDaysDescription: {
     fontSize: 14,

@@ -334,7 +334,7 @@ const RenterProfileScreen = () => {
       {/* Account Actions */}
       <View style={styles.additionalActionsContainer}>
         <View style={styles.accountActionsHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12 }]}>
             Account Actions
           </Text>
         </View>
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
   },
   accountActionsHeader: {
     paddingHorizontal: 24,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   additionalActionButton: {
     flexDirection: 'row',

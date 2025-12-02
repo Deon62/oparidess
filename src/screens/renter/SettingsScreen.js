@@ -199,7 +199,7 @@ const SettingsScreen = () => {
     >
       {/* Account Section */}
       <SectionHeader title="Account" />
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <SettingItem
           icon="person-outline"
           title="Edit Account"
@@ -220,9 +220,12 @@ const SettingsScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Preferences Section */}
       <SectionHeader title="Preferences" />
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <SettingItem
           icon="notifications-outline"
           title="Notification Preferences"
@@ -240,9 +243,12 @@ const SettingsScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Support & Info Section */}
       <SectionHeader title="Support & Information" />
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <SettingItem
           icon="help-circle-outline"
           title="Customer Support"
@@ -260,9 +266,12 @@ const SettingsScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Danger Zone */}
       <SectionHeader title="Account Actions" />
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <SettingItem
           icon="trash-outline"
           title="Delete Account"
@@ -273,9 +282,12 @@ const SettingsScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Logout Button */}
       <TouchableOpacity
-        style={[styles.logoutButton, { backgroundColor: theme.colors.white }]}
+        style={styles.logoutButton}
         onPress={handleLogout}
         activeOpacity={0.7}
       >
@@ -439,8 +451,12 @@ const styles = StyleSheet.create({
   },
   section: {
     marginHorizontal: 24,
-    borderRadius: 16,
-    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 8,
     marginBottom: 8,
   },
   settingItem: {
@@ -620,9 +636,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     marginHorizontal: 24,
-    borderRadius: 16,
     gap: 12,
-    marginTop: 24,
+    marginTop: 8,
   },
   logoutText: {
     fontSize: 16,

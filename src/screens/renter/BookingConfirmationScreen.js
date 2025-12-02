@@ -275,23 +275,34 @@ const BookingConfirmationScreen = () => {
             </View>
           )}
 
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-              Subtotal
-            </Text>
-            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-              {formatCurrency((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0))}
-            </Text>
-          </View>
+          {(() => {
+            // Calculate VAT breakdown from the total (VAT is already included)
+            const totalRentalPrice = bookingDetails?.totalRentalPrice || 0;
+            const subtotalBeforeVAT = totalRentalPrice / 1.16;
+            const vatAmount = totalRentalPrice - subtotalBeforeVAT;
+            
+            return (
+              <>
+                <View style={styles.priceRow}>
+                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                    Subtotal
+                  </Text>
+                  <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                    {formatCurrency(subtotalBeforeVAT)}
+                  </Text>
+                </View>
 
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-              VAT (16%)
-            </Text>
-            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-              {formatCurrency(((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 0.16)}
-            </Text>
-          </View>
+                <View style={styles.priceRow}>
+                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                    VAT (16%)
+                  </Text>
+                  <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                    {formatCurrency(vatAmount)}
+                  </Text>
+                </View>
+              </>
+            );
+          })()}
 
           {bookingDetails?.payOnSite && (
             <View style={styles.priceRow}>
@@ -309,7 +320,7 @@ const BookingConfirmationScreen = () => {
               {bookingDetails?.payOnSite ? 'Total Rental Price' : 'Total'}
             </Text>
             <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-              {formatCurrency(((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 1.16)}
+              {formatCurrency(bookingDetails?.totalRentalPrice || 0)}
             </Text>
           </View>
 
@@ -477,7 +488,7 @@ const BookingConfirmationScreen = () => {
           {bookingDetails?.payOnSite ? 'Booking Fee' : 'Total'}
         </Text>
         <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-          {formatCurrency(bookingDetails?.payOnSite ? bookingDetails?.bookingFee : ((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 1.16)}
+          {formatCurrency(bookingDetails?.payOnSite ? bookingDetails?.bookingFee : bookingDetails?.totalRentalPrice || 0)}
         </Text>
       </View>
       <Button

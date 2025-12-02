@@ -9,7 +9,6 @@ import { formatCurrency } from '../../packages/utils/currency';
 
 // Import payment logos
 const mpesaLogo = require('../../../assets/images/mpesa.png');
-const airtelLogo = require('../../../assets/images/airtel.png');
 const visaLogo = require('../../../assets/images/visa.png');
 const mastercardLogo = require('../../../assets/images/mastercard.png');
 
@@ -33,15 +32,11 @@ const PaymentScreen = () => {
   const expiryInputRef = useRef(null);
   const cvvInputRef = useRef(null);
   const mpesaPhoneInputRef = useRef(null);
-  const airtelPhoneInputRef = useRef(null);
   const cardholderNameInputRef = useRef(null);
   const inputPositionsRef = useRef({});
 
   // Form data for different payment methods
   const [mpesaData, setMpesaData] = useState({
-    phoneNumber: '',
-  });
-  const [airtelData, setAirtelData] = useState({
     phoneNumber: '',
   });
   const [cardData, setCardData] = useState({
@@ -50,6 +45,13 @@ const PaymentScreen = () => {
     expiryDate: '',
     cvv: '',
   });
+
+  // Hide header and tab bar
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   // Hide tab bar when screen is focused (including when returning from other screens)
   useFocusEffect(
@@ -76,21 +78,13 @@ const PaymentScreen = () => {
   const paymentMethods = [
     {
       id: 'mpesa',
-      name: 'M-PESA',
+      name: 'Mpesa',
       logo: mpesaLogo,
-      description: 'Pay with M-PESA',
-    },
-    {
-      id: 'airtel',
-      name: 'Airtel Money',
-      logo: airtelLogo,
-      description: 'Pay with Airtel Money',
     },
     {
       id: 'card',
       name: 'Card',
       logos: [visaLogo, mastercardLogo],
-      description: 'Pay with Visa or Mastercard',
     },
   ];
 
@@ -105,19 +99,22 @@ const PaymentScreen = () => {
         Alert.alert('Error', 'Please enter your M-PESA phone number');
         return false;
       }
-      if (!/^(\+254|0)[17]\d{8}$/.test(mpesaData.phoneNumber.replace(/\s/g, ''))) {
-        Alert.alert('Error', 'Please enter a valid M-PESA phone number');
-        return false;
-      }
-    }
-
-    if (selectedMethod === 'airtel') {
-      if (!airtelData.phoneNumber.trim()) {
-        Alert.alert('Error', 'Please enter your Airtel Money phone number');
-        return false;
-      }
-      if (!/^(\+254|0)[17]\d{8}$/.test(airtelData.phoneNumber.replace(/\s/g, ''))) {
-        Alert.alert('Error', 'Please enter a valid Airtel Money phone number');
+      const cleaned = mpesaData.phoneNumber.replace(/\s/g, '').replace(/^\+/, '');
+      // If starts with 07 or 01, should be exactly 10 digits
+      if (cleaned.startsWith('07') || cleaned.startsWith('01')) {
+        if (cleaned.length !== 10 || !/^0[17]\d{8}$/.test(cleaned)) {
+          Alert.alert('Error', 'Phone number starting with 07 or 01 must be exactly 10 digits');
+          return false;
+        }
+      } 
+      // If starts with 254, should be exactly 12 digits (254 + 9 digits)
+      else if (cleaned.startsWith('254')) {
+        if (cleaned.length !== 12 || !/^254[17]\d{9}$/.test(cleaned)) {
+          Alert.alert('Error', 'Phone number starting with 254 must be in format: 254 7XXX XXXXX');
+          return false;
+        }
+      } else {
+        Alert.alert('Error', 'Phone number must start with 07, 01, or 254');
         return false;
       }
     }
@@ -147,13 +144,52 @@ const PaymentScreen = () => {
         Alert.alert('Error', `Please enter ${cardType === 'visa' ? 'CVC' : 'CVV'}`);
         return false;
       }
-      if (cardData.cvv.length < 3) {
-        Alert.alert('Error', `Please enter a valid ${cardType === 'visa' ? 'CVC' : 'CVV'}`);
+      if (cardData.cvv.length !== 3) {
+        Alert.alert('Error', `Please enter a valid ${cardType === 'visa' ? 'CVC' : 'CVV'} (3 digits)`);
         return false;
       }
     }
 
     return true;
+  };
+
+  // Check if all required fields are filled for the selected payment method
+  const isFormComplete = () => {
+    if (!selectedMethod) {
+      return false;
+    }
+
+    if (selectedMethod === 'mpesa') {
+      const phone = mpesaData.phoneNumber.trim();
+      if (!phone) return false;
+      const cleaned = phone.replace(/\s/g, '').replace(/^\+/, '');
+      // If starts with 07 or 01, should be exactly 10 digits
+      if (cleaned.startsWith('07') || cleaned.startsWith('01')) {
+        return cleaned.length === 10 && /^0[17]\d{8}$/.test(cleaned);
+      }
+      // If starts with 254, should be exactly 12 digits (254 + 9 digits)
+      if (cleaned.startsWith('254')) {
+        return cleaned.length === 12 && /^254[17]\d{9}$/.test(cleaned);
+      }
+      return false;
+    }
+
+    if (selectedMethod === 'card') {
+      const cardNumber = cardData.cardNumber.replace(/\s/g, '');
+      const expiryDate = cardData.expiryDate.trim();
+      const cvv = cardData.cvv.trim();
+      const cardholderName = cardData.cardholderName.trim();
+
+      return (
+        cardNumber.length >= 16 &&
+        cardholderName.length > 0 &&
+        expiryDate.length === 5 &&
+        /^\d{2}\/\d{2}$/.test(expiryDate) &&
+        cvv.length === 3
+      );
+    }
+
+    return false;
   };
 
   const handleInitiatePayment = async () => {
@@ -257,6 +293,15 @@ const PaymentScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Sticky Back Button */}
+      <TouchableOpacity
+        style={[styles.backButton, { top: insets.top + 8 }]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
+
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -271,24 +316,6 @@ const PaymentScreen = () => {
           nestedScrollEnabled={true}
           scrollEnabled={true}
         >
-        {/* Amount Summary */}
-        <View style={[styles.amountCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.amountLabel, { color: theme.colors.textSecondary }]}>
-            {payOnSite ? 'Booking Fee' : 'Total Amount'}
-          </Text>
-          <Text style={[styles.amountValue, { color: theme.colors.primary }]}>
-            {formatCurrency(totalPrice || 0)}
-          </Text>
-          {payOnSite && totalRentalPrice && (
-            <View style={styles.payOnSiteNote}>
-              <Ionicons name="information-circle-outline" size={16} color={theme.colors.textSecondary} />
-              <Text style={[styles.payOnSiteNoteText, { color: theme.colors.textSecondary }]}>
-                You'll pay {formatCurrency(totalRentalPrice - bookingFee)} directly to the car owner at pickup
-              </Text>
-            </View>
-          )}
-        </View>
-
         {/* Payment Methods */}
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -339,9 +366,6 @@ const PaymentScreen = () => {
                   <Text style={[styles.paymentMethodName, { color: theme.colors.textPrimary }]}>
                     {method.name}
                   </Text>
-                  <Text style={[styles.paymentMethodDesc, { color: theme.colors.textSecondary }]}>
-                    {method.description}
-                  </Text>
                 </View>
               </View>
               <View
@@ -371,32 +395,73 @@ const PaymentScreen = () => {
               label="Phone Number"
               placeholder="+254 712 345 678"
               value={mpesaData.phoneNumber}
-              onChangeText={(value) => setMpesaData({ ...mpesaData, phoneNumber: value })}
+              onChangeText={(value) => {
+                // Remove all non-digits, but allow + at the start
+                const hasPlus = value.startsWith('+');
+                let digitsOnly = value.replace(/[^\d]/g, '');
+                
+                // Limit based on format
+                if (digitsOnly.startsWith('254')) {
+                  // Limit to 12 digits for 254 format
+                  digitsOnly = digitsOnly.slice(0, 12);
+                  // Format as: 254 712 345 678
+                  let formatted = digitsOnly;
+                  if (formatted.length > 3) {
+                    formatted = '254 ' + formatted.slice(3);
+                    if (formatted.length > 7) {
+                      formatted = formatted.slice(0, 7) + ' ' + formatted.slice(7);
+                      if (formatted.length > 11) {
+                        formatted = formatted.slice(0, 11) + ' ' + formatted.slice(11);
+                      }
+                    }
+                  }
+                  setMpesaData({ ...mpesaData, phoneNumber: (hasPlus ? '+' : '') + formatted });
+                } else if (digitsOnly.startsWith('07') || digitsOnly.startsWith('01')) {
+                  // Limit to 10 digits for 07/01 format
+                  digitsOnly = digitsOnly.slice(0, 10);
+                  // Format as: 07022 48 984 (5 digits, space, 2 digits, space, 3 digits)
+                  let formatted = digitsOnly;
+                  if (formatted.length > 5) {
+                    formatted = formatted.slice(0, 5) + ' ' + formatted.slice(5);
+                    if (formatted.length > 8) {
+                      formatted = formatted.slice(0, 8) + ' ' + formatted.slice(8);
+                    }
+                  }
+                  setMpesaData({ ...mpesaData, phoneNumber: formatted });
+                } else if (digitsOnly.startsWith('0')) {
+                  // If starts with 0, limit to 10 (will be 07 or 01)
+                  digitsOnly = digitsOnly.slice(0, 10);
+                  // Format as: 07022 48 984
+                  let formatted = digitsOnly;
+                  if (formatted.length > 5) {
+                    formatted = formatted.slice(0, 5) + ' ' + formatted.slice(5);
+                    if (formatted.length > 8) {
+                      formatted = formatted.slice(0, 8) + ' ' + formatted.slice(8);
+                    }
+                  }
+                  setMpesaData({ ...mpesaData, phoneNumber: formatted });
+                } else {
+                  // Otherwise, limit to 12 (might be typing 254)
+                  digitsOnly = digitsOnly.slice(0, 12);
+                  // Format as: 254 712 345 678
+                  let formatted = digitsOnly;
+                  if (formatted.length > 3) {
+                    formatted = '254 ' + formatted.slice(3);
+                    if (formatted.length > 7) {
+                      formatted = formatted.slice(0, 7) + ' ' + formatted.slice(7);
+                      if (formatted.length > 11) {
+                        formatted = formatted.slice(0, 11) + ' ' + formatted.slice(11);
+                      }
+                    }
+                  }
+                  setMpesaData({ ...mpesaData, phoneNumber: (hasPlus ? '+' : '') + formatted });
+                }
+              }}
               keyboardType="phone-pad"
               onFocus={() => handleInputFocus(mpesaPhoneInputRef, 'mpesaPhone')}
             />
             <Text style={[styles.infoText, { color: theme.colors.hint }]}>
               You will receive an M-PESA prompt on your phone to complete the payment.
-            </Text>
-          </View>
-        )}
-
-        {selectedMethod === 'airtel' && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Airtel Money Details
-            </Text>
-            <Input
-              ref={airtelPhoneInputRef}
-              label="Phone Number"
-              placeholder="+254 712 345 678"
-              value={airtelData.phoneNumber}
-              onChangeText={(value) => setAirtelData({ ...airtelData, phoneNumber: value })}
-              keyboardType="phone-pad"
-              onFocus={() => handleInputFocus(airtelPhoneInputRef, 'airtelPhone')}
-            />
-            <Text style={[styles.infoText, { color: theme.colors.hint }]}>
-              You will receive an Airtel Money prompt on your phone to complete the payment.
             </Text>
           </View>
         )}
@@ -460,10 +525,13 @@ const PaymentScreen = () => {
                   label={cardType === 'visa' ? 'CVC' : 'CVV'}
                   placeholder={cardType === 'visa' ? '123' : '123'}
                   value={cardData.cvv}
-                  onChangeText={(value) => setCardData({ ...cardData, cvv: value.replace(/\D/g, '') })}
+                  onChangeText={(value) => {
+                    const cleaned = value.replace(/\D/g, '').slice(0, 3);
+                    setCardData({ ...cardData, cvv: cleaned });
+                  }}
                   keyboardType="numeric"
                   secureTextEntry
-                  maxLength={4}
+                  maxLength={3}
                   onFocus={() => handleInputFocus(cvvInputRef, 'cvv')}
                 />
               </View>
@@ -490,7 +558,7 @@ const PaymentScreen = () => {
           variant="primary"
           style={[styles.payButton, { backgroundColor: '#FF1577' }]}
           loading={loading}
-          disabled={!selectedMethod || loading}
+          disabled={!isFormComplete() || loading}
         />
       </View>
 
@@ -521,7 +589,7 @@ const PaymentScreen = () => {
                   Payment Method
                 </Text>
                 <Text style={[styles.successDetailValue, { color: theme.colors.textPrimary }]}>
-                  {selectedMethod === 'mpesa' ? 'M-PESA' : selectedMethod === 'airtel' ? 'Airtel Money' : 'Card'}
+                  {selectedMethod === 'mpesa' ? 'Mpesa' : 'Card'}
                 </Text>
               </View>
               <View style={styles.successDetailRow}>
@@ -576,7 +644,24 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 200, // Add extra padding for fixed bottom bar and keyboard
+    paddingTop: 80, // Add top padding for back button
     flexGrow: 1,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
   },
   amountCard: {
     marginHorizontal: 24,
@@ -628,20 +713,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    padding: 12,
     borderRadius: 12,
     borderWidth: 2,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   paymentMethodLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 16,
+    gap: 12,
   },
   paymentLogo: {
-    width: 60,
-    height: 40,
+    width: 50,
+    height: 35,
   },
   cardLogosContainer: {
     flexDirection: 'row',
@@ -657,11 +742,6 @@ const styles = StyleSheet.create({
   paymentMethodName: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
-  },
-  paymentMethodDesc: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
   },
   radioButton: {
     width: 24,

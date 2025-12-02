@@ -11,8 +11,11 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Import profile image for host
 const profileImage = require('../../../assets/logo/profile.jpg');
-// Import default car image
-const defaultCarImage = require('../../../assets/images/car1.webp');
+// Import car images
+const carImage1 = require('../../../assets/images/car1.webp');
+const carImage2 = require('../../../assets/images/car2.webp');
+const carImage3 = require('../../../assets/images/car3.webp');
+const carImage4 = require('../../../assets/images/car4.webp');
 
 const BookingTrackingScreen = () => {
   const theme = useTheme();
@@ -20,6 +23,14 @@ const BookingTrackingScreen = () => {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   const { bookingDetails, paymentMethod, totalPrice } = route.params || {};
+
+  // Car images for repository (up to 4)
+  const carImages = [
+    bookingDetails?.car?.image || carImage1,
+    carImage2,
+    carImage3,
+    carImage4,
+  ].slice(0, 4);
 
   const [daysUntilPickup, setDaysUntilPickup] = useState(0);
   const [hoursUntilPickup, setHoursUntilPickup] = useState(0);
@@ -242,36 +253,34 @@ const BookingTrackingScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Header */}
+      <View style={[styles.header, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            if (navigation.canGoBack()) {
+              navigation.goBack();
+            } else {
+              navigation.navigate('BookingsList');
+            }
+          }}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+          Active Rental
+        </Text>
+        <View style={styles.headerRight} />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Car Image */}
-        <View style={styles.carImageContainer}>
-          <Image
-            source={bookingDetails?.car?.image || defaultCarImage}
-            style={styles.carImage}
-            resizeMode="cover"
-          />
-          
-          {/* Sticky Back Button */}
-          <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => navigation.goBack()}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Content Container with Curved Top */}
-        <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
-
-      {/* Countdown Timer */}
-      <View style={styles.section}>
+        {/* Countdown Timer */}
+        <View style={styles.section}>
         <Text style={[styles.countdownTitle, { color: theme.colors.textPrimary }]}>
           {isPickedUp ? 'Dropoff in' : 'Pickup in'}
         </Text>
@@ -307,6 +316,33 @@ const BookingTrackingScreen = () => {
             </Text>
           </View>
         </View>
+      </View>
+
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+      {/* Image Repository Link */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Image Repository
+        </Text>
+        <TouchableOpacity
+          style={styles.imageRepositoryCard}
+          onPress={() => {
+            navigation.navigate('ImageRepository', {
+              images: carImages,
+              title: `${bookingDetails?.car?.name || 'Car'} - Images`,
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <View style={styles.imageRepositoryLink}>
+            <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+            <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+              View all images
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Separator Line */}
@@ -672,9 +708,8 @@ const BookingTrackingScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Bottom Spacing */}
-      <View style={{ height: 40 }} />
-        </View>
+        {/* Bottom Spacing */}
+        <View style={{ height: 40 }} />
       </ScrollView>
 
       {/* Receipt Download Modal */}
@@ -775,46 +810,30 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
-  contentContainer: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    marginTop: -20,
-    paddingTop: 20,
-  },
-  carImageContainer: {
-    width: SCREEN_WIDTH,
-    height: 300,
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  carImage: {
-    width: '100%',
-    height: '100%',
-  },
-  floatingButtons: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+  header: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: 16,
-    paddingBottom: 8,
-  },
-  floatingButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingBottom: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
+    textAlign: 'center',
+    marginHorizontal: 16,
+  },
+  headerRight: {
+    width: 40,
   },
   countdownTitle: {
     fontSize: 18,
@@ -848,20 +867,32 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
   },
   section: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    padding: 16,
+    paddingHorizontal: 24,
+    marginTop: 24,
   },
   sectionSeparator: {
     borderTopWidth: 1,
     marginHorizontal: 24,
-    marginTop: 16,
+    marginTop: 24,
   },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     letterSpacing: -0.3,
+  },
+  imageRepositoryCard: {
+    padding: 16,
+  },
+  imageRepositoryLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  imageRepositoryLinkText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
   },
   infoCard: {
     flexDirection: 'row',

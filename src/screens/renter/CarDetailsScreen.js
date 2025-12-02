@@ -302,7 +302,7 @@ const CarDetailsScreen = () => {
         <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
         {/* Car Details & Description */}
         <View style={styles.section}>
-          <View style={[styles.carOverviewCard, { backgroundColor: theme.colors.primary + '08' }]}>
+          <View style={styles.carOverviewCard}>
             <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
               {carData.name}
             </Text>
@@ -342,13 +342,16 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Image Repository Link */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Image Repository
           </Text>
           <TouchableOpacity
-            style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
+            style={styles.imageRepositoryCard}
             onPress={() => {
               navigation.navigate('ImageRepository', {
                 images: carImages,
@@ -365,6 +368,9 @@ const CarDetailsScreen = () => {
             </View>
           </TouchableOpacity>
         </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
         {/* Features */}
         <View style={styles.section}>
@@ -383,12 +389,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Rental Information */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Rental Information
           </Text>
-          <View style={[styles.infoCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
                 Per Day
@@ -443,12 +452,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Car Availability Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Availability
           </Text>
-          <View style={[styles.availabilityCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.availabilityCard}>
             <View style={styles.availabilityRow}>
               <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
               <View style={styles.availabilityInfo}>
@@ -489,6 +501,9 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Map Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -528,12 +543,15 @@ const CarDetailsScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Meet Car Owner Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Meet Your Host
           </Text>
-          <View style={[styles.hostCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.hostCard}>
             <View style={styles.hostHeader}>
               <Image source={hostInfo.photo} style={styles.hostPhoto} resizeMode="cover" />
               <View style={styles.hostInfo}>
@@ -583,12 +601,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Why Choose This Car Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Why Choose This Car
           </Text>
-          <View style={[styles.whyChooseCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.whyChooseCard}>
             <View style={styles.whyChooseItem}>
               <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
                 <Text style={styles.whyChooseNumber}>1</Text>
@@ -644,12 +665,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Opa Guarantees Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Opa Guarantees
           </Text>
-          <View style={[styles.guaranteesCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.guaranteesCard}>
             <View style={styles.guaranteeItem}>
               <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
                 <Text style={styles.guaranteeLabel}>A</Text>
@@ -705,12 +729,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Car Rules Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Car Rules
           </Text>
-          <View style={[styles.rulesCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.rulesCard}>
             {displayedRules.map((rule, index) => (
               <View key={index} style={styles.ruleItem}>
                 <Ionicons name="remove-circle-outline" size={20} color={theme.colors.hint} />
@@ -738,12 +765,15 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Safety Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Safety
           </Text>
-          <View style={[styles.safetyCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.safetyCard}>
             <View style={styles.safetyContent}>
               <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
                 Safe & Verified
@@ -767,6 +797,9 @@ const CarDetailsScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
         {/* Reviews Section */}
         <View style={styles.section}>
@@ -957,8 +990,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 24,
   },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 24,
+  },
   carOverviewCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -995,10 +1032,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   imageRepositoryCard: {
-    borderRadius: 12,
     padding: 16,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
   imageRepositoryLink: {
     flexDirection: 'row',
@@ -1011,7 +1045,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   infoCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -1183,7 +1216,6 @@ const styles = StyleSheet.create({
   },
   // Host section styles
   hostCard: {
-    borderRadius: 16,
     padding: 24,
     gap: 18,
   },
@@ -1254,7 +1286,6 @@ const styles = StyleSheet.create({
   },
   // Availability section styles
   availabilityCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -1277,7 +1308,6 @@ const styles = StyleSheet.create({
   },
   // Rules section styles
   rulesCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 12,
   },
@@ -1306,7 +1336,6 @@ const styles = StyleSheet.create({
   },
   // Safety section styles
   safetyCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -1380,7 +1409,6 @@ const styles = StyleSheet.create({
   },
   // Why Choose This Car section styles
   whyChooseCard: {
-    borderRadius: 16,
     padding: 24,
     gap: 24,
   },
@@ -1420,7 +1448,6 @@ const styles = StyleSheet.create({
   },
   // Opa Guarantees section styles
   guaranteesCard: {
-    borderRadius: 16,
     padding: 24,
     gap: 24,
   },

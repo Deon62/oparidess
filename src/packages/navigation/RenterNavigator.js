@@ -229,7 +229,9 @@ const HomeStack = () => {
         component={RenterProfileScreen}
         options={{ 
           title: 'My Profile',
-          headerShown: true 
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -536,7 +538,9 @@ const SettingsStack = () => {
         component={SettingsScreen}
         options={{ 
           title: 'Settings',
-          headerShown: true 
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

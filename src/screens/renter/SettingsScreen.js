@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Toggle, Button } from '../../packages/components';
 import {
   isBiometricAvailable,
@@ -18,6 +19,7 @@ const profileImage = require('../../../assets/logo/profile.jpg');
 const SettingsScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { logout } = useUser();
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
@@ -74,36 +76,19 @@ const SettingsScreen = () => {
     }
   };
 
-  // Set header with notifications and profile picture
+  // Hide default header
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <View style={styles.headerRightContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Notifications');
-            }}
-            style={styles.iconButton}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('HomeTab', { screen: 'RenterProfile' });
-            }}
-            style={styles.profileButton}
-            activeOpacity={0.7}
-          >
-            <View style={styles.profileImageContainer}>
-              <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-              <View style={styles.onlineIndicator} />
-            </View>
-          </TouchableOpacity>
-        </View>
-      ),
+      headerShown: false,
     });
-  }, [navigation, theme]);
+  }, [navigation]);
+
+  // Ensure StatusBar is visible when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // StatusBar will be shown via the component
+    }, [])
+  );
 
   const handleAccountEdit = () => {
     navigation.navigate('UpdateProfile');
@@ -196,11 +181,44 @@ const SettingsScreen = () => {
   );
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      {/* Custom Header */}
+      <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+        <View style={styles.headerContent}>
+          <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+            Settings
+          </Text>
+          <View style={styles.headerRightContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Notifications');
+              }}
+              style={styles.iconButton}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('HomeTab', { screen: 'RenterProfile' });
+              }}
+              style={styles.profileButton}
+              activeOpacity={0.7}
+            >
+              <View style={styles.profileImageContainer}>
+                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+                <View style={styles.onlineIndicator} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Account Section */}
       <SectionHeader title="Account" />
       <View style={styles.section}>
@@ -438,7 +456,8 @@ const SettingsScreen = () => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -446,8 +465,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
   contentContainer: {
     paddingBottom: 40,
+  },
+  customHeader: {
+    position: 'relative',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+    paddingTop: 12,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    flex: 1,
   },
   sectionHeader: {
     fontSize: 12,

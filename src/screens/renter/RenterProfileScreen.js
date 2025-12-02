@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button } from '../../packages/components';
@@ -46,6 +46,13 @@ const RenterProfileScreen = () => {
       headerShown: false,
     });
   }, [navigation]);
+
+  // Ensure StatusBar is visible when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      // StatusBar will be shown via the component
+    }, [])
+  );
 
   const handleUploadDocs = () => {
     navigation.navigate('UploadDocs');
@@ -220,6 +227,7 @@ const RenterProfileScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
       {/* Floating Back Button */}
       <View style={[styles.backButtonContainer, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity

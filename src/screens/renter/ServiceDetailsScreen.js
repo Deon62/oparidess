@@ -191,35 +191,36 @@ const ServiceDetailsScreen = () => {
         <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
         {/* Service Overview */}
         <View style={styles.section}>
-          <View style={[styles.serviceOverviewCard, { backgroundColor: theme.colors.primary + '08' }]}>
-            <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
-              {serviceData.name}
-            </Text>
-            <View style={styles.serviceSpecs}>
-              <View style={styles.specItem}>
-                <Ionicons name="star" size={18} color="#FFB800" />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {serviceData.rating} Rating
-                </Text>
-              </View>
-              <View style={styles.specItem}>
-                <Ionicons name="location-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {serviceData.location}
-                </Text>
-              </View>
-              <View style={styles.specItem}>
-                <Ionicons name="business-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {serviceData.category}
-                </Text>
-              </View>
+          <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
+            {serviceData.name}
+          </Text>
+          <View style={styles.serviceSpecs}>
+            <View style={styles.specItem}>
+              <Ionicons name="star" size={18} color="#FFB800" />
+              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                {serviceData.rating} Rating
+              </Text>
             </View>
-            <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
-              {serviceData.description || 'Professional service provider offering quality services with years of experience. Contact us for more details.'}
-            </Text>
+            <View style={styles.specItem}>
+              <Ionicons name="location-outline" size={18} color={theme.colors.hint} />
+              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                {serviceData.location}
+              </Text>
+            </View>
+            <View style={styles.specItem}>
+              <Ionicons name="business-outline" size={18} color={theme.colors.hint} />
+              <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                {serviceData.category}
+              </Text>
+            </View>
           </View>
+          <Text style={[styles.serviceDescription, { color: theme.colors.textSecondary }]}>
+            {serviceData.description || 'Professional service provider offering quality services with years of experience. Contact us for more details.'}
+          </Text>
         </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
         {/* Image Repository Link */}
         <View style={styles.section}>
@@ -227,7 +228,7 @@ const ServiceDetailsScreen = () => {
             Image Repository
           </Text>
           <TouchableOpacity
-            style={[styles.imageRepositoryCard, { backgroundColor: theme.colors.background }]}
+            style={styles.imageRepositoryCard}
             onPress={() => {
               const serviceImages = serviceData.image ? [{ uri: serviceData.image }] : [];
               navigation.navigate('ImageRepository', {
@@ -246,12 +247,15 @@ const ServiceDetailsScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Price Information */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Pricing Information
           </Text>
-          <View style={[styles.infoCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
                 Service Price
@@ -294,12 +298,15 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Availability */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Availability
           </Text>
-          <View style={[styles.availabilityCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.availabilityCard}>
             <View style={styles.availabilityRow}>
               <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
               <View style={styles.availabilityInfo}>
@@ -340,12 +347,15 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* About Service Provider */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             About Service Provider
           </Text>
-          <View style={[styles.providerCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.providerCard}>
             <View style={styles.providerHeader}>
               <Image
                 source={{ uri: providerInfo.photo }}
@@ -397,12 +407,15 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Why Choose This Service */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Why Choose This Service
           </Text>
-          <View style={[styles.whyChooseCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.whyChooseCard}>
             {whyChoose.map((item, index) => (
               <View key={index} style={styles.whyChooseItem}>
                 <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
@@ -414,12 +427,15 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Safety */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Safety
           </Text>
-          <View style={[styles.safetyCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.safetyCard}>
             <View style={styles.safetyContent}>
               <Text style={[styles.safetyTitle, { color: theme.colors.textPrimary }]}>
                 Safe & Verified
@@ -441,12 +457,15 @@ const ServiceDetailsScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Reviews */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Reviews ({reviews.length})
           </Text>
-          <View style={[styles.reviewsCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.reviewsCard}>
             {reviews.map((review, index) => (
               <View 
                 key={review.id} 
@@ -566,6 +585,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 24,
   },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 8,
+    marginBottom: 8,
+  },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
@@ -573,10 +598,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   imageRepositoryCard: {
-    borderRadius: 12,
     padding: 16,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
   },
   imageRepositoryLink: {
     flexDirection: 'row',
@@ -587,11 +609,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
     textDecorationLine: 'underline',
-  },
-  serviceOverviewCard: {
-    borderRadius: 16,
-    padding: 20,
-    gap: 16,
   },
   serviceName: {
     fontSize: 28,
@@ -620,7 +637,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   infoCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -648,7 +664,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   availabilityCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -670,7 +685,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   providerCard: {
-    borderRadius: 16,
     padding: 24,
     gap: 18,
   },
@@ -736,7 +750,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   whyChooseCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -752,7 +765,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   safetyCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 16,
   },
@@ -783,7 +795,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   reviewsCard: {
-    borderRadius: 16,
     padding: 20,
     gap: 20,
   },

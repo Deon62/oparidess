@@ -63,7 +63,7 @@ const SearchScreen = () => {
     'Trans Nzoia', 'Turkana', 'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot',
   ];
 
-  // Vehicle categories (to be passed from home or defined here)
+  // Vehicle categories
   const vehicleCategories = [
     { id: 'essential', name: 'Everyday Picks' },
     { id: 'executive', name: 'Premium & Luxury' },
@@ -171,17 +171,23 @@ const SearchScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Header */}
-      <View style={[styles.header, { paddingTop: insets.top, backgroundColor: theme.colors.white }]}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.backButton}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
-          </TouchableOpacity>
-          <View style={[styles.searchBarContainer, { backgroundColor: theme.colors.background }]}>
+      {/* Sticky Back Button */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={[styles.backButton, { top: insets.top + 12 }]}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
+
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Search Bar - Elevated */}
+        <View style={styles.searchBarWrapper}>
+          <View style={[styles.searchBarContainer, { backgroundColor: theme.colors.white }]}>
             <Ionicons name="search" size={20} color={theme.colors.hint} style={styles.searchIcon} />
             <TextInput
               style={[styles.searchInput, { color: theme.colors.textPrimary }]}
@@ -202,15 +208,9 @@ const SearchScreen = () => {
             )}
           </View>
         </View>
-      </View>
 
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
         {/* Location Section */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Location
           </Text>
@@ -230,45 +230,56 @@ const SearchScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Divider */}
+        <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
+
         {/* Filter Tabs */}
-        <View style={[styles.filterTabsContainer, { backgroundColor: theme.colors.white }]}>
-          <TouchableOpacity
-            style={[
-              styles.filterTab,
-              filterTab === 'cars' && { backgroundColor: theme.colors.primary + '15' },
-            ]}
-            onPress={() => setFilterTab('cars')}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterTabText,
-              { color: filterTab === 'cars' ? theme.colors.primary : theme.colors.textSecondary },
-              filterTab === 'cars' && { fontFamily: 'Nunito_700Bold' },
-            ]}>
-              Vehicles
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.filterTab,
-              filterTab === 'services' && { backgroundColor: theme.colors.primary + '15' },
-            ]}
-            onPress={() => setFilterTab('services')}
-            activeOpacity={0.7}
-          >
-            <Text style={[
-              styles.filterTabText,
-              { color: filterTab === 'services' ? theme.colors.primary : theme.colors.textSecondary },
-              filterTab === 'services' && { fontFamily: 'Nunito_700Bold' },
-            ]}>
-              Services
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 16 }]}>
+            Filter By
+          </Text>
+          <View style={[styles.filterTabsContainer, { backgroundColor: theme.colors.white }]}>
+            <TouchableOpacity
+              style={[
+                styles.filterTab,
+                filterTab === 'cars' && { backgroundColor: '#FF1577' },
+              ]}
+              onPress={() => setFilterTab('cars')}
+              activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.filterTabText,
+                { color: filterTab === 'cars' ? theme.colors.white : theme.colors.textSecondary },
+                filterTab === 'cars' && { fontFamily: 'Nunito_700Bold' },
+              ]}>
+                Vehicles
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterTab,
+                filterTab === 'services' && { backgroundColor: '#FF1577' },
+              ]}
+              onPress={() => setFilterTab('services')}
+              activeOpacity={0.7}
+            >
+              <Text style={[
+                styles.filterTabText,
+                { color: filterTab === 'services' ? theme.colors.white : theme.colors.textSecondary },
+                filterTab === 'services' && { fontFamily: 'Nunito_700Bold' },
+              ]}>
+                Services
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
+
+        {/* Divider */}
+        <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
 
         {/* Vehicle Filters */}
         {filterTab === 'cars' && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.section}>
             {/* Price Range */}
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Price Range (per day)
@@ -278,7 +289,7 @@ const SearchScreen = () => {
                 <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Min</Text>
                 <TextInput
                   style={[styles.priceInput, { 
-                    borderColor: theme.colors.hint,
+                    borderColor: theme.colors.hint + '40',
                     color: theme.colors.textPrimary,
                     backgroundColor: theme.colors.background,
                   }]}
@@ -300,7 +311,7 @@ const SearchScreen = () => {
                 <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Max</Text>
                 <TextInput
                   style={[styles.priceInput, { 
-                    borderColor: theme.colors.hint,
+                    borderColor: theme.colors.hint + '40',
                     color: theme.colors.textPrimary,
                     backgroundColor: theme.colors.background,
                   }]}
@@ -318,9 +329,18 @@ const SearchScreen = () => {
                 />
               </View>
             </View>
+          </View>
+        )}
 
-            {/* Categories */}
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginTop: 24 }]}>
+        {/* Divider */}
+        {filterTab === 'cars' && (
+          <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
+        )}
+
+        {/* Vehicle Categories */}
+        {filterTab === 'cars' && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Vehicle Categories
             </Text>
             <View style={styles.chipsContainer}>
@@ -363,9 +383,18 @@ const SearchScreen = () => {
                 </TouchableOpacity>
               ))}
             </View>
+          </View>
+        )}
 
-            {/* Fuel Types */}
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginTop: 24 }]}>
+        {/* Divider */}
+        {filterTab === 'cars' && (
+          <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
+        )}
+
+        {/* Fuel Types */}
+        {filterTab === 'cars' && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Fuel Type
             </Text>
             <View style={styles.chipsContainer}>
@@ -413,156 +442,168 @@ const SearchScreen = () => {
 
         {/* Service Filters */}
         {filterTab === 'services' && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-            {/* Price Range */}
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Price Range
-            </Text>
-            <View style={styles.priceRangeContainer}>
-              <View style={styles.priceInputWrapper}>
-                <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Min</Text>
-                <TextInput
-                  style={[styles.priceInput, { 
-                    borderColor: theme.colors.hint,
-                    color: theme.colors.textPrimary,
-                    backgroundColor: theme.colors.background,
-                  }]}
-                  placeholder="0"
-                  placeholderTextColor={theme.colors.hint}
-                  keyboardType="numeric"
-                  value={serviceFilters.priceRange.min > 0 ? serviceFilters.priceRange.min.toString() : ''}
-                  onChangeText={(text) => {
-                    const value = text === '' ? 0 : parseInt(text) || 0;
-                    setServiceFilters(prev => ({
-                      ...prev,
-                      priceRange: { ...prev.priceRange, min: value }
-                    }));
-                  }}
-                />
-              </View>
-              <Text style={[styles.priceSeparator, { color: theme.colors.textSecondary }]}>-</Text>
-              <View style={styles.priceInputWrapper}>
-                <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Max</Text>
-                <TextInput
-                  style={[styles.priceInput, { 
-                    borderColor: theme.colors.hint,
-                    color: theme.colors.textPrimary,
-                    backgroundColor: theme.colors.background,
-                  }]}
-                  placeholder="60000"
-                  placeholderTextColor={theme.colors.hint}
-                  keyboardType="numeric"
-                  value={serviceFilters.priceRange.max < 60000 ? serviceFilters.priceRange.max.toString() : ''}
-                  onChangeText={(text) => {
-                    const value = text === '' ? 60000 : parseInt(text) || 60000;
-                    setServiceFilters(prev => ({
-                      ...prev,
-                      priceRange: { ...prev.priceRange, max: value }
-                    }));
-                  }}
-                />
+          <>
+            <View style={styles.section}>
+              {/* Price Range */}
+              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                Price Range
+              </Text>
+              <View style={styles.priceRangeContainer}>
+                <View style={styles.priceInputWrapper}>
+                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Min</Text>
+                  <TextInput
+                    style={[styles.priceInput, { 
+                      borderColor: theme.colors.hint + '40',
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background,
+                    }]}
+                    placeholder="0"
+                    placeholderTextColor={theme.colors.hint}
+                    keyboardType="numeric"
+                    value={serviceFilters.priceRange.min > 0 ? serviceFilters.priceRange.min.toString() : ''}
+                    onChangeText={(text) => {
+                      const value = text === '' ? 0 : parseInt(text) || 0;
+                      setServiceFilters(prev => ({
+                        ...prev,
+                        priceRange: { ...prev.priceRange, min: value }
+                      }));
+                    }}
+                  />
+                </View>
+                <Text style={[styles.priceSeparator, { color: theme.colors.textSecondary }]}>-</Text>
+                <View style={styles.priceInputWrapper}>
+                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>Max</Text>
+                  <TextInput
+                    style={[styles.priceInput, { 
+                      borderColor: theme.colors.hint + '40',
+                      color: theme.colors.textPrimary,
+                      backgroundColor: theme.colors.background,
+                    }]}
+                    placeholder="60000"
+                    placeholderTextColor={theme.colors.hint}
+                    keyboardType="numeric"
+                    value={serviceFilters.priceRange.max < 60000 ? serviceFilters.priceRange.max.toString() : ''}
+                    onChangeText={(text) => {
+                      const value = text === '' ? 60000 : parseInt(text) || 60000;
+                      setServiceFilters(prev => ({
+                        ...prev,
+                        priceRange: { ...prev.priceRange, max: value }
+                      }));
+                    }}
+                  />
+                </View>
               </View>
             </View>
 
-            {/* Categories */}
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginTop: 24 }]}>
-              Service Categories
-            </Text>
-            <View style={styles.chipsContainer}>
-              {serviceCategories.map((category) => (
-                <TouchableOpacity
-                  key={category.id}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: serviceFilters.categories.includes(category.id)
-                        ? theme.colors.primary
-                        : theme.colors.background,
-                      borderColor: serviceFilters.categories.includes(category.id)
-                        ? theme.colors.primary
-                        : theme.colors.hint + '40',
-                    }
-                  ]}
-                  onPress={() => {
-                    setServiceFilters(prev => {
-                      const newCategories = prev.categories.includes(category.id)
-                        ? prev.categories.filter(id => id !== category.id)
-                        : [...prev.categories, category.id];
-                      return { ...prev, categories: newCategories };
-                    });
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text
+            {/* Divider */}
+            <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
+
+            {/* Service Categories */}
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                Service Categories
+              </Text>
+              <View style={styles.chipsContainer}>
+                {serviceCategories.map((category) => (
+                  <TouchableOpacity
+                    key={category.id}
                     style={[
-                      styles.chipText,
+                      styles.chip,
                       {
-                        color: serviceFilters.categories.includes(category.id)
-                          ? theme.colors.white
-                          : theme.colors.textPrimary,
+                        backgroundColor: serviceFilters.categories.includes(category.id)
+                          ? theme.colors.primary
+                          : theme.colors.background,
+                        borderColor: serviceFilters.categories.includes(category.id)
+                          ? theme.colors.primary
+                          : theme.colors.hint + '40',
                       }
                     ]}
+                    onPress={() => {
+                      setServiceFilters(prev => {
+                        const newCategories = prev.categories.includes(category.id)
+                          ? prev.categories.filter(id => id !== category.id)
+                          : [...prev.categories, category.id];
+                        return { ...prev, categories: newCategories };
+                      });
+                    }}
+                    activeOpacity={0.7}
                   >
-                    {category.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        styles.chipText,
+                        {
+                          color: serviceFilters.categories.includes(category.id)
+                            ? theme.colors.white
+                            : theme.colors.textPrimary,
+                        }
+                      ]}
+                    >
+                      {category.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
+
+            {/* Divider */}
+            <View style={[styles.divider, { backgroundColor: theme.colors.hint + '40' }]} />
 
             {/* Minimum Rating */}
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginTop: 24 }]}>
-              Minimum Rating
-            </Text>
-            <View style={styles.chipsContainer}>
-              {[0, 4.0, 4.5, 4.7, 4.8, 4.9].map((rating) => (
-                <TouchableOpacity
-                  key={rating}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: serviceFilters.minRating === rating
-                        ? theme.colors.primary
-                        : theme.colors.background,
-                      borderColor: serviceFilters.minRating === rating
-                        ? theme.colors.primary
-                        : theme.colors.hint + '40',
-                    }
-                  ]}
-                  onPress={() => {
-                    setServiceFilters(prev => ({
-                      ...prev,
-                      minRating: prev.minRating === rating ? 0 : rating
-                    }));
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Text
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                Minimum Rating
+              </Text>
+              <View style={styles.chipsContainer}>
+                {[0, 4.0, 4.5, 4.7, 4.8, 4.9].map((rating) => (
+                  <TouchableOpacity
+                    key={rating}
                     style={[
-                      styles.chipText,
+                      styles.chip,
                       {
-                        color: serviceFilters.minRating === rating
-                          ? theme.colors.white
-                          : theme.colors.textPrimary,
+                        backgroundColor: serviceFilters.minRating === rating
+                          ? theme.colors.primary
+                          : theme.colors.background,
+                        borderColor: serviceFilters.minRating === rating
+                          ? theme.colors.primary
+                          : theme.colors.hint + '40',
                       }
                     ]}
+                    onPress={() => {
+                      setServiceFilters(prev => ({
+                        ...prev,
+                        minRating: prev.minRating === rating ? 0 : rating
+                      }));
+                    }}
+                    activeOpacity={0.7}
                   >
-                    {rating === 0 ? 'Any' : `${rating}+ ⭐`}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={[
+                        styles.chipText,
+                        {
+                          color: serviceFilters.minRating === rating
+                            ? theme.colors.white
+                            : theme.colors.textPrimary,
+                        }
+                      ]}
+                    >
+                      {rating === 0 ? 'Any' : `${rating}+ ⭐`}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
+          </>
         )}
 
         {/* Bottom Spacing */}
-        <View style={{ height: 100 }} />
+        <View style={{ height: 120 }} />
       </ScrollView>
 
       {/* Action Buttons */}
       <View style={[styles.actionBar, { 
-        paddingBottom: insets.bottom + 16,
+        paddingBottom: insets.bottom + 12,
         backgroundColor: theme.colors.white,
-        borderTopColor: theme.colors.hint + '20',
+        borderTopColor: theme.colors.hint + '40',
       }]}>
         <TouchableOpacity
           style={[styles.resetButton, { 
@@ -672,33 +713,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
   backButton: {
-    width: 40,
-    height: 40,
+    position: 'absolute',
+    left: 20,
+    zIndex: 1000,
+    width: 36,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingTop: 100,
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  searchBarWrapper: {
+    marginBottom: 24,
   },
   searchBarContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: 28,
     paddingHorizontal: 16,
-    height: 48,
+    height: 56,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 0,
   },
   searchInput: {
     flex: 1,
@@ -709,22 +765,18 @@ const styles = StyleSheet.create({
   clearButton: {
     marginLeft: 8,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 16,
-    gap: 16,
-  },
   section: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
+  },
+  divider: {
+    height: 1,
+    marginVertical: 0,
   },
   locationButton: {
     flexDirection: 'row',
@@ -741,16 +793,21 @@ const styles = StyleSheet.create({
   },
   filterTabsContainer: {
     flexDirection: 'row',
-    borderRadius: 16,
+    borderRadius: 28,
     padding: 4,
-    marginBottom: 16,
-    gap: 8,
+    gap: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
   },
   filterTab: {
     flex: 1,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 24,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   filterTabText: {
     fontSize: 16,
@@ -797,25 +854,25 @@ const styles = StyleSheet.create({
   },
   actionBar: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    paddingHorizontal: 20,
+    paddingTop: 12,
     gap: 12,
     borderTopWidth: 1,
   },
   resetButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   resetButtonText: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
   },
   applyButton: {
-    height: 48,
+    height: 44,
   },
   modalOverlay: {
     position: 'absolute',
@@ -873,4 +930,3 @@ const styles = StyleSheet.create({
 });
 
 export default SearchScreen;
-

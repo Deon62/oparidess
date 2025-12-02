@@ -331,18 +331,8 @@ const BookingScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Car Info Summary */}
-        <View style={[styles.carInfoCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-            {car?.name || 'Toyota Corolla'}
-          </Text>
-          <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
-            {formatPricePerDay(rentalInfo.perDay)}
-          </Text>
-        </View>
-
         {/* Date Selection */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Select Dates
           </Text>
@@ -409,8 +399,11 @@ const BookingScreen = () => {
           )}
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Time Selection */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Select Times
           </Text>
@@ -450,8 +443,11 @@ const BookingScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Location Selection */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Pickup Location
           </Text>
@@ -471,19 +467,16 @@ const BookingScreen = () => {
           </TouchableOpacity>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Dropoff Location */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <View style={styles.dropoffLocationHeader}>
             <View style={styles.dropoffLocationHeaderLeft}>
-              <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
-              <View style={styles.dropoffLocationTitleContainer}>
-                <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                  Dropoff Location
-                </Text>
-                <Text style={[styles.dropoffLocationSubtitle, { color: theme.colors.textSecondary }]}>
-                  {sameDropoffLocation ? 'Same as pickup location' : 'Different location'}
-                </Text>
-              </View>
+              <Text style={[styles.dropoffLocationText, { color: theme.colors.textPrimary }]}>
+                Same dropoff location
+              </Text>
             </View>
             <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
           </View>
@@ -506,8 +499,11 @@ const BookingScreen = () => {
           )}
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Special Requirements */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Special Requirements
           </Text>
@@ -523,8 +519,11 @@ const BookingScreen = () => {
           />
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Insurance Toggle */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <View style={styles.insuranceCard}>
             <View style={styles.insuranceInfo}>
               <Text style={[styles.insuranceTitle, { color: theme.colors.textPrimary }]}>
@@ -541,8 +540,11 @@ const BookingScreen = () => {
           </View>
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Pay on Site Option */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <View style={styles.payOnSiteHeader}>
             <View style={styles.payOnSiteHeaderLeft}>
               <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
@@ -594,8 +596,11 @@ const BookingScreen = () => {
           )}
         </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Price Summary */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Price Summary
           </Text>
@@ -771,7 +776,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     key={i}
                     style={[
                       styles.timePickerItem,
-                      hours === i && { backgroundColor: theme.colors.primary + '20' },
+                      hours === i && { backgroundColor: theme.colors.primary + '10' },
                     ]}
                     onPress={() => setHours(i)}
                     activeOpacity={0.7}
@@ -797,7 +802,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     key={min}
                     style={[
                       styles.timePickerItem,
-                      minutes === min && { backgroundColor: theme.colors.primary + '20' },
+                      minutes === min && { backgroundColor: theme.colors.primary + '10' },
                     ]}
                     onPress={() => setMinutes(min)}
                     activeOpacity={0.7}
@@ -905,32 +910,20 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: 20,
   },
-  carInfoCard: {
+  sectionSeparator: {
+    borderTopWidth: 1,
     marginHorizontal: 24,
-    marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
-  },
-  carName: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-  },
-  carPrice: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
   },
   section: {
     marginHorizontal: 24,
-    marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
-    overflow: 'hidden',
+    marginTop: 16,
+    padding: 16,
   },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 20,
+    marginBottom: 16,
     letterSpacing: -0.3,
   },
   dateRow: {
@@ -1288,15 +1281,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 12,
+    gap: 8,
   },
-  dropoffLocationTitleContainer: {
-    flex: 1,
-  },
-  dropoffLocationSubtitle: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    marginTop: 2,
+  dropoffLocationText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   // Time Picker Modal Styles
   timePickerModalOverlay: {
@@ -1320,22 +1309,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    height: 150,
     marginBottom: 24,
   },
   timePickerColumn: {
     flex: 1,
-    maxHeight: 200,
+    maxHeight: 150,
   },
   timePickerItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 8,
-    marginVertical: 2,
+    marginVertical: 1,
     alignItems: 'center',
   },
   timePickerItemText: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Nunito_400Regular',
   },
   timePickerSeparator: {

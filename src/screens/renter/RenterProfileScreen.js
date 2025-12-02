@@ -272,6 +272,9 @@ const RenterProfileScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Action Buttons */}
       <View style={styles.actionButtonsContainer}>
         <Button
@@ -279,12 +282,14 @@ const RenterProfileScreen = () => {
           onPress={handleUploadDocs}
           variant="primary"
           style={styles.actionButton}
+          textStyle={styles.actionButtonText}
         />
         <Button
           title="Update Profile"
           onPress={handleUpdateProfile}
           variant="secondary"
           style={styles.actionButton}
+          textStyle={styles.actionButtonText}
         />
       </View>
 
@@ -298,13 +303,8 @@ const RenterProfileScreen = () => {
         </Text>
         <InfoRow
           icon="person-outline"
-          label="First Name"
-          value={personalInfo.first_name}
-        />
-        <InfoRow
-          icon="person-outline"
-          label="Last Name"
-          value={personalInfo.last_name}
+          label="Full Name"
+          value={`${personalInfo.first_name} ${personalInfo.last_name}`}
         />
         <InfoRow
           icon="call-outline"
@@ -320,16 +320,6 @@ const RenterProfileScreen = () => {
           icon="person-circle-outline"
           label="Gender"
           value={personalInfo.gender}
-        />
-        <InfoRow
-          icon="location-outline"
-          label="Location"
-          value={personalInfo.location}
-        />
-        <InfoRow
-          icon="home-outline"
-          label="Address"
-          value={personalInfo.address}
         />
         <InfoRow
           icon="card-outline"
@@ -578,10 +568,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     paddingHorizontal: 24,
+    marginTop: 8,
     marginBottom: 24,
   },
   actionButton: {
     flex: 1,
+    paddingVertical: 10,
+    minHeight: 40,
+  },
+  actionButtonText: {
+    fontSize: 14,
   },
   section: {
     marginHorizontal: 24,

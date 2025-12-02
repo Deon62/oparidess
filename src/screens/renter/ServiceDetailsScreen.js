@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Share, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -148,6 +148,18 @@ const ServiceDetailsScreen = () => {
     });
   };
 
+  const handleShare = async () => {
+    try {
+      const message = `Check out ${serviceData.name} on Oparides!\n\n${serviceData.description || 'Professional service provider offering quality services.'}\n\nPrice: ${serviceData.price}\nLocation: ${serviceData.location}\nRating: ${serviceData.rating} ⭐`;
+      const result = await Share.share({
+        message: message,
+        title: `Share ${serviceData.name}`,
+      });
+    } catch (error) {
+      Alert.alert('Error', 'Failed to share service. Please try again.');
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <ScrollView
@@ -173,28 +185,38 @@ const ServiceDetailsScreen = () => {
               <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
             </TouchableOpacity>
             
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={() => toggleServiceLike(serviceId)}
-              activeOpacity={0.8}
-            >
-              <Ionicons
-                name={isLiked ? "heart" : "heart-outline"}
-                size={20}
-                color={isLiked ? "#FF3B30" : theme.colors.textPrimary}
-              />
-            </TouchableOpacity>
+            <View style={styles.floatingButtonsRight}>
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleShare}
+                activeOpacity={0.8}
+              >
+                <Ionicons name="share-outline" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={() => toggleServiceLike(serviceId)}
+                activeOpacity={0.8}
+              >
+                <Ionicons
+                  name={isLiked ? "heart" : "heart-outline"}
+                  size={20}
+                  color={isLiked ? "#FF3B30" : theme.colors.textPrimary}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
         {/* Content Container with Curved Top */}
         <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
         {/* Service Overview */}
-        <View style={styles.section}>
+        <View style={styles.serviceOverviewSection}>
           <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
             {serviceData.name}
           </Text>
-          <View style={styles.serviceSpecs}>
+          <View style={[styles.serviceSpecs, { marginTop: 12 }]}>
             <View style={styles.specItem}>
               <Ionicons name="star" size={18} color="#FFB800" />
               <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
@@ -554,6 +576,10 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
   },
+  floatingButtonsRight: {
+    flexDirection: 'row',
+    gap: 8,
+  },
   floatingButton: {
     width: 36,
     height: 36,
@@ -584,6 +610,10 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: 24,
     marginTop: 24,
+  },
+  serviceOverviewSection: {
+    paddingHorizontal: 24,
+    marginTop: 32,
   },
   sectionSeparator: {
     borderTopWidth: 1,
@@ -620,6 +650,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 16,
+    marginBottom: 12,
   },
   specItem: {
     flexDirection: 'row',

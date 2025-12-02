@@ -40,6 +40,10 @@ import NotificationPreferencesScreen from '../../screens/shared/NotificationPref
 import PrivacyScreen from '../../screens/shared/PrivacyScreen';
 import AboutScreen from '../../screens/shared/AboutScreen';
 import LegalScreen from '../../screens/shared/LegalScreen';
+import TermsOfServiceScreen from '../../screens/shared/TermsOfServiceScreen';
+import UserAgreementScreen from '../../screens/shared/UserAgreementScreen';
+import LiabilityInsuranceScreen from '../../screens/shared/LiabilityInsuranceScreen';
+import IntellectualPropertyScreen from '../../screens/shared/IntellectualPropertyScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
@@ -467,6 +471,38 @@ const SettingsStack = () => {
         component={LegalScreen}
         options={{ 
           title: 'Legal',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="TermsOfService" 
+        component={TermsOfServiceScreen}
+        options={{ 
+          title: 'Terms of Service',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="UserAgreement" 
+        component={UserAgreementScreen}
+        options={{ 
+          title: 'User Agreement',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="LiabilityInsurance" 
+        component={LiabilityInsuranceScreen}
+        options={{ 
+          title: 'Liability & Insurance',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="IntellectualProperty" 
+        component={IntellectualPropertyScreen}
+        options={{ 
+          title: 'Intellectual Property',
           headerShown: true 
         }}
       />

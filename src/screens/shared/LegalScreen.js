@@ -33,22 +33,30 @@ const LegalScreen = () => {
     Linking.openURL(url).catch((err) => console.error('Failed to open URL:', err));
   };
 
+  const handleSectionPress = (screenName) => {
+    navigation.navigate(screenName);
+  };
+
   const legalSections = [
     {
       title: 'Terms of Service',
       content: 'By using Oparides, you agree to our Terms of Service. These terms govern your use of our platform, including vehicle rentals, service bookings, and all interactions on the platform. Please read these terms carefully before using our services.',
+      screenName: 'TermsOfService',
     },
     {
       title: 'User Agreement',
       content: 'Our User Agreement outlines the rights and responsibilities of both car owners and renters on the Oparides platform. This includes booking policies, payment terms, cancellation procedures, and dispute resolution processes.',
+      screenName: 'UserAgreement',
     },
     {
       title: 'Liability & Insurance',
       content: 'Oparides provides comprehensive insurance coverage for all rentals. Car owners and renters are protected through our insurance policies. However, users are responsible for following all traffic laws and using vehicles responsibly. Any damages or incidents must be reported immediately.',
+      screenName: 'LiabilityInsurance',
     },
     {
       title: 'Intellectual Property',
       content: 'All content on the Oparides platform, including logos, designs, text, graphics, and software, is the property of Oparides and protected by copyright and trademark laws. Unauthorized use of our intellectual property is prohibited.',
+      screenName: 'IntellectualProperty',
     },
   ];
 
@@ -67,6 +75,15 @@ const LegalScreen = () => {
           <Text style={[styles.sectionContent, { color: theme.colors.textSecondary }]}>
             {section.content}
           </Text>
+          <TouchableOpacity
+            style={styles.readMoreButton}
+            onPress={() => handleSectionPress(section.screenName)}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+              Read More
+            </Text>
+          </TouchableOpacity>
         </View>
       ))}
 
@@ -114,6 +131,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 24,
+    marginBottom: 12,
+  },
+  readMoreButton: {
+    marginTop: 8,
+    alignSelf: 'flex-start',
+  },
+  readMoreText: {
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
   },
   contactButton: {
     flexDirection: 'row',

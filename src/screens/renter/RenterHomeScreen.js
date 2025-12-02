@@ -617,11 +617,23 @@ const RenterHomeScreen = () => {
 
   // Get filtered services for each category
   const getFilteredServices = (categoryKey) => {
-    const categoryServices = servicesData[categoryKey] || [];
-    if (!hasActiveServiceFilters) {
-      return categoryServices;
+    let categoryServices = servicesData[categoryKey] || [];
+    
+    // Apply search filter first if there's a search query
+    if (searchQuery.trim()) {
+      const lowerQuery = searchQuery.toLowerCase().trim();
+      categoryServices = categoryServices.filter(service => 
+        service.name.toLowerCase().includes(lowerQuery) ||
+        (service.location && service.location.toLowerCase().includes(lowerQuery))
+      );
     }
-    return filterServices(categoryServices, categoryKey);
+    
+    // Then apply service filters if active
+    if (hasActiveServiceFilters) {
+      categoryServices = filterServices(categoryServices, categoryKey);
+    }
+    
+    return categoryServices;
   };
 
   // Get all cars from all classes
@@ -677,6 +689,15 @@ const RenterHomeScreen = () => {
     
     return vehicles;
   })();
+
+  // Check if there are any car results
+  const hasCarResults = filteredCarClasses.length > 0 || filteredCommercialVehicles.length > 0;
+  
+  // Check if there are any service results
+  const hasServiceResults = serviceCategories.some(category => {
+    const filtered = getFilteredServices(category.categoryKey);
+    return filtered.length > 0;
+  });
 
   // Get current location
   const getCurrentLocation = async () => {
@@ -1441,6 +1462,42 @@ const RenterHomeScreen = () => {
                 )}
               </ScrollView>
           </View>
+          )}
+
+          {/* Empty State - No Services Found */}
+          {!hasServiceResults && (hasActiveServiceFilters || searchQuery.trim()) && (
+            <View style={styles.emptyStateContainer}>
+              <Ionicons name="briefcase-outline" size={64} color={theme.colors.hint} />
+              <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
+                {searchQuery.trim()
+                  ? `No services found matching "${searchQuery}"`
+                  : 'No services match your filters'
+                }
+              </Text>
+              <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
+                {searchQuery.trim()
+                  ? 'Try searching with a different term or adjust your filters'
+                  : 'Try adjusting your filters to see more results'
+                }
+              </Text>
+              <TouchableOpacity
+                style={[styles.emptyStateButton, { backgroundColor: theme.colors.primary }]}
+                onPress={() => {
+                  navigation.navigate('Search', {
+                    initialSearchQuery: searchQuery,
+                    initialLocation: selectedCity,
+                    initialFilters: filters,
+                    initialServiceFilters: serviceFilters,
+                    activeTab: activeTab,
+                  });
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.emptyStateButtonText, { color: theme.colors.white }]}>
+                  Adjust Filters
+                </Text>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
       )}
@@ -2721,18 +2778,41 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
           ))
         ) : null}
 
-        {/* Search Results / No Results */}
-        {searchQuery.trim() ? (
-          <View style={styles.noResultsContainer}>
+        {/* Empty State - No Results Found */}
+        {!hasCarResults && (hasActiveFilters || searchQuery.trim()) && (
+          <View style={styles.emptyStateContainer}>
             <Ionicons name="search-outline" size={64} color={theme.colors.hint} />
-            <Text style={[styles.noResultsText, { color: theme.colors.textSecondary }]}>
-              No vehicles found matching "{searchQuery}"
+            <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
+              {searchQuery.trim() 
+                ? `No vehicles found matching "${searchQuery}"`
+                : 'No vehicles match your filters'
+              }
             </Text>
-            <Text style={[styles.noResultsSubtext, { color: theme.colors.hint }]}>
-              Try searching with a different term
+            <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
+              {searchQuery.trim()
+                ? 'Try searching with a different term or adjust your filters'
+                : 'Try adjusting your filters to see more results'
+              }
             </Text>
+            <TouchableOpacity
+              style={[styles.emptyStateButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                navigation.navigate('Search', {
+                  initialSearchQuery: searchQuery,
+                  initialLocation: selectedCity,
+                  initialFilters: filters,
+                  initialServiceFilters: serviceFilters,
+                  activeTab: activeTab,
+                });
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.emptyStateButtonText, { color: theme.colors.white }]}>
+                Adjust Filters
+              </Text>
+            </TouchableOpacity>
           </View>
-        ) : null}
+        )}
         </>
       )}
       </ScrollView>
@@ -3619,6 +3699,36 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginTop: 8,
     textAlign: 'center',
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 80,
+    paddingHorizontal: 24,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  emptyStateText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  emptyStateButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyStateButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   customHeader: {
     position: 'relative',

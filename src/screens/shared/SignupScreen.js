@@ -77,7 +77,7 @@ const SignupScreen = () => {
               style={[styles.taglineText, { color: theme.colors.white }]}
               allowFontScaling={false}
             >
-              Welcome to Opa😉
+              Welcome to Opa!
             </Text>
           </View>
           <View style={[styles.taglineCurve, { backgroundColor: theme.colors.background }]} />

@@ -129,7 +129,7 @@ const LoginScreen = () => {
               style={[styles.taglineText, { color: theme.colors.white }]}
               allowFontScaling={false}
             >
-              Glad to see you😊
+              Glad to see you again!
             </Text>
           </View>
           <View style={[styles.taglineCurve, { backgroundColor: theme.colors.background }]} />

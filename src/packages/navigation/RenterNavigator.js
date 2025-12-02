@@ -11,6 +11,7 @@ import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import ServiceListScreen from '../../screens/renter/ServiceListScreen';
 import DiscoverListScreen from '../../screens/renter/DiscoverListScreen';
+import DiscoverDetailsScreen from '../../screens/renter/DiscoverDetailsScreen';
 import ArticleScreen from '../../screens/renter/ArticleScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
@@ -109,6 +110,13 @@ const HomeStack = () => {
         options={{ 
           title: 'All Discoveries',
           headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="DiscoverDetails" 
+        component={DiscoverDetailsScreen}
+        options={{ 
+          headerShown: false 
         }}
       />
       <Stack.Screen 

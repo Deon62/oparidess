@@ -152,12 +152,16 @@ Following these tips will help ensure your road trip is safe, smooth, and stress
           title: item.title,
           author: 'Opa Editorial Team',
           date: item.date,
-          image: item.image.replace('w=400', 'w=800'),
+          image: typeof item.image === 'string' ? item.image.replace('w=400', 'w=800') : item.image,
           content: item.fullContent || item.description + '\n\nFull article content coming soon...',
         },
       });
     } else {
-      navigation.navigate('ComingSoon');
+      // Navigate to DiscoverDetailsScreen for other discover items
+      navigation.navigate('DiscoverDetails', {
+        item: item,
+        category: categoryId,
+      });
     }
   };
 

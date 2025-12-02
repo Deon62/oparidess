@@ -1539,7 +1539,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'mombasa',
+                    name: 'Mombasa Beaches',
+                    description: 'Coastal paradise with beautiful beaches',
+                    image: mombasaImage,
+                    likeId: 'destination-mombasa',
+                  },
+                  category: 'destinations',
+                })}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={mombasaImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1574,7 +1583,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'nakuru',
+                    name: 'Lake Nakuru',
+                    description: 'Wildlife and scenic lake views',
+                    image: nakuruImage,
+                    likeId: 'destination-nakuru',
+                  },
+                  category: 'destinations',
+                })}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={nakuruImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1609,7 +1627,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'egerton',
+                    name: 'Lord Egerton Castle',
+                    description: 'Historic castle with stunning architecture',
+                    image: egertonImage,
+                    likeId: 'destination-egerton',
+                  },
+                  category: 'destinations',
+                })}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={egertonImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1644,7 +1671,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'hellsgate',
+                    name: 'Hell\'s Gate',
+                    description: 'Spectacular canyon and geothermal park',
+                    image: hellsgateImage,
+                    likeId: 'destination-hellsgate',
+                  },
+                  category: 'destinations',
+                })}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={hellsgateImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1679,7 +1715,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'pejeta',
+                    name: 'Ol Pejeta Conservancy',
+                    description: 'Wildlife conservation and safari experience',
+                    image: pejetaImage,
+                    likeId: 'destination-pejeta',
+                  },
+                  category: 'destinations',
+                })}
               >
                 <View style={styles.destinationImageContainer}>
                   <Image source={pejetaImage} style={styles.destinationImage} resizeMode="cover" />
@@ -1738,7 +1783,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'nairobi',
+                    name: 'Nairobi Auto Show',
+                    description: 'Biggest automotive exhibition in the region',
+                    image: eventsImage,
+                    likeId: 'event-nairobi',
+                  },
+                  category: 'events',
+                })}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={eventsImage} style={styles.carEventsImage} resizeMode="cover" />
@@ -1773,7 +1827,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'classic',
+                    name: 'Classic Car Exhibition',
+                    description: 'Vintage and classic vehicles showcase',
+                    image: events1Image,
+                    likeId: 'event-classic',
+                  },
+                  category: 'events',
+                })}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events1Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1808,7 +1871,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'supercar',
+                    name: 'Supercar Rally',
+                    description: 'High-performance supercars showcase',
+                    image: events2Image,
+                    likeId: 'event-supercar',
+                  },
+                  category: 'events',
+                })}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events2Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1843,7 +1915,16 @@ const RenterHomeScreen = () => {
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('ComingSoon')}
+                onPress={() => navigation.navigate('DiscoverDetails', {
+                  item: {
+                    id: 'motor',
+                    name: 'Motor Expo',
+                    description: 'Latest automotive technology and innovations',
+                    image: events3Image,
+                    likeId: 'event-motor',
+                  },
+                  category: 'events',
+                })}
               >
                 <View style={styles.carEventsImageContainer}>
                   <Image source={events3Image} style={styles.carEventsImage} resizeMode="cover" />
@@ -1904,7 +1985,19 @@ const RenterHomeScreen = () => {
                   key={business.id}
                   style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('DiscoverDetails', {
+                    item: {
+                      id: business.id,
+                      name: business.name,
+                      description: `Auto parts shop in ${business.location}`,
+                      image: business.image,
+                      rating: business.rating,
+                      location: business.location,
+                      price: business.price,
+                      likeId: `autoparts-${business.id}`,
+                    },
+                    category: 'autoParts',
+                  })}
                 >
                   <View style={styles.carEventsImageContainer}>
                     <Image source={{ uri: business.image }} style={styles.carEventsImage} resizeMode="cover" />
@@ -1973,7 +2066,19 @@ const RenterHomeScreen = () => {
                   key={mechanic.id}
                   style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
                   activeOpacity={0.8}
-                  onPress={() => navigation.navigate('ComingSoon')}
+                  onPress={() => navigation.navigate('DiscoverDetails', {
+                    item: {
+                      id: mechanic.id,
+                      name: mechanic.name,
+                      description: `Certified mechanic in ${mechanic.location}`,
+                      image: mechanic.image,
+                      rating: mechanic.rating,
+                      location: mechanic.location,
+                      experience: mechanic.experience,
+                      likeId: `mechanic-${mechanic.id}`,
+                    },
+                    category: 'mechanics',
+                  })}
                 >
                   <View style={styles.carEventsImageContainer}>
                     <Image source={{ uri: mechanic.image }} style={styles.carEventsImage} resizeMode="cover" />

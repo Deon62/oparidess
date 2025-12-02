@@ -602,25 +602,13 @@ const PaymentScreen = () => {
               </View>
             </View>
             <Button
-              title="View Booking Details"
+              title="View My Bookings"
               onPress={() => {
                 setShowSuccessModal(false);
-                // Check if this is a service booking
-                if (bookingDetails?.type === 'service') {
-                  navigation.navigate('ServiceBookingConfirmation', {
-                    bookingDetails: {
-                      ...bookingDetails,
-                      bookingId: `SRV-${Date.now().toString().slice(-8)}`,
-                    },
-                    paymentMethod: selectedMethod,
-                  });
-                } else {
-                  navigation.navigate('BookingTracking', {
-                    bookingDetails,
-                    paymentMethod: selectedMethod,
-                    totalPrice,
-                  });
-                }
+                // Navigate to Bookings tab to show the booking card
+                navigation.getParent()?.navigate('BookingsTab', {
+                  screen: 'BookingsList',
+                });
               }}
               variant="primary"
               style={styles.successModalButton}

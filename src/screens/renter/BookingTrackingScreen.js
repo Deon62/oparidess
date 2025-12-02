@@ -225,7 +225,7 @@ const BookingTrackingScreen = () => {
 
   const InfoCard = ({ icon, title, value, onPress }) => (
     <TouchableOpacity
-      style={[styles.infoCard, { backgroundColor: theme.colors.white }]}
+      style={styles.infoCard}
       onPress={onPress}
       activeOpacity={onPress ? 0.7 : 1}
     >
@@ -271,7 +271,7 @@ const BookingTrackingScreen = () => {
         <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
 
       {/* Countdown Timer */}
-      <View style={[styles.countdownCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.countdownTitle, { color: theme.colors.textPrimary }]}>
           {isPickedUp ? 'Dropoff in' : 'Pickup in'}
         </Text>
@@ -309,8 +309,11 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Booking Details */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Booking Details
         </Text>
@@ -341,8 +344,11 @@ const BookingTrackingScreen = () => {
         />
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '80' }]} />
+
       {/* Pickup Instructions */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Pickup Instructions
         </Text>
@@ -405,8 +411,11 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '80' }]} />
+
       {/* Rules & Guidelines */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Rules & Guidelines
         </Text>
@@ -450,8 +459,11 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Important Information */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Important Information
         </Text>
@@ -485,8 +497,11 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Message Car Owner Section with Host Card */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Message Car Owner
         </Text>
@@ -545,8 +560,11 @@ const BookingTrackingScreen = () => {
         </View>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Add Rental Days Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <TouchableOpacity
           style={styles.addDaysCard}
           onPress={handleMessageCarOwner}
@@ -569,8 +587,11 @@ const BookingTrackingScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Manage Booking Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Manage Booking
         </Text>
@@ -602,8 +623,11 @@ const BookingTrackingScreen = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
       {/* Booking Actions Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Booking Actions
         </Text>
@@ -792,17 +816,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  countdownCard: {
-    marginHorizontal: 24,
-    padding: 24,
-    borderRadius: 16,
-    marginBottom: 24,
-    alignItems: 'center',
-  },
   countdownTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   countdownContainer: {
     flexDirection: 'row',
@@ -811,45 +828,48 @@ const styles = StyleSheet.create({
   },
   countdownItem: {
     alignItems: 'center',
-    minWidth: 60,
+    minWidth: 50,
   },
   countdownValue: {
-    fontSize: 36,
+    fontSize: 28,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 4,
   },
   countdownLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'Nunito_400Regular',
   },
   countdownSeparator: {
-    marginHorizontal: 8,
+    marginHorizontal: 6,
     paddingTop: 8,
   },
   countdownSeparatorText: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Nunito_700Bold',
   },
   section: {
     marginHorizontal: 24,
-    marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
+    marginTop: 16,
+    padding: 16,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 16,
   },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 20,
+    marginBottom: 16,
     letterSpacing: -0.3,
   },
   infoCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 0,
+    marginBottom: 10,
   },
   infoCardLeft: {
     flexDirection: 'row',
@@ -872,30 +892,30 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   instructionsList: {
-    gap: 20,
+    gap: 16,
   },
   instructionItem: {
     flexDirection: 'row',
     gap: 16,
   },
   instructionNumber: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
   },
   instructionNumberText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_700Bold',
   },
   instructionContent: {
     flex: 1,
   },
   instructionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   instructionText: {
     fontSize: 14,
@@ -903,7 +923,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   rulesList: {
-    gap: 12,
+    gap: 10,
   },
   ruleItem: {
     flexDirection: 'row',
@@ -917,7 +937,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   infoList: {
-    gap: 12,
+    gap: 10,
   },
   infoListItem: {
     flexDirection: 'row',
@@ -943,7 +963,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   manageItemLeft: {
     flexDirection: 'row',

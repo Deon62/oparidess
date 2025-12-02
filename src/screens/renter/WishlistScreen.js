@@ -255,10 +255,10 @@ const WishlistScreen = () => {
       {totalLiked === 0 ? (
         <View style={styles.emptyState}>
           <Ionicons name="heart-outline" size={64} color={theme.colors.hint} />
-          <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
+          <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
             Your wishlist is empty
           </Text>
-          <Text style={[styles.emptyStateSubtext, { color: theme.colors.hint }]}>
+          <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
             Start liking vehicles, services, and discover items you're interested in to find them easily later
           </Text>
         </View>
@@ -572,20 +572,20 @@ const styles = StyleSheet.create({
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 100,
+    paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 20,
+    marginBottom: 8,
   },
   emptyStateText: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginTop: 24,
-    textAlign: 'center',
-  },
-  emptyStateSubtext: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 8,
     textAlign: 'center',
-    paddingHorizontal: 40,
+    lineHeight: 20,
   },
   section: {
     marginBottom: 32,

@@ -18,51 +18,9 @@ const BookingsListScreen = () => {
   const [ratedBookings, setRatedBookings] = useState(new Set()); // Track which bookings have been rated
   const [showMore, setShowMore] = useState(false); // Track if past rentals are expanded
 
-  // Mock bookings data
-  const carBookings = [
-    {
-      id: 1,
-      carName: 'Toyota Corolla',
-      date: '2024-01-15',
-      duration: '3 days',
-      price: 'KSh 13,500',
-      status: 'pending',
-      image: require('../../../assets/images/car1.webp'),
-    },
-    {
-      id: 2,
-      carName: 'BMW 5 Series',
-      date: '2024-01-20',
-      duration: '5 days',
-      price: 'KSh 60,000',
-      status: 'active',
-      image: require('../../../assets/images/car2.webp'),
-      pickupDate: '2024-01-20',
-      dropoffDate: '2024-01-25',
-      days: 5,
-      pickupLocation: 'Nairobi, Kenya',
-      dropoffLocation: 'Nairobi, Kenya',
-      paymentMethod: 'mpesa',
-    },
-    {
-      id: 3,
-      carName: 'Tesla Model S',
-      date: '2024-01-10',
-      duration: '2 days',
-      price: 'KSh 40,000',
-      status: 'completed',
-      image: require('../../../assets/images/car3.webp'),
-    },
-    {
-      id: 4,
-      carName: 'Honda Civic',
-      date: '2024-01-12',
-      duration: '1 day',
-      price: 'KSh 4,800',
-      status: 'cancelled',
-      image: require('../../../assets/images/car4.webp'),
-    },
-  ];
+  // Bookings data - will be populated from session bookings
+  // For now, empty array - bookings will be added when users complete test bookings
+  const carBookings = [];
 
   const bookings = carBookings;
   
@@ -200,9 +158,12 @@ const BookingsListScreen = () => {
       <View style={styles.bookingsList}>
         {displayedBookings.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="document-text-outline" size={48} color={theme.colors.hint} />
+            <Ionicons name="calendar-outline" size={64} color={theme.colors.hint} />
+            <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
+              No rentals yet
+            </Text>
             <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-              No bookings found
+              Your bookings will appear here once you complete a rental
             </Text>
           </View>
         ) : (
@@ -597,12 +558,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 20,
+    marginBottom: 8,
   },
   emptyStateText: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 16,
     textAlign: 'center',
+    lineHeight: 20,
   },
   notificationIconContainer: {
     position: 'relative',

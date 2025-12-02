@@ -128,7 +128,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Nunito_600SemiBold',
     textAlign: 'center',
-    letterSpacing: -0.3,
+    letterSpacing: 0.5,
+    lineHeight: 28,
   },
   // Commented out: Car image styles
   // imageContainer: {
@@ -172,8 +173,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingHorizontal: 24,
-    paddingTop: 20,
+    paddingTop: 32,
     gap: 14,
+    marginTop: 20,
   },
   primaryButton: {
     marginBottom: 0,
@@ -183,9 +185,14 @@ const styles = StyleSheet.create({
   },
   carOwnerContainer: {
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 24,
     paddingBottom: 40,
     alignItems: 'center',
+  },
+  carOwnerLinkContainer: {
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
   carOwnerLinkContainer: {
     alignItems: 'center',

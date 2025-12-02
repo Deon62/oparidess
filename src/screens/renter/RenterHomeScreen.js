@@ -356,6 +356,44 @@ const RenterHomeScreen = () => {
     navigation.navigate('ServiceList', { categoryId });
   };
 
+  // Discover categories with descriptions
+  const discoverCategories = [
+    {
+      id: 'destinations',
+      name: 'Popular Destinations',
+      description: 'Explore Kenya\'s most beautiful and exciting destinations',
+      categoryKey: 'destinations',
+    },
+    {
+      id: 'events',
+      name: 'Car Events Near Me',
+      description: 'Discover automotive events and exhibitions happening around you',
+      categoryKey: 'events',
+    },
+    {
+      id: 'autoParts',
+      name: 'Automobile Parts Shop',
+      description: 'Find trusted auto parts shops for all your vehicle needs',
+      categoryKey: 'autoParts',
+    },
+    {
+      id: 'mechanics',
+      name: 'Mechanics Near Me',
+      description: 'Connect with certified and experienced mechanics',
+      categoryKey: 'mechanics',
+    },
+    {
+      id: 'blogs',
+      name: 'Opa Blogs',
+      description: 'Read our latest articles, tips, and automotive insights',
+      categoryKey: 'blogs',
+    },
+  ];
+
+  const handleViewAllDiscover = (categoryId) => {
+    navigation.navigate('DiscoverList', { categoryId });
+  };
+
   // Filter cars based on search query
   const filterCarsBySearch = (cars, query) => {
     if (!query.trim()) return cars;
@@ -1404,10 +1442,17 @@ const RenterHomeScreen = () => {
       {activeTab === 'discover' && (
         <View style={styles.discoverSection}>
           {/* Special Offers Section */}
-          <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Special Offers
-            </Text>
+          <View style={[styles.discoverSubsection, styles.firstSection]}>
+            <View style={[styles.classHeader, styles.firstHeader]}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  Special Offers
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  Exclusive deals and discounts for your next adventure
+                </Text>
+              </View>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.offersContainer}>
               <TouchableOpacity
                 style={[styles.offerCard, { backgroundColor: theme.colors.primary }]}
@@ -1467,9 +1512,25 @@ const RenterHomeScreen = () => {
 
           {/* Popular Destinations Section */}
           <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Popular Destinations
-            </Text>
+            <View style={styles.classHeader}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {discoverCategories.find(c => c.id === 'destinations')?.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {discoverCategories.find(c => c.id === 'destinations')?.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllDiscover('destinations')}
+                activeOpacity={0.7}
+                style={styles.viewAllButton}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.destinationsContainer}>
               <TouchableOpacity
                 style={[styles.destinationCard, { backgroundColor: theme.colors.white }]}
@@ -1650,9 +1711,25 @@ const RenterHomeScreen = () => {
 
           {/* Car Events Near Me Section */}
           <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Car Events Near Me
-            </Text>
+            <View style={styles.classHeader}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {discoverCategories.find(c => c.id === 'events')?.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {discoverCategories.find(c => c.id === 'events')?.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllDiscover('events')}
+                activeOpacity={0.7}
+                style={styles.viewAllButton}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
               <TouchableOpacity
                 style={[styles.carEventsCard, { backgroundColor: theme.colors.white }]}
@@ -1798,9 +1875,25 @@ const RenterHomeScreen = () => {
 
           {/* Automobile Parts Shop Section */}
           <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Automobile Parts Shop
-            </Text>
+            <View style={styles.classHeader}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {discoverCategories.find(c => c.id === 'autoParts')?.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {discoverCategories.find(c => c.id === 'autoParts')?.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllDiscover('autoParts')}
+                activeOpacity={0.7}
+                style={styles.viewAllButton}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
               {discoverBusinesses.autoParts.map((business) => (
                 <TouchableOpacity
@@ -1851,9 +1944,25 @@ const RenterHomeScreen = () => {
 
           {/* Mechanics Near Me Section */}
           <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Mechanics Near Me
-            </Text>
+            <View style={styles.classHeader}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {discoverCategories.find(c => c.id === 'mechanics')?.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {discoverCategories.find(c => c.id === 'mechanics')?.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllDiscover('mechanics')}
+                activeOpacity={0.7}
+                style={styles.viewAllButton}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.carEventsContainer}>
               {discoverBusinesses.mechanics.map((mechanic) => (
                 <TouchableOpacity
@@ -1907,9 +2016,25 @@ const RenterHomeScreen = () => {
 
           {/* Opa Blogs Section */}
           <View style={styles.discoverSubsection}>
-            <Text style={[styles.discoverSectionTitle, { color: theme.colors.textPrimary }]}>
-              Opa Blogs
-            </Text>
+            <View style={styles.classHeader}>
+              <View style={styles.classHeaderLeft}>
+                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                  {discoverCategories.find(c => c.id === 'blogs')?.name}
+                </Text>
+                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                  {discoverCategories.find(c => c.id === 'blogs')?.description}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllDiscover('blogs')}
+                activeOpacity={0.7}
+                style={styles.viewAllButton}
+              >
+                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.blogsContainer}>
               <TouchableOpacity
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}

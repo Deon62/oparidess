@@ -10,6 +10,7 @@ import RenterHomeScreen from '../../screens/renter/RenterHomeScreen';
 import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
 import ServiceListScreen from '../../screens/renter/ServiceListScreen';
+import DiscoverListScreen from '../../screens/renter/DiscoverListScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
 import CancellationScreen from '../../screens/renter/CancellationScreen';
@@ -98,6 +99,14 @@ const HomeStack = () => {
         component={ServiceListScreen}
         options={{ 
           title: 'All Services',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="DiscoverList" 
+        component={DiscoverListScreen}
+        options={{ 
+          title: 'All Discoveries',
           headerShown: true 
         }}
       />

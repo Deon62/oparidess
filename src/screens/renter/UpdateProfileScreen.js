@@ -13,20 +13,28 @@ const UpdateProfileScreen = () => {
   const { user, updateUser } = useUser();
 
   // Get initial data from route params or user context
-  const initialData = route.params?.personalInfo || {
-    first_name: user?.first_name || '',
-    last_name: user?.last_name || '',
-    phone_number: user?.phone_number || '',
-    date_of_birth: user?.date_of_birth || '',
-    gender: user?.gender || '',
-    location: user?.location || '',
-    address: user?.address || '',
-    id_number: user?.id_number || '',
-    dl_number: user?.dl_number || '',
-    dl_category: user?.dl_category || '',
-    dl_issue_date: user?.dl_issue_date || '',
-    dl_expiry_date: user?.dl_expiry_date || '',
+  const getInitialData = () => {
+    const params = route.params?.personalInfo;
+    const baseData = {
+      first_name: params?.first_name || user?.first_name || '',
+      last_name: params?.last_name || user?.last_name || '',
+      phone_number: params?.phone_number || user?.phone_number || '',
+      date_of_birth: params?.date_of_birth || user?.date_of_birth || '',
+      gender: params?.gender || user?.gender || '',
+      id_number: params?.id_number || user?.id_number || '',
+      dl_number: params?.dl_number || user?.dl_number || '',
+      dl_category: params?.dl_category || user?.dl_category || '',
+      dl_issue_date: params?.dl_issue_date || user?.dl_issue_date || '',
+      dl_expiry_date: params?.dl_expiry_date || user?.dl_expiry_date || '',
+    };
+    // Combine first_name and last_name into full_name
+    baseData.full_name = baseData.first_name && baseData.last_name 
+      ? `${baseData.first_name} ${baseData.last_name}`.trim()
+      : baseData.first_name || baseData.last_name || '';
+    return baseData;
   };
+
+  const initialData = getInitialData();
 
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
@@ -113,13 +121,23 @@ const UpdateProfileScreen = () => {
 
     setLoading(true);
     try {
+      // Split full_name into first_name and last_name if provided
+      const saveData = { ...formData };
+      if (saveData.full_name && saveData.full_name.trim()) {
+        const nameParts = saveData.full_name.trim().split(' ');
+        saveData.first_name = nameParts[0] || '';
+        saveData.last_name = nameParts.slice(1).join(' ') || '';
+      }
+      // Remove full_name from saveData as it's not stored in the backend
+      delete saveData.full_name;
+
       // TODO: Make API call to update profile
       // For now, update the user context
-      updateUser(formData);
+      updateUser(saveData);
 
       // Calculate profile completeness (simplified)
-      const filledFields = Object.values(formData).filter(value => value && value.trim()).length;
-      const totalFields = Object.keys(formData).length;
+      const filledFields = Object.values(saveData).filter(value => value && value.trim()).length;
+      const totalFields = Object.keys(saveData).length;
       const completeness = Math.round((filledFields / totalFields) * 100);
       
       updateUser({ profile_completeness: completeness });
@@ -310,23 +328,15 @@ const UpdateProfileScreen = () => {
         </Text>
 
         <Input
-          label="First Name (Optional)"
-          placeholder="Enter your first name"
-          value={formData.first_name}
-          onChangeText={(value) => updateField('first_name', value)}
-          error={errors.first_name}
+          label="Full Name"
+          placeholder="Enter your full name"
+          value={formData.full_name}
+          onChangeText={(value) => updateField('full_name', value)}
+          error={errors.full_name}
         />
 
         <Input
-          label="Last Name (Optional)"
-          placeholder="Enter your last name"
-          value={formData.last_name}
-          onChangeText={(value) => updateField('last_name', value)}
-          error={errors.last_name}
-        />
-
-        <Input
-          label="Phone Number (Optional)"
+          label="Phone Number"
           placeholder="+254 712 345 678"
           value={formData.phone_number}
           onChangeText={(value) => updateField('phone_number', value)}
@@ -337,7 +347,7 @@ const UpdateProfileScreen = () => {
         {/* Date of Birth */}
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Date of Birth (Optional)
+            Date of Birth
           </Text>
           <TouchableOpacity
             style={[
@@ -374,7 +384,7 @@ const UpdateProfileScreen = () => {
         {/* Gender Selector */}
         <View style={styles.inputContainer}>
           <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Gender (Optional)
+            Gender
           </Text>
           <TouchableOpacity
             style={[
@@ -401,24 +411,6 @@ const UpdateProfileScreen = () => {
           </TouchableOpacity>
           {errors.gender && <Text style={styles.errorText}>{errors.gender}</Text>}
         </View>
-
-        <Input
-          label="Location (Optional)"
-          placeholder="City, Country"
-          value={formData.location}
-          onChangeText={(value) => updateField('location', value)}
-          error={errors.location}
-        />
-
-        <Input
-          label="Address (Optional)"
-          placeholder="Street address"
-          value={formData.address}
-          onChangeText={(value) => updateField('address', value)}
-          multiline
-          numberOfLines={2}
-          error={errors.address}
-        />
 
         <Input
           label="ID Number (Optional)"

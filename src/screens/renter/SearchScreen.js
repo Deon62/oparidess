@@ -135,21 +135,31 @@ const SearchScreen = () => {
   };
 
   const handleApply = () => {
-    // Pass back the search results via route params to parent
+    // Get the parent navigator to navigate to the HomeTab and update RenterHome params
     const parent = navigation.getParent();
     if (parent) {
       parent.navigate('HomeTab', {
         screen: 'RenterHome',
         params: {
-          searchQuery,
-          location: selectedLocation,
+          searchQuery: searchQuery || '',
+          location: selectedLocation || '',
           filters: filterTab === 'cars' ? filters : null,
           serviceFilters: filterTab === 'services' ? serviceFilters : null,
           activeTab: filterTab,
+          timestamp: Date.now(), // Add timestamp to ensure params are always new
         },
       });
+    } else {
+      // Fallback: navigate directly if parent is not available
+      navigation.navigate('RenterHome', {
+        searchQuery: searchQuery || '',
+        location: selectedLocation || '',
+        filters: filterTab === 'cars' ? filters : null,
+        serviceFilters: filterTab === 'services' ? serviceFilters : null,
+        activeTab: filterTab,
+        timestamp: Date.now(),
+      });
     }
-    navigation.goBack();
   };
 
   const handleReset = () => {

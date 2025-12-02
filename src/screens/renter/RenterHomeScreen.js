@@ -105,29 +105,50 @@ const RenterHomeScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       const params = route.params;
-      // Only process if params exist and have meaningful values
-      const hasParams = params && Object.keys(params).length > 0 && 
-                        (params.searchQuery !== undefined || 
-                         params.location || 
-                         params.filters || 
-                         params.serviceFilters || 
-                         params.activeTab);
+      // Check if params exist and have meaningful filter/search values
+      const hasRelevantParams = params && (
+        params.searchQuery !== undefined || 
+        params.location || 
+        params.filters !== undefined || 
+        params.serviceFilters !== undefined || 
+        params.activeTab
+      );
       
-      if (hasParams) {
-        const paramsKey = JSON.stringify(params);
+      if (hasRelevantParams) {
+        const paramsKey = params.timestamp || JSON.stringify(params);
         // Only process if these are new params we haven't seen
         if (paramsKey !== lastParamsRef.current) {
           if (params.searchQuery !== undefined) {
-            setSearchQuery(params.searchQuery);
+            setSearchQuery(params.searchQuery || '');
           }
           if (params.location) {
             setSelectedCity(params.location);
           }
-          if (params.filters) {
-            setFilters(params.filters);
+          if (params.filters !== undefined) {
+            if (params.filters) {
+              setFilters(params.filters);
+            } else {
+              // Reset filters if explicitly set to null
+              setFilters({
+                priceRange: { min: 0, max: 50000 },
+                categories: [],
+                fuelTypes: [],
+                seatCounts: [],
+              });
+            }
           }
-          if (params.serviceFilters) {
-            setServiceFilters(params.serviceFilters);
+          if (params.serviceFilters !== undefined) {
+            if (params.serviceFilters) {
+              setServiceFilters(params.serviceFilters);
+            } else {
+              // Reset service filters if explicitly set to null
+              setServiceFilters({
+                priceRange: { min: 0, max: 60000 },
+                categories: [],
+                locations: [],
+                minRating: 0,
+              });
+            }
           }
           if (params.activeTab) {
             setActiveTab(params.activeTab);
@@ -138,9 +159,9 @@ const RenterHomeScreen = () => {
       }
       // Reset ref when screen loses focus so we can process new params next time
       return () => {
-        lastParamsRef.current = null;
+        // Keep ref but allow it to be updated on next focus
       };
-    }, [])
+    }, [route.params])
   );
   
   // Services data with 4 businesses per category

@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
+  Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -24,6 +25,7 @@ const WriteBlogScreen = () => {
   const insets = useSafeAreaInsets();
   const contentInputRef = useRef(null);
   const titleInputRef = useRef(null);
+  const scrollViewRef = useRef(null);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -32,6 +34,7 @@ const WriteBlogScreen = () => {
   const [isDraft, setIsDraft] = useState(false);
   const [titleHeight, setTitleHeight] = useState(30);
   const [currentTag, setCurrentTag] = useState('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   // Hide header
   useLayoutEffect(() => {
@@ -119,7 +122,42 @@ const WriteBlogScreen = () => {
     setSelectedImage(null);
   };
 
+  // Handle keyboard events
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      (e) => {
+        setKeyboardHeight(e.endCoordinates.height);
+      }
+    );
 
+    const keyboardDidHideListener = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      }
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  // Handle focus on content input to scroll into view
+  const handleContentFocus = () => {
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        // Scroll to end to ensure content input is visible
+        scrollViewRef.current.scrollToEnd({ animated: true });
+      }
+    }, 500);
+  };
+
+  // Handle focus on title input
+  const handleTitleFocus = () => {
+    // Title is at the top, no need to scroll
+  };
 
 
   return (
@@ -171,21 +209,23 @@ const WriteBlogScreen = () => {
       </View>
 
       <KeyboardAvoidingView
-        style={[styles.keyboardView, { paddingBottom: 0, marginBottom: 0 }]}
+        style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={0}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
         <ScrollView
+          ref={scrollViewRef}
           style={styles.scrollView}
           contentContainerStyle={[
             styles.scrollContent,
             {
               paddingTop: insets.top + 64,
-              paddingBottom: 0,
+              paddingBottom: keyboardHeight > 0 ? keyboardHeight + 100 : 100,
             }
           ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
           bounces={true}
           scrollEnabled={true}
         >
@@ -201,6 +241,7 @@ const WriteBlogScreen = () => {
               placeholderTextColor={theme.colors.hint}
               value={title}
               onChangeText={setTitle}
+              onFocus={handleTitleFocus}
               maxLength={100}
               autoFocus={false}
               multiline
@@ -232,7 +273,14 @@ const WriteBlogScreen = () => {
               placeholder="Write blog"
               placeholderTextColor={theme.colors.hint}
               value={content}
-              onChangeText={setContent}
+              onChangeText={(text) => {
+                setContent(text);
+                // Auto-scroll to bottom when typing
+                setTimeout(() => {
+                  scrollViewRef.current?.scrollToEnd({ animated: false });
+                }, 100);
+              }}
+              onFocus={handleContentFocus}
               multiline
               textAlignVertical="top"
               maxLength={5000}
@@ -303,8 +351,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 0,
-    marginBottom: 0,
   },
   section: {
     marginHorizontal: 24,

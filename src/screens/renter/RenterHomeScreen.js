@@ -31,6 +31,10 @@ const carImage2 = require('../../../assets/images/car2.webp');
 const carImage3 = require('../../../assets/images/car3.webp');
 const carImage4 = require('../../../assets/images/car4.webp');
 
+// Import blog images
+const nairobiImage = require('../../../assets/images/nairobi.webp');
+const parkImage = require('../../../assets/images/park.webp');
+
 // Import commercial vehicle images
 const car5 = require('../../../assets/images/car5.webp');
 const car6 = require('../../../assets/images/car6.webp');
@@ -2040,12 +2044,55 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  navigation.navigate('ComingSoon');
+                  navigation.navigate('Article', {
+                    article: {
+                      id: 'roadtrip',
+                      title: 'Top 10 Road Trip Destinations in Kenya',
+                      author: 'Opa Editorial Team',
+                      date: '2 days ago',
+                      image: nairobiImage,
+                      content: `Kenya is a country blessed with diverse landscapes, from pristine beaches to majestic mountains, making it a perfect destination for road trips. Whether you're seeking adventure, wildlife encounters, or simply breathtaking scenery, Kenya has something for every traveler.
+
+Here are the top 10 road trip destinations that should be on your bucket list:
+
+1. **Mombasa Beaches**
+   Experience the coastal paradise with beautiful white sand beaches, crystal-clear waters, and vibrant marine life. Perfect for relaxation and water activities.
+
+2. **Lake Nakuru**
+   Home to thousands of flamingos and diverse wildlife, Lake Nakuru offers stunning lake views and excellent bird watching opportunities.
+
+3. **Lord Egerton Castle**
+   A historic castle with stunning architecture, offering a glimpse into Kenya's colonial past and beautiful gardens to explore.
+
+4. **Hell's Gate National Park**
+   A spectacular canyon and geothermal park where you can walk, cycle, or drive through the dramatic landscape that inspired the Lion King.
+
+5. **Ol Pejeta Conservancy**
+   A wildlife conservation area offering incredible safari experiences and the chance to see the Big Five.
+
+6. **Maasai Mara**
+   World-famous for the Great Migration, this reserve offers unparalleled wildlife viewing and authentic cultural experiences.
+
+7. **Mount Kenya**
+   For the adventurous, Mount Kenya offers challenging climbs and stunning alpine scenery.
+
+8. **Samburu National Reserve**
+   Unique wildlife and beautiful landscapes make this reserve a must-visit for nature lovers.
+
+9. **Tsavo National Park**
+   One of the largest national parks in Kenya, offering diverse ecosystems and abundant wildlife.
+
+10. **Diani Beach**
+    A tropical paradise with pristine beaches, perfect for water sports and relaxation.
+
+Each destination offers unique experiences that will make your road trip unforgettable. Plan your journey, pack your bags, and get ready to explore the beauty of Kenya!`,
+                    },
+                  });
                 }}
               >
                 <View style={styles.blogImageContainer}>
                 <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400' }}
+                  source={nairobiImage}
                   style={styles.blogImage}
                   resizeMode="cover"
                 />
@@ -2083,7 +2130,67 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  navigation.navigate('ComingSoon');
+                  navigation.navigate('Article', {
+                    article: {
+                      id: 'maintenance',
+                      title: 'Car Maintenance Tips for Long Trips',
+                      author: 'Opa Editorial Team',
+                      date: '5 days ago',
+                      image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=800',
+                      content: `Planning a long road trip? Ensuring your vehicle is in top condition is crucial for a safe and enjoyable journey. Here are essential maintenance tips to keep your rental car running smoothly during long journeys.
+
+**Before Your Trip:**
+
+1. **Check Fluid Levels**
+   - Engine oil: Ensure it's at the proper level and not due for a change
+   - Coolant: Check for proper levels to prevent overheating
+   - Brake fluid: Essential for safe stopping
+   - Windshield washer fluid: Keep your visibility clear
+
+2. **Inspect Tires**
+   - Check tire pressure (including spare tire)
+   - Look for signs of wear or damage
+   - Ensure proper tread depth for safe driving
+   - Rotate tires if needed
+
+3. **Test Your Battery**
+   - Check battery terminals for corrosion
+   - Ensure battery is fully charged
+   - Consider replacing if it's more than 3-4 years old
+
+4. **Lights and Signals**
+   - Test all headlights, taillights, and turn signals
+   - Replace any burnt-out bulbs
+   - Clean light covers for maximum visibility
+
+**During Your Trip:**
+
+1. **Regular Checks**
+   - Monitor temperature gauge
+   - Listen for unusual sounds
+   - Watch for warning lights on dashboard
+
+2. **Fuel Management**
+   - Don't let fuel tank get too low
+   - Use quality fuel from reputable stations
+   - Keep emergency fuel container if traveling remote areas
+
+3. **Rest Stops**
+   - Take breaks every 2-3 hours
+   - Check tire pressure during long drives
+   - Inspect for any visible issues
+
+**Emergency Kit Essentials:**
+- First aid kit
+- Jumper cables
+- Tire pressure gauge
+- Basic tools
+- Emergency contact numbers
+- Roadside assistance information
+
+Following these tips will help ensure your road trip is safe, smooth, and stress-free. Happy travels!`,
+                    },
+                  });
                 }}
               >
                 <View style={styles.blogImageContainer}>
@@ -2126,12 +2233,61 @@ const RenterHomeScreen = () => {
                 style={[styles.blogCard, { backgroundColor: theme.colors.white }]}
                 activeOpacity={0.8}
                 onPress={() => {
-                  navigation.navigate('ComingSoon');
+                  navigation.navigate('Article', {
+                    article: {
+                      id: 'parks',
+                      title: 'Best Time to Visit Kenya\'s National Parks',
+                      author: 'Opa Editorial Team',
+                      date: '1 week ago',
+                      image: parkImage,
+                      content: `Planning your safari adventure? Timing is everything when it comes to wildlife viewing in Kenya's national parks. Each season offers unique experiences, and knowing when to visit can make all the difference in your safari experience.
+
+**Dry Season (June to October)**
+This is considered the best time for wildlife viewing across most parks. The dry conditions force animals to gather around water sources, making them easier to spot. The weather is also pleasant with clear skies and minimal rainfall.
+
+- **Maasai Mara**: Peak season for the Great Migration (July-October)
+- **Amboseli**: Excellent elephant viewing with clear Mount Kilimanjaro views
+- **Tsavo**: Best game viewing with animals concentrated at waterholes
+
+**Short Rains (November to December)**
+A transitional period with occasional showers. The landscape becomes greener, and it's a great time to visit with fewer crowds and lower prices.
+
+- Wildlife is still abundant
+- Beautiful green landscapes
+- Fewer tourists
+- Lower accommodation rates
+
+**Long Rains (March to May)**
+The wettest period, but also the quietest. Some lodges may close, but those that remain open offer excellent value and unique experiences.
+
+- Lush, green landscapes
+- Bird watching is exceptional
+- Very few tourists
+- Best prices for accommodations
+
+**Hot and Dry (January to February)**
+A short dry spell between the rains. Good wildlife viewing with pleasant weather and moderate tourist numbers.
+
+- Clear skies and good visibility
+- Good wildlife concentrations
+- Moderate temperatures
+- Balanced tourist numbers
+
+**Special Considerations:**
+
+- **Great Migration**: Plan for July-October in Maasai Mara
+- **Bird Watching**: Best during and after rains (November-April)
+- **Photography**: Dry season offers best light and visibility
+- **Budget Travel**: Long rains offer best value
+
+No matter when you visit, Kenya's national parks offer incredible wildlife experiences year-round. Choose the season that best matches your interests, budget, and travel preferences!`,
+                    },
+                  });
                 }}
               >
                 <View style={styles.blogImageContainer}>
                 <Image
-                  source={{ uri: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400' }}
+                  source={parkImage}
                   style={styles.blogImage}
                   resizeMode="cover"
                 />

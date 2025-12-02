@@ -15,6 +15,8 @@ const eventsImage = require('../../../assets/images/events.webp');
 const events1Image = require('../../../assets/images/events1.webp');
 const events2Image = require('../../../assets/images/events2.webp');
 const events3Image = require('../../../assets/images/events3.webp');
+const nairobiImage = require('../../../assets/images/nairobi.webp');
+const parkImage = require('../../../assets/images/park.webp');
 
 const DiscoverListScreen = () => {
   const theme = useTheme();
@@ -51,8 +53,76 @@ const DiscoverListScreen = () => {
       { id: 4, name: 'Reliable Car Service', rating: 4.6, location: 'Nairobi', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', experience: '10 years', likeId: 'mechanic-4' },
     ],
     blogs: [
-      { id: 'roadtrip', title: 'Top 10 Road Trip Destinations in Kenya', description: 'Discover the most breathtaking destinations perfect for your next road trip adventure.', date: '2 days ago', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', likeId: 'blog-roadtrip' },
-      { id: 'maintenance', title: 'Car Maintenance Tips for Long Trips', description: 'Essential maintenance tips to keep your rental car running smoothly during long journeys.', date: '5 days ago', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', likeId: 'blog-maintenance' },
+      { 
+        id: 'roadtrip', 
+        title: 'Top 10 Road Trip Destinations in Kenya', 
+        description: 'Discover the most breathtaking destinations perfect for your next road trip adventure.', 
+        date: '2 days ago', 
+        image: nairobiImage, 
+        likeId: 'blog-roadtrip',
+        fullContent: `Kenya is a country blessed with diverse landscapes, from pristine beaches to majestic mountains, making it a perfect destination for road trips. Whether you're seeking adventure, wildlife encounters, or simply breathtaking scenery, Kenya has something for every traveler.
+
+Here are the top 10 road trip destinations that should be on your bucket list:
+
+1. **Mombasa Beaches** - Experience the coastal paradise with beautiful white sand beaches, crystal-clear waters, and vibrant marine life. Perfect for relaxation and water activities.
+
+2. **Lake Nakuru** - Home to thousands of flamingos and diverse wildlife, Lake Nakuru offers stunning lake views and excellent bird watching opportunities.
+
+3. **Lord Egerton Castle** - A historic castle with stunning architecture, offering a glimpse into Kenya's colonial past and beautiful gardens to explore.
+
+4. **Hell's Gate National Park** - A spectacular canyon and geothermal park where you can walk, cycle, or drive through the dramatic landscape that inspired the Lion King.
+
+5. **Ol Pejeta Conservancy** - A wildlife conservation area offering incredible safari experiences and the chance to see the Big Five.
+
+6. **Maasai Mara** - World-famous for the Great Migration, this reserve offers unparalleled wildlife viewing and authentic cultural experiences.
+
+7. **Mount Kenya** - For the adventurous, Mount Kenya offers challenging climbs and stunning alpine scenery.
+
+8. **Samburu National Reserve** - Unique wildlife and beautiful landscapes make this reserve a must-visit for nature lovers.
+
+9. **Tsavo National Park** - One of the largest national parks in Kenya, offering diverse ecosystems and abundant wildlife.
+
+10. **Diani Beach** - A tropical paradise with pristine beaches, perfect for water sports and relaxation.
+
+Each destination offers unique experiences that will make your road trip unforgettable. Plan your journey, pack your bags, and get ready to explore the beauty of Kenya!`,
+      },
+      { 
+        id: 'maintenance', 
+        title: 'Car Maintenance Tips for Long Trips', 
+        description: 'Essential maintenance tips to keep your rental car running smoothly during long journeys.', 
+        date: '5 days ago', 
+        image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', 
+        likeId: 'blog-maintenance',
+        fullContent: `Planning a long road trip? Ensuring your vehicle is in top condition is crucial for a safe and enjoyable journey. Here are essential maintenance tips to keep your rental car running smoothly during long journeys.
+
+**Before Your Trip:**
+
+1. **Check Fluid Levels** - Engine oil, coolant, brake fluid, and windshield washer fluid should all be at proper levels.
+
+2. **Inspect Tires** - Check tire pressure, look for signs of wear or damage, and ensure proper tread depth for safe driving.
+
+3. **Test Your Battery** - Check battery terminals for corrosion and ensure battery is fully charged.
+
+4. **Lights and Signals** - Test all headlights, taillights, and turn signals. Replace any burnt-out bulbs.
+
+**During Your Trip:**
+
+1. **Regular Checks** - Monitor temperature gauge, listen for unusual sounds, and watch for warning lights on dashboard.
+
+2. **Fuel Management** - Don't let fuel tank get too low. Use quality fuel from reputable stations.
+
+3. **Rest Stops** - Take breaks every 2-3 hours. Check tire pressure during long drives.
+
+**Emergency Kit Essentials:**
+- First aid kit
+- Jumper cables
+- Tire pressure gauge
+- Basic tools
+- Emergency contact numbers
+- Roadside assistance information
+
+Following these tips will help ensure your road trip is safe, smooth, and stress-free. Happy travels!`,
+      },
     ],
   };
 
@@ -74,7 +144,21 @@ const DiscoverListScreen = () => {
   }, [navigation, categoryId]);
 
   const handleItemPress = (item) => {
-    navigation.navigate('ComingSoon');
+    if (categoryId === 'blogs') {
+      // Navigate to Article screen for blogs
+      navigation.navigate('Article', {
+        article: {
+          id: item.id,
+          title: item.title,
+          author: 'Opa Editorial Team',
+          date: item.date,
+          image: item.image.replace('w=400', 'w=800'),
+          content: item.fullContent || item.description + '\n\nFull article content coming soon...',
+        },
+      });
+    } else {
+      navigation.navigate('ComingSoon');
+    }
   };
 
   const renderDestinationCard = (item) => (
@@ -182,7 +266,11 @@ const DiscoverListScreen = () => {
     >
       <View style={[styles.itemCard, { backgroundColor: theme.colors.white }]}>
         <View style={styles.itemImageContainer}>
-          <Image source={{ uri: item.image }} style={styles.itemImage} resizeMode="cover" />
+          <Image 
+            source={typeof item.image === 'string' ? { uri: item.image } : item.image} 
+            style={styles.itemImage} 
+            resizeMode="cover" 
+          />
           <View style={styles.itemOverlay} />
           <View style={styles.itemActions}>
             <TouchableOpacity

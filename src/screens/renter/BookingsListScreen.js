@@ -5,11 +5,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, Button } from '../../packages/components';
+import { useBookings } from '../../packages/context/BookingsContext';
 
 const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { bookings: contextBookings } = useBookings();
   // Only car bookings - no driver/chauffeur functionality
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -18,9 +20,8 @@ const BookingsListScreen = () => {
   const [ratedBookings, setRatedBookings] = useState(new Set()); // Track which bookings have been rated
   const [showMore, setShowMore] = useState(false); // Track if past rentals are expanded
 
-  // Bookings data - will be populated from session bookings
-  // For now, empty array - bookings will be added when users complete test bookings
-  const carBookings = [];
+  // Bookings data - populated from context
+  const carBookings = contextBookings || [];
 
   const bookings = carBookings;
   

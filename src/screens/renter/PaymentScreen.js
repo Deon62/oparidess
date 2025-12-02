@@ -6,6 +6,7 @@ import { useNavigation, useRoute, useFocusEffect, CommonActions } from '@react-n
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
+import { useBookings } from '../../packages/context/BookingsContext';
 
 // Import payment logos
 const mpesaLogo = require('../../../assets/images/mpesa.png');
@@ -17,6 +18,7 @@ const PaymentScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
+  const { addBooking } = useBookings();
   const { totalPrice, bookingDetails } = route.params || {};
   const { payOnSite, bookingFee, totalRentalPrice } = bookingDetails || {};
 
@@ -202,6 +204,31 @@ const PaymentScreen = () => {
       // TODO: Implement actual payment processing
       // Simulate payment processing
       await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Save booking to context after successful payment
+      if (bookingDetails) {
+        const bookingToSave = {
+          id: bookingDetails.bookingId || `BK-${Date.now()}`,
+          carName: bookingDetails.car?.name || 'Car',
+          image: bookingDetails.car?.image || require('../../../assets/images/car1.webp'),
+          date: bookingDetails.pickupDate || new Date().toISOString(),
+          pickupDate: bookingDetails.pickupDate || new Date().toISOString(),
+          dropoffDate: bookingDetails.dropoffDate || new Date().toISOString(),
+          pickupTime: bookingDetails.pickupTime || '10:00',
+          dropoffTime: bookingDetails.dropoffTime || '10:00',
+          days: bookingDetails.days || 1,
+          duration: `${bookingDetails.days || 1} day${(bookingDetails.days || 1) > 1 ? 's' : ''}`,
+          price: formatCurrency(totalPrice || 0),
+          pickupLocation: bookingDetails.pickupLocation || 'Nairobi CBD, Kenya',
+          dropoffLocation: bookingDetails.dropoffLocation || bookingDetails.pickupLocation || 'Nairobi CBD, Kenya',
+          paymentMethod: selectedMethod || 'mpesa',
+          status: bookingDetails.payOnSite ? 'pending' : 'active', // Pay on site bookings are pending, full payments are active
+          payOnSite: bookingDetails.payOnSite || false,
+          bookingId: bookingDetails.bookingId || `BK-${Date.now()}`,
+          car: bookingDetails.car,
+        };
+        addBooking(bookingToSave);
+      }
 
       setShowSuccessModal(true);
     } catch (error) {

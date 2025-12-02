@@ -20,6 +20,7 @@ import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
 import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScreen';
+import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetailsScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
@@ -409,6 +410,15 @@ const BookingsStack = () => {
         options={{ 
           title: 'Image Repository',
           headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="PendingRentalDetails" 
+        component={PendingRentalDetailsScreen}
+        options={{ 
+          title: 'Pending Rental Details',
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
     </Stack.Navigator>

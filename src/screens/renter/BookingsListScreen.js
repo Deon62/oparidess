@@ -66,15 +66,14 @@ const BookingsListScreen = () => {
 
   const bookings = carBookings;
   
-  // Separate active and past bookings
+  // Separate active and past bookings (exclude cancelled)
   const activeBookings = bookings.filter(booking => booking.status === 'active');
-  const pastBookings = bookings.filter(booking => booking.status !== 'active');
+  const pastBookings = bookings.filter(booking => booking.status !== 'active' && booking.status !== 'cancelled');
   
-  // Sort past bookings by status priority: pending > completed > cancelled
+  // Sort past bookings by status priority: pending > completed
   const statusPriority = {
     'pending': 1,
     'completed': 2,
-    'cancelled': 3,
   };
   
   const sortedPastBookings = [...pastBookings].sort((a, b) => {
@@ -240,6 +239,14 @@ const BookingsListScreen = () => {
                     paymentMethod: booking.paymentMethod || 'mpesa',
                     totalPrice: parseFloat(booking.price.replace(/[^\d.]/g, '')) || 0,
                   });
+                } else if (booking.status === 'pending') {
+                  // Navigate to pending rental details screen
+                  navigation.navigate('PendingRentalDetails', {
+                    booking: {
+                      ...booking,
+                      bookingId: booking.id,
+                    },
+                  });
                 } else if (booking.status === 'completed') {
                   // Navigate to past rental details screen
                   navigation.navigate('PastRentalDetails', {
@@ -251,6 +258,7 @@ const BookingsListScreen = () => {
                 }
               }}
               activeOpacity={1}
+              disabled={booking.status !== 'active' && booking.status !== 'completed' && booking.status !== 'pending'}
             >
               <View style={[styles.bookingCard, { backgroundColor: theme.colors.background }]}>
                 {booking.image && (

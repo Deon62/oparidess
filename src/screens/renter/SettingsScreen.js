@@ -134,6 +134,10 @@ const SettingsScreen = () => {
     navigation.navigate('About');
   };
 
+  const handleLegal = () => {
+    navigation.navigate('Legal');
+  };
+
   const handleDeleteAccount = () => {
     setShowDeleteModal(true);
   };
@@ -263,6 +267,11 @@ const SettingsScreen = () => {
           icon="information-circle-outline"
           title="About"
           onPress={handleAbout}
+        />
+        <SettingItem
+          icon="document-text-outline"
+          title="Legal"
+          onPress={handleLegal}
         />
       </View>
 

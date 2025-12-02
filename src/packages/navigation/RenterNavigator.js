@@ -39,6 +39,7 @@ import LanguageScreen from '../../screens/shared/LanguageScreen';
 import NotificationPreferencesScreen from '../../screens/shared/NotificationPreferencesScreen';
 import PrivacyScreen from '../../screens/shared/PrivacyScreen';
 import AboutScreen from '../../screens/shared/AboutScreen';
+import LegalScreen from '../../screens/shared/LegalScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
@@ -458,6 +459,14 @@ const SettingsStack = () => {
         component={AboutScreen}
         options={{ 
           title: 'About',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="Legal" 
+        component={LegalScreen}
+        options={{ 
+          title: 'Legal',
           headerShown: true 
         }}
       />

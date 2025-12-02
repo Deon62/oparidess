@@ -9,6 +9,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import RenterHomeScreen from '../../screens/renter/RenterHomeScreen';
 import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
+import ServiceListScreen from '../../screens/renter/ServiceListScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
 import CancellationScreen from '../../screens/renter/CancellationScreen';
@@ -89,6 +90,14 @@ const HomeStack = () => {
         component={CarListScreen}
         options={{ 
           title: 'Available Cars',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceList" 
+        component={ServiceListScreen}
+        options={{ 
+          title: 'All Services',
           headerShown: true 
         }}
       />

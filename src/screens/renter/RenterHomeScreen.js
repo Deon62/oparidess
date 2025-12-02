@@ -353,16 +353,7 @@ const RenterHomeScreen = () => {
   ];
 
   const handleViewAllServices = (categoryId) => {
-    // Navigate to filtered services view
-    // For now, we can navigate to a search with the category filter
-    // or create a ServiceList screen similar to CarList
-    navigation.navigate('HomeTab', {
-      screen: 'RenterHome',
-      params: { 
-        activeTab: 'services',
-        serviceCategory: categoryId,
-      },
-    });
+    navigation.navigate('ServiceList', { categoryId });
   };
 
   // Filter cars based on search query

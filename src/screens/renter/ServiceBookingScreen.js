@@ -207,6 +207,55 @@ const ServiceBookingScreen = () => {
     return parseFloat(numericString) || 0;
   };
 
+  // Check if all required fields are filled
+  const isFormComplete = () => {
+    // Contact phone is always required
+    if (!contactPhone.trim()) {
+      return false;
+    }
+
+    const categoryStr = (category || '').toLowerCase();
+    
+    // Drivers & Road Trips
+    if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+      if (!pickupLocation.trim() || !destination.trim()) {
+        return false;
+      }
+    }
+    // VIP Wedding
+    else if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+      if (!eventLocation.trim()) {
+        return false;
+      }
+    }
+    // Movers
+    else if (categoryStr.includes('movers')) {
+      if (!pickupLocation.trim() || !destination.trim()) {
+        return false;
+      }
+    }
+    // Auto Parts
+    else if (categoryStr.includes('parts') || categoryStr.includes('automobile parts')) {
+      if (!partName.trim() || !deliveryAddress.trim()) {
+        return false;
+      }
+    }
+    // Car Detailing
+    else if (categoryStr.includes('detailing') || categoryStr.includes('car detailing')) {
+      if (!vehicleLocation.trim()) {
+        return false;
+      }
+    }
+    // Roadside Assistance
+    else if (categoryStr.includes('roadside')) {
+      if (!currentLocation.trim() || !issueType.trim()) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <KeyboardAvoidingView 
@@ -753,9 +802,16 @@ const ServiceBookingScreen = () => {
           </Text>
         </View>
         <TouchableOpacity
-          style={[styles.payNowButton, { backgroundColor: '#FF1577' }]}
-          onPress={handleContinue}
-          activeOpacity={0.8}
+          style={[
+            styles.payNowButton, 
+            { 
+              backgroundColor: isFormComplete() ? '#FF1577' : theme.colors.hint,
+              opacity: isFormComplete() ? 1 : 0.6,
+            }
+          ]}
+          onPress={isFormComplete() ? handleContinue : null}
+          activeOpacity={isFormComplete() ? 0.8 : 1}
+          disabled={!isFormComplete()}
         >
           <Text style={[styles.payNowButtonText, { color: theme.colors.white }]}>
             Pay Now

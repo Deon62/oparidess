@@ -82,7 +82,6 @@ const HomeStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
-          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 
@@ -316,7 +315,6 @@ const BookingsStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
-          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 
@@ -358,7 +356,6 @@ const WishlistStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
-          statusBarTranslucent: true,
         }}
       />
     </Stack.Navigator>
@@ -392,7 +389,6 @@ const MessagesStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
-          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 
@@ -507,6 +503,14 @@ const SettingsStack = () => {
         }}
       />
       <Stack.Screen 
+        name="UpdateProfile" 
+        component={UpdateProfileScreen}
+        options={{ 
+          title: 'Update Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
         name="Notifications" 
         component={NotificationsScreen}
         options={{ 
@@ -514,7 +518,6 @@ const SettingsStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
-          statusBarTranslucent: true,
         }}
       />
       <Stack.Screen 

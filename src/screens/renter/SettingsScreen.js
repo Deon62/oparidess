@@ -106,7 +106,7 @@ const SettingsScreen = () => {
   }, [navigation, theme]);
 
   const handleAccountEdit = () => {
-    navigation.navigate('HomeTab', { screen: 'UpdateProfile' });
+    navigation.navigate('UpdateProfile');
   };
 
   const handleCustomerSupport = () => {

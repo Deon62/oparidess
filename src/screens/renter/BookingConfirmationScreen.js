@@ -5,18 +5,20 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Card, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay } from '../../packages/utils/currency';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const BookingConfirmationScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { bookingDetails } = route.params || {};
 
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Review Booking',
+      headerShown: false,
     });
   }, [navigation]);
 
@@ -82,32 +84,43 @@ const BookingConfirmationScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Sticky Back Button */}
+      <TouchableOpacity
+        style={[styles.backButton, { top: insets.top + 8 }]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-      {/* Car Summary Card */}
-      <Card style={[styles.carCard, { backgroundColor: theme.colors.white }]}>
-        <View style={styles.carHeader}>
-          <View style={styles.carInfo}>
-            <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-              {bookingDetails?.car?.name || 'Toyota Corolla'}
-            </Text>
-            <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
-              {formatPricePerDay(bookingDetails?.rentalInfo?.perDay || 4500)}
-            </Text>
-          </View>
-        </View>
-      </Card>
-
       {/* Booking Details */}
-      <View style={styles.section}>
+      <View style={[styles.section, styles.firstSection]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Booking Details
         </Text>
 
         <Card style={[styles.detailCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.detailRow}>
+            <View style={styles.detailLeft}>
+              <Ionicons name="car-outline" size={20} color={theme.colors.primary} />
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Car
+              </Text>
+            </View>
+            <View style={styles.detailRight}>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails?.car?.name || 'Toyota Corolla'}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.detailDivider} />
+
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
               <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
@@ -262,6 +275,24 @@ const BookingConfirmationScreen = () => {
             </View>
           )}
 
+          <View style={styles.priceRow}>
+            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+              Subtotal
+            </Text>
+            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+              {formatCurrency((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0))}
+            </Text>
+          </View>
+
+          <View style={styles.priceRow}>
+            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+              VAT (16%)
+            </Text>
+            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+              {formatCurrency(((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 0.16)}
+            </Text>
+          </View>
+
           {bookingDetails?.payOnSite && (
             <View style={styles.priceRow}>
               <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
@@ -278,7 +309,7 @@ const BookingConfirmationScreen = () => {
               {bookingDetails?.payOnSite ? 'Total Rental Price' : 'Total'}
             </Text>
             <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-              {formatCurrency(bookingDetails?.totalRentalPrice || 0)}
+              {formatCurrency(((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 1.16)}
             </Text>
           </View>
 
@@ -446,7 +477,7 @@ const BookingConfirmationScreen = () => {
           {bookingDetails?.payOnSite ? 'Booking Fee' : 'Total'}
         </Text>
         <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-          {formatCurrency(bookingDetails?.payOnSite ? bookingDetails?.bookingFee : bookingDetails?.totalRentalPrice || 0)}
+          {formatCurrency(bookingDetails?.payOnSite ? bookingDetails?.bookingFee : ((bookingDetails?.basePrice || 0) + (bookingDetails?.insuranceCost || 0)) * 1.16)}
         </Text>
       </View>
       <Button
@@ -465,38 +496,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  backButton: {
+    position: 'absolute',
+    left: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+  },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
     paddingBottom: 20,
-  },
-  carCard: {
-    marginHorizontal: 24,
-    marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
-  },
-  carHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  carInfo: {
-    flex: 1,
-  },
-  carName: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-  },
-  carPrice: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
+    paddingTop: 60,
   },
   section: {
     paddingHorizontal: 24,
     marginTop: 24,
+  },
+  firstSection: {
+    marginTop: 40,
   },
   sectionTitle: {
     fontSize: 20,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -31,7 +31,7 @@ const SearchScreen = () => {
 
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [selectedLocation, setSelectedLocation] = useState(initialLocation);
-  const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [filterTab, setFilterTab] = useState(activeTab); // 'cars' or 'services'
@@ -127,7 +127,6 @@ const SearchScreen = () => {
         setCurrentLocation({ latitude, longitude, city: 'Current Location' });
         setSelectedLocation('Current Location');
       }
-      setShowLocationPicker(false);
     } catch (error) {
       Alert.alert('Error', 'Failed to get your location. Please try again.');
     } finally {
@@ -180,53 +179,122 @@ const SearchScreen = () => {
         <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
       </TouchableOpacity>
 
+      {/* Location Dropdown Modal */}
+      {showLocationDropdown && (
+        <View style={styles.dropdownModalOverlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setShowLocationDropdown(false)}
+          />
+          <View style={[styles.dropdownModal, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.dropdownModalHeader}>
+              <Text style={[styles.dropdownModalTitle, { color: theme.colors.textPrimary }]}>
+                Select County
+              </Text>
+              <TouchableOpacity
+                onPress={() => setShowLocationDropdown(false)}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="close-outline" size={24} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
+            <ScrollView 
+              style={styles.dropdownModalScrollView}
+              showsVerticalScrollIndicator={true}
+            >
+              {counties.map((county) => (
+                <TouchableOpacity
+                  key={county}
+                  style={[
+                    styles.dropdownItem,
+                    {
+                      backgroundColor: selectedLocation === county ? theme.colors.primary + '15' : 'transparent',
+                    },
+                  ]}
+                  onPress={() => {
+                    setSelectedLocation(county);
+                    setShowLocationDropdown(false);
+                    if (county !== 'Current Location') {
+                      setCurrentLocation(null);
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name="location"
+                    size={18}
+                    color={selectedLocation === county ? theme.colors.primary : theme.colors.textSecondary}
+                  />
+                  <Text
+                    style={[
+                      styles.dropdownItemText,
+                      {
+                        color: selectedLocation === county ? theme.colors.primary : theme.colors.textPrimary,
+                        fontFamily: selectedLocation === county ? 'Nunito_600SemiBold' : 'Nunito_400Regular',
+                      },
+                    ]}
+                  >
+                    {county}
+                  </Text>
+                  {selectedLocation === county && (
+                    <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      )}
+
       <ScrollView 
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        scrollEnabled={!showLocationDropdown}
       >
-        {/* Search Bar - Elevated */}
-        <View style={styles.searchBarWrapper}>
-          <View style={[styles.searchBarContainer, { backgroundColor: theme.colors.white }]}>
-            <Ionicons name="search" size={20} color={theme.colors.hint} style={styles.searchIcon} />
-            <TextInput
-              style={[styles.searchInput, { color: theme.colors.textPrimary }]}
-              placeholder="Search for cars, services..."
-              placeholderTextColor={theme.colors.hint}
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              autoFocus
-            />
-            {searchQuery.length > 0 && (
-              <TouchableOpacity
-                onPress={() => setSearchQuery('')}
-                style={styles.clearButton}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="close-circle" size={20} color={theme.colors.hint} />
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-
         {/* Location Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Location
           </Text>
+          
+          {/* Get Current Location Button */}
           <TouchableOpacity
-            style={[styles.locationButton, { 
-              backgroundColor: theme.colors.background,
+            style={[styles.getLocationButton, { 
+              backgroundColor: theme.colors.primary,
+            }]}
+            onPress={getCurrentLocation}
+            disabled={isGettingLocation}
+            activeOpacity={0.7}
+          >
+            {isGettingLocation ? (
+              <Ionicons name="hourglass-outline" size={20} color={theme.colors.white} />
+            ) : (
+              <Ionicons name="locate-outline" size={20} color={theme.colors.white} />
+            )}
+            <Text style={[styles.getLocationButtonText, { color: theme.colors.white }]}>
+              {isGettingLocation ? 'Getting Location...' : 'Get Current Location'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* City Dropdown */}
+          <TouchableOpacity
+            style={[styles.dropdownButton, { 
+              backgroundColor: theme.colors.white,
               borderColor: theme.colors.hint + '40',
             }]}
-            onPress={() => setShowLocationPicker(true)}
+            onPress={() => setShowLocationDropdown(true)}
             activeOpacity={0.7}
           >
             <Ionicons name="location" size={20} color={theme.colors.primary} />
-            <Text style={[styles.locationText, { color: theme.colors.textPrimary }]}>
+            <Text style={[styles.dropdownButtonText, { color: theme.colors.textPrimary }]}>
               {selectedLocation}
             </Text>
-            <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+            <Ionicons 
+              name="chevron-down" 
+              size={20} 
+              color={theme.colors.hint} 
+            />
           </TouchableOpacity>
         </View>
 
@@ -625,86 +693,6 @@ const SearchScreen = () => {
         />
       </View>
 
-      {/* Location Picker Modal */}
-      {showLocationPicker && (
-        <View style={[styles.modalOverlay, { paddingTop: insets.top }]}>
-          <View style={[styles.locationModal, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
-                Choose Location
-              </Text>
-              <TouchableOpacity
-                onPress={() => setShowLocationPicker(false)}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="close-outline" size={28} color={theme.colors.textPrimary} />
-              </TouchableOpacity>
-            </View>
-            
-            <View style={styles.locationOptionsContainer}>
-              <TouchableOpacity
-                style={[styles.locationOption, {
-                  backgroundColor: theme.colors.primary,
-                }]}
-                onPress={getCurrentLocation}
-                disabled={isGettingLocation}
-                activeOpacity={0.7}
-              >
-                {isGettingLocation ? (
-                  <Ionicons name="hourglass-outline" size={24} color={theme.colors.white} />
-                ) : (
-                  <Ionicons name="locate-outline" size={24} color={theme.colors.white} />
-                )}
-                <Text style={[styles.locationOptionText, { color: theme.colors.white }]}>
-                  {isGettingLocation ? 'Getting Location...' : 'Use Current Location'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {counties.map((county) => (
-                <TouchableOpacity
-                  key={county}
-                  style={[
-                    styles.countyItem,
-                    {
-                      backgroundColor: selectedLocation === county ? theme.colors.primary + '15' : 'transparent',
-                    },
-                  ]}
-                  onPress={() => {
-                    setSelectedLocation(county);
-                    setShowLocationPicker(false);
-                    if (county !== 'Current Location') {
-                      setCurrentLocation(null);
-                    }
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name="location"
-                    size={20}
-                    color={selectedLocation === county ? theme.colors.primary : theme.colors.textSecondary}
-                  />
-                  <Text
-                    style={[
-                      styles.countyItemText,
-                      {
-                        color: selectedLocation === county ? theme.colors.primary : theme.colors.textPrimary,
-                        fontFamily: selectedLocation === county ? 'Nunito_600SemiBold' : 'Nunito_400Regular',
-                      },
-                    ]}
-                  >
-                    {county}
-                  </Text>
-                  {selectedLocation === county && (
-                    <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      )}
     </View>
   );
 };
@@ -733,37 +721,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingTop: 100,
+    paddingTop: 80,
     paddingHorizontal: 20,
     paddingBottom: 20,
-  },
-  searchBarWrapper: {
-    marginBottom: 24,
-  },
-  searchBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 28,
-    paddingHorizontal: 16,
-    height: 56,
-    gap: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  searchIcon: {
-    marginRight: 0,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
-    padding: 0,
-  },
-  clearButton: {
-    marginLeft: 8,
   },
   section: {
     paddingVertical: 20,
@@ -778,7 +738,21 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: 0,
   },
-  locationButton: {
+  getLocationButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    gap: 8,
+    marginBottom: 16,
+  },
+  getLocationButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  dropdownButton: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
@@ -786,10 +760,57 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: 12,
   },
-  locationText: {
+  dropdownButtonText: {
     flex: 1,
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
+  },
+  dropdownModalOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+    zIndex: 1000,
+  },
+  dropdownModal: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: '70%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 10,
+  },
+  dropdownModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  dropdownModalTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  dropdownModalScrollView: {
+    maxHeight: 400,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+    gap: 12,
+  },
+  dropdownItemText: {
+    flex: 1,
+    fontSize: 16,
   },
   filterTabsContainer: {
     flexDirection: 'row',

@@ -36,6 +36,7 @@ import ServiceBookingScreen from '../../screens/renter/ServiceBookingScreen';
 import ServiceBookingConfirmationScreen from '../../screens/renter/ServiceBookingConfirmationScreen';
 import WriteBlogScreen from '../../screens/renter/WriteBlogScreen';
 import PreviewBlogScreen from '../../screens/renter/PreviewBlogScreen';
+import SearchScreen from '../../screens/renter/SearchScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -88,6 +89,14 @@ const HomeStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="Search" 
+        component={SearchScreen}
+        options={{ 
+          headerShown: false,
+          animation: 'slide_from_bottom',
         }}
       />
       <Stack.Screen 

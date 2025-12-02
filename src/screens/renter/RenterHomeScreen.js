@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Image, Animated, Modal, Alert, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 import { parseCurrency } from '../../packages/utils/currency';
@@ -70,6 +70,7 @@ const events3Image = require('../../../assets/images/events3.webp');
 const RenterHomeScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
   const insets = useSafeAreaInsets();
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -90,6 +91,7 @@ const RenterHomeScreen = () => {
   const scrollViewRef = useRef(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const lastParamsRef = useRef(null);
 
   // Simulate initial loading
   useEffect(() => {
@@ -98,6 +100,48 @@ const RenterHomeScreen = () => {
       setIsLoading(false);
     }, 2000);
   }, []);
+
+  // Handle params from SearchScreen
+  useFocusEffect(
+    React.useCallback(() => {
+      const params = route.params;
+      // Only process if params exist and have meaningful values
+      const hasParams = params && Object.keys(params).length > 0 && 
+                        (params.searchQuery !== undefined || 
+                         params.location || 
+                         params.filters || 
+                         params.serviceFilters || 
+                         params.activeTab);
+      
+      if (hasParams) {
+        const paramsKey = JSON.stringify(params);
+        // Only process if these are new params we haven't seen
+        if (paramsKey !== lastParamsRef.current) {
+          if (params.searchQuery !== undefined) {
+            setSearchQuery(params.searchQuery);
+          }
+          if (params.location) {
+            setSelectedCity(params.location);
+          }
+          if (params.filters) {
+            setFilters(params.filters);
+          }
+          if (params.serviceFilters) {
+            setServiceFilters(params.serviceFilters);
+          }
+          if (params.activeTab) {
+            setActiveTab(params.activeTab);
+          }
+          // Mark these params as processed
+          lastParamsRef.current = paramsKey;
+        }
+      }
+      // Reset ref when screen loses focus so we can process new params next time
+      return () => {
+        lastParamsRef.current = null;
+      };
+    }, [])
+  );
   
   // Services data with 4 businesses per category
   const servicesData = {
@@ -677,102 +721,40 @@ const RenterHomeScreen = () => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       header: () => (
-        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
-          {/* Top Row: Location and Action Icons */}
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
+          {/* Top Row: Search Bar and Profile */}
           <View style={styles.headerTopRow}>
             <TouchableOpacity
-              onPress={() => setShowLocationModal(true)}
-              style={styles.headerLocationButton}
-              activeOpacity={0.7}
+              onPress={() => {
+                navigation.navigate('Search', {
+                  initialSearchQuery: searchQuery,
+                  initialLocation: selectedCity,
+                  initialFilters: filters,
+                  initialServiceFilters: serviceFilters,
+                  activeTab: activeTab,
+                });
+              }}
+              style={[styles.headerSearchBar, { backgroundColor: theme.colors.white }]}
+              activeOpacity={0.8}
             >
-              <Ionicons name="location" size={22} color={theme.colors.primary} />
-              <Text 
-                style={[styles.headerLocationText, { color: theme.colors.textPrimary }]}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {selectedCity}
+              <Ionicons name="search" size={20} color={theme.colors.hint} />
+              <Text style={[styles.headerSearchPlaceholder, { color: theme.colors.hint }]}>
+                Search for cars, services...
               </Text>
             </TouchableOpacity>
-
-            <View style={styles.headerRightContainer}>
-              {showSearch ? (
-                <View style={[styles.headerSearchContainer, { backgroundColor: theme.colors.background }]}>
-                  <TextInput
-                    style={[styles.headerSearchInput, { color: theme.colors.textPrimary }]}
-                    placeholder="Search cars..."
-                    placeholderTextColor={theme.colors.hint}
-                    value={searchQuery}
-                    onChangeText={setSearchQuery}
-                    autoFocus
-                  />
-                  <TouchableOpacity
-                    onPress={() => {
-                      setShowSearch(false);
-                      setSearchQuery('');
-                    }}
-                    style={styles.headerCloseButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="close" size={20} color={theme.colors.textPrimary} />
-                  </TouchableOpacity>
-                </View>
-              ) : (
-                <View style={styles.headerIcons}>
-                  <TouchableOpacity
-                    onPress={() => setShowSearch(true)}
-                    style={styles.iconButton}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="search-outline" size={22} color={theme.colors.textPrimary} />
-                  </TouchableOpacity>
-                  {activeTab === 'cars' && (
-                    <TouchableOpacity
-                      onPress={() => setShowFilterModal(true)}
-                      style={[styles.iconButton, hasActiveFilters && styles.filterIconActive]}
-                      activeOpacity={0.7}
-                    >
-                      <Ionicons 
-                        name="filter-outline" 
-                        size={22} 
-                        color={hasActiveFilters ? theme.colors.primary : theme.colors.textPrimary} 
-                      />
-                      {hasActiveFilters && (
-                        <View style={[styles.filterBadge, { backgroundColor: theme.colors.primary }]} />
-                      )}
-                    </TouchableOpacity>
-                  )}
-                  {activeTab === 'services' && (
-                    <TouchableOpacity
-                      onPress={() => setShowServiceFilterModal(true)}
-                      style={[styles.iconButton, hasActiveServiceFilters && styles.filterIconActive]}
-                      activeOpacity={0.7}
-                    >
-                      <Ionicons 
-                        name="filter-outline" 
-                        size={22} 
-                        color={hasActiveServiceFilters ? theme.colors.primary : theme.colors.textPrimary} 
-                      />
-                      {hasActiveServiceFilters && (
-                        <View style={[styles.filterBadge, { backgroundColor: theme.colors.primary }]} />
-                      )}
-                    </TouchableOpacity>
-                  )}
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('RenterProfile');
-                    }}
-                    style={styles.profileButton}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.profileImageContainer}>
-                      <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-                      <View style={styles.onlineIndicator} />
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
+            
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('RenterProfile');
+              }}
+              style={styles.profileButton}
+              activeOpacity={0.7}
+            >
+              <View style={styles.profileImageContainer}>
+                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
+                <View style={styles.onlineIndicator} />
+              </View>
+            </TouchableOpacity>
           </View>
 
           {/* Bottom Row: Toggle Buttons */}
@@ -865,7 +847,7 @@ const RenterHomeScreen = () => {
         </View>
       ),
     });
-  }, [navigation, theme, showSearch, searchQuery, selectedCity, activeTab, isScrolled, insets.top, hasActiveFilters, hasActiveServiceFilters]);
+  }, [navigation, theme, selectedCity, activeTab, isScrolled, insets.top]);
 
   // Pull to refresh handler
   const onRefresh = React.useCallback(() => {
@@ -3619,11 +3601,6 @@ const styles = StyleSheet.create({
   },
   customHeader: {
     position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
     overflow: 'visible',
   },
   headerTopRow: {
@@ -3631,8 +3608,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 14,
-    paddingBottom: 12,
+    paddingVertical: 16,
+    paddingBottom: 16,
+    gap: 12,
+  },
+  headerSearchBar: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 28,
+    paddingHorizontal: 16,
+    height: 56,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  headerSearchPlaceholder: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
   },
   headerLocationButton: {
     flexDirection: 'row',

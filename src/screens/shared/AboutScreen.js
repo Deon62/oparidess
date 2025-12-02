@@ -36,20 +36,25 @@ const AboutScreen = () => {
   const aboutSections = [
     {
       title: 'About Oparides',
-      content: 'Oparides is your premium destination for car rentals. We connect car owners and renters to create a seamless mobility experience.',
+      content: 'Oparides is Kenya\'s leading peer-to-peer car rental and mobility services platform, connecting car owners with renters through a secure and user-friendly marketplace. We offer a comprehensive ecosystem that goes beyond traditional car rentals, providing vehicles, professional services, and discovery features all in one place. Our platform features three main sections: Vehicles for car rentals across different categories, Services for specialized mobility needs, and Discover for exploring destinations, events, and automotive businesses. Whether you need an everyday ride, a luxury vehicle for special occasions, commercial transport, or professional services like chauffeurs and car detailing, Oparides provides trusted solutions that prioritize safety, convenience, and customer satisfaction.',
     },
     {
       title: 'Our Mission',
-      content: 'To revolutionize the way people access transportation by providing a trusted platform that makes car rental and chauffeur services accessible, convenient, and affordable for everyone.',
+      content: 'Our mission is to revolutionize transportation access in Kenya by creating a comprehensive mobility platform that empowers both car owners and renters. We aim to make car rental, professional services, and automotive discovery accessible to everyone through innovative technology, transparent pricing, and exceptional customer service. We are committed to building a trusted community where car owners can monetize their assets while renters enjoy affordable, reliable, and diverse mobility options. Beyond rentals, we connect users with professional services, help them discover amazing destinations and events, and provide access to automotive businesses like mechanics and parts shops. Our vision is to transform how Kenyans move, explore, and experience transportation.',
     },
     {
       title: 'What We Offer',
       items: [
-        'Premium car rental services',
-        'Professional chauffeur services',
-        'Flexible booking options',
-        '24/7 customer support',
-        'Secure and reliable platform',
+        'Vehicle Rentals: Three categories including Everyday Picks for affordable daily rides, Premium & Luxury for business and special events, and Elite Collection for ultimate luxury experiences',
+        'Commercial Vehicles: Pickups, Vans, and Trucks for work, cargo transport, and group travel needs',
+        'Professional Services: Road trip planning, VIP wedding fleets, professional chauffeur services, moving services, car detailing, and 24/7 roadside assistance',
+        'Discover Section: Curated destinations like Mombasa beaches, Lake Nakuru, and Hell\'s Gate for your next adventure',
+        'Events & Experiences: Access to auto shows, classic car exhibitions, supercar rallies, and motor expos',
+        'Automotive Businesses: Connect with verified auto parts shops and experienced mechanics for vehicle maintenance and repairs',
+        'Flexible Booking: Choose from hourly, daily, weekly, or monthly rental periods to match your schedule',
+        'Secure Payments: Multiple payment options including M-Pesa and card payments with transparent pricing',
+        'Verified Network: All car owners, drivers, and businesses are verified with ratings and reviews for your peace of mind',
+        '24/7 Support: Round-the-clock customer service for bookings, inquiries, and emergency assistance',
       ],
     },
   ];
@@ -77,7 +82,7 @@ const AboutScreen = () => {
       <View style={styles.headerSection}>
         <Text style={[styles.appTitle, { color: theme.colors.primary }]}>Oparides</Text>
         <Text style={[styles.appTagline, { color: theme.colors.textSecondary }]}>
-          Premium Car Rental & Chauffeur Services
+          Premium Car Rental, Services & Discoveries
         </Text>
         <Text style={[styles.versionText, { color: theme.colors.hint }]}>Version 1.0.0</Text>
       </View>

@@ -197,7 +197,7 @@ const WriteBlogScreen = () => {
                 styles.titleInput,
                 { color: theme.colors.textPrimary, height: Math.max(30, titleHeight) },
               ]}
-              placeholder="Enter blog title"
+              placeholder="Title..."
               placeholderTextColor={theme.colors.hint}
               value={title}
               onChangeText={setTitle}
@@ -225,8 +225,6 @@ const WriteBlogScreen = () => {
                 </TouchableOpacity>
               </View>
             )}
-            
-            <View style={[styles.divider, { backgroundColor: theme.colors.hint + '30' }]} />
             
             <TextInput
               ref={contentInputRef}

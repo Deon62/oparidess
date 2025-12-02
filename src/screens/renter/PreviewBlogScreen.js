@@ -1,10 +1,9 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  TextInput,
   TouchableOpacity,
   Image,
   Alert,
@@ -20,9 +19,7 @@ const PreviewBlogScreen = () => {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   
-  const { title, content, selectedImage, tags: initialTags } = route.params || {};
-  const [tags, setTags] = useState(initialTags || []);
-  const [currentTag, setCurrentTag] = useState('');
+  const { title, content, selectedImage } = route.params || {};
 
   // Hide header and ensure tab bar is hidden
   useLayoutEffect(() => {
@@ -62,21 +59,6 @@ const PreviewBlogScreen = () => {
       };
     }, [navigation])
   );
-
-  const handleAddTag = () => {
-    if (tags.length >= 4) {
-      Alert.alert('Maximum Tags', 'You can only add up to 4 tags.');
-      return;
-    }
-    if (currentTag.trim() && !tags.includes(currentTag.trim())) {
-      setTags([...tags, currentTag.trim()]);
-      setCurrentTag('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
 
   const handlePublish = () => {
     if (!title || !title.trim()) {
@@ -171,75 +153,24 @@ const PreviewBlogScreen = () => {
               </Text>
             </View>
           )}
-        </View>
 
-        {/* Tags Section */}
-        <View style={[styles.tagsSection, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Tags {tags.length > 0 && `(${tags.length}/4)`}
-          </Text>
-          <View style={styles.tagInputContainer}>
-            <TextInput
-              style={[styles.tagInput, { color: theme.colors.textPrimary, borderColor: theme.colors.hint }]}
-              placeholder="Add a tag..."
-              placeholderTextColor={theme.colors.hint}
-              value={currentTag}
-              onChangeText={setCurrentTag}
-              onSubmitEditing={handleAddTag}
-              editable={tags.length < 4}
-            />
+          {/* Publish Button - Inside Card */}
+          <View style={styles.publishButtonContainer}>
             <TouchableOpacity
-              style={[
-                styles.addTagButton,
-                { backgroundColor: theme.colors.primary },
-                tags.length >= 4 && { opacity: 0.5 }
-              ]}
-              onPress={handleAddTag}
+              style={[styles.publishButton, { backgroundColor: theme.colors.primary }]}
+              onPress={handlePublish}
               activeOpacity={0.7}
-              disabled={tags.length >= 4}
             >
-              <Ionicons name="add" size={20} color={theme.colors.white} />
+              <Text style={[styles.publishButtonText, { color: theme.colors.white }]}>
+                Publish
+              </Text>
             </TouchableOpacity>
           </View>
-          {tags.length > 0 && (
-            <View style={styles.tagsContainer}>
-              {tags.map((tag, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[styles.tag, { backgroundColor: theme.colors.primary + '15' }]}
-                  onPress={() => handleRemoveTag(tag)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={[styles.tagText, { color: theme.colors.primary }]}>{tag}</Text>
-                  <Ionicons name="close" size={16} color={theme.colors.primary} />
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-          {tags.length >= 4 && (
-            <Text style={[styles.tagLimitText, { color: theme.colors.hint }]}>
-              Maximum of 4 tags reached
-            </Text>
-          )}
         </View>
 
         {/* Bottom spacing */}
-        <View style={{ height: 100 }} />
+        <View style={{ height: insets.bottom + 24 }} />
       </ScrollView>
-
-      {/* Publish Button */}
-      <View style={[styles.publishContainer, { paddingBottom: insets.bottom + 16, paddingTop: 16 }]}>
-        <TouchableOpacity
-          style={[styles.publishButton, { backgroundColor: theme.colors.primary }]}
-          onPress={handlePublish}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="paper-plane-outline" size={20} color={theme.colors.white} />
-          <Text style={[styles.publishButtonText, { color: theme.colors.white }]}>
-            Publish
-          </Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -329,74 +260,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
   },
-  tagsSection: {
-    borderRadius: 20,
-    padding: 20,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
-  },
-  tagInputContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
-  },
-  tagInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
-  },
-  addTagButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  tag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 8,
-  },
-  tagText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  tagLimitText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    marginTop: 8,
-    fontStyle: 'italic',
-  },
-  publishContainer: {
-    paddingHorizontal: 24,
+  publishButtonContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
-    backgroundColor: 'rgba(255, 255, 255, 0.98)',
+    marginTop: 8,
   },
   publishButton: {
     width: '100%',
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 16,
     borderRadius: 12,
-    gap: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,

@@ -14,54 +14,8 @@ const MessagesScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
-  // Mock messages data
-  const messages = [
-    {
-      id: 1,
-      name: 'John Smith',
-      lastMessage: 'Thanks for the ride! The car was perfect.',
-      time: '2h ago',
-      unread: 2,
-      avatar: require('../../../assets/images/car1.webp'), // Using car image as placeholder
-      isOnline: true,
-    },
-    {
-      id: 2,
-      name: 'Sarah Johnson',
-      lastMessage: 'Can we reschedule the booking?',
-      time: '5h ago',
-      unread: 0,
-      avatar: require('../../../assets/images/car2.webp'),
-      isOnline: false,
-    },
-    {
-      id: 3,
-      name: 'Michael Brown',
-      lastMessage: 'The car is ready for pickup.',
-      time: '1d ago',
-      unread: 1,
-      avatar: require('../../../assets/images/car3.webp'),
-      isOnline: true,
-    },
-    {
-      id: 4,
-      name: 'Emily Davis',
-      lastMessage: 'Thank you for choosing our service!',
-      time: '2d ago',
-      unread: 0,
-      avatar: require('../../../assets/images/car4.webp'),
-      isOnline: false,
-    },
-    {
-      id: 5,
-      name: 'David Wilson',
-      lastMessage: 'I\'ll be there in 10 minutes.',
-      time: '3d ago',
-      unread: 0,
-      avatar: require('../../../assets/images/car1.webp'),
-      isOnline: true,
-    },
-  ];
+  // Custom messages data - empty for now
+  const messages = [];
 
   // Set custom header with profile picture and status bar
   useLayoutEffect(() => {
@@ -144,51 +98,63 @@ const MessagesScreen = () => {
       {/* Divider */}
       <View style={[styles.divider, { backgroundColor: theme.colors.hint }]} />
 
-      {/* Regular Messages */}
-      {messages.map((message) => (
-        <TouchableOpacity
-          key={message.id}
-          onPress={() => handleMessagePress(message)}
-          activeOpacity={0.7}
-          style={styles.messageItem}
-        >
-          <View style={styles.avatarContainer}>
-            <Image source={message.avatar} style={styles.avatar} resizeMode="cover" />
-            {message.isOnline && (
-              <View style={[styles.onlineIndicator, { backgroundColor: '#4CAF50' }]} />
-            )}
-          </View>
-          <View style={styles.messageContent}>
-            <View style={styles.messageHeader}>
-              <Text style={[styles.messageName, { color: theme.colors.textPrimary }]}>
-                {message.name}
-              </Text>
-              <Text style={[styles.messageTime, { color: theme.colors.hint }]}>
-                {message.time}
-              </Text>
-            </View>
-            <View style={styles.messageFooter}>
-              <Text
-                style={[
-                  styles.lastMessage,
-                  { color: message.unread > 0 ? theme.colors.textPrimary : theme.colors.textSecondary },
-                  message.unread > 0 && styles.unreadMessage,
-                ]}
-                numberOfLines={1}
-              >
-                {message.lastMessage}
-              </Text>
-              {message.unread > 0 && (
-                <View style={[styles.unreadBadge, { backgroundColor: theme.colors.primary }]}>
-                  <Text style={[styles.unreadText, { color: theme.colors.white }]}>
-                    {message.unread}
-                  </Text>
-                </View>
+      {/* Custom Messages */}
+      {messages.length > 0 ? (
+        messages.map((message) => (
+          <TouchableOpacity
+            key={message.id}
+            onPress={() => handleMessagePress(message)}
+            activeOpacity={0.7}
+            style={styles.messageItem}
+          >
+            <View style={styles.avatarContainer}>
+              <Image source={message.avatar} style={styles.avatar} resizeMode="cover" />
+              {message.isOnline && (
+                <View style={[styles.onlineIndicator, { backgroundColor: '#4CAF50' }]} />
               )}
             </View>
-          </View>
-        </TouchableOpacity>
-      ))}
+            <View style={styles.messageContent}>
+              <View style={styles.messageHeader}>
+                <Text style={[styles.messageName, { color: theme.colors.textPrimary }]}>
+                  {message.name}
+                </Text>
+                <Text style={[styles.messageTime, { color: theme.colors.hint }]}>
+                  {message.time}
+                </Text>
+              </View>
+              <View style={styles.messageFooter}>
+                <Text
+                  style={[
+                    styles.lastMessage,
+                    { color: message.unread > 0 ? theme.colors.textPrimary : theme.colors.textSecondary },
+                    message.unread > 0 && styles.unreadMessage,
+                  ]}
+                  numberOfLines={1}
+                >
+                  {message.lastMessage}
+                </Text>
+                {message.unread > 0 && (
+                  <View style={[styles.unreadBadge, { backgroundColor: theme.colors.primary }]}>
+                    <Text style={[styles.unreadText, { color: theme.colors.white }]}>
+                      {message.unread}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <View style={styles.emptyState}>
+          <Ionicons name="chatbubbles-outline" size={64} color={theme.colors.hint} />
+          <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
+            No messages yet
+          </Text>
+          <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
+            Your custom conversations with Opa users will appear here
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 };
@@ -329,6 +295,24 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: 8,
     opacity: 0.2,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 40,
+  },
+  emptyStateTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 20,
+    marginBottom: 8,
+  },
+  emptyStateText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
 

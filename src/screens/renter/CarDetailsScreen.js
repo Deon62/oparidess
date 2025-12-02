@@ -438,16 +438,13 @@ const CarDetailsScreen = () => {
                 {rentalInfo.minimumDays} days
               </Text>
             </View>
-            <View style={styles.locationContainer}>
-              <View style={styles.locationRow}>
-                <Ionicons name="location-outline" size={18} color={theme.colors.primary} />
-                <Text style={[styles.locationLabel, { color: theme.colors.textSecondary }]}>
-                  Pickup
-                </Text>
-                <Text style={[styles.pickupLocation, { color: theme.colors.textPrimary }]}>
-                  {rentalInfo.pickupLocation}
-                </Text>
-              </View>
+            <View style={styles.infoRow}>
+              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                Pickup Location
+              </Text>
+              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                {rentalInfo.pickupLocation}
+              </Text>
             </View>
           </View>
         </View>

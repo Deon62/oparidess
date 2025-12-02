@@ -32,6 +32,12 @@ const LandingScreen = () => {
         <View style={styles.logoAlignLeft}>
           <Logo width={360} height={360} color={theme.colors.textPrimary} />
         </View>
+        {/* Tagline Section - Below logo text */}
+        <View style={styles.taglineContainer}>
+          <Text style={[styles.tagline, { color: theme.colors.textPrimary }]}>
+            Your Complete Mobility Solution
+          </Text>
+        </View>
       </View>
 
       {/* Commented out: Luxury Car Image Section */}
@@ -104,9 +110,25 @@ const styles = StyleSheet.create({
     paddingTop: 100,
     paddingBottom: 40,
     paddingHorizontal: 20,
+    position: 'relative',
   },
   logoAlignLeft: {
     marginLeft: -40,
+  },
+  taglineContainer: {
+    position: 'absolute',
+    top: 360,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  tagline: {
+    fontSize: 20,
+    fontFamily: 'Nunito_600SemiBold',
+    textAlign: 'center',
+    letterSpacing: -0.3,
   },
   // Commented out: Car image styles
   // imageContainer: {

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button } from '../../packages/components';
+import Logo from '../../components/Logo';
 
 const LandingScreen = () => {
   const theme = useTheme();
@@ -26,24 +27,31 @@ const LandingScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Luxury Car Image Section */}
-      <View style={styles.imageContainer}>
+      {/* Logo Section */}
+      <View style={[styles.logoContainer, { backgroundColor: theme.colors.background }]}>
+        <View style={styles.logoAlignLeft}>
+          <Logo width={360} height={360} color={theme.colors.textPrimary} />
+        </View>
+      </View>
+
+      {/* Commented out: Luxury Car Image Section */}
+      {/* <View style={styles.imageContainer}>
         <Image
           source={{ uri: 'https://pngimg.com/uploads/tesla_car/tesla_car_PNG29.png' }}
           style={styles.carImage}
           resizeMode="contain"
         />
-      </View>
+      </View> */}
 
-      {/* Content Section */}
-      <View style={styles.contentSection}>
+      {/* Commented out: Content Section */}
+      {/* <View style={styles.contentSection}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
           Welcome to Opa
         </Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
           Alles Gut (Everything is Good) with Opa
         </Text>
-      </View>
+      </View> */}
 
       {/* Buttons Section */}
       <View style={styles.buttonContainer}>
@@ -88,18 +96,31 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
-  imageContainer: {
+  logoContainer: {
     width: '100%',
-    height: 350,
+    flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 40,
+    alignItems: 'flex-start',
+    paddingTop: 100,
+    paddingBottom: 40,
     paddingHorizontal: 20,
   },
-  carImage: {
-    width: '100%',
-    height: '100%',
+  logoAlignLeft: {
+    marginLeft: -40,
   },
+  // Commented out: Car image styles
+  // imageContainer: {
+  //   width: '100%',
+  //   height: 350,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   paddingTop: 40,
+  //   paddingHorizontal: 20,
+  // },
+  // carImage: {
+  //   width: '100%',
+  //   height: '100%',
+  // },
   contentSection: {
     paddingHorizontal: 24,
     paddingTop: 24,
@@ -129,7 +150,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     paddingHorizontal: 24,
-    paddingTop: 64,
+    paddingTop: 20,
     gap: 14,
   },
   primaryButton: {

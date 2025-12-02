@@ -235,13 +235,10 @@ const BookingsListScreen = () => {
                     dropoffLocation: booking.dropoffLocation || 'Nairobi, Kenya',
                   };
                   
-                  navigation.navigate('HomeTab', {
-                    screen: 'BookingTracking',
-                    params: {
-                      bookingDetails,
-                      paymentMethod: booking.paymentMethod || 'mpesa',
-                      totalPrice: parseFloat(booking.price.replace(/[^\d.]/g, '')) || 0,
-                    },
+                  navigation.navigate('BookingTracking', {
+                    bookingDetails,
+                    paymentMethod: booking.paymentMethod || 'mpesa',
+                    totalPrice: parseFloat(booking.price.replace(/[^\d.]/g, '')) || 0,
                   });
                 } else if (booking.status === 'completed') {
                   // Navigate to past rental details screen
@@ -254,17 +251,15 @@ const BookingsListScreen = () => {
                 }
               }}
               activeOpacity={1}
-              disabled={booking.status !== 'active' && booking.status !== 'completed'}
             >
-              <Card style={styles.bookingCard}>
+              <View style={[styles.bookingCard, { backgroundColor: theme.colors.background }]}>
                 {booking.image && (
                   <View style={styles.bookingImageContainer}>
                     <Image source={booking.image} style={styles.bookingImage} resizeMode="cover" />
                   </View>
                 )}
                 <View style={styles.bookingContent}>
-                <View style={styles.bookingHeader}>
-                  <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]}>
+                  <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                     {booking.carName}
                   </Text>
                   <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
@@ -273,56 +268,7 @@ const BookingsListScreen = () => {
                     </Text>
                   </View>
                 </View>
-                <View style={styles.bookingDetails}>
-                  <View style={styles.bookingDetailItem}>
-                    <Ionicons name="calendar-outline" size={16} color={theme.colors.hint} />
-                    <Text style={[styles.bookingDetailText, { color: theme.colors.textSecondary }]}>
-                      {booking.date}
-                    </Text>
-                  </View>
-                  <View style={styles.bookingDetailItem}>
-                    <Ionicons name="time-outline" size={16} color={theme.colors.hint} />
-                    <Text style={[styles.bookingDetailText, { color: theme.colors.textSecondary }]}>
-                      {booking.duration}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.bookingFooter}>
-                  <Text style={[styles.bookingPrice, { color: theme.colors.primary }]}>{booking.price}</Text>
-                  {booking.status === 'completed' && (
-                    (() => {
-                      const ratingKey = `car-${booking.id}`;
-                      const isRated = ratedBookings.has(ratingKey);
-                      return (
-                        <TouchableOpacity
-                          style={[
-                            styles.rateButton,
-                            isRated
-                              ? { backgroundColor: theme.colors.hint + '30', borderWidth: 1, borderColor: theme.colors.hint }
-                              : { backgroundColor: theme.colors.primary }
-                          ]}
-                          onPress={() => !isRated && handleRateBooking(booking)}
-                          activeOpacity={isRated ? 1 : 0.7}
-                          disabled={isRated}
-                        >
-                          <Ionicons 
-                            name={isRated ? "checkmark-circle" : "star-outline"} 
-                            size={16} 
-                            color={isRated ? theme.colors.textSecondary : theme.colors.white} 
-                          />
-                          <Text style={[
-                            styles.rateButtonText, 
-                            { color: isRated ? theme.colors.textSecondary : theme.colors.white }
-                          ]}>
-                            {isRated ? 'Rated' : 'Rate'}
-                          </Text>
-                        </TouchableOpacity>
-                      );
-                    })()
-                  )}
-                </View>
               </View>
-            </Card>
             </TouchableOpacity>
             ))}
             
@@ -509,24 +455,22 @@ const styles = StyleSheet.create({
   },
   bookingCard: {
     flexDirection: 'row',
-    padding: 0,
-    overflow: 'hidden',
-    marginBottom: 0,
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowRadius: 12,
+    elevation: 2,
   },
   bookingImageContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     overflow: 'hidden',
-    marginLeft: 16,
-    marginVertical: 16,
+    marginRight: 16,
   },
   bookingImage: {
     width: '100%',
@@ -534,65 +478,23 @@ const styles = StyleSheet.create({
   },
   bookingContent: {
     flex: 1,
-    padding: 16,
-    paddingLeft: 12,
-  },
-  bookingHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
+    alignItems: 'center',
   },
   bookingTitle: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
+    fontSize: 17,
+    fontFamily: 'Nunito_600SemiBold',
     flex: 1,
     marginRight: 8,
   },
   statusBadge: {
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 12,
   },
   statusText: {
     fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  bookingDetails: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 12,
-  },
-  bookingDetailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  bookingDetailText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  bookingFooter: {
-    marginTop: 'auto',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  bookingPrice: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-  },
-  rateButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    gap: 6,
-  },
-  rateButtonText: {
-    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
   },
   // Rating Modal Styles

@@ -392,6 +392,17 @@ const BookingsStack = () => {
           animation: 'simple_push',
         }}
       />
+      <Stack.Screen 
+        name="BookingTracking" 
+        component={BookingTrackingScreen}
+        options={{ 
+          title: 'Booking Details',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+          animation: 'simple_push',
+        }}
+      />
     </Stack.Navigator>
   );
 };

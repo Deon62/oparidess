@@ -24,8 +24,6 @@ const ReferFriendsScreen = () => {
   };
 
   const [referralCode] = useState(generateReferralCode());
-  const [totalReferrals] = useState(3); // Mock data
-  const [totalRewards] = useState(1500); // Mock rewards in KES
   const [showCopyModal, setShowCopyModal] = useState(false);
 
   useLayoutEffect(() => {
@@ -109,7 +107,7 @@ const ReferFriendsScreen = () => {
       <Card style={[styles.headerCard, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerContent}>
           <View style={[styles.iconCircle, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-            <Ionicons name="gift-outline" size={40} color={theme.colors.white} />
+            <Ionicons name="gift-outline" size={28} color={theme.colors.white} />
           </View>
           <Text style={[styles.headerTitle, { color: theme.colors.white }]}>
             Refer & Earn
@@ -155,7 +153,7 @@ const ReferFriendsScreen = () => {
             onPress={shareReferralCode}
             activeOpacity={0.7}
           >
-            <Ionicons name="share-social-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="share-social-outline" size={20} color={theme.colors.primary} />
             <Text style={[styles.shareButtonText, { color: theme.colors.primary }]}>
               Share Code
             </Text>
@@ -165,7 +163,7 @@ const ReferFriendsScreen = () => {
             onPress={shareReferralLink}
             activeOpacity={0.7}
           >
-            <Ionicons name="link-outline" size={24} color={theme.colors.white} />
+            <Ionicons name="link-outline" size={20} color={theme.colors.white} />
             <Text style={[styles.shareButtonText, { color: theme.colors.white }]}>
               Share Link
             </Text>
@@ -173,87 +171,10 @@ const ReferFriendsScreen = () => {
         </View>
       </View>
 
-      {/* Stats */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          Your Referrals
-        </Text>
-        <View style={styles.statsContainer}>
-          <Card style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-            <Ionicons name="people-outline" size={32} color={theme.colors.primary} />
-            <Text style={[styles.statValue, { color: theme.colors.textPrimary }]}>
-              {totalReferrals}
-            </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-              Friends Referred
-            </Text>
-          </Card>
-          <Card style={[styles.statCard, { backgroundColor: theme.colors.white }]}>
-            <Ionicons name="cash-outline" size={32} color="#4CAF50" />
-            <Text style={[styles.statValue, { color: '#4CAF50' }]}>
-              KSh {totalRewards.toLocaleString()}
-            </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-              Total Rewards
-            </Text>
-          </Card>
-        </View>
-      </View>
-
-      {/* How It Works */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          How It Works
-        </Text>
-        <Card style={[styles.infoCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.stepRow}>
-            <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-              <Text style={[styles.stepNumberText, { color: theme.colors.white }]}>1</Text>
-            </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
-                Share Your Code
-              </Text>
-              <Text style={[styles.stepDescription, { color: theme.colors.textSecondary }]}>
-                Share your referral code or link with friends via WhatsApp, SMS, or social media
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.stepRow}>
-            <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-              <Text style={[styles.stepNumberText, { color: theme.colors.white }]}>2</Text>
-            </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
-                Friend Signs Up
-              </Text>
-              <Text style={[styles.stepDescription, { color: theme.colors.textSecondary }]}>
-                Your friend downloads the app and uses your referral code when signing up
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.stepRow}>
-            <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-              <Text style={[styles.stepNumberText, { color: theme.colors.white }]}>3</Text>
-            </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>
-                You Both Earn Rewards
-              </Text>
-              <Text style={[styles.stepDescription, { color: theme.colors.textSecondary }]}>
-                When your friend completes their first booking, you both earn rewards!
-              </Text>
-            </View>
-          </View>
-        </Card>
-      </View>
-
       {/* Rewards Info */}
       <View style={styles.section}>
         <View style={[styles.rewardsCard, { backgroundColor: '#4CAF50' + '10' }]}>
-          <Ionicons name="trophy-outline" size={32} color="#4CAF50" />
+          <Ionicons name="trophy-outline" size={24} color="#4CAF50" />
           <Text style={[styles.rewardsTitle, { color: theme.colors.textPrimary }]}>
             Rewards
           </Text>
@@ -329,64 +250,64 @@ const styles = StyleSheet.create({
   headerCard: {
     marginHorizontal: 24,
     marginTop: 24,
-    padding: 32,
-    borderRadius: 20,
+    padding: 20,
+    borderRadius: 16,
     alignItems: 'center',
   },
   headerContent: {
     alignItems: 'center',
   },
   iconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 22,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   headerSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 20,
   },
   section: {
     paddingHorizontal: 24,
-    marginTop: 24,
+    marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    marginBottom: 12,
     letterSpacing: -0.3,
   },
   codeCard: {
-    padding: 20,
-    borderRadius: 16,
+    padding: 16,
+    borderRadius: 12,
   },
   codeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
   },
   referralCode: {
     flex: 1,
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: 'Nunito_700Bold',
-    letterSpacing: 4,
+    letterSpacing: 3,
     textAlign: 'center',
   },
   copyButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
   },
@@ -403,89 +324,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 16,
-    borderRadius: 12,
+    padding: 12,
+    borderRadius: 10,
     borderWidth: 2,
-    gap: 8,
+    gap: 6,
   },
   shareButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  statCard: {
-    flex: 1,
-    padding: 20,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-  statValue: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-    marginTop: 8,
-    marginBottom: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
-  },
-  infoCard: {
-    padding: 20,
-    borderRadius: 16,
-  },
-  stepRow: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    gap: 16,
-  },
-  stepNumber: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexShrink: 0,
-  },
-  stepNumberText: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
-  },
-  stepContent: {
-    flex: 1,
-  },
-  stepTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 4,
-  },
-  stepDescription: {
     fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
+    fontFamily: 'Nunito_600SemiBold',
   },
   rewardsCard: {
-    padding: 20,
-    borderRadius: 16,
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
     borderWidth: 0,
     shadowOpacity: 0,
     elevation: 0,
   },
   rewardsTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginTop: 12,
-    marginBottom: 8,
+    marginTop: 10,
+    marginBottom: 6,
   },
   rewardsDescription: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
-    lineHeight: 20,
+    lineHeight: 18,
   },
   // Copy Modal Styles
   modalOverlay: {

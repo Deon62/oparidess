@@ -76,6 +76,7 @@ const HomeStack = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
+        animation: 'simple_push',
       }}
     >
       <Stack.Screen 
@@ -93,7 +94,8 @@ const HomeStack = () => {
         component={CarListScreen}
         options={{ 
           title: 'Available Cars',
-          headerShown: true 
+          headerShown: true,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
@@ -101,7 +103,8 @@ const HomeStack = () => {
         component={ServiceListScreen}
         options={{ 
           title: 'All Services',
-          headerShown: true 
+          headerShown: true,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
@@ -109,21 +112,24 @@ const HomeStack = () => {
         component={DiscoverListScreen}
         options={{ 
           title: 'All Discoveries',
-          headerShown: true 
+          headerShown: true,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
         name="DiscoverDetails" 
         component={DiscoverDetailsScreen}
         options={{ 
-          headerShown: false 
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
         name="Article" 
         component={ArticleScreen}
         options={{ 
-          headerShown: false 
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
@@ -131,7 +137,8 @@ const HomeStack = () => {
         component={CarDetailsScreen}
         options={{ 
           title: 'Car Details',
-          headerShown: true 
+          headerShown: true,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
@@ -139,7 +146,10 @@ const HomeStack = () => {
         component={BookingScreen}
         options={{ 
           title: 'Book Car',
-          headerShown: true 
+          headerShown: true,
+          animation: 'slide_from_bottom',
+          animationDuration: 200,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen 
@@ -147,7 +157,10 @@ const HomeStack = () => {
         component={BookingConfirmationScreen}
         options={{ 
           title: 'Review Booking',
-          headerShown: true 
+          headerShown: true,
+          animation: 'slide_from_bottom',
+          animationDuration: 200,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen 
@@ -155,7 +168,10 @@ const HomeStack = () => {
         component={PaymentScreen}
         options={{ 
           title: 'Payment',
-          headerShown: true 
+          headerShown: true,
+          animation: 'slide_from_bottom',
+          animationDuration: 200,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen 
@@ -283,7 +299,8 @@ const HomeStack = () => {
         component={ServiceDetailsScreen}
         options={{ 
           title: 'Service Details',
-          headerShown: false 
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen 
@@ -291,7 +308,10 @@ const HomeStack = () => {
         component={ServiceBookingScreen}
         options={{ 
           title: 'Book Service',
-          headerShown: true 
+          headerShown: true,
+          animation: 'slide_from_bottom',
+          animationDuration: 200,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen 
@@ -299,7 +319,10 @@ const HomeStack = () => {
         component={ServiceBookingConfirmationScreen}
         options={{ 
           title: 'Booking Confirmed',
-          headerShown: true 
+          headerShown: true,
+          animation: 'slide_from_bottom',
+          animationDuration: 200,
+          presentation: 'modal',
         }}
       />
       <Stack.Screen 
@@ -339,6 +362,7 @@ const BookingsStack = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
+        animation: 'simple_push',
       }}
     >
       <Stack.Screen 
@@ -356,7 +380,8 @@ const BookingsStack = () => {
         component={PastRentalDetailsScreen}
         options={{ 
           title: 'Past Rental Details',
-          headerShown: false 
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
     </Stack.Navigator>
@@ -380,6 +405,7 @@ const WishlistStack = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
+        animation: 'simple_push',
       }}
     >
       <Stack.Screen 
@@ -413,6 +439,7 @@ const MessagesStack = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
+        animation: 'simple_push',
       }}
     >
       <Stack.Screen 
@@ -430,7 +457,8 @@ const MessagesStack = () => {
         component={ChatScreen}
         options={({ route }) => ({ 
           title: route.params?.userName || 'Chat',
-          headerShown: true 
+          headerShown: true,
+          animation: 'simple_push',
         })}
       />
     </Stack.Navigator>
@@ -454,6 +482,7 @@ const SettingsStack = () => {
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
+        animation: 'simple_push',
       }}
     >
       <Stack.Screen 

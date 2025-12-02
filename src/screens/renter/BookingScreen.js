@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal,
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Input, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay, parseCurrency } from '../../packages/utils/currency';
 
@@ -10,6 +11,7 @@ const BookingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   const { car } = route.params || {};
 
   const [pickupDate, setPickupDate] = useState(null);
@@ -43,6 +45,13 @@ const BookingScreen = () => {
     { id: 4, name: 'Kilimani, Nairobi', address: 'Argwings Kodhek Road, Nairobi', coordinates: { latitude: -1.2856, longitude: 36.7819 } },
     { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi', coordinates: { latitude: -1.3192, longitude: 36.9278 } },
   ];
+
+  // Hide bottom tab bar and header on this screen
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   // Hide tab bar when screen is focused (including when returning from other screens)
   useFocusEffect(
@@ -326,6 +335,17 @@ const BookingScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      {/* Header with Back Button */}
+      <View style={[styles.header, { paddingTop: insets.top + 8, paddingBottom: 12 }]}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -903,6 +923,20 @@ const LocationPicker = ({ visible, onClose, locations, selectedLocation, onLocat
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: 'transparent',
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
     flex: 1,

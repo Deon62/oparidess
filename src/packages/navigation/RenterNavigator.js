@@ -150,6 +150,8 @@ const HomeStack = () => {
           animation: 'slide_from_bottom',
           animationDuration: 200,
           presentation: 'modal',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

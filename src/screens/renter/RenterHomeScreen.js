@@ -929,8 +929,8 @@ const RenterHomeScreen = () => {
         <View style={styles.servicesSection}>
           {/* Road Trips Section */}
           {getFilteredServices('roadTrips').length > 0 && (
-            <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
+            <View style={[styles.serviceCategorySection, styles.firstSection]}>
+              <View style={[styles.classHeader, styles.firstHeader]}>
                 <View style={styles.classHeaderLeft}>
                   <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
                     {serviceCategories.find(c => c.id === 'roadTrips')?.name}
@@ -3032,7 +3032,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingBottom: 40,
+    paddingBottom: 24,
   },
   headerRightContainer: {
     flexDirection: 'row',
@@ -3409,8 +3409,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   servicesSection: {
-    paddingTop: 24,
-    paddingBottom: 40,
+    paddingTop: 0,
+    paddingBottom: 24,
   },
   servicesGrid: {
     paddingHorizontal: 24,
@@ -3459,8 +3459,8 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   serviceCategorySection: {
-    marginBottom: 32,
-    paddingTop: 8,
+    marginTop: 0,
+    marginBottom: 8,
   },
   serviceCategoryTitle: {
     fontSize: 20,
@@ -3554,7 +3554,7 @@ const styles = StyleSheet.create({
   },
   discoverSection: {
     paddingTop: 24,
-    paddingBottom: 40,
+    paddingBottom: 24,
   },
   discoverSubsection: {
     marginBottom: 32,

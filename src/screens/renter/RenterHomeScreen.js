@@ -312,6 +312,59 @@ const RenterHomeScreen = () => {
     }
   };
 
+  // Service categories with descriptions
+  const serviceCategories = [
+    {
+      id: 'roadTrips',
+      name: 'Road Trips Agencies',
+      description: 'Explore Kenya\'s stunning landscapes with trusted tour operators',
+      categoryKey: 'roadTrips',
+    },
+    {
+      id: 'vipWedding',
+      name: 'VIP Wedding Fleet Hire',
+      description: 'Luxury vehicles for your special day',
+      categoryKey: 'vipWedding',
+    },
+    {
+      id: 'drivers',
+      name: 'Hire Professional Drivers',
+      description: 'Experienced and licensed drivers at your service',
+      categoryKey: 'drivers',
+    },
+    {
+      id: 'movers',
+      name: 'Movers',
+      description: 'Reliable moving services for your relocation needs',
+      categoryKey: 'movers',
+    },
+    {
+      id: 'carDetailing',
+      name: 'VIP Car Detailing',
+      description: 'Premium car care and detailing services',
+      categoryKey: 'carDetailing',
+    },
+    {
+      id: 'roadside',
+      name: 'Roadside Assistance',
+      description: '24/7 emergency help when you need it most',
+      categoryKey: 'roadside',
+    },
+  ];
+
+  const handleViewAllServices = (categoryId) => {
+    // Navigate to filtered services view
+    // For now, we can navigate to a search with the category filter
+    // or create a ServiceList screen similar to CarList
+    navigation.navigate('HomeTab', {
+      screen: 'RenterHome',
+      params: { 
+        activeTab: 'services',
+        serviceCategory: categoryId,
+      },
+    });
+  };
+
   // Filter cars based on search query
   const filterCarsBySearch = (cars, query) => {
     if (!query.trim()) return cars;
@@ -877,9 +930,25 @@ const RenterHomeScreen = () => {
           {/* Road Trips Section */}
           {getFilteredServices('roadTrips').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                Road Trips Agencies
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'roadTrips')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'roadTrips')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('roadTrips')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadtrips-${index}`} />)
@@ -941,9 +1010,25 @@ const RenterHomeScreen = () => {
           {/* VIP Wedding Fleet Section */}
           {getFilteredServices('vipWedding').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                VIP Wedding Fleet Hire
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'vipWedding')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'vipWedding')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('vipWedding')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-vipwedding-${index}`} />)
@@ -1005,9 +1090,25 @@ const RenterHomeScreen = () => {
           {/* Professional Drivers Section */}
           {getFilteredServices('drivers').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                Hire Professional Drivers
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'drivers')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'drivers')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('drivers')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-drivers-${index}`} />)
@@ -1068,9 +1169,25 @@ const RenterHomeScreen = () => {
           {/* Movers Section */}
           {getFilteredServices('movers').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                Movers
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'movers')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'movers')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('movers')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-movers-${index}`} />)
@@ -1133,9 +1250,25 @@ const RenterHomeScreen = () => {
           {/* VIP Car Detailing Section */}
           {getFilteredServices('carDetailing').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                VIP Car Detailing
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'carDetailing')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'carDetailing')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('carDetailing')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-cardetailing-${index}`} />)
@@ -1197,9 +1330,25 @@ const RenterHomeScreen = () => {
           {/* Roadside Assistance Section */}
           {getFilteredServices('roadside').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <Text style={[styles.serviceCategoryTitle, { color: theme.colors.textPrimary }]}>
-                Roadside Assistance
-              </Text>
+              <View style={styles.classHeader}>
+                <View style={styles.classHeaderLeft}>
+                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
+                    {serviceCategories.find(c => c.id === 'roadside')?.name}
+                  </Text>
+                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
+                    {serviceCategories.find(c => c.id === 'roadside')?.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => handleViewAllServices('roadside')}
+                  activeOpacity={0.7}
+                  style={styles.viewAllButton}
+                >
+                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
+                    View All
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadside-${index}`} />)

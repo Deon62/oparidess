@@ -552,6 +552,46 @@ const BookingScreen = () => {
               <Text style={[styles.insuranceDescription, { color: theme.colors.textSecondary }]}>
                 Add comprehensive insurance coverage for extra protection (+KSh 1,500/day)
               </Text>
+              
+              {/* Common Covers List */}
+              <View style={styles.coversList}>
+                <View style={styles.coverItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
+                    Collision Damage Waiver
+                  </Text>
+                </View>
+                <View style={styles.coverItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
+                    Theft Protection
+                  </Text>
+                </View>
+                <View style={styles.coverItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
+                    Third Party Liability
+                  </Text>
+                </View>
+                <View style={styles.coverItem}>
+                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
+                    Personal Accident Coverage
+                  </Text>
+                </View>
+              </View>
+              
+              {/* Read More Link */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate('InsuranceDetails')}
+                activeOpacity={0.7}
+                style={styles.readMoreButton}
+              >
+                <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+                  Read more
+                </Text>
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+              </TouchableOpacity>
             </View>
             <Toggle
               value={insuranceEnabled}
@@ -1027,6 +1067,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+    marginBottom: 12,
+  },
+  coversList: {
+    marginTop: 12,
+    marginBottom: 12,
+  },
+  coverItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  coverText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    flex: 1,
+  },
+  readMoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    gap: 4,
+  },
+  readMoreText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
   priceRow: {
     flexDirection: 'row',

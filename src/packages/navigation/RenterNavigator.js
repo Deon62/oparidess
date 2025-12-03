@@ -15,6 +15,7 @@ import DiscoverDetailsScreen from '../../screens/renter/DiscoverDetailsScreen';
 import ArticleScreen from '../../screens/renter/ArticleScreen';
 import BookingScreen from '../../screens/renter/BookingScreen';
 import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationScreen';
+import InsuranceDetailsScreen from '../../screens/renter/InsuranceDetailsScreen';
 import CancellationScreen from '../../screens/renter/CancellationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
@@ -160,6 +161,16 @@ const HomeStack = () => {
           animation: 'slide_from_bottom',
           animationDuration: 200,
           presentation: 'modal',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="InsuranceDetails" 
+        component={InsuranceDetailsScreen}
+        options={{ 
+          headerShown: false,
+          animation: 'simple_push',
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
         }}

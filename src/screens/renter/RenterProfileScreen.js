@@ -19,6 +19,7 @@ const RenterProfileScreen = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
   const [showNameEditModal, setShowNameEditModal] = useState(false);
+  const [showNameSuccessModal, setShowNameSuccessModal] = useState(false);
   const [editedFirstName, setEditedFirstName] = useState('');
   const [editedLastName, setEditedLastName] = useState('');
 
@@ -83,7 +84,7 @@ const RenterProfileScreen = () => {
         last_name: editedLastName.trim(),
       });
       setShowNameEditModal(false);
-      Alert.alert('Success', 'Name updated successfully!');
+      setShowNameSuccessModal(true);
     } else {
       Alert.alert('Error', 'Please enter both first and last name.');
     }
@@ -469,6 +470,37 @@ const RenterProfileScreen = () => {
         </View>
       </Modal>
 
+      {/* Name Update Success Modal */}
+      <Modal
+        visible={showNameSuccessModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowNameSuccessModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.nameSuccessModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.nameSuccessIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={64} color="#4CAF50" />
+            </View>
+            <Text style={[styles.nameSuccessModalTitle, { color: theme.colors.textPrimary }]}>
+              Name Updated!
+            </Text>
+            <Text style={[styles.nameSuccessModalMessage, { color: theme.colors.textSecondary }]}>
+              Your name has been updated successfully.
+            </Text>
+            <TouchableOpacity
+              style={[styles.nameSuccessModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => setShowNameSuccessModal(false)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.nameSuccessModalButtonText, { color: theme.colors.white }]}>
+                OK
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       {/* Logout Confirmation Modal */}
       <Modal
         visible={showLogoutModal}
@@ -828,6 +860,50 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   nameEditModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Name Success Modal Styles
+  nameSuccessModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+  },
+  nameSuccessIconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  nameSuccessModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  nameSuccessModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  nameSuccessModalButton: {
+    width: '100%',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  nameSuccessModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },

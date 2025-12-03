@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -18,6 +18,9 @@ const RenterProfileScreen = () => {
   const { logout, user, updateUser } = useUser();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
+  const [showNameEditModal, setShowNameEditModal] = useState(false);
+  const [editedFirstName, setEditedFirstName] = useState('');
+  const [editedLastName, setEditedLastName] = useState('');
 
   // Mock user data - in real app, this would come from context/API
   const [personalInfo, setPersonalInfo] = useState({
@@ -59,6 +62,31 @@ const RenterProfileScreen = () => {
 
   const handleUpdateProfile = () => {
     navigation.navigate('UpdateProfile', { personalInfo });
+  };
+
+  const handleEditName = () => {
+    setEditedFirstName(personalInfo.first_name);
+    setEditedLastName(personalInfo.last_name);
+    setShowNameEditModal(true);
+  };
+
+  const handleSaveName = () => {
+    if (editedFirstName.trim() && editedLastName.trim()) {
+      setPersonalInfo(prev => ({
+        ...prev,
+        first_name: editedFirstName.trim(),
+        last_name: editedLastName.trim(),
+      }));
+      // Update user context
+      updateUser({
+        first_name: editedFirstName.trim(),
+        last_name: editedLastName.trim(),
+      });
+      setShowNameEditModal(false);
+      Alert.alert('Success', 'Name updated successfully!');
+    } else {
+      Alert.alert('Error', 'Please enter both first and last name.');
+    }
   };
 
   const requestPermissions = async () => {
@@ -226,9 +254,18 @@ const RenterProfileScreen = () => {
             <Ionicons name="camera" size={16} color={theme.colors.white} />
           </TouchableOpacity>
         </View>
-        <Text style={[styles.profileName, { color: theme.colors.textPrimary }]}>
-          {personalInfo.first_name} {personalInfo.last_name}
-        </Text>
+        <View style={styles.profileNameContainer}>
+          <Text style={[styles.profileName, { color: theme.colors.textPrimary }]}>
+            {personalInfo.first_name} {personalInfo.last_name}
+          </Text>
+          <TouchableOpacity
+            onPress={handleEditName}
+            style={styles.nameEditIcon}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="create-outline" size={18} color={theme.colors.primary} />
+          </TouchableOpacity>
+        </View>
         <Text style={[styles.profileSubtext, { color: theme.colors.textSecondary }]}>
           {personalInfo.email}
         </Text>
@@ -361,6 +398,76 @@ const RenterProfileScreen = () => {
 
       {/* Bottom Spacing */}
       <View style={{ height: 40 }} />
+
+      {/* Name Edit Modal */}
+      <Modal
+        visible={showNameEditModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowNameEditModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.nameEditModalContent, { backgroundColor: theme.colors.white }]}>
+            <Text style={[styles.nameEditModalTitle, { color: theme.colors.textPrimary }]}>
+              Edit Name
+            </Text>
+            <View style={styles.nameEditInputContainer}>
+              <Text style={[styles.nameEditLabel, { color: theme.colors.textSecondary }]}>
+                First Name
+              </Text>
+              <TextInput
+                style={[styles.nameEditInput, { 
+                  color: theme.colors.textPrimary,
+                  borderColor: theme.colors.hint + '40',
+                  backgroundColor: theme.colors.background,
+                }]}
+                value={editedFirstName}
+                onChangeText={setEditedFirstName}
+                placeholder="Enter first name"
+                placeholderTextColor={theme.colors.hint}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={styles.nameEditInputContainer}>
+              <Text style={[styles.nameEditLabel, { color: theme.colors.textSecondary }]}>
+                Last Name
+              </Text>
+              <TextInput
+                style={[styles.nameEditInput, { 
+                  color: theme.colors.textPrimary,
+                  borderColor: theme.colors.hint + '40',
+                  backgroundColor: theme.colors.background,
+                }]}
+                value={editedLastName}
+                onChangeText={setEditedLastName}
+                placeholder="Enter last name"
+                placeholderTextColor={theme.colors.hint}
+                autoCapitalize="words"
+              />
+            </View>
+            <View style={styles.nameEditModalButtons}>
+              <TouchableOpacity
+                style={[styles.nameEditModalButton, styles.nameEditModalButtonCancel, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowNameEditModal(false)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.nameEditModalButtonText, { color: theme.colors.textSecondary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.nameEditModalButton, styles.nameEditModalButtonSave, { backgroundColor: theme.colors.primary }]}
+                onPress={handleSaveName}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.nameEditModalButtonText, { color: theme.colors.white }]}>
+                  Save
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Logout Confirmation Modal */}
       <Modal
@@ -504,11 +611,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
   },
+  profileNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+    gap: 8,
+  },
   profileName: {
     fontSize: 24,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
     textAlign: 'center',
+  },
+  nameEditIcon: {
+    padding: 4,
   },
   profileSubtext: {
     fontSize: 16,
@@ -651,6 +767,67 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   logoutModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Name Edit Modal Styles
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+  },
+  nameEditModalContent: {
+    width: '85%',
+    borderRadius: 24,
+    padding: 24,
+  },
+  nameEditModalTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  nameEditInputContainer: {
+    marginBottom: 16,
+  },
+  nameEditLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 8,
+  },
+  nameEditInput: {
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+  },
+  nameEditModalButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8,
+  },
+  nameEditModalButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameEditModalButtonCancel: {
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+  },
+  nameEditModalButtonSave: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  nameEditModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },

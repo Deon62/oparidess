@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useUser } from '../../packages/context/UserContext';
+import { useBookings } from '../../packages/context/BookingsContext';
 import { Button, Input, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay, parseCurrency } from '../../packages/utils/currency';
 
@@ -12,7 +14,12 @@ const BookingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
+  const { user } = useUser();
+  const { bookings } = useBookings();
   const { car } = route.params || {};
+  
+  // Minimum age requirement for car rental (as per car rules)
+  const MINIMUM_AGE = 25;
 
   // Initialize dates to tomorrow and day after tomorrow
   const getTomorrow = () => {
@@ -91,6 +98,7 @@ const BookingScreen = () => {
 
   // Calculate dates
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
 
@@ -99,6 +107,105 @@ const BookingScreen = () => {
     perDay: car?.price ? parseCurrency(car.price.replace('/day', '')) : 4500,
     deposit: 20000,
     minimumDays: 3,
+  };
+
+  // Age verification functions
+  const calculateAge = (dateOfBirth) => {
+    if (!dateOfBirth) return null;
+    
+    const birthDate = new Date(dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
+  };
+
+  const isAgeEligible = () => {
+    if (!user?.date_of_birth) return null; // Return null if date of birth not set
+    const age = calculateAge(user.date_of_birth);
+    return age !== null ? age >= MINIMUM_AGE : null;
+  };
+
+  // Availability check functions
+  const getUnavailableDates = () => {
+    if (!car?.id) return [];
+    
+    const unavailableDates = [];
+    
+    // Get all existing bookings for this car
+    const carBookings = bookings.filter(booking => {
+      // Check if booking is for this car (match by car id or name)
+      const bookingCarId = booking.car?.id || booking.carId;
+      const bookingCarName = booking.car?.name || booking.carName;
+      const currentCarId = car?.id || car?.carId;
+      const currentCarName = car?.name;
+      
+      return (bookingCarId && bookingCarId === currentCarId) || 
+             (bookingCarName && currentCarName && bookingCarName === currentCarName);
+    });
+    
+    // Extract unavailable date ranges from bookings
+    carBookings.forEach(booking => {
+      if (booking.pickupDate && booking.dropoffDate && booking.status !== 'cancelled') {
+        const pickup = new Date(booking.pickupDate);
+        const dropoff = new Date(booking.dropoffDate);
+        pickup.setHours(0, 0, 0, 0);
+        dropoff.setHours(0, 0, 0, 0);
+        
+        // Add all dates in the range to unavailable dates
+        const currentDate = new Date(pickup);
+        while (currentDate <= dropoff) {
+          unavailableDates.push(new Date(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+      }
+    });
+    
+    return unavailableDates;
+  };
+
+  const isDateUnavailable = (date) => {
+    const unavailableDates = getUnavailableDates();
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    
+    return unavailableDates.some(unavailableDate => {
+      const unavailable = new Date(unavailableDate);
+      unavailable.setHours(0, 0, 0, 0);
+      return unavailable.getTime() === checkDate.getTime();
+    });
+  };
+
+  const isDateRangeAvailable = (startDate, endDate) => {
+    const unavailableDates = getUnavailableDates();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
+    
+    // Check if any date in the range is unavailable
+    const currentDate = new Date(start);
+    while (currentDate <= end) {
+      const checkDate = new Date(currentDate);
+      checkDate.setHours(0, 0, 0, 0);
+      
+      if (unavailableDates.some(unavailableDate => {
+        const unavailable = new Date(unavailableDate);
+        unavailable.setHours(0, 0, 0, 0);
+        return unavailable.getTime() === checkDate.getTime();
+      })) {
+        return false;
+      }
+      
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return true;
   };
 
   // Calculate number of days
@@ -169,10 +276,54 @@ const BookingScreen = () => {
   };
 
   const handleContinue = () => {
+    // Age verification
+    const ageEligible = isAgeEligible();
+    if (ageEligible === false) {
+      const userAge = calculateAge(user?.date_of_birth);
+      Alert.alert(
+        'Age Requirement Not Met',
+        `You must be at least ${MINIMUM_AGE} years old to rent this car. You are currently ${userAge} years old. Please update your date of birth in your profile or contact support.`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Update Profile', 
+            onPress: () => navigation.navigate('UpdateProfile')
+          }
+        ]
+      );
+      return;
+    }
+    
+    if (ageEligible === null) {
+      Alert.alert(
+        'Date of Birth Required',
+        'Please add your date of birth in your profile to proceed with booking. This is required to verify age eligibility.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Update Profile', 
+            onPress: () => navigation.navigate('UpdateProfile')
+          }
+        ]
+      );
+      return;
+    }
+
+    // Date validation
     if (!pickupDate || !dropoffDate) {
       Alert.alert('Error', 'Please select both pickup and dropoff dates');
       return;
     }
+    
+    // Availability check
+    if (!isDateRangeAvailable(pickupDate, dropoffDate)) {
+      Alert.alert(
+        'Car Not Available',
+        'The car is already booked for one or more of the selected dates. Please choose different dates.'
+      );
+      return;
+    }
+
     if (days < rentalInfo.minimumDays) {
       Alert.alert(
         'Error',
@@ -217,7 +368,7 @@ const BookingScreen = () => {
 
   // Single Date Picker Component
   // Single Date Picker Component
-  const SingleDatePicker = ({ visible, onClose, selectedDate, onDateSelect, title, minDate }) => {
+  const SingleDatePicker = ({ visible, onClose, selectedDate, onDateSelect, title, minDate, unavailableDates = [] }) => {
     const initialMonth = selectedDate?.getMonth() ?? today.getMonth();
     const initialYear = selectedDate?.getFullYear() ?? today.getFullYear();
     const [currentMonth, setCurrentMonth] = useState(initialMonth);
@@ -257,6 +408,7 @@ const BookingScreen = () => {
 
     const isDateDisabled = (day) => {
       const date = new Date(currentYear, currentMonth, day);
+      date.setHours(0, 0, 0, 0);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
@@ -268,6 +420,16 @@ const BookingScreen = () => {
         const min = new Date(minDate);
         min.setHours(0, 0, 0, 0);
         if (date <= min) return true;
+      }
+      
+      // Check if date is unavailable (already booked)
+      if (unavailableDates.length > 0) {
+        const isUnavailable = unavailableDates.some(unavailableDate => {
+          const unavailable = new Date(unavailableDate);
+          unavailable.setHours(0, 0, 0, 0);
+          return unavailable.getTime() === date.getTime();
+        });
+        if (isUnavailable) return true;
       }
       
       return false;
@@ -435,6 +597,21 @@ const BookingScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Age Warning Banner */}
+        {user?.date_of_birth && !isAgeEligible() && (
+          <View style={[styles.ageWarningBanner, { backgroundColor: '#FFF3CD' + '80', borderLeftColor: '#FF9800' }]}>
+            <Ionicons name="warning-outline" size={20} color="#FF9800" />
+            <View style={styles.ageWarningContent}>
+              <Text style={[styles.ageWarningTitle, { color: theme.colors.textPrimary }]}>
+                Age Requirement
+              </Text>
+              <Text style={[styles.ageWarningText, { color: theme.colors.textSecondary }]}>
+                You must be at least {MINIMUM_AGE} years old to rent this car. You are currently {calculateAge(user.date_of_birth)} years old.
+              </Text>
+            </View>
+          </View>
+        )}
+
         {/* Date Selection - Airbnb Style */}
         <View style={styles.section}>
           {/* Pickup Date */}
@@ -870,6 +1047,7 @@ const BookingScreen = () => {
           }
         }}
         title="Select Pickup Date"
+        unavailableDates={getUnavailableDates()}
       />
 
       {/* Dropoff Date Picker */}
@@ -880,6 +1058,7 @@ const BookingScreen = () => {
         onDateSelect={setDropoffDate}
         title="Select Dropoff Date"
         minDate={pickupDate}
+        unavailableDates={getUnavailableDates()}
       />
 
       {/* Combined Time Picker */}
@@ -1346,6 +1525,29 @@ const styles = StyleSheet.create({
   dateChangeButtonText: {
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  ageWarningBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginHorizontal: 24,
+    marginTop: 16,
+    padding: 16,
+    borderRadius: 12,
+    borderLeftWidth: 4,
+    gap: 12,
+  },
+  ageWarningContent: {
+    flex: 1,
+  },
+  ageWarningTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  ageWarningText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
   },
   // Date Range Picker Modal Styles
   modalOverlay: {

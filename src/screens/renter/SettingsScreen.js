@@ -92,6 +92,10 @@ const SettingsScreen = () => {
     navigation.navigate('UpdateProfile');
   };
 
+  const handleChangePassword = () => {
+    navigation.navigate('ChangePassword');
+  };
+
   const handleCustomerSupport = () => {
     navigation.navigate('CustomerSupport');
   };
@@ -212,6 +216,11 @@ const SettingsScreen = () => {
           icon="person-outline"
           title="Edit Account"
           onPress={handleAccountEdit}
+        />
+        <SettingItem
+          icon="lock-closed-outline"
+          title="Change Password"
+          onPress={handleChangePassword}
         />
         <SettingItem
           icon={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}

@@ -26,6 +26,7 @@ import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetail
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
+import ChangePasswordScreen from '../../screens/renter/ChangePasswordScreen';
 import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
@@ -650,6 +651,14 @@ const ProfileStack = () => {
         component={UpdateProfileScreen}
         options={{ 
           title: 'Update Profile',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="ChangePassword" 
+        component={ChangePasswordScreen}
+        options={{ 
+          title: 'Change Password',
           headerShown: true 
         }}
       />

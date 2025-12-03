@@ -228,14 +228,21 @@ const RenterProfileScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
-      {/* Floating Back Button */}
-      <View style={[styles.backButtonContainer, { paddingTop: insets.top + 8 }]}>
+      {/* Floating Back Button and Settings Icon */}
+      <View style={[styles.topButtonsContainer, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
           style={[styles.backButton, { backgroundColor: theme.colors.white }]}
           onPress={() => navigation.goBack()}
           activeOpacity={0.8}
         >
           <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.settingsButton, { backgroundColor: theme.colors.white }]}
+          onPress={() => navigation.navigate('Settings')}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="settings-outline" size={20} color={theme.colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -469,15 +476,30 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 20,
   },
-  backButtonContainer: {
+  topButtonsContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     zIndex: 1000,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
+    alignItems: 'center',
   },
   backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  settingsButton: {
     width: 40,
     height: 40,
     borderRadius: 20,

@@ -133,10 +133,10 @@ const CancellationPolicyScreen = () => {
           <TouchableOpacity
             style={[styles.supportButton, { backgroundColor: theme.colors.primary }]}
             onPress={() => {
-              // Navigate to CustomerSupport in the appropriate tab
+              // Navigate to CustomerSupport in the ProfileTab
               const parent = navigation.getParent();
               if (parent) {
-                parent.navigate('SettingsTab', { screen: 'CustomerSupport' });
+                parent.navigate('ProfileTab', { screen: 'CustomerSupport' });
               } else {
                 navigation.navigate('CustomerSupport');
               }

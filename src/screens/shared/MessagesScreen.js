@@ -5,8 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// Import profile image
-const profileImage = require('../../../assets/logo/profile.jpg');
 const opaLogo = require('../../../assets/logo/logo.webp');
 
 const MessagesScreen = () => {
@@ -26,18 +24,6 @@ const MessagesScreen = () => {
             <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
               Messages
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('HomeTab', { screen: 'RenterProfile' });
-              }}
-              style={styles.profileButton}
-              activeOpacity={0.7}
-            >
-              <View style={styles.profileImageContainer}>
-                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-                <View style={styles.profileOnlineIndicator} />
-              </View>
-            </TouchableOpacity>
           </View>
         </View>
       ),
@@ -257,20 +243,6 @@ const styles = StyleSheet.create({
   unreadText: {
     fontSize: 11,
     fontFamily: 'Nunito_700Bold',
-  },
-  profileButton: {
-    marginRight: 8,
-  },
-  profileImageContainer: {
-    position: 'relative',
-    width: 36,
-    height: 36,
-  },
-  profileImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
   },
   profileOnlineIndicator: {
     position: 'absolute',

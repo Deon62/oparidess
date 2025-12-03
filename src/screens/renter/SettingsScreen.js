@@ -13,8 +13,6 @@ import {
   authenticateWithBiometrics,
 } from '../../packages/utils/biometrics';
 
-// Import profile image
-const profileImage = require('../../../assets/logo/profile.jpg');
 
 const SettingsScreen = () => {
   const theme = useTheme();
@@ -198,18 +196,6 @@ const SettingsScreen = () => {
               activeOpacity={0.7}
             >
               <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('HomeTab', { screen: 'RenterProfile' });
-              }}
-              style={styles.profileButton}
-              activeOpacity={0.7}
-            >
-              <View style={styles.profileImageContainer}>
-                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-                <View style={styles.onlineIndicator} />
-              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -545,20 +531,6 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 8,
-  },
-  profileButton: {
-    marginLeft: 4,
-  },
-  profileImageContainer: {
-    position: 'relative',
-    width: 36,
-    height: 36,
-  },
-  profileImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
   },
   onlineIndicator: {
     position: 'absolute',

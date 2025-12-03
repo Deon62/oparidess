@@ -55,7 +55,13 @@ const BookingsListScreen = () => {
             </Text>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('SettingsTab', { screen: 'Notifications' });
+                // Navigate to ProfileTab, then to Notifications screen
+                const parent = navigation.getParent();
+                if (parent) {
+                  parent.navigate('ProfileTab', { screen: 'Notifications' });
+                } else {
+                  navigation.navigate('ProfileTab', { screen: 'Notifications' });
+                }
               }}
               style={styles.iconButton}
               activeOpacity={0.7}

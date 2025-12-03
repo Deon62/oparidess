@@ -22,9 +22,6 @@ try {
   // expo-blur not installed, will use fallback
 }
 
-// Import profile image
-const profileImage = require('../../../assets/logo/profile.jpg');
-
 // Import car images
 const carImage1 = require('../../../assets/images/car1.webp');
 const carImage2 = require('../../../assets/images/car2.webp');
@@ -764,7 +761,7 @@ const RenterHomeScreen = () => {
     navigation.setOptions({
       header: () => (
         <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
-          {/* Top Row: Search Bar and Profile */}
+          {/* Top Row: Search Bar */}
           <View style={styles.headerTopRow}>
             <TouchableOpacity
               onPress={() => {
@@ -783,19 +780,6 @@ const RenterHomeScreen = () => {
               <Text style={[styles.headerSearchPlaceholder, { color: theme.colors.hint }]}>
                 Search for cars, services...
               </Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('RenterProfile');
-              }}
-              style={styles.profileButton}
-              activeOpacity={0.7}
-            >
-              <View style={styles.profileImageContainer}>
-                <Image source={profileImage} style={[styles.profileImage, { borderColor: theme.colors.primary }]} resizeMode="cover" />
-                <View style={styles.onlineIndicator} />
-              </View>
             </TouchableOpacity>
           </View>
 
@@ -3507,31 +3491,6 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 6,
   },
-  profileButton: {
-    marginLeft: 4,
-  },
-  profileImageContainer: {
-    position: 'relative',
-    width: 36,
-    height: 36,
-  },
-  profileImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 2,
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#4CAF50',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
   headerSearchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -3736,15 +3695,15 @@ const styles = StyleSheet.create({
   },
   headerTopRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
     paddingBottom: 16,
-    gap: 12,
   },
   headerSearchBar: {
     flex: 1,
+    maxWidth: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 28,

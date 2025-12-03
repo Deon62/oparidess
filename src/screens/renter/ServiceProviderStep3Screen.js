@@ -75,7 +75,7 @@ const ServiceProviderStep3Screen = () => {
       tabBarStyle: undefined,
     });
     // Navigate back to profile or home
-    navigation.getParent()?.navigate('HomeTab', { screen: 'RenterProfile' });
+    navigation.getParent()?.navigate('ProfileTab', { screen: 'RenterProfile' });
   };
 
   const InfoRow = ({ label, value, icon }) => (

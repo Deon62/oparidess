@@ -236,16 +236,6 @@ const HomeStack = () => {
         }}
       />
       <Stack.Screen 
-        name="RenterProfile" 
-        component={RenterProfileScreen}
-        options={{ 
-          title: 'My Profile',
-          headerShown: false,
-          statusBarStyle: 'dark',
-          statusBarBackgroundColor: 'transparent',
-        }}
-      />
-      <Stack.Screen 
         name="UpdateProfile" 
         component={UpdateProfileScreen}
         options={{ 
@@ -524,8 +514,8 @@ const MessagesStack = () => {
   );
 };
 
-// Settings Stack Navigator
-const SettingsStack = () => {
+// Profile Stack Navigator
+const ProfileStack = () => {
   const theme = useTheme();
 
   return (
@@ -544,6 +534,16 @@ const SettingsStack = () => {
         animation: 'simple_push',
       }}
     >
+      <Stack.Screen 
+        name="RenterProfile" 
+        component={RenterProfileScreen}
+        options={{ 
+          title: 'My Profile',
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
       <Stack.Screen 
         name="Settings" 
         component={SettingsScreen}
@@ -707,9 +707,9 @@ const RenterNavigator = () => {
             iconName = focused ? 'calendar' : 'calendar-outline';
           } else if (route.name === 'MessagesTab') {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          } else if (route.name === 'SettingsTab') {
-            // SettingsTab icon is handled in its own options to prevent highlighting when on Notifications
-            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (route.name === 'ProfileTab') {
+            // ProfileTab icon is handled in its own options
+            iconName = focused ? 'person' : 'person-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -762,21 +762,21 @@ const RenterNavigator = () => {
         }}
       />
       <Tab.Screen 
-        name="SettingsTab" 
-        component={SettingsStack}
+        name="ProfileTab" 
+        component={ProfileStack}
         options={({ route }) => {
-          const routeName = getFocusedRouteNameFromRoute(route) ?? 'Settings';
-          const isSettingsScreen = routeName === 'Settings';
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'RenterProfile';
+          const isProfileScreen = routeName === 'RenterProfile';
           
           return {
-            title: 'Settings',
-            tabBarLabel: 'Settings',
+            title: 'Profile',
+            tabBarLabel: 'Profile',
             tabBarIcon: ({ focused, color, size }) => {
-              // Only highlight if we're on Settings screen, not on Notifications
-              const shouldHighlight = focused && isSettingsScreen;
+              // Only highlight if we're on Profile screen
+              const shouldHighlight = focused && isProfileScreen;
               return (
                 <Ionicons 
-                  name={shouldHighlight ? 'settings' : 'settings-outline'} 
+                  name={shouldHighlight ? 'person' : 'person-outline'} 
                   size={size} 
                   color={shouldHighlight ? theme.colors.primary : theme.colors.hint} 
                 />
@@ -786,13 +786,13 @@ const RenterNavigator = () => {
         }}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
-            // Get the current route name in the SettingsTab stack
-            const routeName = getFocusedRouteNameFromRoute(route) ?? 'Settings';
+            // Get the current route name in the ProfileTab stack
+            const routeName = getFocusedRouteNameFromRoute(route) ?? 'RenterProfile';
             
-            // If we're not on the Settings screen, navigate to it instead
-            if (routeName !== 'Settings') {
+            // If we're not on the Profile screen, navigate to it instead
+            if (routeName !== 'RenterProfile') {
               e.preventDefault();
-              navigation.navigate('SettingsTab', { screen: 'Settings' });
+              navigation.navigate('ProfileTab', { screen: 'RenterProfile' });
             }
             // Otherwise, let the default behavior happen (just focus the tab)
           },

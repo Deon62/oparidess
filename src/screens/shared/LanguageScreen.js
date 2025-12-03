@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -11,12 +11,23 @@ const LanguageScreen = () => {
   const currentLanguage = route.params?.currentLanguage || 'English';
   const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
 
-  // Hide bottom tab bar when screen is focused
+  // Set navigation options to show status bar
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      statusBarStyle: 'dark',
+      statusBarBackgroundColor: 'transparent',
+    });
+  }, [navigation]);
+
+  // Hide bottom tab bar and ensure status bar is visible when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       navigation.getParent()?.setOptions({
         tabBarStyle: { display: 'none' },
       });
+      // Ensure status bar is visible
+      StatusBar.setHidden(false);
+      StatusBar.setBarStyle('dark-content');
       return () => {
         // Restore tab bar when leaving this screen
       };
@@ -76,11 +87,13 @@ const LanguageScreen = () => {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      <ScrollView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
       {languages.map((language) => {
         const isSelected = selectedLanguage === language.name;
         return (
@@ -108,6 +121,7 @@ const LanguageScreen = () => {
         );
       })}
     </ScrollView>
+    </>
   );
 };
 

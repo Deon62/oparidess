@@ -548,7 +548,9 @@ const SettingsStack = () => {
         component={LanguageScreen}
         options={{ 
           title: 'Select Language',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -556,7 +558,9 @@ const SettingsStack = () => {
         component={NotificationPreferencesScreen}
         options={{ 
           title: 'Notification Preferences',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -564,7 +568,9 @@ const SettingsStack = () => {
         component={PrivacyScreen}
         options={{ 
           title: 'Privacy',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -572,7 +578,9 @@ const SettingsStack = () => {
         component={AboutScreen}
         options={{ 
           title: 'About',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -580,7 +588,9 @@ const SettingsStack = () => {
         component={LegalScreen}
         options={{ 
           title: 'Legal',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -588,7 +598,9 @@ const SettingsStack = () => {
         component={TermsOfServiceScreen}
         options={{ 
           title: 'Terms of Service',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -596,7 +608,9 @@ const SettingsStack = () => {
         component={UserAgreementScreen}
         options={{ 
           title: 'User Agreement',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -604,7 +618,9 @@ const SettingsStack = () => {
         component={LiabilityInsuranceScreen}
         options={{ 
           title: 'Liability & Insurance',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -612,7 +628,9 @@ const SettingsStack = () => {
         component={IntellectualPropertyScreen}
         options={{ 
           title: 'Intellectual Property',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

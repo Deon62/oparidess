@@ -1,6 +1,5 @@
 import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
@@ -64,25 +63,6 @@ const SignupScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.contentContainer}>
-        {/* Tagline */}
-        <LinearGradient
-          colors={[theme.colors.primary, theme.colors.primary + 'F5', theme.colors.primary + 'EA']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-          style={styles.taglineContainer}
-        >
-          <View style={styles.taglineContent}>
-            <View style={styles.decorativeCircle} />
-            <Text 
-              style={[styles.taglineText, { color: theme.colors.white }]}
-              allowFontScaling={false}
-            >
-              Welcome to Opa!
-            </Text>
-          </View>
-          <View style={[styles.taglineCurve, { backgroundColor: theme.colors.background }]} />
-        </LinearGradient>
-
         {/* Form Section */}
         <View style={styles.formSection}>
         <View style={styles.inputWrapper}>
@@ -223,42 +203,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-  taglineContainer: {
-    paddingTop: 120,
-    paddingBottom: 0,
-    marginBottom: -1,
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  taglineContent: {
-    paddingHorizontal: 24,
-    paddingBottom: 28,
-    alignItems: 'center',
-    position: 'relative',
-  },
-  decorativeCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    position: 'absolute',
-    top: -20,
-    right: -10,
-  },
-  taglineCurve: {
-    height: 35,
-    borderTopLeftRadius: 35,
-    borderTopRightRadius: 35,
-    marginTop: -1,
-  },
-  taglineText: {
-    fontSize: 22,
-    fontFamily: 'Nunito_600SemiBold',
-    textAlign: 'center',
-  },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 80,
   },
   inputWrapper: {
     alignItems: 'center',

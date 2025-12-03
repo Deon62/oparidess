@@ -303,9 +303,9 @@ const RenterHomeScreen = () => {
       name: 'Everyday Picks',
       description: 'Affordable and reliable rides for daily movement.',
       cars: [
-        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1 },
-        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2 },
-        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3 },
+        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1, rating: 4.8, tag: 'Fuel Efficient' },
+        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2, rating: 4.7 },
+        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3, rating: 4.6 },
       ],
     },
     {
@@ -313,9 +313,9 @@ const RenterHomeScreen = () => {
       name: 'Premium & Luxury',
       description: 'Elevated comfort for business or special events.',
       cars: [
-        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1 },
-        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2 },
+        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4, rating: 4.9, tag: 'Boss Vibe' },
+        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1, rating: 4.8 },
+        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2, rating: 4.7 },
       ],
     },
     {
@@ -323,9 +323,9 @@ const RenterHomeScreen = () => {
       name: 'Elite Collection',
       description: 'Ultimate luxury and prestige for extraordinary moments.',
       cars: [
-        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3 },
-        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1 },
+        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3, rating: 5.0, tag: 'Royal Feel' },
+        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4, rating: 4.9 },
+        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1, rating: 5.0 },
       ],
     },
   ];
@@ -337,9 +337,9 @@ const RenterHomeScreen = () => {
       name: 'Pickups',
       description: 'Rugged and versatile for work and adventure',
       vehicles: [
-        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', image: car12 },
-        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', image: car5 },
-        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', image: car6 },
+        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', image: car12, rating: 4.9, tag: 'Best Offroader' },
+        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', image: car5, rating: 4.7 },
+        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', image: car6, rating: 4.6 },
       ],
     },
     {
@@ -347,9 +347,9 @@ const RenterHomeScreen = () => {
       name: 'Vans',
       description: 'Spacious and practical for groups and cargo',
       vehicles: [
-        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', image: car9 },
-        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', image: car10 },
-        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', image: car11 },
+        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', image: car9, rating: 4.8, tag: 'Spacious' },
+        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', image: car10, rating: 4.7 },
+        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', image: car11, rating: 4.9 },
       ],
     },
     {
@@ -357,9 +357,9 @@ const RenterHomeScreen = () => {
       name: 'Trucks',
       description: 'Heavy-duty vehicles for commercial transport',
       vehicles: [
-        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car7 },
-        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car8 },
-        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car13 },
+        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car7, rating: 4.8, tag: 'Heavy Duty' },
+        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car8, rating: 4.7 },
+        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car13, rating: 4.9 },
       ],
     },
   ];
@@ -2501,7 +2501,13 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                       style={styles.carImage}
                       resizeMode="cover"
                     />
-                    {/* Like Icon */}
+                    {/* Tag Badge - Top Left */}
+                    {car.tag && (
+                      <View style={styles.carTagContainer}>
+                        <Text style={styles.carTagText}>{car.tag}</Text>
+                      </View>
+                    )}
+                    {/* Like Icon - Top Right */}
                     <View style={styles.carActions}>
                       <TouchableOpacity
                         onPress={(e) => {
@@ -2523,9 +2529,17 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                     <Text style={[styles.carName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {car.name}
                     </Text>
-                    <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
-                      {car.price}
-                    </Text>
+                    <View style={styles.carPriceRatingRow}>
+                      <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
+                        {car.price}
+                      </Text>
+                      {car.rating && (
+                        <View style={styles.carRatingContainer}>
+                          <Ionicons name="star" size={12} color="#FFB800" />
+                          <Text style={styles.carRatingText}>{car.rating}</Text>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 </Card>
               </TouchableOpacity>
@@ -2584,7 +2598,13 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                         style={styles.carImage}
                         resizeMode="cover"
                       />
-                      {/* Like Icon */}
+                      {/* Tag Badge - Top Left */}
+                      {vehicle.tag && (
+                        <View style={styles.carTagContainer}>
+                          <Text style={styles.carTagText}>{vehicle.tag}</Text>
+                        </View>
+                      )}
+                      {/* Like Icon - Top Right */}
                       <View style={styles.carActions}>
                         <TouchableOpacity
                           onPress={(e) => {
@@ -2606,9 +2626,17 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                       <Text style={[styles.carName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                         {vehicle.name}
                       </Text>
-                      <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
-                        {vehicle.price}
-                      </Text>
+                      <View style={styles.carPriceRatingRow}>
+                        <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
+                          {vehicle.price}
+                        </Text>
+                        {vehicle.rating && (
+                          <View style={styles.carRatingContainer}>
+                            <Ionicons name="star" size={12} color="#FFB800" />
+                            <Text style={styles.carRatingText}>{vehicle.rating}</Text>
+                          </View>
+                        )}
+                      </View>
                     </View>
                   </Card>
                 </TouchableOpacity>
@@ -3446,6 +3474,26 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  carTagContainer: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  carTagText: {
+    fontSize: 10,
+    fontFamily: 'Nunito_700Bold',
+    color: '#000000',
+    letterSpacing: 0.2,
+  },
   carActions: {
     position: 'absolute',
     top: 6,
@@ -3480,9 +3528,25 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     lineHeight: 18,
   },
+  carPriceRatingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   carPrice: {
     fontSize: 15,
     fontFamily: 'Nunito_700Bold',
+    flex: 1,
+  },
+  carRatingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  carRatingText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#000000',
   },
   carDetails: {
     flexDirection: 'row',

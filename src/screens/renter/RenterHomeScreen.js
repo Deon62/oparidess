@@ -1017,20 +1017,10 @@ const RenterHomeScreen = () => {
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={12} color={theme.colors.hint} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    </Text>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {business.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                   ))
@@ -1089,19 +1079,9 @@ const RenterHomeScreen = () => {
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
                 </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={12} color={theme.colors.hint} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {business.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                 ))
@@ -1159,19 +1139,10 @@ const RenterHomeScreen = () => {
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {driver.name}
-                </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {driver.rating}
-                      </Text>
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint, marginLeft: 8 }]} numberOfLines={1}>
-                        {driver.experience}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    </Text>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {driver.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                 ))
@@ -1229,20 +1200,10 @@ const RenterHomeScreen = () => {
                   <View style={styles.serviceBusinessContent}>
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
-                </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={12} color={theme.colors.hint} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    </Text>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {business.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                 ))
@@ -1302,19 +1263,9 @@ const RenterHomeScreen = () => {
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
                 </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={12} color={theme.colors.hint} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {business.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                 ))
@@ -1373,19 +1324,9 @@ const RenterHomeScreen = () => {
                     <Text style={[styles.serviceBusinessName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {business.name}
                 </Text>
-                    <View style={styles.serviceBusinessInfo}>
-                      <Ionicons name="star" size={12} color="#FFB800" />
-                      <Text style={[styles.serviceBusinessRating, { color: theme.colors.textSecondary }]}>
-                        {business.rating}
-                      </Text>
-                      <Ionicons name="location" size={12} color={theme.colors.hint} />
-                      <Text style={[styles.serviceBusinessLocation, { color: theme.colors.hint }]} numberOfLines={1}>
-                        {business.location}
-                      </Text>
-                    </View>
-                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.primary }]}>
+                    <Text style={[styles.serviceBusinessPrice, { color: theme.colors.textPrimary }]}>
                       {business.price}
-                </Text>
+                    </Text>
               </View>
             </TouchableOpacity>
                 ))
@@ -2579,33 +2520,12 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                     </View>
                   </View>
                   <View style={styles.carInfo}>
-                    <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+                    <Text style={[styles.carName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                       {car.name}
                     </Text>
-                    <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
+                    <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
                       {car.price}
                     </Text>
-                    {/* Car Details Icons */}
-                    <View style={styles.carDetails}>
-                      <View style={styles.carDetailItem}>
-                        <Ionicons name="people-outline" size={12} color={theme.colors.hint} />
-                        <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                          {car.seats}
-                        </Text>
-                      </View>
-                      <View style={styles.carDetailItem}>
-                        <Ionicons name="car-outline" size={12} color={theme.colors.hint} />
-                        <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                          {car.fuel}
-                        </Text>
-                      </View>
-                      <View style={styles.carDetailItem}>
-                        <Ionicons name="color-palette-outline" size={12} color={theme.colors.hint} />
-                        <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                          {car.color}
-                        </Text>
-                      </View>
-                    </View>
                   </View>
                 </Card>
               </TouchableOpacity>
@@ -2683,33 +2603,12 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                       </View>
                     </View>
                     <View style={styles.carInfo}>
-                      <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+                      <Text style={[styles.carName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
                         {vehicle.name}
                       </Text>
-                      <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
+                      <Text style={[styles.carPrice, { color: theme.colors.textPrimary }]}>
                         {vehicle.price}
                       </Text>
-                      {/* Vehicle Details Icons */}
-                      <View style={styles.carDetails}>
-                        <View style={styles.carDetailItem}>
-                          <Ionicons name="people-outline" size={12} color={theme.colors.hint} />
-                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                            {vehicle.seats}
-                          </Text>
-                        </View>
-                        <View style={styles.carDetailItem}>
-                          <Ionicons name="car-outline" size={12} color={theme.colors.hint} />
-                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                            {vehicle.fuel}
-                          </Text>
-                        </View>
-                        <View style={styles.carDetailItem}>
-                          <Ionicons name="color-palette-outline" size={12} color={theme.colors.hint} />
-                          <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                            {vehicle.color}
-                          </Text>
-                        </View>
-                      </View>
                     </View>
                   </Card>
                 </TouchableOpacity>
@@ -3531,7 +3430,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   carCard: {
-    width: 150,
+    width: 160,
     padding: 0,
     overflow: 'hidden',
     borderWidth: 0,
@@ -3539,7 +3438,7 @@ const styles = StyleSheet.create({
   },
   carImageContainer: {
     width: '100%',
-    height: 85,
+    height: 120,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -3569,22 +3468,21 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   carInfo: {
-    padding: 10,
+    padding: 12,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   carName: {
-    fontSize: 13,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
-    lineHeight: 16,
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 6,
+    lineHeight: 18,
   },
   carPrice: {
     fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 6,
   },
   carDetails: {
     flexDirection: 'row',
@@ -3906,7 +3804,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   serviceBusinessCard: {
-    width: 150,
+    width: 160,
     borderRadius: 12,
     overflow: 'hidden',
     marginRight: 12,
@@ -3919,7 +3817,7 @@ const styles = StyleSheet.create({
   },
   serviceBusinessImageContainer: {
     width: '100%',
-    height: 85,
+    height: 120,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -3949,40 +3847,21 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   serviceBusinessContent: {
-    padding: 10,
+    padding: 12,
     borderBottomLeftRadius: 12,
     borderBottomRightRadius: 12,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
   serviceBusinessName: {
-    fontSize: 13,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
-    lineHeight: 16,
-  },
-  serviceBusinessInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 2,
-    gap: 3,
-  },
-  serviceBusinessRating: {
-    fontSize: 10,
-    fontFamily: 'Nunito_400Regular',
-    marginLeft: 3,
-  },
-  serviceBusinessLocation: {
-    fontSize: 10,
-    fontFamily: 'Nunito_400Regular',
-    marginLeft: 3,
-    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 6,
+    lineHeight: 18,
   },
   serviceBusinessPrice: {
     fontSize: 15,
     fontFamily: 'Nunito_700Bold',
-    marginTop: 2,
-    marginBottom: 6,
   },
   discoverSection: {
     paddingTop: 24,

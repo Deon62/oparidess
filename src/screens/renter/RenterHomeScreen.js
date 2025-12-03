@@ -2564,27 +2564,32 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
       {activeTab === 'cars' && (
         <>
         {filteredCarClasses.length > 0 ? (
-        filteredCarClasses.map((carClass, index) => (
-        <View key={carClass.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
-          <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
-            <View style={styles.classHeaderLeft}>
-              <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                {carClass.name}
-              </Text>
-              <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                {carClass.description}
-              </Text>
-            </View>
+        filteredCarClasses.map((carClass, index) => {
+          // Create psychologically intriguing sentences for each category
+          const getCategorySentence = (categoryId, isFirst) => {
+            if (isFirst) {
+              return `Cars available near you in ${selectedCity}`;
+            }
+            const sentences = {
+              'essential': `Popular everyday picks in ${selectedCity}`,
+              'executive': `Premium vehicles for your special moments`,
+              'signature': `Elite collection for unforgettable experiences`,
+            };
+            return sentences[categoryId] || carClass.name;
+          };
+
+          return (
+          <View key={carClass.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
             <TouchableOpacity
               onPress={() => handleViewAll(carClass.id)}
               activeOpacity={0.7}
-              style={styles.viewAllButton}
+              style={[styles.classHeader, index === 0 && styles.firstHeader]}
             >
-              <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                View All
+              <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                {getCategorySentence(carClass.id, index === 0)}
               </Text>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
             </TouchableOpacity>
-          </View>
 
           <ScrollView
             horizontal
@@ -2660,33 +2665,39 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
               </TouchableOpacity>
             ))
             )}
-          </ScrollView>
-        </View>
-      ))
+            </ScrollView>
+          </View>
+          );
+        })
       ) : null}
 
         {/* Commercial Vehicles Sections */}
         {filteredCommercialVehicles.length > 0 ? (
-          filteredCommercialVehicles.map((category, index) => (
-          <View key={category.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
-            <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
-              <View>
-                <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                  {category.name}
+          filteredCommercialVehicles.map((category, index) => {
+            // Create psychologically intriguing sentences for commercial vehicles
+            const getCommercialSentence = (categoryId) => {
+              const sentences = {
+                'pickups': `Rugged pickups ready for your next adventure`,
+                'vans': `Spacious vans perfect for group travel`,
+                'trucks': `Heavy-duty trucks for commercial needs`,
+              };
+              return sentences[categoryId] || category.name;
+            };
+
+            return (
+            <View key={category.id} style={[styles.classSection, index === 0 && styles.firstSection]}>
+              <View style={[styles.classHeader, index === 0 && styles.firstHeader]}>
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  {getCommercialSentence(category.id)}
                 </Text>
-                <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                  {category.description}
-                </Text>
+                <TouchableOpacity
+                  onPress={() => handleViewAll(category.id, true)}
+                  activeOpacity={0.7}
+                  style={styles.viewMoreButton}
+                >
+                  <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => handleViewAll(category.id, true)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                  View All
-                </Text>
-              </TouchableOpacity>
-            </View>
 
             <ScrollView
               horizontal
@@ -2759,7 +2770,8 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
               ))}
             </ScrollView>
           </View>
-          ))
+          );
+          })
         ) : null}
 
         {/* Empty State - No Results Found */}
@@ -3523,16 +3535,23 @@ const styles = StyleSheet.create({
   classHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingHorizontal: 24,
-    marginBottom: 12,
+    marginBottom: 16,
     paddingTop: 12,
+    paddingVertical: 8,
     gap: 12,
   },
   classHeaderLeft: {
     flex: 1,
     flexShrink: 1,
     minWidth: 0,
+  },
+  categoryTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    flex: 1,
+    letterSpacing: -0.3,
   },
   className: {
     fontSize: 20,
@@ -3544,6 +3563,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
+  },
+  viewMoreButton: {
+    padding: 4,
+    marginLeft: 8,
   },
   viewAllButton: {
     flexShrink: 0,

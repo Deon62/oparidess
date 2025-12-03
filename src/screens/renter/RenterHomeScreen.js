@@ -3494,7 +3494,7 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   categoryTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontFamily: 'Nunito_700Bold',
     flex: 1,
     letterSpacing: -0.3,

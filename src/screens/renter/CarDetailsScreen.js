@@ -37,6 +37,10 @@ const CarDetailsScreen = () => {
     transmission: 'Automatic', // 'Automatic' or 'Manual'
     image: carImage1,
     description: 'A reliable and fuel-efficient sedan perfect for city driving and road trips. This well-maintained Toyota Corolla offers comfort, safety, and excellent value for your rental needs.',
+    rating: 4.8,
+    tag: 'Fuel Efficient',
+    reviewCount: 53,
+    location: 'Nairobi, Kenya',
   };
 
   // Car images for carousel (up to 4)
@@ -300,42 +304,93 @@ const CarDetailsScreen = () => {
 
         {/* Content Container with Curved Top */}
         <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
-        {/* Car Details & Description */}
+        {/* Car Details & Description - Airbnb Style */}
         <View style={styles.section}>
           <View style={styles.carOverviewCard}>
-            <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-              {carData.name}
-            </Text>
-            <View style={styles.carSpecs}>
+            {/* Title Row */}
+            <View style={styles.titleRow}>
+              <View style={styles.titleContainer}>
+                <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+                  {carData.name}
+                </Text>
+                {carData.tag && (
+                  <View style={styles.tagBadge}>
+                    <Text style={styles.tagBadgeText}>{carData.tag}</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+
+            {/* Location and Type */}
+            <View style={styles.locationRow}>
+              <Ionicons name="location-outline" size={14} color={theme.colors.hint} />
+              <Text style={[styles.locationText, { color: theme.colors.textSecondary }]}>
+                {carData.location || 'Nairobi, Kenya'}
+              </Text>
+            </View>
+
+            {/* Key Specs - Clean Format with Icons */}
+            <View style={styles.specsRow}>
               <View style={styles.specItem}>
-                <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {carData.seats} Seats
+                <Ionicons name="people-outline" size={14} color={theme.colors.hint} />
+                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
+                  {carData.seats} seats
                 </Text>
               </View>
+              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
               <View style={styles.specItem}>
-                <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                <Ionicons name="car-outline" size={14} color={theme.colors.hint} />
+                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
                   {carData.fuel}
                 </Text>
               </View>
+              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
               <View style={styles.specItem}>
                 <Ionicons 
                   name={carData.transmission === 'Automatic' ? 'speedometer-outline' : 'git-branch-outline'} 
-                  size={18} 
+                  size={14} 
                   color={theme.colors.hint} 
                 />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
                   {carData.transmission || 'Automatic'}
                 </Text>
               </View>
+              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
               <View style={styles.specItem}>
-                <Ionicons name="color-fill-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                <Ionicons name="color-fill-outline" size={14} color={theme.colors.hint} />
+                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
                   {carData.color}
                 </Text>
               </View>
             </View>
+
+            {/* Rating and Reviews */}
+            <View style={styles.ratingRow}>
+              <View style={styles.ratingContainer}>
+                <Ionicons name="star" size={16} color="#000000" />
+                <Text style={[styles.ratingText, { color: theme.colors.textPrimary }]}>
+                  {carData.rating || 4.8}
+                </Text>
+                <View style={styles.starsContainer}>
+                  {[...Array(5)].map((_, i) => (
+                    <Ionicons
+                      key={i}
+                      name={i < Math.floor(carData.rating || 4.8) ? 'star' : 'star-outline'}
+                      size={14}
+                      color="#000000"
+                      style={styles.starIcon}
+                    />
+                  ))}
+                </View>
+              </View>
+              {carData.reviewCount && (
+                <Text style={[styles.reviewCountText, { color: theme.colors.textSecondary }]}>
+                  {carData.reviewCount} Reviews
+                </Text>
+              )}
+            </View>
+
+            {/* Description */}
             <Text style={[styles.carDescription, { color: theme.colors.textSecondary }]}>
               {carData.description || 'A reliable and well-maintained vehicle perfect for your travel needs.'}
             </Text>
@@ -993,34 +1048,104 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   carOverviewCard: {
-    padding: 20,
-    gap: 16,
+    padding: 0,
+    gap: 12,
+  },
+  titleRow: {
+    marginBottom: 4,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 8,
   },
   carName: {
-    fontSize: 28,
+    fontSize: 22,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 0,
-    letterSpacing: -0.5,
+    letterSpacing: -0.3,
+    flex: 1,
+    minWidth: '60%',
+  },
+  tagBadge: {
+    backgroundColor: '#000000',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  tagBadgeText: {
+    fontSize: 11,
+    fontFamily: 'Nunito_700Bold',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 4,
+  },
+  locationText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  specsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 8,
+    gap: 6,
+  },
+  specItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  specsText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  specsSeparator: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginHorizontal: 2,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  ratingText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginRight: 4,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    gap: 2,
+  },
+  starIcon: {
+    marginHorizontal: 0,
+  },
+  reviewCountText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textDecorationLine: 'underline',
   },
   carDescription: {
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 22,
-    marginTop: 4,
-  },
-  carSpecs: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-  specItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  specText: {
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
   },
   sectionTitle: {
     fontSize: 20,

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 
 // Renter screens
@@ -692,6 +693,7 @@ const ProfileStack = () => {
 
 const RenterNavigator = () => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
@@ -712,19 +714,32 @@ const RenterNavigator = () => {
             iconName = focused ? 'person' : 'person-outline';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={24} color={color} />;
         },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.hint,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontFamily: 'Nunito_600SemiBold',
+          marginTop: 0,
+          marginBottom: 0,
+        },
+        tabBarIconStyle: {
+          marginTop: 2,
+        },
         tabBarStyle: {
           backgroundColor: theme.colors.white,
-          borderTopWidth: 0,
-          elevation: 0,
-          shadowOpacity: 0,
-          height: 60,
-          paddingBottom: 8,
-          paddingTop: 8,
+          borderTopWidth: 1,
+          borderTopColor: theme.colors.hint + '30',
+          elevation: 12,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.12,
+          shadowRadius: 12,
+          height: 58 + insets.bottom,
+          paddingBottom: Math.max(insets.bottom, 4),
+          paddingTop: 2,
         },
         headerShown: false,
       })}

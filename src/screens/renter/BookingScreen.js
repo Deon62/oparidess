@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -14,13 +14,26 @@ const BookingScreen = () => {
   const insets = useSafeAreaInsets();
   const { car } = route.params || {};
 
-  const [pickupDate, setPickupDate] = useState(null);
-  const [dropoffDate, setDropoffDate] = useState(null);
-  const [showPickupCalendar, setShowPickupCalendar] = useState(false);
-  const [showDropoffCalendar, setShowDropoffCalendar] = useState(false);
+  // Initialize dates to tomorrow and day after tomorrow
+  const getTomorrow = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    return tomorrow;
+  };
+
+  const getDayAfterTomorrow = () => {
+    const dayAfter = new Date();
+    dayAfter.setDate(dayAfter.getDate() + 2);
+    dayAfter.setHours(10, 0, 0, 0);
+    return dayAfter;
+  };
+
+  const [pickupDate, setPickupDate] = useState(getTomorrow());
+  const [dropoffDate, setDropoffDate] = useState(getDayAfterTomorrow());
+  const [showPickupDatePicker, setShowPickupDatePicker] = useState(false);
+  const [showDropoffDatePicker, setShowDropoffDatePicker] = useState(false);
   const [specialRequirements, setSpecialRequirements] = useState('');
-  const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
-  const [isSelectingPickup, setIsSelectingPickup] = useState(true);
   const [payOnSite, setPayOnSite] = useState(false);
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [crossCountryTravelEnabled, setCrossCountryTravelEnabled] = useState(false);
@@ -28,8 +41,8 @@ const BookingScreen = () => {
   // Time selection
   const [pickupTime, setPickupTime] = useState('10:00');
   const [dropoffTime, setDropoffTime] = useState('10:00');
-  const [showPickupTimePicker, setShowPickupTimePicker] = useState(false);
-  const [showDropoffTimePicker, setShowDropoffTimePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [isSelectingPickupTime, setIsSelectingPickupTime] = useState(true);
   
   // Location selection
   const [pickupLocation, setPickupLocation] = useState('Nairobi CBD, Kenya');
@@ -107,51 +120,52 @@ const BookingScreen = () => {
   const bookingFee = payOnSite ? totalPrice * COMMISSION_RATE : 0;
   const balanceToPayOnSite = payOnSite ? totalPrice - bookingFee : 0;
 
-  // Calendar functions
-  const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
-
-  const getFirstDayOfMonth = (month, year) => {
-    return new Date(year, month, 1).getDay();
-  };
-
-  const formatDate = (date) => {
-    if (!date) return 'Select date';
-    return date.toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
+  // Date formatting functions
+  const formatDateRange = () => {
+    if (!pickupDate || !dropoffDate) return 'Select dates';
+    
+    const pickupFormatted = pickupDate.toLocaleDateString('en-US', {
       day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+    
+    const dropoffFormatted = dropoffDate.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+    
+    // If same month and year, show compact format
+    if (
+      pickupDate.getMonth() === dropoffDate.getMonth() &&
+      pickupDate.getFullYear() === dropoffDate.getFullYear()
+    ) {
+      return `${pickupDate.getDate()}-${dropoffDate.getDate()} ${pickupDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
+    }
+    
+    return `${pickupFormatted} - ${dropoffFormatted}`;
+  };
+
+  const formatDateShort = (date) => {
+    if (!date) return '';
+    return date.toLocaleDateString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     });
   };
 
-  const handleDateSelect = (day, month, year) => {
-    const selectedDate = new Date(year, month, day);
-    if (isSelectingPickup) {
-      setPickupDate(selectedDate);
-      setShowPickupCalendar(false);
-      // If dropoff date is before pickup, clear it
-      if (dropoffDate && dropoffDate < selectedDate) {
-        setDropoffDate(null);
-      }
-    } else {
-      // Ensure dropoff is after pickup
-      if (pickupDate && selectedDate <= pickupDate) {
-        return; // Don't allow dropoff before or on pickup date
-      }
-      setDropoffDate(selectedDate);
-      setShowDropoffCalendar(false);
-    }
+  const openPickupDatePicker = () => {
+    setShowPickupDatePicker(true);
   };
 
-  const openCalendar = (isPickup) => {
-    setIsSelectingPickup(isPickup);
-    if (isPickup) {
-      setShowPickupCalendar(true);
-    } else {
-      setShowDropoffCalendar(true);
+  const openDropoffDatePicker = () => {
+    if (!pickupDate) {
+      Alert.alert('Select Pickup First', 'Please select pickup date first');
+      return;
     }
+    setShowDropoffDatePicker(true);
   };
 
   const handleContinue = () => {
@@ -201,21 +215,42 @@ const BookingScreen = () => {
     });
   };
 
-  // Calendar Component
-  const Calendar = ({ visible, onClose, selectedDate, minDate }) => {
-    const [currentMonth, setCurrentMonth] = useState(today.getMonth());
-    const [currentYear, setCurrentYear] = useState(today.getFullYear());
+  // Single Date Picker Component
+  // Single Date Picker Component
+  const SingleDatePicker = ({ visible, onClose, selectedDate, onDateSelect, title, minDate }) => {
+    const initialMonth = selectedDate?.getMonth() ?? today.getMonth();
+    const initialYear = selectedDate?.getFullYear() ?? today.getFullYear();
+    const [currentMonth, setCurrentMonth] = useState(initialMonth);
+    const [currentYear, setCurrentYear] = useState(initialYear);
+    const [tempSelectedDate, setTempSelectedDate] = useState(selectedDate);
+    
+    // Sync with parent state when picker opens
+    React.useEffect(() => {
+      if (visible) {
+        setTempSelectedDate(selectedDate);
+        if (selectedDate) {
+          setCurrentMonth(selectedDate.getMonth());
+          setCurrentYear(selectedDate.getFullYear());
+        }
+      }
+    }, [visible, selectedDate]);
+
+    const getDaysInMonth = (month, year) => {
+      return new Date(year, month + 1, 0).getDate();
+    };
+
+    const getFirstDayOfMonth = (month, year) => {
+      return new Date(year, month, 1).getDay();
+    };
 
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
     const monthName = new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
     const daysArray = [];
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       daysArray.push(null);
     }
-    // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       daysArray.push(day);
     }
@@ -225,29 +260,32 @@ const BookingScreen = () => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
-      if (date < today) return true; // Past dates disabled
+      // Disable past dates
+      if (date < today) return true;
       
-      if (isSelectingPickup) {
-        return false; // For pickup, only past dates are disabled
-      } else {
-        // For dropoff, dates before or equal to pickup are disabled
-        if (pickupDate) {
-          const pickup = new Date(pickupDate);
-          pickup.setHours(0, 0, 0, 0);
-          return date <= pickup;
-        }
-        return false;
+      // If minDate is provided (for dropoff), disable dates before or equal to minDate
+      if (minDate) {
+        const min = new Date(minDate);
+        min.setHours(0, 0, 0, 0);
+        if (date <= min) return true;
       }
+      
+      return false;
     };
 
     const isDateSelected = (day) => {
-      if (!selectedDate || !day) return false;
+      if (!tempSelectedDate || !day) return false;
       const date = new Date(currentYear, currentMonth, day);
-      return (
-        date.getDate() === selectedDate.getDate() &&
-        date.getMonth() === selectedDate.getMonth() &&
-        date.getFullYear() === selectedDate.getFullYear()
-      );
+      date.setHours(0, 0, 0, 0);
+      const selected = new Date(tempSelectedDate);
+      selected.setHours(0, 0, 0, 0);
+      return date.getTime() === selected.getTime();
+    };
+
+    const handleDayPress = (day) => {
+      const date = new Date(currentYear, currentMonth, day);
+      date.setHours(10, 0, 0, 0);
+      setTempSelectedDate(date);
     };
 
     const navigateMonth = (direction) => {
@@ -270,67 +308,109 @@ const BookingScreen = () => {
 
     return (
       <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-        <View style={styles.calendarModalOverlay}>
-          <View style={[styles.calendarModal, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.calendarHeader}>
-              <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.calendarNavButton}>
-                <Ionicons name="chevron-back" size={24} color={theme.colors.textPrimary} />
+        <View style={styles.datePickerModalOverlay}>
+          <View style={[styles.datePickerModal, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.datePickerHeader}>
+              <TouchableOpacity onPress={onClose} style={styles.datePickerCloseButton}>
+                <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
               </TouchableOpacity>
-              <Text style={[styles.calendarMonth, { color: theme.colors.textPrimary }]}>
+              <Text style={[styles.datePickerTitle, { color: theme.colors.textPrimary }]}>
+                {title}
+              </Text>
+              <View style={{ width: 40 }} />
+            </View>
+
+            <View style={styles.datePickerMonthHeader}>
+              <TouchableOpacity onPress={() => navigateMonth('prev')} style={styles.datePickerNavButton}>
+                <Ionicons name="chevron-back" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
+              <Text style={[styles.datePickerMonth, { color: theme.colors.textPrimary }]}>
                 {monthName}
               </Text>
-              <TouchableOpacity onPress={() => navigateMonth('next')} style={styles.calendarNavButton}>
-                <Ionicons name="chevron-forward" size={24} color={theme.colors.textPrimary} />
+              <TouchableOpacity onPress={() => navigateMonth('next')} style={styles.datePickerNavButton}>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
               </TouchableOpacity>
             </View>
 
-            <View style={styles.calendarWeekDays}>
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                <Text key={day} style={[styles.weekDay, { color: theme.colors.hint }]}>
+            <View style={styles.datePickerWeekDays}>
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+                <Text key={index} style={[styles.datePickerWeekDay, { color: theme.colors.hint }]}>
                   {day}
                 </Text>
               ))}
             </View>
 
-            <View style={styles.calendarGrid}>
+            <View style={styles.datePickerGrid}>
               {daysArray.map((day, index) => {
                 if (day === null) {
-                  return <View key={index} style={styles.calendarDay} />;
+                  return <View key={index} style={styles.datePickerDay} />;
                 }
                 const disabled = isDateDisabled(day);
                 const selected = isDateSelected(day);
+                
                 return (
                   <TouchableOpacity
                     key={index}
                     style={[
-                      styles.calendarDay,
-                      selected && { backgroundColor: theme.colors.primary },
-                      disabled && styles.calendarDayDisabled,
+                      styles.datePickerDay,
+                      disabled && styles.datePickerDayDisabled,
                     ]}
-                    onPress={() => !disabled && handleDateSelect(day, currentMonth, currentYear)}
+                    onPress={() => !disabled && handleDayPress(day)}
                     disabled={disabled}
                     activeOpacity={0.7}
                   >
-                    <Text
+                    <View
                       style={[
-                        styles.calendarDayText,
-                        { color: disabled ? theme.colors.hint : theme.colors.textPrimary },
-                        selected && { color: theme.colors.white, fontFamily: 'Nunito_700Bold' },
+                        styles.datePickerDayContent,
+                        selected && { backgroundColor: theme.colors.primary },
+                        disabled && { opacity: 0.3 },
                       ]}
                     >
-                      {day}
-                    </Text>
+                      <Text
+                        style={[
+                          styles.datePickerDayText,
+                          { color: disabled ? theme.colors.hint : theme.colors.textPrimary },
+                          selected && { color: theme.colors.white, fontFamily: 'Nunito_700Bold' },
+                        ]}
+                      >
+                        {day}
+                      </Text>
+                    </View>
                   </TouchableOpacity>
                 );
               })}
             </View>
 
-            <Button
-              title="Close"
-              onPress={onClose}
-              variant="secondary"
-              style={styles.calendarCloseButton}
-            />
+            <View style={styles.datePickerActions}>
+              <TouchableOpacity
+                style={[styles.datePickerCancelButton, { borderColor: theme.colors.hint }]}
+                onPress={onClose}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.datePickerCancelText, { color: theme.colors.textPrimary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.datePickerConfirmButton,
+                  { backgroundColor: theme.colors.primary },
+                  !tempSelectedDate && { opacity: 0.5 }
+                ]}
+                onPress={() => {
+                  if (tempSelectedDate) {
+                    onDateSelect(tempSelectedDate);
+                    onClose();
+                  }
+                }}
+                activeOpacity={0.7}
+                disabled={!tempSelectedDate}
+              >
+                <Text style={[styles.datePickerConfirmText, { color: theme.colors.white }]}>
+                  Confirm
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -355,63 +435,52 @@ const BookingScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Date Selection */}
+        {/* Date Selection - Airbnb Style */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Select Dates
-          </Text>
-
-          <View style={styles.dateRow}>
-            <View style={styles.dateInputContainer}>
-              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
+          {/* Pickup Date */}
+          <View style={styles.dateSectionRow}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
                 Pickup Date
               </Text>
-              <TouchableOpacity
-                style={[styles.dateButton, { borderColor: theme.colors.hint }]}
-                onPress={() => openCalendar(true)}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-                <Text
-                  style={[
-                    styles.dateButtonText,
-                    { color: pickupDate ? theme.colors.textPrimary : theme.colors.hint },
-                  ]}
-                >
-                  {formatDate(pickupDate)}
-                </Text>
-              </TouchableOpacity>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {pickupDate ? formatDateShort(pickupDate) : 'Select date'}
+              </Text>
             </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={openPickupDatePicker}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                Change
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.dateInputContainer}>
-              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
+          {/* Dropoff Date */}
+          <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
                 Dropoff Date
               </Text>
-              <TouchableOpacity
-                style={[
-                  styles.dateButton,
-                  { borderColor: theme.colors.hint },
-                  !pickupDate && styles.dateButtonDisabled,
-                ]}
-                onPress={() => pickupDate && openCalendar(false)}
-                disabled={!pickupDate}
-                activeOpacity={0.7}
-              >
-                <Ionicons
-                  name="calendar-outline"
-                  size={20}
-                  color={pickupDate ? theme.colors.primary : theme.colors.hint}
-                />
-                <Text
-                  style={[
-                    styles.dateButtonText,
-                    { color: dropoffDate ? theme.colors.textPrimary : theme.colors.hint },
-                  ]}
-                >
-                  {formatDate(dropoffDate)}
-                </Text>
-              </TouchableOpacity>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {dropoffDate ? formatDateShort(dropoffDate) : 'Select date'}
+              </Text>
             </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={openDropoffDatePicker}
+              activeOpacity={0.7}
+              disabled={!pickupDate}
+            >
+              <Text style={[
+                styles.dateChangeButtonText,
+                { color: pickupDate ? theme.colors.primary : theme.colors.hint, textDecorationLine: 'underline' }
+              ]}>
+                Change
+              </Text>
+            </TouchableOpacity>
           </View>
 
           {days > 0 && (
@@ -426,77 +495,70 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Time Selection */}
+        {/* Time Selection - Airbnb Style */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Select Times
-          </Text>
-
-          <View style={styles.dateRow}>
-            <View style={styles.dateInputContainer}>
-              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
-                Pickup Time
+          <View style={styles.dateSectionRow}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                Times
               </Text>
-              <TouchableOpacity
-                style={[styles.dateButton, { borderColor: theme.colors.hint }]}
-                onPress={() => setShowPickupTimePicker(true)}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-                <Text style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}>
-                  {pickupTime}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={styles.dateInputContainer}>
-              <Text style={[styles.dateLabel, { color: theme.colors.textSecondary }]}>
-                Dropoff Time
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {pickupTime} - {dropoffTime}
               </Text>
-              <TouchableOpacity
-                style={[styles.dateButton, { borderColor: theme.colors.hint }]}
-                onPress={() => setShowDropoffTimePicker(true)}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
-                <Text style={[styles.dateButtonText, { color: theme.colors.textPrimary }]}>
-                  {dropoffTime}
-                </Text>
-              </TouchableOpacity>
             </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={() => {
+                setIsSelectingPickupTime(true);
+                setShowTimePicker(true);
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                Change
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
 
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Location Selection */}
+        {/* Location Selection - Airbnb Style */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Pickup Location
-          </Text>
-          <TouchableOpacity
-            style={[styles.locationButton, { borderColor: theme.colors.hint }]}
-            onPress={() => {
-              setIsSelectingPickupLocation(true);
-              setShowLocationPicker(true);
-            }}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
-            <Text style={[styles.locationButtonText, { color: theme.colors.textPrimary }]}>
-              {pickupLocation || 'Select pickup location'}
-            </Text>
-            <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.hint} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Dropoff Location */}
-        <View style={styles.section}>
-          <View style={styles.dropoffLocationHeader}>
+          <View style={styles.dateSectionRow}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                {sameDropoffLocation ? 'Location' : 'Pickup Location'}
+              </Text>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {pickupLocation || 'Select location'}
+              </Text>
+              {!sameDropoffLocation && (
+                <>
+                  <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary, marginTop: 8 }]}>
+                    Dropoff Location
+                  </Text>
+                  <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                    {dropoffLocation || 'Select location'}
+                  </Text>
+                </>
+              )}
+            </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={() => {
+                setIsSelectingPickupLocation(true);
+                setShowLocationPicker(true);
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                Change
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.dropoffLocationHeader, { marginTop: 12 }]}>
             <View style={styles.dropoffLocationHeaderLeft}>
               <Text style={[styles.dropoffLocationText, { color: theme.colors.textPrimary }]}>
                 Same dropoff location
@@ -504,23 +566,6 @@ const BookingScreen = () => {
             </View>
             <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
           </View>
-
-          {!sameDropoffLocation && (
-            <TouchableOpacity
-              style={[styles.locationButton, { borderColor: theme.colors.hint, marginTop: 16 }]}
-              onPress={() => {
-                setIsSelectingPickupLocation(false);
-                setShowLocationPicker(true);
-              }}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
-              <Text style={[styles.locationButtonText, { color: theme.colors.textPrimary }]}>
-                {dropoffLocation || 'Select dropoff location'}
-              </Text>
-              <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.hint} />
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Separator Line */}
@@ -812,33 +857,50 @@ const BookingScreen = () => {
         />
       </View>
 
-      {/* Calendars */}
-      <Calendar
-        visible={showPickupCalendar}
-        onClose={() => setShowPickupCalendar(false)}
+      {/* Pickup Date Picker */}
+      <SingleDatePicker
+        visible={showPickupDatePicker}
+        onClose={() => setShowPickupDatePicker(false)}
         selectedDate={pickupDate}
+        onDateSelect={(date) => {
+          setPickupDate(date);
+          // If dropoff is before new pickup, reset dropoff
+          if (dropoffDate && dropoffDate <= date) {
+            setDropoffDate(null);
+          }
+        }}
+        title="Select Pickup Date"
       />
-      <Calendar
-        visible={showDropoffCalendar}
-        onClose={() => setShowDropoffCalendar(false)}
+
+      {/* Dropoff Date Picker */}
+      <SingleDatePicker
+        visible={showDropoffDatePicker}
+        onClose={() => setShowDropoffDatePicker(false)}
         selectedDate={dropoffDate}
+        onDateSelect={setDropoffDate}
+        title="Select Dropoff Date"
         minDate={pickupDate}
       />
 
-      {/* Time Pickers */}
+      {/* Combined Time Picker */}
       <TimePicker
-        visible={showPickupTimePicker}
-        onClose={() => setShowPickupTimePicker(false)}
-        selectedTime={pickupTime}
-        onTimeSelect={setPickupTime}
-        title="Select Pickup Time"
-      />
-      <TimePicker
-        visible={showDropoffTimePicker}
-        onClose={() => setShowDropoffTimePicker(false)}
-        selectedTime={dropoffTime}
-        onTimeSelect={setDropoffTime}
-        title="Select Dropoff Time"
+        visible={showTimePicker}
+        onClose={() => {
+          setShowTimePicker(false);
+          setIsSelectingPickupTime(true);
+        }}
+        selectedTime={isSelectingPickupTime ? pickupTime : dropoffTime}
+        onTimeSelect={(time) => {
+          if (isSelectingPickupTime) {
+            setPickupTime(time);
+            setIsSelectingPickupTime(false);
+          } else {
+            setDropoffTime(time);
+            setShowTimePicker(false);
+            setIsSelectingPickupTime(true);
+          }
+        }}
+        title={isSelectingPickupTime ? "Select Pickup Time" : "Select Dropoff Time"}
       />
 
       {/* Location Picker */}
@@ -1259,68 +1321,148 @@ const styles = StyleSheet.create({
   payButton: {
     minWidth: 140,
   },
-  // Calendar Modal Styles
+  // Airbnb-style Date Section
+  dateSectionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dateSectionContent: {
+    flex: 1,
+  },
+  dateSectionLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  dateSectionValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+  },
+  dateChangeButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  dateChangeButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Date Range Picker Modal Styles
   modalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  calendarModalOverlay: {
+  datePickerModalOverlay: {
     flex: 1,
     justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  calendarModal: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  datePickerModal: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 24,
-    maxHeight: '80%',
+    maxHeight: '85%',
   },
-  calendarHeader: {
+  datePickerHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 24,
   },
-  calendarNavButton: {
-    padding: 8,
+  datePickerCloseButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  calendarMonth: {
+  datePickerTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
   },
-  calendarWeekDays: {
+  datePickerMonthHeader: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  datePickerNavButton: {
+    padding: 8,
+  },
+  datePickerMonth: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  datePickerWeekDays: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginBottom: 12,
   },
-  weekDay: {
-    flex: 1,
-    textAlign: 'center',
+  datePickerWeekDay: {
     fontSize: 12,
     fontFamily: 'Nunito_600SemiBold',
+    width: '14.28%',
+    textAlign: 'center',
   },
-  calendarGrid: {
+  datePickerGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 24,
   },
-  calendarDay: {
+  datePickerDay: {
     width: '14.28%',
     aspectRatio: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8,
-    marginBottom: 4,
+    padding: 2,
   },
-  calendarDayDisabled: {
+  datePickerDayContent: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  datePickerDayStart: {
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+  },
+  datePickerDayEnd: {
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  datePickerDayDisabled: {
     opacity: 0.3,
   },
-  calendarDayText: {
-    fontSize: 16,
+  datePickerDayText: {
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
-  calendarCloseButton: {
-    marginTop: 8,
+  datePickerActions: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 16,
+  },
+  datePickerCancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  datePickerCancelText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  datePickerConfirmButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  datePickerConfirmText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
   // Pay on Site Styles
   payOnSiteHeader: {
@@ -1611,3 +1753,4 @@ const styles = StyleSheet.create({
 });
 
 export default BookingScreen;
+

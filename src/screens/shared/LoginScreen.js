@@ -128,8 +128,8 @@ const LoginScreen = () => {
         <View style={styles.formSection}>
         <View style={styles.inputWrapper}>
           <Input
-            label="Email"
-            placeholder="Enter your email"
+            label="Enter Your Email"
+            placeholder=""
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -139,8 +139,8 @@ const LoginScreen = () => {
         </View>
         <View style={styles.inputWrapper}>
           <Input
-            label="Password"
-            placeholder="Enter your password"
+            label="Your Password"
+            placeholder=""
             value={password}
             onChangeText={setPassword}
             secureTextEntry

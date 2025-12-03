@@ -659,7 +659,9 @@ const ProfileStack = () => {
         component={ChangePasswordScreen}
         options={{ 
           title: 'Change Password',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

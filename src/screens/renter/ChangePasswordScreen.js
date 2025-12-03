@@ -21,12 +21,14 @@ const ChangePasswordScreen = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Hide bottom tab bar when screen is focused
+  // Hide bottom tab bar and ensure StatusBar is visible when screen is focused
   useFocusEffect(
     React.useCallback(() => {
+      // Hide tab bar
       navigation.getParent()?.setOptions({
         tabBarStyle: { display: 'none' },
       });
+      // StatusBar will be shown via the component
       return () => {
         // Restore tab bar when leaving this screen
         navigation.getParent()?.setOptions({
@@ -95,7 +97,7 @@ const ChangePasswordScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <KeyboardAvoidingView
         style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

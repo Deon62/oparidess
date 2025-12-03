@@ -1,5 +1,6 @@
 import React, { useState, forwardRef } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 
 const Input = forwardRef(({
@@ -64,10 +65,13 @@ const Input = forwardRef(({
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.eyeIcon}
+            activeOpacity={0.7}
           >
-            <Text style={[styles.eyeText, { color: theme.colors.hint }]}>
-              {showPassword ? 'Show' : 'Hide'}
-            </Text>
+            <Ionicons 
+              name={showPassword ? 'eye-outline' : 'eye-off-outline'} 
+              size={20} 
+              color={theme.colors.hint} 
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -115,10 +119,7 @@ const styles = StyleSheet.create({
   },
   eyeIcon: {
     padding: 4,
-  },
-  eyeText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
+    marginLeft: 8,
   },
   errorText: {
     color: '#FF3B30',

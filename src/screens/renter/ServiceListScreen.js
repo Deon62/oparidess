@@ -9,7 +9,7 @@ const ServiceListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const { categoryId } = route.params || {};
+  const { categoryId, selectedCity = 'your area' } = route.params || {};
   const { likedServices, toggleServiceLike } = useWishlist();
 
   // Services data matching RenterHomeScreen
@@ -52,6 +52,19 @@ const ServiceListScreen = () => {
     ],
   };
 
+  // Create psychologically intriguing titles for each category
+  const getCategoryTitle = (categoryId) => {
+    const titles = {
+      'roadTrips': `Services available near you in ${selectedCity}`,
+      'vipWedding': `Premium wedding fleets for your special day`,
+      'drivers': `Professional drivers ready to take the wheel`,
+      'movers': `Trusted movers to make relocation easy`,
+      'carDetailing': `Premium car detailing to keep your ride shining`,
+      'roadside': `Roadside assistance when you need it most`,
+    };
+    return titles[categoryId] || 'All Services';
+  };
+
   const categoryNames = {
     roadTrips: 'Road Trips Agencies',
     vipWedding: 'VIP Wedding Fleet Hire',
@@ -77,11 +90,11 @@ const ServiceListScreen = () => {
   const displayedServices = categoryId ? servicesData[categoryId] || [] : Object.values(servicesData).flat();
 
   useLayoutEffect(() => {
-    const title = categoryId ? categoryNames[categoryId] : 'All Services';
+    const title = categoryId ? getCategoryTitle(categoryId) : 'All Services';
     navigation.setOptions({
       title,
     });
-  }, [navigation, categoryId]);
+  }, [navigation, categoryId, selectedCity]);
 
   const handleServicePress = (service) => {
     const categoryName = categoryId ? categoryNames[categoryId] : 'Road Trips Agencies';

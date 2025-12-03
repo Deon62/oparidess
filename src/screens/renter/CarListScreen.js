@@ -15,7 +15,8 @@ const CarListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const { classId } = route.params || {};
+  const { classId, categoryId, isCommercial, selectedCity = 'your area' } = route.params || {};
+  const activeCategoryId = isCommercial ? categoryId : classId;
 
   const [likedCars, setLikedCars] = useState(new Set());
 
@@ -149,20 +150,27 @@ const CarListScreen = () => {
     ],
   };
 
-  const classNames = {
-    essential: 'Essential',
-    executive: 'Executive',
-    signature: 'Signature',
+  // Create psychologically intriguing titles for each category
+  const getCategoryTitle = (categoryId) => {
+    const titles = {
+      'essential': `Cars available near you in ${selectedCity}`,
+      'executive': `Premium vehicles for your special moments`,
+      'signature': `Elite collection for unforgettable experiences`,
+      'pickups': `Rugged pickups ready for your next adventure`,
+      'vans': `Spacious vans perfect for group travel`,
+      'trucks': `Heavy-duty trucks for commercial needs`,
+    };
+    return titles[categoryId] || 'Available Cars';
   };
 
-  const displayedCars = classId ? allCarsByClass[classId] || [] : Object.values(allCarsByClass).flat();
+  const displayedCars = activeCategoryId ? allCarsByClass[activeCategoryId] || [] : Object.values(allCarsByClass).flat();
 
   useLayoutEffect(() => {
-    const title = classId ? `${classNames[classId]} Cars` : 'Available Cars';
+    const title = activeCategoryId ? getCategoryTitle(activeCategoryId) : 'Available Cars';
     navigation.setOptions({
       title,
     });
-  }, [navigation, classId]);
+  }, [navigation, activeCategoryId, selectedCity]);
 
   const toggleLike = (carId) => {
     setLikedCars((prev) => {

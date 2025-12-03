@@ -372,9 +372,9 @@ const RenterHomeScreen = () => {
   const handleViewAll = (classId, isCommercial = false) => {
     if (isCommercial) {
       // Navigate to commercial vehicle list
-      navigation.navigate('CarList', { categoryId: classId, isCommercial: true });
+      navigation.navigate('CarList', { categoryId: classId, isCommercial: true, selectedCity });
     } else {
-      navigation.navigate('CarList', { classId });
+      navigation.navigate('CarList', { classId, selectedCity });
     }
   };
 
@@ -419,7 +419,7 @@ const RenterHomeScreen = () => {
   ];
 
   const handleViewAllServices = (categoryId) => {
-    navigation.navigate('ServiceList', { categoryId });
+    navigation.navigate('ServiceList', { categoryId, selectedCity });
   };
 
   // Discover categories with descriptions
@@ -971,25 +971,16 @@ const RenterHomeScreen = () => {
           {/* Road Trips Section */}
           {getFilteredServices('roadTrips').length > 0 && (
             <View style={[styles.serviceCategorySection, styles.firstSection]}>
-              <View style={[styles.classHeader, styles.firstHeader]}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'roadTrips')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'roadTrips')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('roadTrips')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('roadTrips')}
+                activeOpacity={0.7}
+                style={[styles.classHeader, styles.firstHeader]}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  RoadTrips Agencies available near you in {selectedCity}
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadtrips-${index}`} />)
@@ -1051,25 +1042,16 @@ const RenterHomeScreen = () => {
           {/* VIP Wedding Fleet Section */}
           {getFilteredServices('vipWedding').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'vipWedding')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'vipWedding')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('vipWedding')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('vipWedding')}
+                activeOpacity={0.7}
+                style={styles.classHeader}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  Premium wedding fleets for your special day
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-vipwedding-${index}`} />)
@@ -1131,25 +1113,16 @@ const RenterHomeScreen = () => {
           {/* Professional Drivers Section */}
           {getFilteredServices('drivers').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'drivers')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'drivers')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('drivers')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('drivers')}
+                activeOpacity={0.7}
+                style={styles.classHeader}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  Professional drivers ready to take the wheel
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-drivers-${index}`} />)
@@ -1210,25 +1183,16 @@ const RenterHomeScreen = () => {
           {/* Movers Section */}
           {getFilteredServices('movers').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'movers')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'movers')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('movers')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('movers')}
+                activeOpacity={0.7}
+                style={styles.classHeader}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  Trusted movers to make relocation easy
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-movers-${index}`} />)
@@ -1291,25 +1255,16 @@ const RenterHomeScreen = () => {
           {/* VIP Car Detailing Section */}
           {getFilteredServices('carDetailing').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'carDetailing')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'carDetailing')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('carDetailing')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('carDetailing')}
+                activeOpacity={0.7}
+                style={styles.classHeader}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  Premium car detailing to keep your ride shining
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-cardetailing-${index}`} />)
@@ -1371,25 +1326,16 @@ const RenterHomeScreen = () => {
           {/* Roadside Assistance Section */}
           {getFilteredServices('roadside').length > 0 && (
             <View style={styles.serviceCategorySection}>
-              <View style={styles.classHeader}>
-                <View style={styles.classHeaderLeft}>
-                  <Text style={[styles.className, { color: theme.colors.textPrimary }]}>
-                    {serviceCategories.find(c => c.id === 'roadside')?.name}
-                  </Text>
-                  <Text style={[styles.classDescription, { color: theme.colors.textSecondary }]}>
-                    {serviceCategories.find(c => c.id === 'roadside')?.description}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  onPress={() => handleViewAllServices('roadside')}
-                  activeOpacity={0.7}
-                  style={styles.viewAllButton}
-                >
-                  <Text style={[styles.viewAllText, { color: theme.colors.primary }]}>
-                    View All
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleViewAllServices('roadside')}
+                activeOpacity={0.7}
+                style={styles.classHeader}
+              >
+                <Text style={[styles.categoryTitle, { color: theme.colors.textPrimary }]}>
+                  Roadside assistance when you need it most
+                </Text>
+                <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+              </TouchableOpacity>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.serviceScrollContainer}>
                 {isLoading ? (
                   [...Array(4)].map((_, index) => <ServiceCardSkeleton key={`skeleton-roadside-${index}`} />)

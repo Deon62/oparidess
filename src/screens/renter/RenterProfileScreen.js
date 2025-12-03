@@ -516,8 +516,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   section: {
-    marginHorizontal: 24,
-    padding: 20,
+    marginHorizontal: 0,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
     marginBottom: 8,
   },
   sectionHeader: {

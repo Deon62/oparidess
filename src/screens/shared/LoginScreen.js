@@ -115,6 +115,16 @@ const LoginScreen = () => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Welcome Headline */}
+        <View style={styles.headlineSection}>
+          <Text style={[styles.headline, { color: theme.colors.textPrimary }]}>
+            Welcome Back
+          </Text>
+          <Text style={[styles.subheadline, { color: theme.colors.textSecondary }]}>
+            Sign in to continue
+          </Text>
+        </View>
+
         <View style={styles.formSection}>
         <View style={styles.inputWrapper}>
           <Input
@@ -262,9 +272,26 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
-  formSection: {
+  headlineSection: {
     paddingHorizontal: 24,
     paddingTop: 60,
+    paddingBottom: 8,
+    alignItems: 'center',
+  },
+  headline: {
+    fontSize: 28,
+    fontFamily: 'Nunito_700Bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subheadline: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+  },
+  formSection: {
+    paddingHorizontal: 24,
+    paddingTop: 32,
   },
   inputWrapper: {
     alignItems: 'center',

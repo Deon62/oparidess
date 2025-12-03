@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
@@ -62,7 +62,22 @@ const SignupScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Welcome Headline */}
+        <View style={styles.headlineSection}>
+          <Text style={[styles.headline, { color: theme.colors.textPrimary }]}>
+            Welcome to Opa
+          </Text>
+          <Text style={[styles.subheadline, { color: theme.colors.textSecondary }]}>
+            Create your account to get started
+          </Text>
+        </View>
+
         {/* Form Section */}
         <View style={styles.formSection}>
         <View style={styles.inputWrapper}>
@@ -191,7 +206,7 @@ const SignupScreen = () => {
           </TouchableOpacity>
         </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -200,12 +215,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentContainer: {
+  scrollView: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
+  headlineSection: {
+    paddingHorizontal: 24,
+    paddingTop: 60,
+    paddingBottom: 8,
+    alignItems: 'center',
+  },
+  headline: {
+    fontSize: 28,
+    fontFamily: 'Nunito_700Bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  subheadline: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
   },
   formSection: {
     paddingHorizontal: 24,
-    paddingTop: 80,
+    paddingTop: 32,
   },
   inputWrapper: {
     alignItems: 'center',

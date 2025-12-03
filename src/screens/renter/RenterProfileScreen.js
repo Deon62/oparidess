@@ -23,14 +23,13 @@ const RenterProfileScreen = () => {
   const [personalInfo, setPersonalInfo] = useState({
     first_name: user?.first_name || 'John',
     last_name: user?.last_name || 'Doe',
+    email: user?.email || 'john.doe@example.com',
     phone_number: user?.phone_number || '+254 712 345 678',
     date_of_birth: user?.date_of_birth || '1990-01-15',
     gender: user?.gender || 'Male',
     location: user?.location || 'Nairobi, Kenya',
     address: user?.address || '123 Main Street, Westlands',
     id_number: user?.id_number || '12345678',
-    rating: user?.rating || 4.8,
-    totalReviews: user?.totalReviews || 24,
   });
 
   // Update profile image URI when user context changes
@@ -168,47 +167,6 @@ const RenterProfileScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
-  // Render star rating
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-    
-    return (
-      <View style={styles.starsContainer}>
-        {[...Array(5)].map((_, i) => {
-          if (i < fullStars) {
-            return (
-              <Ionicons
-                key={i}
-                name="star"
-                size={16}
-                color="#FFB800"
-              />
-            );
-          } else if (i === fullStars && hasHalfStar) {
-            return (
-              <Ionicons
-                key={i}
-                name="star-half"
-                size={16}
-                color="#FFB800"
-              />
-            );
-          } else {
-            return (
-              <Ionicons
-                key={i}
-                name="star-outline"
-                size={16}
-                color="#FFB800"
-              />
-            );
-          }
-        })}
-      </View>
-    );
-  };
-
   const InfoRow = ({ icon, label, value }) => (
     <View style={styles.infoRow}>
       <View style={styles.infoRowLeft}>
@@ -272,40 +230,8 @@ const RenterProfileScreen = () => {
           {personalInfo.first_name} {personalInfo.last_name}
         </Text>
         <Text style={[styles.profileSubtext, { color: theme.colors.textSecondary }]}>
-          {personalInfo.phone_number}
+          {personalInfo.email}
         </Text>
-
-        {/* User Rating */}
-        <View style={styles.ratingContainer}>
-          {renderStars(personalInfo.rating)}
-          <Text style={[styles.ratingValue, { color: theme.colors.textPrimary }]}>
-            {personalInfo.rating.toFixed(1)}
-          </Text>
-          <Text style={[styles.ratingCount, { color: theme.colors.textSecondary }]}>
-            ({personalInfo.totalReviews} reviews)
-          </Text>
-        </View>
-      </View>
-
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-      {/* Action Buttons */}
-      <View style={styles.actionButtonsContainer}>
-        <Button
-          title="Upload Docs"
-          onPress={handleUploadDocs}
-          variant="primary"
-          style={styles.actionButton}
-          textStyle={styles.actionButtonText}
-        />
-        <Button
-          title="Update Profile"
-          onPress={handleUpdateProfile}
-          variant="secondary"
-          style={styles.actionButton}
-          textStyle={styles.actionButtonText}
-        />
       </View>
 
       {/* Separator Line */}
@@ -313,14 +239,18 @@ const RenterProfileScreen = () => {
 
       {/* Personal Information */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          Personal Information
-        </Text>
-        <InfoRow
-          icon="person-outline"
-          label="Full Name"
-          value={`${personalInfo.first_name} ${personalInfo.last_name}`}
-        />
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Personal Information
+          </Text>
+          <TouchableOpacity
+            onPress={handleUpdateProfile}
+            style={styles.updateProfileIcon}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="create-outline" size={22} color={theme.colors.primary} />
+          </TouchableOpacity>
+        </View>
         <InfoRow
           icon="call-outline"
           label="Phone Number"
@@ -373,6 +303,18 @@ const RenterProfileScreen = () => {
           <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             Add Payment
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleUploadDocs}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="document-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Upload Docs
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
@@ -573,52 +515,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     marginBottom: 12,
   },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 8,
-  },
-  starsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  ratingValue: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    marginLeft: 4,
-  },
-  ratingCount: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  actionButtonsContainer: {
-    flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 24,
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  actionButton: {
-    flex: 1,
-    paddingVertical: 10,
-    minHeight: 40,
-  },
-  actionButtonText: {
-    fontSize: 14,
-  },
   section: {
     marginHorizontal: 24,
     padding: 20,
     marginBottom: 8,
   },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
   sectionTitle: {
     fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 20,
     letterSpacing: -0.3,
+  },
+  updateProfileIcon: {
+    padding: 4,
   },
   infoRow: {
     flexDirection: 'row',

@@ -654,6 +654,14 @@ const ProfileStack = () => {
         }}
       />
       <Stack.Screen 
+        name="UploadDocs" 
+        component={UploadDocsScreen}
+        options={{ 
+          title: 'Upload Documents',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
         name="Notifications" 
         component={NotificationsScreen}
         options={{ 

@@ -45,6 +45,11 @@ const BookingScreen = () => {
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [crossCountryTravelEnabled, setCrossCountryTravelEnabled] = useState(false);
   
+  // Modal states for age verification
+  const [showAgeRequirementModal, setShowAgeRequirementModal] = useState(false);
+  const [showUpdateProfileModal, setShowUpdateProfileModal] = useState(false);
+  const [showAgeEligibleModal, setShowAgeEligibleModal] = useState(false);
+  
   // Time selection
   const [pickupTime, setPickupTime] = useState('10:00');
   const [dropoffTime, setDropoffTime] = useState('10:00');
@@ -279,34 +284,24 @@ const BookingScreen = () => {
     // Age verification
     const ageEligible = isAgeEligible();
     if (ageEligible === false) {
-      const userAge = calculateAge(user?.date_of_birth);
-      Alert.alert(
-        'Age Requirement Not Met',
-        `You must be at least ${MINIMUM_AGE} years old to rent this car. You are currently ${userAge} years old. Please update your date of birth in your profile or contact support.`,
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { 
-            text: 'Update Profile', 
-            onPress: () => navigation.navigate('UpdateProfile')
-          }
-        ]
-      );
+      setShowAgeRequirementModal(true);
       return;
     }
     
     if (ageEligible === null) {
-      Alert.alert(
-        'Date of Birth Required',
-        'Please add your date of birth in your profile to proceed with booking. This is required to verify age eligibility.',
-        [
-          { text: 'Cancel', style: 'cancel' },
-          { 
-            text: 'Update Profile', 
-            onPress: () => navigation.navigate('UpdateProfile')
-          }
-        ]
-      );
+      setShowUpdateProfileModal(true);
       return;
+    }
+    
+    // Show success modal if user just became eligible (optional enhancement)
+    // This could be useful if user updates profile and comes back
+    if (ageEligible === true && user?.date_of_birth) {
+      const age = calculateAge(user.date_of_birth);
+      if (age === MINIMUM_AGE || age === MINIMUM_AGE + 1) {
+        // Only show if they're exactly the minimum age or one year older
+        // setShowAgeEligibleModal(true);
+        // return;
+      }
     }
 
     // Date validation
@@ -599,7 +594,7 @@ const BookingScreen = () => {
       >
         {/* Age Warning Banner */}
         {user?.date_of_birth && !isAgeEligible() && (
-          <View style={[styles.ageWarningBanner, { backgroundColor: '#FFF3CD' + '80', borderLeftColor: '#FF9800' }]}>
+          <View style={[styles.ageWarningBanner, { backgroundColor: '#FFF3CD' + '80' }]}>
             <Ionicons name="warning-outline" size={20} color="#FF9800" />
             <View style={styles.ageWarningContent}>
               <Text style={[styles.ageWarningTitle, { color: theme.colors.textPrimary }]}>
@@ -1101,6 +1096,132 @@ const BookingScreen = () => {
         }}
         title={isSelectingPickupLocation ? 'Select Pickup Location' : 'Select Dropoff Location'}
       />
+
+      {/* Age Requirement Not Met Modal */}
+      <Modal
+        visible={showAgeRequirementModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAgeRequirementModal(false)}
+      >
+        <View style={styles.customModalOverlay}>
+          <View style={[styles.customModal, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.modalIconContainer, { backgroundColor: '#FF9800' + '20' }]}>
+              <Ionicons name="warning" size={48} color="#FF9800" />
+            </View>
+            <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
+              Age Requirement Not Met
+            </Text>
+            <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
+              You must be at least {MINIMUM_AGE} years old to rent this car.{'\n\n'}
+              You are currently {calculateAge(user?.date_of_birth)} years old.
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButtonSecondary, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowAgeRequirementModal(false)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalButtonTextSecondary, { color: theme.colors.textPrimary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary }]}
+                onPress={() => {
+                  setShowAgeRequirementModal(false);
+                  // UpdateProfile is in the same HomeStack, so we can navigate directly
+                  navigation.navigate('UpdateProfile');
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalButtonTextPrimary, { color: theme.colors.white }]}>
+                  Update Profile
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Update Profile Modal */}
+      <Modal
+        visible={showUpdateProfileModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowUpdateProfileModal(false)}
+      >
+        <View style={styles.customModalOverlay}>
+          <View style={[styles.customModal, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
+              <Ionicons name="person-circle-outline" size={48} color={theme.colors.primary} />
+            </View>
+            <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
+              {user?.date_of_birth ? 'Update Date of Birth' : 'Add Date of Birth'}
+            </Text>
+            <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
+              {user?.date_of_birth
+                ? 'Please update your date of birth in your profile to verify your age eligibility for car rental.'
+                : 'Please add your date of birth in your profile to proceed with booking. This is required to verify age eligibility.'}
+            </Text>
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={[styles.modalButtonSecondary, { borderColor: theme.colors.hint }]}
+                onPress={() => setShowUpdateProfileModal(false)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalButtonTextSecondary, { color: theme.colors.textPrimary }]}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary }]}
+                onPress={() => {
+                  setShowUpdateProfileModal(false);
+                  // UpdateProfile is in the same HomeStack, so we can navigate directly
+                  navigation.navigate('UpdateProfile');
+                }}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.modalButtonTextPrimary, { color: theme.colors.white }]}>
+                  Go to Profile
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Age Eligible Success Modal */}
+      <Modal
+        visible={showAgeEligibleModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowAgeEligibleModal(false)}
+      >
+        <View style={styles.customModalOverlay}>
+          <View style={[styles.customModal, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.modalIconContainer, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={48} color="#4CAF50" />
+            </View>
+            <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
+              Age Requirement Met!
+            </Text>
+            <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
+              Great! You meet the age requirement of {MINIMUM_AGE} years old. You can proceed with your booking.
+            </Text>
+            <TouchableOpacity
+              style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary, width: '100%' }]}
+              onPress={() => setShowAgeEligibleModal(false)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.modalButtonTextPrimary, { color: theme.colors.white }]}>
+                Continue
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -1533,7 +1654,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 16,
     borderRadius: 12,
-    borderLeftWidth: 4,
     gap: 12,
   },
   ageWarningContent: {
@@ -1663,6 +1783,73 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   datePickerConfirmText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Custom Modal Styles
+  customModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  customModal: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  modalIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontFamily: 'Nunito_700Bold',
+    textAlign: 'center',
+    marginBottom: 12,
+  },
+  modalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  modalButtonSecondary: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  modalButtonTextSecondary: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  modalButtonPrimary: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalButtonTextPrimary: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },

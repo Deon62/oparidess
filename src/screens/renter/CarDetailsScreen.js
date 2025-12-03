@@ -975,9 +975,9 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   contentContainer: {
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    marginTop: -20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    marginTop: -12,
     paddingTop: 20,
   },
   carouselContainer: {

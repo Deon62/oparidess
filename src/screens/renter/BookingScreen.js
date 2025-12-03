@@ -23,6 +23,7 @@ const BookingScreen = () => {
   const [isSelectingPickup, setIsSelectingPickup] = useState(true);
   const [payOnSite, setPayOnSite] = useState(false);
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
+  const [crossCountryTravelEnabled, setCrossCountryTravelEnabled] = useState(false);
   
   // Time selection
   const [pickupTime, setPickupTime] = useState('10:00');
@@ -97,8 +98,9 @@ const BookingScreen = () => {
 
   const days = calculateDays();
   const insuranceCost = insuranceEnabled ? 1500 * days : 0;
+  const crossCountryTravelCost = crossCountryTravelEnabled ? 5000 * days : 0;
   const basePrice = rentalInfo.perDay * days;
-  const totalPrice = basePrice + insuranceCost;
+  const totalPrice = basePrice + insuranceCost + crossCountryTravelCost;
   
   // Commission rate (15%)
   const COMMISSION_RATE = 0.15;
@@ -187,11 +189,13 @@ const BookingScreen = () => {
         days,
         specialRequirements,
         insuranceEnabled,
+        insuranceCost,
+        crossCountryTravelEnabled,
+        crossCountryTravelCost,
         payOnSite,
         bookingFee: payOnSite ? bookingFee : 0,
         totalRentalPrice: totalPrice,
         basePrice,
-        insuranceCost,
         rentalInfo,
       },
     });
@@ -522,6 +526,55 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
+        {/* Cross Country Travel Toggle */}
+        <View style={styles.section}>
+          <View style={styles.crossCountryCard}>
+            <View style={styles.crossCountryInfo}>
+              <Text style={[styles.crossCountryTitle, { color: theme.colors.textPrimary }]}>
+                Cross Country Travel
+              </Text>
+              <Text style={[styles.crossCountryDescription, { color: theme.colors.textSecondary }]}>
+                Enable this option if you plan to travel across different countries or regions (+KSh 5,000/day)
+              </Text>
+              
+              {/* Instructions List */}
+              <View style={styles.crossCountryInstructions}>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Required for travel outside the vehicle's registered country
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Includes border crossing documentation support
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Additional insurance coverage for international travel
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Owner must approve cross-country travel in advance
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Toggle
+              value={crossCountryTravelEnabled}
+              onValueChange={setCrossCountryTravelEnabled}
+            />
+          </View>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Special Requirements */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -681,6 +734,17 @@ const BookingScreen = () => {
               </Text>
               <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
                 {formatCurrency(insuranceCost)}
+              </Text>
+            </View>
+          )}
+
+          {crossCountryTravelEnabled && (
+            <View style={styles.priceRow}>
+              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                Cross Country Travel ({days || 0} {days === 1 ? 'day' : 'days'})
+              </Text>
+              <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                {formatCurrency(crossCountryTravelCost)}
               </Text>
             </View>
           )}
@@ -1093,6 +1157,42 @@ const styles = StyleSheet.create({
   readMoreText: {
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  crossCountryCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingVertical: 4,
+  },
+  crossCountryInfo: {
+    flex: 1,
+    marginRight: 16,
+  },
+  crossCountryTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  crossCountryDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  crossCountryInstructions: {
+    marginTop: 8,
+    gap: 8,
+  },
+  crossCountryInstructionItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+  },
+  crossCountryInstructionText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
+    flex: 1,
   },
   priceRow: {
     flexDirection: 'row',

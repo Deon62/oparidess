@@ -59,6 +59,7 @@ import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
+import CrossCountryTravelDetailsScreen from '../../screens/shared/CrossCountryTravelDetailsScreen';
 import DisputeScreen from '../../screens/shared/DisputeScreen';
 import ComingSoonScreen from '../../screens/shared/ComingSoonScreen';
 import ImageRepositoryScreen from '../../screens/shared/ImageRepositoryScreen';
@@ -237,6 +238,14 @@ const HomeStack = () => {
         component={CancellationPolicyScreen}
         options={{ 
           title: 'Cancellation Policy',
+          headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="CrossCountryTravelDetails" 
+        component={CrossCountryTravelDetailsScreen}
+        options={{ 
+          title: 'Cross Country Travel',
           headerShown: true 
         }}
       />

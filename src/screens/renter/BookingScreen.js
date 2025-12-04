@@ -946,12 +946,9 @@ const BookingScreen = () => {
               
               {/* Read More Link */}
               <TouchableOpacity
-                onPress={() => {
-                  // TODO: Navigate to CrossCountryTravelDetails screen when implemented
-                  // navigation.navigate('CrossCountryTravelDetails');
-                }}
+                onPress={() => navigation.navigate('CrossCountryTravelDetails')}
                 activeOpacity={0.7}
-                style={styles.readMoreButton}
+                style={[styles.readMoreButton, { marginTop: 16 }]}
               >
                 <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
                   Read more

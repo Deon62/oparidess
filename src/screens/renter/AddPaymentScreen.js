@@ -7,7 +7,7 @@ import { Button, Input } from '../../packages/components';
 
 // Import payment logos
 const mpesaLogo = require('../../../assets/images/mpesa.png');
-const airtelLogo = require('../../../assets/images/airtel.png');
+// const airtelLogo = require('../../../assets/images/airtel.png');
 const visaLogo = require('../../../assets/images/visa.png');
 const mastercardLogo = require('../../../assets/images/mastercard.png');
 
@@ -28,9 +28,9 @@ const AddPaymentScreen = () => {
   const [mpesaData, setMpesaData] = useState({
     phoneNumber: '',
   });
-  const [airtelData, setAirtelData] = useState({
-    phoneNumber: '',
-  });
+  // const [airtelData, setAirtelData] = useState({
+  //   phoneNumber: '',
+  // });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -194,13 +194,13 @@ const AddPaymentScreen = () => {
           onPress={() => setSelectedMethod('mpesa')}
           isSelected={selectedMethod === 'mpesa'}
         />
-        <PaymentMethodCard
+        {/* <PaymentMethodCard
           method="airtel"
           title="Airtel Money"
           logo={airtelLogo}
           onPress={() => setSelectedMethod('airtel')}
           isSelected={selectedMethod === 'airtel'}
-        />
+        /> */}
       </View>
 
       {/* Form Fields Based on Selection */}

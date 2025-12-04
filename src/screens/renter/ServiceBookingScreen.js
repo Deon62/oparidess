@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useLayoutEffect, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform, KeyboardAvoidingView, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -12,16 +12,27 @@ const ServiceBookingScreen = () => {
   const insets = useSafeAreaInsets();
   const { service, category } = route.params || {};
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState(new Date());
-  const [dateInput, setDateInput] = useState('');
-  const [timeInput, setTimeInput] = useState('');
+  // Initialize date to tomorrow
+  const getTomorrow = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(10, 0, 0, 0);
+    return tomorrow;
+  };
+
+  const [selectedDate, setSelectedDate] = useState(getTomorrow());
+  const [selectedTime, setSelectedTime] = useState('10:00 AM');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showLocationPicker, setShowLocationPicker] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   
   // Conditional fields based on service category
   const [pickupLocation, setPickupLocation] = useState('');
-  const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState(''); // For other categories (movers, etc.)
+  const [areasOfVisit, setAreasOfVisit] = useState([]); // For road trips - changed from destination to areas of visit
+  const [areaInput, setAreaInput] = useState(''); // Input for adding areas
   const [numberOfPassengers, setNumberOfPassengers] = useState('');
   const [duration, setDuration] = useState('');
   const [eventLocation, setEventLocation] = useState('');
@@ -44,7 +55,7 @@ const ServiceBookingScreen = () => {
 
   // Hide tab bar when screen is focused (including when returning from other screens)
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       navigation.getParent()?.setOptions({
         tabBarStyle: { display: 'none' },
       });
@@ -64,49 +75,42 @@ const ServiceBookingScreen = () => {
     };
   }, [navigation]);
 
-  const formatDate = (date) => {
+  const formatDateShort = (date) => {
+    if (!date) {
+      // Return tomorrow's date as default
+      return formatDateShort(getTomorrow());
+    }
     return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
       day: 'numeric',
+      month: 'short',
+      year: 'numeric',
     });
   };
 
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
+  const formatTime = (timeString) => {
+    return timeString || '10:00 AM';
   };
 
-  const handleDateInputChange = (text) => {
-    setDateInput(text);
-    // Try to parse the date
-    const parsed = new Date(text);
-    if (!isNaN(parsed.getTime()) && parsed >= new Date()) {
-      setSelectedDate(parsed);
+  // Available locations (mock data - in real app, fetch from backend)
+  const availableLocations = [
+    { id: 1, name: 'Nairobi CBD, Kenya', address: 'Moi Avenue, Nairobi CBD' },
+    { id: 2, name: 'Westlands, Nairobi', address: 'Westlands Road, Nairobi' },
+    { id: 3, name: 'Karen, Nairobi', address: 'Karen Road, Nairobi' },
+    { id: 4, name: 'Kilimani, Nairobi', address: 'Argwings Kodhek Road, Nairobi' },
+    { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi' },
+  ];
+
+  // Add area of visit
+  const handleAddArea = () => {
+    if (areaInput.trim()) {
+      setAreasOfVisit([...areasOfVisit, areaInput.trim()]);
+      setAreaInput('');
     }
   };
 
-  const handleTimeInputChange = (text) => {
-    setTimeInput(text);
-    // Try to parse time (format: HH:MM AM/PM)
-    const timeRegex = /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i;
-    const match = text.match(timeRegex);
-    if (match) {
-      let hours = parseInt(match[1]);
-      const minutes = parseInt(match[2]);
-      const ampm = match[3].toUpperCase();
-      
-      if (ampm === 'PM' && hours !== 12) hours += 12;
-      if (ampm === 'AM' && hours === 12) hours = 0;
-      
-      const newTime = new Date();
-      newTime.setHours(hours, minutes, 0, 0);
-      setSelectedTime(newTime);
-    }
+  // Remove area of visit
+  const handleRemoveArea = (index) => {
+    setAreasOfVisit(areasOfVisit.filter((_, i) => i !== index));
   };
 
   const handleContinue = () => {
@@ -119,11 +123,11 @@ const ServiceBookingScreen = () => {
     const categoryStr = (category || '').toLowerCase();
     if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
       if (!pickupLocation.trim()) {
-        Alert.alert('Required', 'Please enter pickup location');
+        Alert.alert('Required', 'Please select pickup location');
         return;
       }
-      if (!destination.trim()) {
-        Alert.alert('Required', 'Please enter destination');
+      if (areasOfVisit.length === 0) {
+        Alert.alert('Required', 'Please add at least one area of visit');
         return;
       }
     } else if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
@@ -165,18 +169,23 @@ const ServiceBookingScreen = () => {
       }
     }
 
+    // Ensure we always have date and time values (use defaults if not set)
+    const finalDate = selectedDate || getTomorrow();
+    const finalTime = selectedTime || '10:00 AM';
+
     const bookingDetails = {
       service: service,
       category: category,
-      date: selectedDate.toISOString(), // Convert to string for navigation
-      time: selectedTime.toISOString(), // Convert to string for navigation
+      date: finalDate ? finalDate.toISOString() : getTomorrow().toISOString(), // Convert to string for navigation
+      time: finalTime, // selectedTime is now a string, not a Date
       contactPhone: contactPhone.trim(),
       additionalNotes: additionalNotes.trim(),
-      serviceDate: formatDate(selectedDate),
-      serviceTime: formatTime(selectedTime),
+      serviceDate: formatDateShort(finalDate),
+      serviceTime: formatTime(finalTime),
       // Category-specific fields
       pickupLocation: pickupLocation.trim(),
-      destination: destination.trim(),
+      destination: destination.trim(), // For other categories (movers, etc.)
+      areasOfVisit: areasOfVisit, // For road trips - changed from destination
       numberOfPassengers: numberOfPassengers.trim(),
       duration: duration.trim(),
       eventLocation: eventLocation.trim(),
@@ -192,12 +201,12 @@ const ServiceBookingScreen = () => {
       issueType: issueType.trim(),
     };
 
-    navigation.navigate('Payment', {
-      totalPrice: parsePrice(service?.price || '0'),
+    navigation.navigate('ServiceBookingConfirmation', {
       bookingDetails: {
         ...bookingDetails,
         type: 'service',
       },
+      totalPrice: parsePrice(service?.price || '0'),
     });
   };
 
@@ -218,7 +227,7 @@ const ServiceBookingScreen = () => {
     
     // Drivers & Road Trips
     if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
-      if (!pickupLocation.trim() || !destination.trim()) {
+      if (!pickupLocation.trim() || areasOfVisit.length === 0) {
         return false;
       }
     }
@@ -308,57 +317,82 @@ const ServiceBookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Date Selection */}
+        {/* Booking Details Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Select Date
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Booking Details
           </Text>
-          <View style={[styles.dateTimeInputContainer, { borderColor: theme.colors.hint }]}>
-            <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
-            <TextInput
-              style={[styles.dateTimeInput, { color: theme.colors.textPrimary }]}
-              placeholder={formatDate(selectedDate)}
-              placeholderTextColor={theme.colors.hint}
-              value={dateInput}
-              onChangeText={handleDateInputChange}
-              onFocus={() => {
-                if (!dateInput) {
-                  setDateInput(formatDate(selectedDate));
-                }
-              }}
-            />
+          
+          {/* Date Selection - Airbnb Style */}
+          <View style={styles.dateSectionRow}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                Date
+              </Text>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {formatDateShort(selectedDate || getTomorrow())}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={() => setShowDatePicker(true)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                Change
+              </Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.hintText, { color: theme.colors.hint }]}>
-            Format: Day, Month DD, YYYY (e.g., Monday, January 15, 2024)
-          </Text>
-        </View>
 
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Time Selection */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Select Time
-          </Text>
-          <View style={[styles.dateTimeInputContainer, { borderColor: theme.colors.hint }]}>
-            <Ionicons name="time-outline" size={18} color={theme.colors.primary} />
-            <TextInput
-              style={[styles.dateTimeInput, { color: theme.colors.textPrimary }]}
-              placeholder={formatTime(selectedTime)}
-              placeholderTextColor={theme.colors.hint}
-              value={timeInput}
-              onChangeText={handleTimeInputChange}
-              onFocus={() => {
-                if (!timeInput) {
-                  setTimeInput(formatTime(selectedTime));
-                }
-              }}
-            />
+          {/* Time Selection - Airbnb Style */}
+          <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+            <View style={styles.dateSectionContent}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                Time
+              </Text>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                {formatTime(selectedTime || '10:00 AM')}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.dateChangeButton}
+              onPress={() => setShowTimePicker(true)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                Change
+              </Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.hintText, { color: theme.colors.hint }]}>
-            Format: HH:MM AM/PM (e.g., 02:30 PM)
-          </Text>
+
+          {/* Conditional Fields Based on Service Category - Pickup Location for Road Trips */}
+          {(() => {
+            const categoryStr = (category || '').toLowerCase();
+            if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+              return (
+                <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+                  <View style={styles.dateSectionContent}>
+                    <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                      Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                      {pickupLocation || 'Select location'}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.dateChangeButton}
+                    onPress={() => setShowLocationPicker(true)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }
+            return null;
+          })()}
         </View>
 
         {/* Conditional Fields Based on Service Category */}
@@ -369,78 +403,135 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
             return (
               <>
+
                 {/* Separator Line */}
                 <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+                {/* More Info Section */}
                 <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                  <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+                    More Info
                   </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="Enter pickup location"
-                    placeholderTextColor={theme.colors.hint}
-                    value={pickupLocation}
-                    onChangeText={setPickupLocation}
-                  />
-                </View>
-                {/* Separator Line */}
-                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-                <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Destination <Text style={{ color: '#FF3B30' }}>*</Text>
-                  </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="Enter destination"
-                    placeholderTextColor={theme.colors.hint}
-                    value={destination}
-                    onChangeText={setDestination}
-                  />
-                </View>
-                {/* Separator Line */}
-                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-                <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Number of Passengers
-                  </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="Enter number of passengers"
-                    placeholderTextColor={theme.colors.hint}
-                    value={numberOfPassengers}
-                    onChangeText={setNumberOfPassengers}
-                    keyboardType="numeric"
-                  />
-                </View>
-                {/* Separator Line */}
-                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-                <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Duration
-                  </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="e.g., 2 hours, 1 day, 3 days"
-                    placeholderTextColor={theme.colors.hint}
-                    value={duration}
-                    onChangeText={setDuration}
-                  />
+                  
+                  {/* Areas of Visit */}
+                  <View style={{ marginTop: 16 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Areas of Visit <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <View style={[styles.areaInputContainer, { borderColor: theme.colors.hint }]}>
+                      <TextInput
+                        style={[styles.areaInput, { color: theme.colors.textPrimary }]}
+                        placeholder="Enter area to visit"
+                        placeholderTextColor={theme.colors.hint}
+                        value={areaInput}
+                        onChangeText={setAreaInput}
+                        onSubmitEditing={handleAddArea}
+                      />
+                      <TouchableOpacity
+                        onPress={handleAddArea}
+                        style={[styles.addAreaButton, { backgroundColor: theme.colors.primary }]}
+                        activeOpacity={0.7}
+                        disabled={!areaInput.trim()}
+                      >
+                        <Ionicons name="add" size={20} color={theme.colors.white} />
+                      </TouchableOpacity>
+                    </View>
+                    {areasOfVisit.length > 0 && (
+                      <View style={styles.areasList}>
+                        {areasOfVisit.map((area, index) => (
+                          <View key={index} style={[styles.areaTag, { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary + '40' }]}>
+                            <Text style={[styles.areaTagText, { color: theme.colors.textPrimary }]}>
+                              {area}
+                            </Text>
+                            <TouchableOpacity
+                              onPress={() => handleRemoveArea(index)}
+                              style={styles.removeAreaButton}
+                              activeOpacity={0.7}
+                            >
+                              <Ionicons name="close-circle" size={18} color={theme.colors.primary} />
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Number of Passengers */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Number of Passengers
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter number of passengers"
+                      placeholderTextColor={theme.colors.hint}
+                      value={numberOfPassengers}
+                      onChangeText={setNumberOfPassengers}
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  {/* Duration */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Duration
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="e.g., 2 hours, 1 day, 3 days"
+                      placeholderTextColor={theme.colors.hint}
+                      value={duration}
+                      onChangeText={setDuration}
+                    />
+                  </View>
+
+                  {/* Contact Phone */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+
+                  {/* Additional Notes */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Additional Notes (Optional)
+                    </Text>
+                    <TextInput
+                      style={[styles.textArea, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Any special requests or additional information..."
+                      placeholderTextColor={theme.colors.hint}
+                      value={additionalNotes}
+                      onChangeText={setAdditionalNotes}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
                 </View>
               </>
             );
@@ -742,56 +833,48 @@ const ServiceBookingScreen = () => {
           return null;
         })()}
 
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Contact Phone */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
-          </Text>
-          <TextInput
-            style={[styles.input, { 
-              borderColor: theme.colors.hint,
-              color: theme.colors.textPrimary,
-              backgroundColor: theme.colors.background
-            }]}
-            placeholder="Enter your phone number"
-            placeholderTextColor={theme.colors.hint}
-            value={contactPhone}
-            onChangeText={setContactPhone}
-            keyboardType="phone-pad"
-          />
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Additional Notes */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Additional Notes (Optional)
-          </Text>
-          <TextInput
-            style={[styles.textArea, { 
-              borderColor: theme.colors.hint,
-              color: theme.colors.textPrimary,
-              backgroundColor: theme.colors.background
-            }]}
-            placeholder="Any special requests or additional information..."
-            placeholderTextColor={theme.colors.hint}
-            value={additionalNotes}
-            onChangeText={setAdditionalNotes}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-        </View>
-
         {/* Bottom Spacing - Extra space for keyboard and bottom bar */}
         <View style={{ height: 100 }} />
       </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Date Picker Modal */}
+      <DatePickerModal
+        visible={showDatePicker}
+        onClose={() => setShowDatePicker(false)}
+        selectedDate={selectedDate}
+        onDateSelect={(date) => {
+          setSelectedDate(date);
+          setShowDatePicker(false);
+        }}
+        title="Select Date"
+        minDate={getTomorrow()}
+      />
+
+      {/* Time Picker Modal */}
+      <TimePickerModal
+        visible={showTimePicker}
+        onClose={() => setShowTimePicker(false)}
+        selectedTime={selectedTime}
+        onTimeSelect={(time) => {
+          setSelectedTime(time);
+          setShowTimePicker(false);
+        }}
+        title="Select Time"
+      />
+
+      {/* Location Picker Modal */}
+      <LocationPickerModal
+        visible={showLocationPicker}
+        onClose={() => setShowLocationPicker(false)}
+        locations={availableLocations}
+        selectedLocation={pickupLocation}
+        onLocationSelect={(location) => {
+          setPickupLocation(location.name);
+          setShowLocationPicker(false);
+        }}
+        title="Select Pickup Location"
+      />
 
       {/* Bottom Bar with Price and Pay Now Button - Fixed at bottom */}
       <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 20) }]}>
@@ -896,6 +979,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
     marginBottom: 10,
   },
+  sectionHeaderTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 16,
+  },
   dateTimeInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -966,6 +1054,666 @@ const styles = StyleSheet.create({
   payNowButtonText: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
+  },
+  // Airbnb-style date section
+  dateSectionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  dateSectionContent: {
+    flex: 1,
+  },
+  dateSectionLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 4,
+  },
+  dateSectionValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  dateChangeButton: {
+    paddingVertical: 4,
+  },
+  dateChangeButtonText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  // Areas of visit styles
+  areaInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    gap: 8,
+  },
+  areaInput: {
+    flex: 1,
+    paddingVertical: 12,
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  addAreaButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  areasList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 12,
+  },
+  areaTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
+  },
+  areaTagText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_500Medium',
+  },
+  removeAreaButton: {
+    padding: 2,
+  },
+});
+
+// Date Picker Modal Component
+const DatePickerModal = ({ visible, onClose, selectedDate, onDateSelect, title, minDate }) => {
+  const theme = useTheme();
+  const [currentMonth, setCurrentMonth] = useState(selectedDate ? selectedDate.getMonth() : new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(selectedDate ? selectedDate.getFullYear() : new Date().getFullYear());
+  const [tempSelectedDate, setTempSelectedDate] = useState(selectedDate);
+
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentMonth(selectedDate.getMonth());
+      setCurrentYear(selectedDate.getFullYear());
+      setTempSelectedDate(selectedDate);
+    }
+  }, [selectedDate, visible]);
+
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthName = monthNames[currentMonth];
+
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month, year) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const isDateDisabled = (day) => {
+    const date = new Date(currentYear, currentMonth, day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (minDate) {
+      const min = new Date(minDate);
+      min.setHours(0, 0, 0, 0);
+      return date < min;
+    }
+    return date < today;
+  };
+
+  const isDateSelected = (day) => {
+    if (!tempSelectedDate) return false;
+    return (
+      tempSelectedDate.getDate() === day &&
+      tempSelectedDate.getMonth() === currentMonth &&
+      tempSelectedDate.getFullYear() === currentYear
+    );
+  };
+
+  const handleDayPress = (day) => {
+    const date = new Date(currentYear, currentMonth, day);
+    setTempSelectedDate(date);
+  };
+
+  const navigateMonth = (direction) => {
+    if (direction === 'prev') {
+      if (currentMonth === 0) {
+        setCurrentMonth(11);
+        setCurrentYear(currentYear - 1);
+      } else {
+        setCurrentMonth(currentMonth - 1);
+      }
+    } else {
+      if (currentMonth === 11) {
+        setCurrentMonth(0);
+        setCurrentYear(currentYear + 1);
+      } else {
+        setCurrentMonth(currentMonth + 1);
+      }
+    }
+  };
+
+  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+  const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
+  const daysArray = [];
+
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < firstDay; i++) {
+    daysArray.push(null);
+  }
+
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    daysArray.push(day);
+  }
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={pickerStyles.modalOverlay}>
+        <View style={[pickerStyles.modal, { backgroundColor: theme.colors.white }]}>
+          <View style={pickerStyles.modalHeader}>
+            <TouchableOpacity onPress={onClose} style={pickerStyles.closeButton}>
+              <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[pickerStyles.modalTitle, { color: theme.colors.textPrimary }]}>
+              {title}
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          <View style={pickerStyles.monthHeader}>
+            <TouchableOpacity onPress={() => navigateMonth('prev')} style={pickerStyles.navButton}>
+              <Ionicons name="chevron-back" size={20} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[pickerStyles.monthText, { color: theme.colors.textPrimary }]}>
+              {monthName} {currentYear}
+            </Text>
+            <TouchableOpacity onPress={() => navigateMonth('next')} style={pickerStyles.navButton}>
+              <Ionicons name="chevron-forward" size={20} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={pickerStyles.weekDays}>
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+              <Text key={index} style={[pickerStyles.weekDay, { color: theme.colors.hint }]}>
+                {day}
+              </Text>
+            ))}
+          </View>
+
+          <View style={pickerStyles.daysGrid}>
+            {daysArray.map((day, index) => {
+              if (day === null) {
+                return <View key={index} style={pickerStyles.dayCell} />;
+              }
+              const disabled = isDateDisabled(day);
+              const selected = isDateSelected(day);
+              
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={pickerStyles.dayCell}
+                  onPress={() => !disabled && handleDayPress(day)}
+                  disabled={disabled}
+                  activeOpacity={0.7}
+                >
+                  <View
+                    style={[
+                      pickerStyles.dayContent,
+                      selected && { backgroundColor: theme.colors.primary },
+                      disabled && { opacity: 0.3 },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        pickerStyles.dayText,
+                        { color: disabled ? theme.colors.hint : theme.colors.textPrimary },
+                        selected && { color: theme.colors.white, fontFamily: 'Nunito_700Bold' },
+                      ]}
+                    >
+                      {day}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <View style={pickerStyles.modalActions}>
+            <TouchableOpacity
+              style={[pickerStyles.cancelButton, { borderColor: theme.colors.hint }]}
+              onPress={onClose}
+              activeOpacity={0.7}
+            >
+              <Text style={[pickerStyles.cancelText, { color: theme.colors.textPrimary }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                pickerStyles.confirmButton,
+                { backgroundColor: theme.colors.primary },
+                !tempSelectedDate && { opacity: 0.5 }
+              ]}
+              onPress={() => {
+                if (tempSelectedDate) {
+                  onDateSelect(tempSelectedDate);
+                  onClose();
+                }
+              }}
+              activeOpacity={0.7}
+              disabled={!tempSelectedDate}
+            >
+              <Text style={[pickerStyles.confirmText, { color: theme.colors.white }]}>
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Time Picker Modal Component
+const TimePickerModal = ({ visible, onClose, selectedTime, onTimeSelect, title }) => {
+  const theme = useTheme();
+  const [displayHour, setDisplayHour] = useState(10);
+  const [minutes, setMinutes] = useState(0);
+  const [ampm, setAmpm] = useState('AM');
+
+  useEffect(() => {
+    if (selectedTime && visible) {
+      const timeMatch = selectedTime.match(/(\d{1,2}):(\d{2})\s?(AM|PM)/i);
+      if (timeMatch) {
+        let h = parseInt(timeMatch[1]);
+        const m = parseInt(timeMatch[2]);
+        const ap = timeMatch[3].toUpperCase();
+        
+        // Convert to 24-hour format for internal use
+        let hour24 = h;
+        if (ap === 'PM' && h !== 12) hour24 = h + 12;
+        if (ap === 'AM' && h === 12) hour24 = 0;
+        
+        // Convert back to 12-hour display format
+        if (hour24 === 0) {
+          setDisplayHour(12);
+          setAmpm('AM');
+        } else if (hour24 === 12) {
+          setDisplayHour(12);
+          setAmpm('PM');
+        } else if (hour24 > 12) {
+          setDisplayHour(hour24 - 12);
+          setAmpm('PM');
+        } else {
+          setDisplayHour(hour24);
+          setAmpm('AM');
+        }
+        setMinutes(m);
+      }
+    }
+  }, [selectedTime, visible]);
+
+  const handleConfirm = () => {
+    const timeString = `${displayHour}:${String(minutes).padStart(2, '0')} ${ampm}`;
+    onTimeSelect(timeString);
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={pickerStyles.modalOverlay}>
+        <View style={[pickerStyles.modal, { backgroundColor: theme.colors.white }]}>
+          <View style={pickerStyles.modalHeader}>
+            <TouchableOpacity onPress={onClose} style={pickerStyles.closeButton}>
+              <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[pickerStyles.modalTitle, { color: theme.colors.textPrimary }]}>
+              {title}
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          <View style={pickerStyles.timePickerContainer}>
+            <View style={pickerStyles.timePickerRow}>
+              <ScrollView style={pickerStyles.timeScrollView} showsVerticalScrollIndicator={false}>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => {
+                  const isSelected = displayHour === h;
+                  return (
+                    <TouchableOpacity
+                      key={h}
+                      style={[
+                        pickerStyles.timeOption,
+                        isSelected && { backgroundColor: theme.colors.primary + '20' }
+                      ]}
+                      onPress={() => setDisplayHour(h)}
+                    >
+                      <Text style={[
+                        pickerStyles.timeOptionText,
+                        { color: theme.colors.textPrimary },
+                        isSelected && { color: theme.colors.primary, fontFamily: 'Nunito_700Bold' }
+                      ]}>
+                        {String(h).padStart(2, '0')}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+              <Text style={[pickerStyles.timeSeparator, { color: theme.colors.textPrimary }]}>:</Text>
+              <ScrollView style={pickerStyles.timeScrollView} showsVerticalScrollIndicator={false}>
+                {Array.from({ length: 60 }, (_, i) => i).map((m) => {
+                  const isSelected = minutes === m;
+                  return (
+                    <TouchableOpacity
+                      key={m}
+                      style={[
+                        pickerStyles.timeOption,
+                        isSelected && { backgroundColor: theme.colors.primary + '20' }
+                      ]}
+                      onPress={() => setMinutes(m)}
+                    >
+                      <Text style={[
+                        pickerStyles.timeOptionText,
+                        { color: theme.colors.textPrimary },
+                        isSelected && { color: theme.colors.primary, fontFamily: 'Nunito_700Bold' }
+                      ]}>
+                        {String(m).padStart(2, '0')}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+              <View style={pickerStyles.ampmContainer}>
+                <TouchableOpacity
+                  style={[
+                    pickerStyles.ampmButton,
+                    ampm === 'AM' && { backgroundColor: theme.colors.primary }
+                  ]}
+                  onPress={() => setAmpm('AM')}
+                >
+                  <Text style={[
+                    pickerStyles.ampmText,
+                    { color: ampm === 'AM' ? theme.colors.white : theme.colors.textPrimary }
+                  ]}>
+                    AM
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    pickerStyles.ampmButton,
+                    ampm === 'PM' && { backgroundColor: theme.colors.primary }
+                  ]}
+                  onPress={() => setAmpm('PM')}
+                >
+                  <Text style={[
+                    pickerStyles.ampmText,
+                    { color: ampm === 'PM' ? theme.colors.white : theme.colors.textPrimary }
+                  ]}>
+                    PM
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <View style={pickerStyles.modalActions}>
+            <TouchableOpacity
+              style={[pickerStyles.cancelButton, { borderColor: theme.colors.hint }]}
+              onPress={onClose}
+              activeOpacity={0.7}
+            >
+              <Text style={[pickerStyles.cancelText, { color: theme.colors.textPrimary }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pickerStyles.confirmButton, { backgroundColor: theme.colors.primary }]}
+              onPress={handleConfirm}
+              activeOpacity={0.7}
+            >
+              <Text style={[pickerStyles.confirmText, { color: theme.colors.white }]}>
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+// Location Picker Modal Component
+const LocationPickerModal = ({ visible, onClose, locations, selectedLocation, onLocationSelect, title }) => {
+  const theme = useTheme();
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={pickerStyles.modalOverlay}>
+        <View style={[pickerStyles.modal, { backgroundColor: theme.colors.white }]}>
+          <View style={pickerStyles.modalHeader}>
+            <TouchableOpacity onPress={onClose} style={pickerStyles.closeButton}>
+              <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[pickerStyles.modalTitle, { color: theme.colors.textPrimary }]}>
+              {title}
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+          
+          <ScrollView showsVerticalScrollIndicator={false} style={pickerStyles.locationScrollView}>
+            {locations.map((location) => (
+              <TouchableOpacity
+                key={location.id}
+                style={[
+                  pickerStyles.locationItem,
+                  { borderColor: selectedLocation === location.name ? theme.colors.primary : '#E0E0E0' },
+                  selectedLocation === location.name && { backgroundColor: theme.colors.primary + '10' },
+                ]}
+                onPress={() => onLocationSelect(location)}
+                activeOpacity={0.7}
+              >
+                <View style={[pickerStyles.locationIcon, { backgroundColor: theme.colors.primary + '20' }]}>
+                  <Ionicons name="location" size={20} color={theme.colors.primary} />
+                </View>
+                <View style={pickerStyles.locationItemContent}>
+                  <Text style={[pickerStyles.locationItemName, { color: theme.colors.textPrimary }]}>
+                    {location.name}
+                  </Text>
+                  {location.address && (
+                    <Text style={[pickerStyles.locationItemAddress, { color: theme.colors.textSecondary }]}>
+                      {location.address}
+                    </Text>
+                  )}
+                </View>
+                {selectedLocation === location.name && (
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const pickerStyles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modal: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '80%',
+    paddingBottom: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  closeButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  monthHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+  },
+  navButton: {
+    padding: 8,
+  },
+  monthText: {
+    fontSize: 18,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  weekDays: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  weekDay: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  daysGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 20,
+  },
+  dayCell: {
+    width: '14.28%',
+    aspectRatio: 1,
+    padding: 4,
+  },
+  dayContent: {
+    flex: 1,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dayText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_500Medium',
+  },
+  timePickerContainer: {
+    padding: 20,
+    maxHeight: 300,
+  },
+  timePickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  timeScrollView: {
+    maxHeight: 200,
+  },
+  timeOption: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginVertical: 2,
+  },
+  timeOptionText: {
+    fontSize: 18,
+    fontFamily: 'Nunito_500Medium',
+    textAlign: 'center',
+  },
+  timeSeparator: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+  },
+  ampmContainer: {
+    gap: 8,
+  },
+  ampmButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+  },
+  ampmText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  locationScrollView: {
+    maxHeight: 400,
+  },
+  locationItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    marginHorizontal: 20,
+    marginVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 12,
+  },
+  locationIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  locationItemContent: {
+    flex: 1,
+  },
+  locationItemName: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  locationItemAddress: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignItems: 'center',
+  },
+  cancelText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  confirmButton: {
+    flex: 1,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  confirmText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#FFFFFF',
   },
 });
 

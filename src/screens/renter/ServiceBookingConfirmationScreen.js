@@ -1,5 +1,6 @@
-import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useLayoutEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -10,98 +11,175 @@ const ServiceBookingConfirmationScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
-  const { bookingDetails, paymentMethod } = route.params || {};
+  const { bookingDetails, totalPrice } = route.params || {};
 
   const service = bookingDetails?.service || {};
-  const bookingId = bookingDetails?.bookingId || `SRV-${Date.now().toString().slice(-8)}`;
+  const category = bookingDetails?.category || '';
+  const categoryStr = (category || '').toLowerCase();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'Booking Confirmed',
+      title: 'Review Booking',
     });
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-    };
   }, [navigation]);
 
-  const handleContactProvider = () => {
-    // Navigate to chat with service provider
-    navigation.navigate('Chat', {
-      userId: service.providerId || 'provider-123',
-      userName: service.name || 'Service Provider',
-      userImage: service.image,
-      bookingId: bookingId,
+  // Hide tab bar when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        // Don't restore here to prevent flickering
+      };
+    }, [navigation])
+  );
+
+  const handleProceedToPayment = () => {
+    navigation.navigate('Payment', {
+      totalPrice: totalPrice || 0,
+      bookingDetails: {
+        ...bookingDetails,
+        type: 'service',
+      },
     });
   };
 
-  const handleViewBookings = () => {
-    navigation.navigate('BookingsTab', {
-      screen: 'BookingsList',
-    });
-  };
-
-  return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 20 }]}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Success Icon */}
-        <View style={styles.successContainer}>
-          <View style={[styles.successIcon, { backgroundColor: theme.colors.primary + '15' }]}>
-            <Ionicons name="checkmark-circle" size={80} color={theme.colors.primary} />
-          </View>
-          <Text style={[styles.successTitle, { color: theme.colors.textPrimary }]}>
-            Service Booked Successfully!
-          </Text>
-          <Text style={[styles.successSubtitle, { color: theme.colors.textSecondary }]}>
-            Your booking has been confirmed
-          </Text>
-        </View>
-
-        {/* Booking Details Card */}
-        <View style={[styles.detailsCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>
+  // Render road trips specific content
+  const renderRoadTripsContent = () => {
+    return (
+      <>
+        {/* Booking Details Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
             Booking Details
           </Text>
-
+          
           <View style={styles.detailRow}>
             <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-              Booking ID:
+              Date
             </Text>
             <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
-              {bookingId}
+              {bookingDetails?.serviceDate || 'Not set'}
             </Text>
           </View>
 
           <View style={styles.detailRow}>
             <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-              Service:
+              Time
             </Text>
             <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
-              {service.name || 'Service'}
+              {bookingDetails?.serviceTime || 'Not set'}
             </Text>
           </View>
 
           <View style={styles.detailRow}>
             <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-              Category:
+              Pickup Location
             </Text>
             <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
-              {bookingDetails?.category || service.category || ''}
+              {bookingDetails?.pickupLocation || 'Not set'}
             </Text>
           </View>
+        </View>
 
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Trip Information Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Trip Information
+          </Text>
+          
+          {bookingDetails?.areasOfVisit && bookingDetails.areasOfVisit.length > 0 && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Areas of Visit
+              </Text>
+              <View style={styles.areasContainer}>
+                {bookingDetails.areasOfVisit.map((area, index) => (
+                  <View key={index} style={[styles.areaChip, { backgroundColor: theme.colors.primary + '15' }]}>
+                    <Text style={[styles.areaChipText, { color: theme.colors.textPrimary }]}>
+                      {area}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {bookingDetails?.numberOfPassengers && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Number of Passengers
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.numberOfPassengers}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.duration && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Duration
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.duration}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Contact Information Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Contact Information
+          </Text>
+          
+          {bookingDetails?.contactPhone && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Phone Number
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.contactPhone}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.additionalNotes && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Additional Notes
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.additionalNotes}
+              </Text>
+            </View>
+          )}
+        </View>
+      </>
+    );
+  };
+
+  // Render default content for other service types
+  const renderDefaultContent = () => {
+    return (
+      <>
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Booking Details
+          </Text>
+          
           {bookingDetails?.serviceDate && (
             <View style={styles.detailRow}>
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-                Date:
+                Date
               </Text>
               <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
                 {bookingDetails.serviceDate}
@@ -112,7 +190,7 @@ const ServiceBookingConfirmationScreen = () => {
           {bookingDetails?.serviceTime && (
             <View style={styles.detailRow}>
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-                Time:
+                Time
               </Text>
               <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
                 {bookingDetails.serviceTime}
@@ -120,117 +198,80 @@ const ServiceBookingConfirmationScreen = () => {
             </View>
           )}
 
-          <View style={styles.detailRow}>
-            <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-              Amount Paid:
-            </Text>
-            <Text style={[styles.detailValue, { color: theme.colors.primary }]}>
-              {service.price || 'KSh 0'}
-            </Text>
-          </View>
-
-          {paymentMethod && (
+          {bookingDetails?.contactPhone && (
             <View style={styles.detailRow}>
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
-                Payment Method:
+                Phone Number
               </Text>
               <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
-                {paymentMethod === 'mpesa' ? 'M-PESA' : paymentMethod === 'airtel' ? 'Airtel Money' : 'Card'}
+                {bookingDetails.contactPhone}
               </Text>
             </View>
           )}
         </View>
+      </>
+    );
+  };
 
-        {/* Service Provider Info */}
-        <View style={[styles.providerCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>
-            Service Provider
-          </Text>
-          <View style={styles.providerInfo}>
+  return (
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 100 }]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Service Summary */}
+        <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.summaryHeader}>
             {service.image && (
-              <Image
-                source={{ uri: service.image }}
-                style={styles.providerImage}
-                resizeMode="cover"
-              />
+              <View style={styles.serviceImageContainer}>
+                <Ionicons name="car-outline" size={32} color={theme.colors.primary} />
+              </View>
             )}
-            <View style={styles.providerDetails}>
-              <Text style={[styles.providerName, { color: theme.colors.textPrimary }]}>
-                {service.name || 'Service Provider'}
+            <View style={styles.summaryTextContainer}>
+              <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]}>
+                {service.name || 'Service'}
               </Text>
-              {service.location && (
-                <View style={styles.providerLocation}>
-                  <Ionicons name="location" size={16} color={theme.colors.textSecondary} />
-                  <Text style={[styles.providerLocationText, { color: theme.colors.textSecondary }]}>
-                    {service.location}
-                  </Text>
-                </View>
-              )}
-              {service.rating && (
-                <View style={styles.providerRating}>
-                  <Ionicons name="star" size={16} color="#FFB800" />
-                  <Text style={[styles.providerRatingText, { color: theme.colors.textSecondary }]}>
-                    {service.rating}
-                  </Text>
-                </View>
-              )}
+              <Text style={[styles.serviceCategory, { color: theme.colors.textSecondary }]}>
+                {category || service.category || ''}
+              </Text>
             </View>
           </View>
         </View>
 
-        {/* Next Steps */}
-        <View style={[styles.nextStepsCard, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.cardTitle, { color: theme.colors.textPrimary }]}>
-            What's Next?
-          </Text>
-          <View style={styles.stepsList}>
-            <View style={styles.stepItem}>
-              <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.stepNumberText}>1</Text>
-              </View>
-              <Text style={[styles.stepText, { color: theme.colors.textSecondary }]}>
-                You will receive a confirmation message
-              </Text>
-            </View>
-            <View style={styles.stepItem}>
-              <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.stepNumberText}>2</Text>
-              </View>
-              <Text style={[styles.stepText, { color: theme.colors.textSecondary }]}>
-                Contact the service provider to confirm details
-              </Text>
-            </View>
-            <View style={styles.stepItem}>
-              <View style={[styles.stepNumber, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.stepNumberText}>3</Text>
-              </View>
-              <Text style={[styles.stepText, { color: theme.colors.textSecondary }]}>
-                Service will be provided on the scheduled date
-              </Text>
-            </View>
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Dynamic Content Based on Service Type */}
+        {categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')
+          ? renderRoadTripsContent()
+          : renderDefaultContent()}
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Price Summary */}
+        <View style={styles.section}>
+          <View style={styles.priceRow}>
+            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+              Total Amount
+            </Text>
+            <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
+              {service?.price || `KSh ${totalPrice || 0}`}
+            </Text>
           </View>
         </View>
       </ScrollView>
 
-      {/* Action Buttons */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: insets.bottom }]}>
+      {/* Bottom Bar with Proceed to Payment Button */}
+      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 20) }]}>
         <TouchableOpacity
-          style={[styles.contactButton, { backgroundColor: theme.colors.primary }]}
-          onPress={handleContactProvider}
+          style={[styles.proceedButton, { backgroundColor: '#FF1577' }]}
+          onPress={handleProceedToPayment}
           activeOpacity={0.8}
         >
-          <Ionicons name="chatbubble-ellipses" size={20} color={theme.colors.white} />
-          <Text style={[styles.contactButtonText, { color: theme.colors.white }]}>
-            Contact Provider
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.viewBookingsButton, { borderColor: theme.colors.primary }]}
-          onPress={handleViewBookings}
-          activeOpacity={0.7}
-        >
-          <Text style={[styles.viewBookingsButtonText, { color: theme.colors.primary }]}>
-            View My Bookings
+          <Text style={[styles.proceedButtonText, { color: theme.colors.white }]}>
+            Proceed to Payment
           </Text>
         </TouchableOpacity>
       </View>
@@ -247,157 +288,114 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
-    gap: 16,
   },
-  successContainer: {
+  summaryCard: {
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  summaryHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 32,
+    gap: 12,
   },
-  successIcon: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+  serviceImageContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
   },
-  successTitle: {
-    fontSize: 24,
+  summaryTextContainer: {
+    flex: 1,
+  },
+  serviceName: {
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-    textAlign: 'center',
+    marginBottom: 4,
   },
-  successSubtitle: {
-    fontSize: 16,
+  serviceCategory: {
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
   },
-  detailsCard: {
-    padding: 20,
-    borderRadius: 16,
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginHorizontal: 20,
+    marginTop: 16,
+    marginBottom: 16,
   },
-  cardTitle: {
+  section: {
+    padding: 16,
+  },
+  sectionHeaderTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
   },
   detailRow: {
+    marginBottom: 16,
+  },
+  detailLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 6,
+  },
+  detailValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  areasContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 6,
+  },
+  areaChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  areaChipText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_500Medium',
+  },
+  priceRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    paddingVertical: 8,
   },
-  detailLabel: {
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
-  },
-  detailValue: {
-    fontSize: 15,
+  priceLabel: {
+    fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
-    flex: 1,
-    textAlign: 'right',
   },
-  providerCard: {
-    padding: 20,
-    borderRadius: 16,
-  },
-  providerInfo: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  providerImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  providerDetails: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  providerName: {
-    fontSize: 18,
+  priceValue: {
+    fontSize: 20,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
-  },
-  providerLocation: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    marginBottom: 4,
-  },
-  providerLocationText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  providerRating: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  providerRatingText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  nextStepsCard: {
-    padding: 20,
-    borderRadius: 16,
-  },
-  stepsList: {
-    gap: 16,
-  },
-  stepItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-  },
-  stepNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  stepNumberText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontFamily: 'Nunito_700Bold',
-  },
-  stepText: {
-    flex: 1,
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 22,
   },
   footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     paddingHorizontal: 20,
     paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
-    gap: 12,
   },
-  contactButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+  proceedButton: {
     paddingVertical: 16,
     borderRadius: 12,
-    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  contactButtonText: {
+  proceedButtonText: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
-  },
-  viewBookingsButton: {
-    paddingVertical: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignItems: 'center',
-  },
-  viewBookingsButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
   },
 });
 
 export default ServiceBookingConfirmationScreen;
-

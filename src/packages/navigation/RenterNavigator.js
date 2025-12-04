@@ -362,7 +362,7 @@ const HomeStack = () => {
         name="ServiceBookingConfirmation" 
         component={ServiceBookingConfirmationScreen}
         options={{ 
-          title: 'Booking Confirmed',
+          title: 'Review Booking',
           headerShown: true,
           animation: 'slide_from_bottom',
           animationDuration: 200,

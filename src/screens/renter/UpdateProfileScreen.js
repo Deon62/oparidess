@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -61,6 +61,16 @@ const UpdateProfileScreen = () => {
         // Restore tab bar when leaving this screen
       };
     }, [navigation])
+  );
+
+  // Ensure StatusBar is dark when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content', true);
+      return () => {
+        // StatusBar will be restored by other screens
+      };
+    }, [])
   );
 
   // Restore tab bar when component unmounts (navigating away completely)
@@ -316,11 +326,13 @@ const UpdateProfileScreen = () => {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      <ScrollView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Personal Information Form */}
       <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -617,6 +629,7 @@ const UpdateProfileScreen = () => {
         initialDate={formData.dl_expiry_date}
       />
     </ScrollView>
+    </>
   );
 };
 

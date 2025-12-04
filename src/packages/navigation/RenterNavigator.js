@@ -263,7 +263,9 @@ const HomeStack = () => {
         component={UpdateProfileScreen}
         options={{ 
           title: 'Update Profile',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -687,7 +689,9 @@ const ProfileStack = () => {
         component={UpdateProfileScreen}
         options={{ 
           title: 'Update Profile',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

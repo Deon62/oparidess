@@ -321,7 +321,9 @@ const HomeStack = () => {
         component={ReferFriendsScreen}
         options={{ 
           title: 'Refer Friends',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -755,7 +757,9 @@ const ProfileStack = () => {
         component={ReferFriendsScreen}
         options={{ 
           title: 'Refer Friends',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Share, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Share, Platform, Modal, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -42,6 +42,16 @@ const ReferFriendsScreen = () => {
         // Restore tab bar when leaving this screen
       };
     }, [navigation])
+  );
+
+  // Ensure StatusBar is dark when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content', true);
+      return () => {
+        // StatusBar will be restored by other screens
+      };
+    }, [])
   );
 
   // Restore tab bar when component unmounts (navigating away completely)
@@ -98,11 +108,13 @@ const ReferFriendsScreen = () => {
   };
 
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      <ScrollView
+        style={[styles.container, { backgroundColor: theme.colors.background }]}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
       {/* Header Card */}
       <Card style={[styles.headerCard, { backgroundColor: theme.colors.primary }]}>
         <View style={styles.headerContent}>
@@ -237,6 +249,7 @@ const ReferFriendsScreen = () => {
         </View>
       </Modal>
     </ScrollView>
+    </>
   );
 };
 

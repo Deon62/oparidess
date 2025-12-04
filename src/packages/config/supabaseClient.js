@@ -13,13 +13,12 @@ export const getSupabaseClient = async () => {
   }
 
   try {
-    await import('expo-sqlite/localStorage/install');
     const { createClient } = await import('@supabase/supabase-js');
-    const localStorage = await import('expo-sqlite/localStorage');
+    const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
 
     _supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
-        storage: localStorage,
+        storage: AsyncStorage,
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,

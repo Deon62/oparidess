@@ -5,6 +5,36 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useWishlist } from '../../packages/context/WishlistContext';
 
+// Import driver images
+const deonOrinaImage = require('../../../assets/drivers/DeonOrina.webp');
+const davinMoengaImage = require('../../../assets/drivers/DavinMoenga.webp');
+const isaacMuchumaImage = require('../../../assets/drivers/IsaacMuchuma.webp');
+
+// Import mover images
+const moverImage1 = require('../../../assets/movers/moverrr.webp');
+const moverImage2 = require('../../../assets/movers/moverrrs.webp');
+const moverImage3 = require('../../../assets/movers/moverrs.webp');
+
+// Import roadtrip images
+const roadtripImage1 = require('../../../assets/roadtrips/road.webp');
+const roadtripImage2 = require('../../../assets/roadtrips/roadd.webp');
+const roadtripImage3 = require('../../../assets/roadtrips/roads.webp');
+
+// Import roadside assistance images
+const roadsideImage1 = require('../../../assets/roadside/assist.webp');
+const roadsideImage2 = require('../../../assets/roadside/asssist.webp');
+const roadsideImage3 = require('../../../assets/roadside/asssists.webp');
+
+// Import wedding images
+const weddingImage1 = require('../../../assets/wedding/wedding.webp');
+const weddingImage2 = require('../../../assets/wedding/weddings.webp');
+const weddingImage3 = require('../../../assets/wedding/wdding.webp');
+
+// Import detailing images
+const detailingImage1 = require('../../../assets/detailing/detailing.webp');
+const detailingImage2 = require('../../../assets/detailing/detail.webp');
+const detailingImage3 = require('../../../assets/detailing/dettail.webp');
+
 const ServiceListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -12,43 +42,38 @@ const ServiceListScreen = () => {
   const { categoryId, selectedCity = 'your area' } = route.params || {};
   const { likedServices, toggleServiceLike } = useWishlist();
 
+
   // Services data matching RenterHomeScreen
   const servicesData = {
     roadTrips: [
-      { id: 1, name: 'Safari Adventures Kenya', price: 'KSh 15,000/day', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 2, name: 'Coastal Road Trips', price: 'KSh 12,000/day', image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400', rating: 4.6, location: 'Mombasa' },
-      { id: 3, name: 'Mountain View Tours', price: 'KSh 18,000/day', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', rating: 4.9, location: 'Nakuru' },
-      { id: 4, name: 'Wildlife Explorer', price: 'KSh 20,000/day', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 1, name: 'Safari Adventures Kenya', price: 'KSh 15,000/day', image: roadtripImage1, rating: 4.8, location: 'Nairobi' },
+      { id: 2, name: 'Coastal Road Trips', price: 'KSh 12,000/day', image: roadtripImage2, rating: 4.6, location: 'Mombasa' },
+      { id: 3, name: 'Mountain View Tours', price: 'KSh 18,000/day', image: roadtripImage3, rating: 4.9, location: 'Nakuru' },
     ],
     vipWedding: [
-      { id: 1, name: 'Luxury Wedding Fleet', price: 'KSh 50,000/event', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=400', rating: 4.9, location: 'Nairobi' },
-      { id: 2, name: 'Royal Wedding Cars', price: 'KSh 45,000/event', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 3, name: 'Elite Wedding Services', price: 'KSh 55,000/event', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.9, location: 'Mombasa' },
-      { id: 4, name: 'Premium Wedding Convoys', price: 'KSh 48,000/event', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 1, name: 'Luxury Wedding Fleet', price: 'KSh 50,000/event', image: weddingImage1, rating: 4.9, location: 'Nairobi' },
+      { id: 2, name: 'Royal Wedding Cars', price: 'KSh 45,000/event', image: weddingImage2, rating: 4.8, location: 'Nairobi' },
+      { id: 3, name: 'Elite Wedding Services', price: 'KSh 55,000/event', image: weddingImage3, rating: 4.9, location: 'Mombasa' },
     ],
     drivers: [
-      { id: 1, name: 'John Kamau', price: 'KSh 2,500/day', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400', rating: 4.8, experience: '10 years' },
-      { id: 2, name: 'Peter Ochieng', price: 'KSh 2,200/day', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400', rating: 4.7, experience: '8 years' },
-      { id: 3, name: 'David Mwangi', price: 'KSh 2,800/day', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400', rating: 4.9, experience: '12 years' },
-      { id: 4, name: 'James Kariuki', price: 'KSh 2,400/day', image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400', rating: 4.6, experience: '7 years' },
+      { id: 1, name: 'Deon Orina', price: 'KSh 2,500/day', image: deonOrinaImage, rating: 4.8, experience: '10 years' },
+      { id: 2, name: 'Davin Moenga', price: 'KSh 2,200/day', image: davinMoengaImage, rating: 4.7, experience: '8 years' },
+      { id: 3, name: 'Isaac Muchuma', price: 'KSh 2,800/day', image: isaacMuchumaImage, rating: 4.9, experience: '12 years' },
     ],
     movers: [
-      { id: 1, name: 'Quick Move Kenya', price: 'KSh 8,000/trip', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400', rating: 4.7, location: 'Nairobi' },
-      { id: 2, name: 'Reliable Movers', price: 'KSh 7,500/trip', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400', rating: 4.6, location: 'Nairobi' },
-      { id: 3, name: 'Professional Movers', price: 'KSh 9,000/trip', image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e4?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 4, name: 'Express Moving Services', price: 'KSh 8,500/trip', image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 1, name: 'Quick Move Kenya', price: 'KSh 8,000/trip', image: moverImage1, rating: 4.7, location: 'Nairobi' },
+      { id: 2, name: 'Reliable Movers', price: 'KSh 7,500/trip', image: moverImage2, rating: 4.6, location: 'Nairobi' },
+      { id: 3, name: 'Professional Movers', price: 'KSh 9,000/trip', image: moverImage3, rating: 4.8, location: 'Nairobi' },
     ],
     carDetailing: [
-      { id: 1, name: 'Elite Car Spa', price: 'KSh 3,500/service', image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400', rating: 4.9, location: 'Nairobi' },
-      { id: 2, name: 'Premium Detailing', price: 'KSh 4,000/service', image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 3, name: 'Luxury Car Care', price: 'KSh 3,800/service', image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400', rating: 4.9, location: 'Nairobi' },
-      { id: 4, name: 'VIP Auto Detailing', price: 'KSh 4,200/service', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.7, location: 'Nairobi' },
+      { id: 1, name: 'Elite Car Spa', price: 'KSh 3,500/service', image: detailingImage1, rating: 4.9, location: 'Nairobi' },
+      { id: 2, name: 'Premium Detailing', price: 'KSh 4,000/service', image: detailingImage2, rating: 4.8, location: 'Nairobi' },
+      { id: 3, name: 'Luxury Car Care', price: 'KSh 3,800/service', image: detailingImage3, rating: 4.9, location: 'Nairobi' },
     ],
     roadside: [
-      { id: 1, name: '24/7 Roadside Help', price: 'KSh 2,000/call', image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400', rating: 4.8, location: 'Nairobi' },
-      { id: 2, name: 'Emergency Assist', price: 'KSh 2,200/call', image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400', rating: 4.7, location: 'Nairobi' },
-      { id: 3, name: 'Quick Rescue Service', price: 'KSh 1,800/call', image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400', rating: 4.6, location: 'Nairobi' },
-      { id: 4, name: 'Reliable Roadside', price: 'KSh 2,100/call', image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400', rating: 4.8, location: 'Nairobi' },
+      { id: 1, name: '24/7 Roadside Help', price: 'KSh 2,000/call', image: roadsideImage1, rating: 4.8, location: 'Nairobi' },
+      { id: 2, name: 'Emergency Assist', price: 'KSh 2,200/call', image: roadsideImage2, rating: 4.7, location: 'Nairobi' },
+      { id: 3, name: 'Quick Rescue Service', price: 'KSh 1,800/call', image: roadsideImage3, rating: 4.6, location: 'Nairobi' },
     ],
   };
 
@@ -133,7 +158,11 @@ const ServiceListScreen = () => {
               >
                 <View style={[styles.serviceCard, { backgroundColor: theme.colors.white }]}>
                   <View style={styles.serviceImageContainer}>
-                    <Image source={{ uri: service.image }} style={styles.serviceImage} resizeMode="cover" />
+                    <Image 
+                      source={service.image} 
+                      style={styles.serviceImage} 
+                      resizeMode="cover"
+                    />
                     <View style={styles.serviceActions}>
                       <TouchableOpacity
                         onPress={(e) => {

@@ -169,11 +169,19 @@ const ServiceDetailsScreen = () => {
       >
         {/* Service Image Container - Full Width at Top */}
         <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: serviceData.image }}
-            style={styles.serviceImage}
-            resizeMode="cover"
-          />
+          {typeof serviceData.image === 'number' ? (
+            <Image
+              source={serviceData.image}
+              style={styles.serviceImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <Image
+              source={{ uri: serviceData.image }}
+              style={styles.serviceImage}
+              resizeMode="cover"
+            />
+          )}
           
           {/* Floating Action Buttons */}
           <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
@@ -252,7 +260,11 @@ const ServiceDetailsScreen = () => {
           <TouchableOpacity
             style={styles.imageRepositoryCard}
             onPress={() => {
-              const serviceImages = serviceData.image ? [{ uri: serviceData.image }] : [];
+              const serviceImages = serviceData.image 
+                ? (typeof serviceData.image === 'number' 
+                    ? [serviceData.image] 
+                    : [{ uri: serviceData.image }]) 
+                : [];
               navigation.navigate('ImageRepository', {
                 images: serviceImages,
                 title: `${serviceData.name} - Images`,

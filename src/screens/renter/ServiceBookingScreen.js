@@ -35,6 +35,7 @@ const ServiceBookingScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showLocationPicker, setShowLocationPicker] = useState(false);
+  const [showJobTypePicker, setShowJobTypePicker] = useState(false);
   const [additionalNotes, setAdditionalNotes] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   
@@ -426,24 +427,7 @@ const ServiceBookingScreen = () => {
                   </View>
                   <TouchableOpacity
                     style={styles.dateChangeButton}
-                    onPress={() => {
-                      // Show job type selection
-                      Alert.alert(
-                        'Select Job Type',
-                        'Choose the type of job',
-                        [
-                          { text: 'Cancel', style: 'cancel' },
-                          { 
-                            text: 'Longterm', 
-                            onPress: () => setJobType('longterm') 
-                          },
-                          { 
-                            text: 'Quick Job', 
-                            onPress: () => setJobType('quickjob') 
-                          },
-                        ]
-                      );
-                    }}
+                    onPress={() => setShowJobTypePicker(true)}
                     activeOpacity={0.7}
                   >
                     <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
@@ -1294,6 +1278,18 @@ const ServiceBookingScreen = () => {
         })()}
       />
 
+      {/* Job Type Picker Modal */}
+      <JobTypePickerModal
+        visible={showJobTypePicker}
+        onClose={() => setShowJobTypePicker(false)}
+        selectedJobType={jobType}
+        onJobTypeSelect={(type) => {
+          setJobType(type);
+          setShowJobTypePicker(false);
+        }}
+        title="Select Job Type"
+      />
+
       {/* Bottom Bar with Price and Button - Fixed at bottom */}
       <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 12) }]}>
         {(() => {
@@ -2014,6 +2010,129 @@ const LocationPickerModal = ({ visible, onClose, locations, selectedLocation, on
   );
 };
 
+// Job Type Picker Modal Component
+const JobTypePickerModal = ({ visible, onClose, selectedJobType, onJobTypeSelect, title }) => {
+  const theme = useTheme();
+  const [tempSelectedJobType, setTempSelectedJobType] = useState(selectedJobType);
+
+  useEffect(() => {
+    if (visible) {
+      setTempSelectedJobType(selectedJobType);
+    }
+  }, [visible, selectedJobType]);
+
+  const jobTypes = [
+    {
+      id: 'longterm',
+      name: 'Longterm',
+      description: 'Long-term driver hire arrangement',
+      icon: 'calendar-outline',
+    },
+    {
+      id: 'quickjob',
+      name: 'Quick Job',
+      description: 'Short-term or one-time driver service',
+      icon: 'time-outline',
+    },
+  ];
+
+  const handleConfirm = () => {
+    if (tempSelectedJobType) {
+      onJobTypeSelect(tempSelectedJobType);
+      onClose();
+    }
+  };
+
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View style={pickerStyles.modalOverlay}>
+        <View style={[pickerStyles.modal, { backgroundColor: theme.colors.white }]}>
+          <View style={pickerStyles.modalHeader}>
+            <TouchableOpacity onPress={onClose} style={pickerStyles.closeButton}>
+              <Ionicons name="close" size={24} color={theme.colors.textPrimary} />
+            </TouchableOpacity>
+            <Text style={[pickerStyles.modalTitle, { color: theme.colors.textPrimary }]}>
+              {title}
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+          
+          <View style={pickerStyles.jobTypeContainer}>
+            {jobTypes.map((jobType) => (
+              <TouchableOpacity
+                key={jobType.id}
+                style={[
+                  pickerStyles.jobTypeItem,
+                  { 
+                    borderColor: tempSelectedJobType === jobType.id ? theme.colors.primary : '#E0E0E0',
+                    backgroundColor: tempSelectedJobType === jobType.id ? theme.colors.primary + '10' : 'transparent',
+                  },
+                ]}
+                onPress={() => setTempSelectedJobType(jobType.id)}
+                activeOpacity={0.7}
+              >
+                <View style={[
+                  pickerStyles.jobTypeIconContainer, 
+                  { backgroundColor: tempSelectedJobType === jobType.id ? theme.colors.primary + '20' : theme.colors.hint + '20' }
+                ]}>
+                  <Ionicons 
+                    name={jobType.icon} 
+                    size={24} 
+                    color={tempSelectedJobType === jobType.id ? theme.colors.primary : theme.colors.textSecondary} 
+                  />
+                </View>
+                <View style={pickerStyles.jobTypeContent}>
+                  <Text style={[
+                    pickerStyles.jobTypeName, 
+                    { color: tempSelectedJobType === jobType.id ? theme.colors.primary : theme.colors.textPrimary }
+                  ]}>
+                    {jobType.name}
+                  </Text>
+                  <Text style={[
+                    pickerStyles.jobTypeDescription, 
+                    { color: theme.colors.textSecondary }
+                  ]}>
+                    {jobType.description}
+                  </Text>
+                </View>
+                {tempSelectedJobType === jobType.id && (
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <View style={pickerStyles.modalActions}>
+            <TouchableOpacity
+              style={[pickerStyles.cancelButton, { borderColor: theme.colors.hint }]}
+              onPress={onClose}
+              activeOpacity={0.7}
+            >
+              <Text style={[pickerStyles.cancelText, { color: theme.colors.textPrimary }]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                pickerStyles.confirmButton,
+                { backgroundColor: theme.colors.primary },
+                !tempSelectedJobType && { opacity: 0.5 }
+              ]}
+              onPress={handleConfirm}
+              activeOpacity={0.7}
+              disabled={!tempSelectedJobType}
+            >
+              <Text style={[pickerStyles.confirmText, { color: theme.colors.white }]}>
+                Confirm
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const pickerStyles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -2189,6 +2308,37 @@ const pickerStyles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
     color: '#FFFFFF',
+  },
+  jobTypeContainer: {
+    padding: 20,
+    gap: 16,
+  },
+  jobTypeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: 16,
+    borderWidth: 2,
+    gap: 16,
+  },
+  jobTypeIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  jobTypeContent: {
+    flex: 1,
+  },
+  jobTypeName: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  jobTypeDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
   },
 });
 

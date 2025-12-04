@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -41,33 +41,70 @@ const CarDetailsScreen = () => {
   };
 
   // Car images for carousel - use Supabase images if available, otherwise fallback to local images
-  let carImages = [];
-  let carImageUris = []; // For ImageRepository (needs string URIs)
-  
-  if (carData.imageKey) {
-    // Get images from Supabase using the imageKey (e.g., 'porsche', 'pickup', 'rolls', 'x')
-    const supabaseImages = getCarImages(carData.imageKey);
-    carImageUris = supabaseImages; // Keep as strings for ImageRepository
-    carImages = supabaseImages.map(uri => ({ uri })); // Convert to format React Native Image expects
-  } else if (carData.images && Array.isArray(carData.images)) {
-    // Use provided images array (already from Supabase)
-    carImageUris = carData.images; // Keep as strings
-    carImages = carData.images.map(uri => ({ uri }));
-  } else {
-    // Fallback to Supabase images (use x car as default)
-    const fallbackImages = getCarImages('x');
-    carImages = fallbackImages.map(uri => ({ uri }));
-    carImageUris = carImages; // For local images, pass as-is (will be handled by ImageRepository)
-  }
+  const { carImages, carImageUris } = useMemo(() => {
+    let images = [];
+    let imageUris = [];
+    
+    if (carData.imageKey) {
+      // Get images from Supabase using the imageKey (e.g., 'porsche', 'pickup', 'rolls', 'x')
+      const supabaseImages = getCarImages(carData.imageKey);
+      imageUris = supabaseImages; // Keep as strings for ImageRepository
+      images = supabaseImages.map(uri => ({ uri })); // Convert to format React Native Image expects
+    } else if (carData.images && Array.isArray(carData.images)) {
+      // Use provided images array (already from Supabase)
+      imageUris = carData.images; // Keep as strings
+      images = carData.images.map(uri => ({ uri }));
+    } else {
+      // Fallback to Supabase images (use x car as default)
+      const fallbackImages = getCarImages('x');
+      images = fallbackImages.map(uri => ({ uri }));
+      imageUris = fallbackImages; // For Supabase images, pass as-is
+    }
+    
+    return { carImages: images, carImageUris: imageUris };
+  }, [carData.imageKey, carData.images]);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMoreRules, setShowMoreRules] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(new Set());
+  const [previousImageIndex, setPreviousImageIndex] = useState(null);
+  const fadeAnimCurrent = useRef(new Animated.Value(1)).current;
+  const fadeAnimPrevious = useRef(new Animated.Value(0)).current;
 
   // Video URL from Supabase - use from car data if available, otherwise default
   const carVideoUrl = carData.videoUrl || getCarVideoUrl();
+
+  // Preload all carousel images in the background for smooth transitions
+  useEffect(() => {
+    const preloadImages = async () => {
+      const loadedSet = new Set();
+      
+      // Preload all images in parallel
+      const preloadPromises = carImages.map(async (imageSource, index) => {
+        try {
+          if (imageSource.uri) {
+            await Image.prefetch(imageSource.uri);
+            loadedSet.add(index);
+          }
+        } catch (error) {
+          console.warn(`Failed to preload image ${index}:`, error);
+        }
+      });
+
+      await Promise.all(preloadPromises);
+      setImagesLoaded(loadedSet);
+    };
+
+    if (carImages.length > 0) {
+      // Reset loaded images when car changes
+      setImagesLoaded(new Set());
+      // Start preloading immediately
+      preloadImages();
+    }
+  }, [carImages]);
 
   // HTML for video player
   const videoHTML = `
@@ -97,6 +134,42 @@ const CarDetailsScreen = () => {
     </body>
     </html>
   `;
+
+  // Initialize fade animation on mount
+  useEffect(() => {
+    // Set initial state - current image visible, no previous image
+    fadeAnimCurrent.setValue(1);
+    fadeAnimPrevious.setValue(0);
+  }, []);
+
+  // Smooth cross-fade image transition effect
+  useEffect(() => {
+    if (previousImageIndex !== currentImageIndex && previousImageIndex !== null) {
+      // Reset previous image opacity to 1 and current to 0
+      fadeAnimPrevious.setValue(1);
+      fadeAnimCurrent.setValue(0);
+      
+      // Cross-fade: fade out previous, fade in current simultaneously
+      Animated.parallel([
+        Animated.timing(fadeAnimPrevious, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnimCurrent, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Update previous index after animation completes
+        setPreviousImageIndex(currentImageIndex);
+      });
+    } else if (previousImageIndex === null) {
+      // First load - just set the previous index without animation
+      setPreviousImageIndex(currentImageIndex);
+    }
+  }, [currentImageIndex, previousImageIndex, fadeAnimCurrent, fadeAnimPrevious]);
 
   // Auto-swap images every 3 seconds (only when showing images)
   useEffect(() => {
@@ -309,11 +382,50 @@ const CarDetailsScreen = () => {
             </View>
           ) : (
             <View style={styles.carouselImageWrapper}>
-              <Image
-                source={carImages[currentImageIndex]}
-                style={styles.carouselImage}
-                resizeMode="cover"
-              />
+              {/* Previous image - fades out */}
+              {previousImageIndex !== null && previousImageIndex !== currentImageIndex && (
+                <Animated.View style={[styles.carouselImageContainer, { opacity: fadeAnimPrevious }]}>
+                  <Image
+                    source={carImages[previousImageIndex]}
+                    style={styles.carouselImage}
+                    resizeMode="cover"
+                  />
+                </Animated.View>
+              )}
+              
+              {/* Current image - fades in */}
+              <Animated.View style={[styles.carouselImageContainer, { opacity: fadeAnimCurrent }]}>
+                <Image
+                  source={carImages[currentImageIndex]}
+                  style={styles.carouselImage}
+                  resizeMode="cover"
+                  onLoad={() => {
+                    // Image loaded, ensure it's visible
+                    const newLoaded = new Set(imagesLoaded);
+                    newLoaded.add(currentImageIndex);
+                    setImagesLoaded(newLoaded);
+                    
+                    // Ensure image is visible if it just loaded
+                    if (!imagesLoaded.has(currentImageIndex)) {
+                      fadeAnimCurrent.setValue(1);
+                    }
+                  }}
+                />
+              </Animated.View>
+              
+              {/* Pre-render next images for instant transition */}
+              {carImages.length > 1 && (
+                <View style={styles.hiddenImageContainer}>
+                  {carImages.map((_, index) => (
+                    <Image
+                      key={index}
+                      source={carImages[index]}
+                      style={styles.carouselImage}
+                      resizeMode="cover"
+                    />
+                  ))}
+                </View>
+              )}
             </View>
           )}
           
@@ -1115,10 +1227,27 @@ const styles = StyleSheet.create({
   carouselImageWrapper: {
     width: '100%',
     height: '100%',
+    position: 'relative',
+  },
+  carouselImageContainer: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   carouselImage: {
     width: '100%',
     height: '100%',
+  },
+  hiddenImageContainer: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    opacity: 0,
+    overflow: 'hidden',
   },
   videoWrapper: {
     width: '100%',

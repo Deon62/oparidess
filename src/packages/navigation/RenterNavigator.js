@@ -279,7 +279,9 @@ const HomeStack = () => {
         component={AddPaymentScreen}
         options={{ 
           title: 'Add Payment Method',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -754,6 +756,16 @@ const ProfileStack = () => {
         options={{ 
           title: 'Refer Friends',
           headerShown: true 
+        }}
+      />
+      <Stack.Screen 
+        name="AddPayment" 
+        component={AddPaymentScreen}
+        options={{ 
+          title: 'Add Payment Method',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
     </Stack.Navigator>

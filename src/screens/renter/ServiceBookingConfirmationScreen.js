@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -36,13 +36,86 @@ const ServiceBookingConfirmationScreen = () => {
   );
 
   const handleProceedToPayment = () => {
-    navigation.navigate('Payment', {
-      totalPrice: totalPrice || 0,
-      bookingDetails: {
-        ...bookingDetails,
-        type: 'service',
-      },
-    });
+    const categoryStr = (category || '').toLowerCase();
+    const isDriverService = categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'));
+    const isRoadsideAssistance = categoryStr.includes('roadside');
+    
+    if (isDriverService) {
+      // For drivers, send request (no payment)
+      Alert.alert(
+        'Request Sent',
+        'Your driver request has been sent successfully. The service provider will contact you soon.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Navigate back to home or bookings
+              navigation.navigate('HomeTab', { screen: 'Home' });
+            },
+          },
+        ]
+      );
+    } else if (isRoadsideAssistance) {
+      // For roadside assistance, send request (no payment)
+      Alert.alert(
+        'Request Sent',
+        'Your roadside assistance request has been sent successfully. Help is on the way!',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              // Navigate back to home
+              navigation.navigate('HomeTab', { screen: 'Home' });
+            },
+          },
+        ]
+      );
+    } else {
+      // For other services, proceed to payment
+      navigation.navigate('Payment', {
+        totalPrice: totalPrice || 0,
+        bookingDetails: {
+          ...bookingDetails,
+          type: 'service',
+        },
+      });
+    }
+  };
+
+  // Render hire professional drivers specific content
+  const renderDriversContent = () => {
+    return (
+      <>
+        {/* Booking Details Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Booking Details
+          </Text>
+          
+          {bookingDetails?.jobType && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Job Type
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.jobType === 'longterm' ? 'Longterm' : bookingDetails.jobType === 'quickjob' ? 'Quick Job' : bookingDetails.jobType}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.contactPhone && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Phone Number
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.contactPhone}
+              </Text>
+            </View>
+          )}
+        </View>
+      </>
+    );
   };
 
   // Render road trips specific content
@@ -167,6 +240,175 @@ const ServiceBookingConfirmationScreen = () => {
     );
   };
 
+  // Render movers specific content
+  const renderMoversContent = () => {
+    return (
+      <>
+        {/* Booking Details Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Booking Details
+          </Text>
+          
+          {bookingDetails?.serviceDate && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Date
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.serviceDate}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.serviceTime && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Time
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.serviceTime}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.pickupLocation && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Pickup Location
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.pickupLocation}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.destination && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Destination
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.destination}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* More Info Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            More Info
+          </Text>
+          
+          {bookingDetails?.numberOfItems && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Number of Items/Rooms
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.numberOfItems}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.contactPhone && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Phone Number
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.contactPhone}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.additionalNotes && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Additional Notes
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.additionalNotes}
+              </Text>
+            </View>
+          )}
+        </View>
+      </>
+    );
+  };
+
+  // Render roadside assistance specific content
+  const renderRoadsideContent = () => {
+    return (
+      <>
+        {/* Request Details Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Request Details
+          </Text>
+          
+          {bookingDetails?.currentLocation && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Current Location
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.currentLocation}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.issueType && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Issue Type
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.issueType}
+              </Text>
+            </View>
+          )}
+
+          {bookingDetails?.vehicleType && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Vehicle Type
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.vehicleType}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Contact Information Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+            Contact Information
+          </Text>
+          
+          {bookingDetails?.contactPhone && (
+            <View style={styles.detailRow}>
+              <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
+                Phone Number
+              </Text>
+              <Text style={[styles.detailValue, { color: theme.colors.textPrimary }]}>
+                {bookingDetails.contactPhone}
+              </Text>
+            </View>
+          )}
+        </View>
+      </>
+    );
+  };
+
   // Render default content for other service types
   const renderDefaultContent = () => {
     return (
@@ -243,35 +485,64 @@ const ServiceBookingConfirmationScreen = () => {
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
         {/* Dynamic Content Based on Service Type */}
-        {categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')
-          ? renderRoadTripsContent()
-          : renderDefaultContent()}
+        {(() => {
+          if (categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'))) {
+            return renderDriversContent();
+          } else if (categoryStr.includes('road trips')) {
+            return renderRoadTripsContent();
+          } else if (categoryStr.includes('movers')) {
+            return renderMoversContent();
+          } else if (categoryStr.includes('roadside')) {
+            return renderRoadsideContent();
+          } else {
+            return renderDefaultContent();
+          }
+        })()}
 
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+        {/* Price Summary - Only show for services that require payment */}
+        {(() => {
+          const isDriverService = categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'));
+          const isRoadsideAssistance = categoryStr.includes('roadside');
+          if (!isDriverService && !isRoadsideAssistance) {
+            return (
+              <>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Price Summary */}
-        <View style={styles.section}>
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-              Total Amount
-            </Text>
-            <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
-              {service?.price || `KSh ${totalPrice || 0}`}
-            </Text>
-          </View>
-        </View>
+                {/* Price Summary */}
+                <View style={styles.section}>
+                  <View style={styles.priceRow}>
+                    <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                      Total Amount
+                    </Text>
+                    <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
+                      {service?.price || `KSh ${totalPrice || 0}`}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            );
+          }
+          return null;
+        })()}
       </ScrollView>
 
-      {/* Bottom Bar with Proceed to Payment Button */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 20) }]}>
+      {/* Bottom Bar with Button */}
+      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 10) }]}>
         <TouchableOpacity
           style={[styles.proceedButton, { backgroundColor: '#FF1577' }]}
           onPress={handleProceedToPayment}
           activeOpacity={0.8}
         >
           <Text style={[styles.proceedButtonText, { color: theme.colors.white }]}>
-            Proceed to Payment
+            {(() => {
+              const isDriverService = categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'));
+              const isRoadsideAssistance = categoryStr.includes('roadside');
+              if (isDriverService || isRoadsideAssistance) {
+                return 'Send Request';
+              }
+              return 'Proceed to Payment';
+            })()}
           </Text>
         </TouchableOpacity>
       </View>
@@ -334,15 +605,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   detailRow: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   detailLabel: {
-    fontSize: 14,
+    fontSize: 11,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 6,
+    marginBottom: 3,
   },
   detailValue: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
   },
   areasContainer: {
@@ -382,18 +653,18 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },
   proceedButton: {
-    paddingVertical: 16,
+    paddingVertical: 10,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   proceedButtonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Nunito_700Bold',
   },
 });

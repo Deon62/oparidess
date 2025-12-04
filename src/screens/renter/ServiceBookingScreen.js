@@ -1,16 +1,26 @@
-import React, { useState, useLayoutEffect, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform, KeyboardAvoidingView, Modal } from 'react-native';
+import React, { useState, useLayoutEffect, useEffect, useCallback, useMemo } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Platform, KeyboardAvoidingView, Modal, ActivityIndicator, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+// Location import - will use expo-location if available
+let Location = null;
+try {
+  Location = require('expo-location');
+} catch (e) {
+  // expo-location not installed
+}
 
 const ServiceBookingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
-  const { service, category } = route.params || {};
+  const { service, category: routeCategory } = route.params || {};
+  // Use route category or fall back to service category
+  const category = routeCategory || service?.category || '';
 
   // Initialize date to tomorrow
   const getTomorrow = () => {
@@ -35,6 +45,7 @@ const ServiceBookingScreen = () => {
   const [areaInput, setAreaInput] = useState(''); // Input for adding areas
   const [numberOfPassengers, setNumberOfPassengers] = useState('');
   const [duration, setDuration] = useState('');
+  const [jobType, setJobType] = useState(''); // For hire professional drivers: 'longterm' or 'quickjob'
   const [eventLocation, setEventLocation] = useState('');
   const [numberOfGuests, setNumberOfGuests] = useState('');
   const [numberOfItems, setNumberOfItems] = useState('');
@@ -46,6 +57,7 @@ const ServiceBookingScreen = () => {
   const [vehicleType, setVehicleType] = useState('');
   const [currentLocation, setCurrentLocation] = useState('');
   const [issueType, setIssueType] = useState('');
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -113,6 +125,55 @@ const ServiceBookingScreen = () => {
     setAreasOfVisit(areasOfVisit.filter((_, i) => i !== index));
   };
 
+  // Get current location for roadside assistance
+  const handleGetCurrentLocation = async () => {
+    if (!Location) {
+      Alert.alert('Error', 'Location services are not available. Please enter your location manually.');
+      return;
+    }
+
+    setIsGettingLocation(true);
+    try {
+      // Request permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Location permission is required to get your current location.');
+        setIsGettingLocation(false);
+        return;
+      }
+
+      // Get current position
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      // Reverse geocode to get address
+      const [address] = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+
+      // Format address
+      const addressParts = [];
+      if (address.street) addressParts.push(address.street);
+      if (address.district) addressParts.push(address.district);
+      if (address.city) addressParts.push(address.city);
+      if (address.region) addressParts.push(address.region);
+      if (address.country) addressParts.push(address.country);
+
+      const formattedAddress = addressParts.length > 0 
+        ? addressParts.join(', ')
+        : `${location.coords.latitude.toFixed(6)}, ${location.coords.longitude.toFixed(6)}`;
+
+      setCurrentLocation(formattedAddress);
+    } catch (error) {
+      console.error('Error getting location:', error);
+      Alert.alert('Error', 'Failed to get your current location. Please enter it manually.');
+    } finally {
+      setIsGettingLocation(false);
+    }
+  };
+
   const handleContinue = () => {
     if (!contactPhone.trim()) {
       Alert.alert('Required', 'Please enter your contact phone number');
@@ -121,7 +182,14 @@ const ServiceBookingScreen = () => {
 
     // Validate category-specific required fields
     const categoryStr = (category || '').toLowerCase();
-    if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+    const isRoadsideAssistance = categoryStr.includes('roadside');
+    
+    if (categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'))) {
+      if (!jobType.trim()) {
+        Alert.alert('Required', 'Please select job type');
+        return;
+      }
+    } else if (categoryStr.includes('road trips')) {
       if (!pickupLocation.trim()) {
         Alert.alert('Required', 'Please select pickup location');
         return;
@@ -158,9 +226,9 @@ const ServiceBookingScreen = () => {
         Alert.alert('Required', 'Please enter vehicle location');
         return;
       }
-    } else if (categoryStr.includes('roadside')) {
+    } else if (isRoadsideAssistance) {
       if (!currentLocation.trim()) {
-        Alert.alert('Required', 'Please enter current location');
+        Alert.alert('Required', 'Please send your current location');
         return;
       }
       if (!issueType.trim()) {
@@ -168,26 +236,27 @@ const ServiceBookingScreen = () => {
         return;
       }
     }
-
-    // Ensure we always have date and time values (use defaults if not set)
-    const finalDate = selectedDate || getTomorrow();
-    const finalTime = selectedTime || '10:00 AM';
+    
+    // Ensure we always have date and time values (use defaults if not set) - except for roadside assistance
+    const finalDate = isRoadsideAssistance ? null : (selectedDate || getTomorrow());
+    const finalTime = isRoadsideAssistance ? null : (selectedTime || '10:00 AM');
 
     const bookingDetails = {
       service: service,
       category: category,
-      date: finalDate ? finalDate.toISOString() : getTomorrow().toISOString(), // Convert to string for navigation
+      date: finalDate ? finalDate.toISOString() : null, // Convert to string for navigation
       time: finalTime, // selectedTime is now a string, not a Date
       contactPhone: contactPhone.trim(),
       additionalNotes: additionalNotes.trim(),
-      serviceDate: formatDateShort(finalDate),
-      serviceTime: formatTime(finalTime),
+      serviceDate: finalDate ? formatDateShort(finalDate) : null,
+      serviceTime: finalTime ? formatTime(finalTime) : null,
       // Category-specific fields
       pickupLocation: pickupLocation.trim(),
       destination: destination.trim(), // For other categories (movers, etc.)
       areasOfVisit: areasOfVisit, // For road trips - changed from destination
       numberOfPassengers: numberOfPassengers.trim(),
       duration: duration.trim(),
+      jobType: jobType.trim(), // For hire professional drivers
       eventLocation: eventLocation.trim(),
       numberOfGuests: numberOfGuests.trim(),
       numberOfItems: numberOfItems.trim(),
@@ -217,56 +286,64 @@ const ServiceBookingScreen = () => {
   };
 
   // Check if all required fields are filled
-  const isFormComplete = () => {
+  // Memoize form completion check to ensure it re-evaluates when dependencies change
+  const isFormComplete = useMemo(() => {
     // Contact phone is always required
-    if (!contactPhone.trim()) {
+    if (!contactPhone || !contactPhone.trim()) {
       return false;
     }
 
     const categoryStr = (category || '').toLowerCase();
     
-    // Drivers & Road Trips
-    if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
-      if (!pickupLocation.trim() || areasOfVisit.length === 0) {
+    // Hire Professional Drivers (separate from road trips)
+    if (categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'))) {
+      if (!jobType || !jobType.trim()) {
+        return false;
+      }
+    }
+    // Road Trips
+    else if (categoryStr.includes('road trips')) {
+      if (!pickupLocation || !pickupLocation.trim() || areasOfVisit.length === 0) {
         return false;
       }
     }
     // VIP Wedding
     else if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
-      if (!eventLocation.trim()) {
+      if (!eventLocation || !eventLocation.trim()) {
         return false;
       }
     }
     // Movers
     else if (categoryStr.includes('movers')) {
-      if (!pickupLocation.trim() || !destination.trim()) {
+      if (!pickupLocation || !pickupLocation.trim() || !destination || !destination.trim()) {
         return false;
       }
     }
     // Auto Parts
     else if (categoryStr.includes('parts') || categoryStr.includes('automobile parts')) {
-      if (!partName.trim() || !deliveryAddress.trim()) {
+      if (!partName || !partName.trim() || !deliveryAddress || !deliveryAddress.trim()) {
         return false;
       }
     }
     // Car Detailing
     else if (categoryStr.includes('detailing') || categoryStr.includes('car detailing')) {
-      if (!vehicleLocation.trim()) {
+      if (!vehicleLocation || !vehicleLocation.trim()) {
         return false;
       }
     }
     // Roadside Assistance
     else if (categoryStr.includes('roadside')) {
-      if (!currentLocation.trim() || !issueType.trim()) {
+      if (!currentLocation || !currentLocation.trim() || !issueType || !issueType.trim()) {
         return false;
       }
     }
 
     return true;
-  };
+  }, [contactPhone, category, jobType, pickupLocation, areasOfVisit, eventLocation, destination, partName, deliveryAddress, vehicleLocation, currentLocation, issueType]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent={true} />
       <KeyboardAvoidingView 
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -317,71 +394,56 @@ const ServiceBookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Booking Details Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
-            Booking Details
-          </Text>
+        {/* Booking Details Section - Hidden for roadside assistance */}
+        {(() => {
+          const categoryStr = (category || '').toLowerCase();
+          const isRoadsideAssistance = categoryStr.includes('roadside');
           
-          {/* Date Selection - Airbnb Style */}
-          <View style={styles.dateSectionRow}>
-            <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
-                Date
+          if (isRoadsideAssistance) {
+            return null; // Don't show booking details for roadside assistance
+          }
+          
+          return (
+            <View style={styles.section}>
+              <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+                Booking Details
               </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
-                {formatDateShort(selectedDate || getTomorrow())}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.dateChangeButton}
-              onPress={() => setShowDatePicker(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
-                Change
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Time Selection - Airbnb Style */}
-          <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
-            <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
-                Time
-              </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
-                {formatTime(selectedTime || '10:00 AM')}
-              </Text>
-            </View>
-            <TouchableOpacity
-              style={styles.dateChangeButton}
-              onPress={() => setShowTimePicker(true)}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
-                Change
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Conditional Fields Based on Service Category - Pickup Location for Road Trips */}
-          {(() => {
-            const categoryStr = (category || '').toLowerCase();
-            if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+              
+              {(() => {
+                const isDriverService = categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'));
+                
+                // For drivers, show only Job Type
+                if (isDriverService) {
               return (
-                <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+                <View style={styles.dateSectionRow}>
                   <View style={styles.dateSectionContent}>
                     <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
-                      Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                      Job Type <Text style={{ color: '#FF3B30' }}>*</Text>
                     </Text>
                     <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
-                      {pickupLocation || 'Select location'}
+                      {jobType === 'longterm' ? 'Longterm' : jobType === 'quickjob' ? 'Quick Job' : 'Select job type'}
                     </Text>
                   </View>
                   <TouchableOpacity
                     style={styles.dateChangeButton}
-                    onPress={() => setShowLocationPicker(true)}
+                    onPress={() => {
+                      // Show job type selection
+                      Alert.alert(
+                        'Select Job Type',
+                        'Choose the type of job',
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          { 
+                            text: 'Longterm', 
+                            onPress: () => setJobType('longterm') 
+                          },
+                          { 
+                            text: 'Quick Job', 
+                            onPress: () => setJobType('quickjob') 
+                          },
+                        ]
+                      );
+                    }}
                     activeOpacity={0.7}
                   >
                     <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
@@ -391,19 +453,125 @@ const ServiceBookingScreen = () => {
                 </View>
               );
             }
-            return null;
+            
+            // For other services, show date/time/location
+            return (
+              <>
+                {/* Date Selection - Airbnb Style */}
+                <View style={styles.dateSectionRow}>
+                  <View style={styles.dateSectionContent}>
+                    <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                      Date
+                    </Text>
+                    <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                      {formatDateShort(selectedDate || getTomorrow())}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.dateChangeButton}
+                    onPress={() => setShowDatePicker(true)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Time Selection - Airbnb Style */}
+                <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+                  <View style={styles.dateSectionContent}>
+                    <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                      Time
+                    </Text>
+                    <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                      {formatTime(selectedTime || '10:00 AM')}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.dateChangeButton}
+                    onPress={() => setShowTimePicker(true)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Location for Road Trips only */}
+                {categoryStr.includes('road trips') && (
+                  <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+                    <View style={styles.dateSectionContent}>
+                      <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                        Pickup Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                      </Text>
+                      <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                        {pickupLocation || 'Select location'}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.dateChangeButton}
+                      onPress={() => setShowLocationPicker(true)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                        Change
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
+            );
           })()}
-        </View>
+            </View>
+          );
+        })()}
 
         {/* Conditional Fields Based on Service Category */}
         {(() => {
           const categoryStr = (category || '').toLowerCase();
           
-          // Drivers & Road Trips
-          if (categoryStr.includes('road trips') || categoryStr.includes('hire professional drivers') || categoryStr.includes('drivers')) {
+          // Hire Professional Drivers (separate from road trips)
+          if (categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'))) {
             return (
               <>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
+                {/* More Info Section */}
+                <View style={styles.section}>
+                  <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+                    More Info
+                  </Text>
+                  
+                  {/* Contact Phone */}
+                  <View style={{ marginTop: 16 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+                </View>
+              </>
+            );
+          }
+          
+          // Road Trips
+          if (categoryStr.includes('road trips')) {
+            return (
+              <>
                 {/* Separator Line */}
                 <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
@@ -541,42 +709,96 @@ const ServiceBookingScreen = () => {
           if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
             return (
               <>
-                {/* Separator Line */}
-                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                {/* Event Location - Airbnb Style (part of Booking Details) */}
                 <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Event Location <Text style={{ color: '#FF3B30' }}>*</Text>
-                  </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="Enter event location"
-                    placeholderTextColor={theme.colors.hint}
-                    value={eventLocation}
-                    onChangeText={setEventLocation}
-                  />
+                  <View style={[styles.dateSectionRow, { marginTop: 0 }]}>
+                    <View style={styles.dateSectionContent}>
+                      <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+                        Event Location <Text style={{ color: '#FF3B30' }}>*</Text>
+                      </Text>
+                      <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+                        {eventLocation || 'Select location'}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      style={styles.dateChangeButton}
+                      onPress={() => setShowLocationPicker(true)}
+                      activeOpacity={0.7}
+                    >
+                      <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+                        Change
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
+
                 {/* Separator Line */}
                 <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+                {/* More Info Section */}
                 <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                    Number of Guests
+                  <Text style={[styles.sectionHeaderTitle, { color: theme.colors.textPrimary }]}>
+                    More Info
                   </Text>
-                  <TextInput
-                    style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
-                    }]}
-                    placeholder="Enter expected number of guests"
-                    placeholderTextColor={theme.colors.hint}
-                    value={numberOfGuests}
-                    onChangeText={setNumberOfGuests}
-                    keyboardType="numeric"
-                  />
+                  
+                  {/* Number of Guests */}
+                  <View style={{ marginTop: 16 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Number of Guests
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter expected number of guests"
+                      placeholderTextColor={theme.colors.hint}
+                      value={numberOfGuests}
+                      onChangeText={setNumberOfGuests}
+                      keyboardType="numeric"
+                    />
+                  </View>
+
+                  {/* Contact Phone */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+
+                  {/* Additional Notes */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Additional Notes (Optional)
+                    </Text>
+                    <TextInput
+                      style={[styles.textArea, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Any special requests or additional information..."
+                      placeholderTextColor={theme.colors.hint}
+                      value={additionalNotes}
+                      onChangeText={setAdditionalNotes}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
                 </View>
               </>
             );
@@ -640,6 +862,49 @@ const ServiceBookingScreen = () => {
                     onChangeText={setNumberOfItems}
                   />
                 </View>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
+                  {/* Contact Phone */}
+                  <View>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+
+                  {/* Additional Notes */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Additional Notes (Optional)
+                    </Text>
+                    <TextInput
+                      style={[styles.textArea, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Any special requests or additional information..."
+                      placeholderTextColor={theme.colors.hint}
+                      value={additionalNotes}
+                      onChangeText={setAdditionalNotes}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
+                </View>
               </>
             );
           }
@@ -701,6 +966,49 @@ const ServiceBookingScreen = () => {
                     value={deliveryAddress}
                     onChangeText={setDeliveryAddress}
                   />
+                </View>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
+                  {/* Contact Phone */}
+                  <View>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+
+                  {/* Additional Notes */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Additional Notes (Optional)
+                    </Text>
+                    <TextInput
+                      style={[styles.textArea, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Any special requests or additional information..."
+                      placeholderTextColor={theme.colors.hint}
+                      value={additionalNotes}
+                      onChangeText={setAdditionalNotes}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
                 </View>
               </>
             );
@@ -764,6 +1072,49 @@ const ServiceBookingScreen = () => {
                     onChangeText={setVehicleType}
                   />
                 </View>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
+                  {/* Contact Phone */}
+                  <View>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
+
+                  {/* Additional Notes */}
+                  <View style={{ marginTop: 20 }}>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Additional Notes (Optional)
+                    </Text>
+                    <TextInput
+                      style={[styles.textArea, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Any special requests or additional information..."
+                      placeholderTextColor={theme.colors.hint}
+                      value={additionalNotes}
+                      onChangeText={setAdditionalNotes}
+                      multiline
+                      numberOfLines={4}
+                      textAlignVertical="top"
+                    />
+                  </View>
+                </View>
               </>
             );
           }
@@ -778,17 +1129,45 @@ const ServiceBookingScreen = () => {
                   <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                     Current Location <Text style={{ color: '#FF3B30' }}>*</Text>
                   </Text>
-                  <TextInput
+                  <TouchableOpacity
                     style={[styles.input, { 
-                      borderColor: theme.colors.hint,
-                      color: theme.colors.textPrimary,
-                      backgroundColor: theme.colors.background
+                      borderColor: theme.colors.primary,
+                      backgroundColor: theme.colors.background,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      paddingVertical: 14,
                     }]}
-                    placeholder="Enter your current location"
-                    placeholderTextColor={theme.colors.hint}
-                    value={currentLocation}
-                    onChangeText={setCurrentLocation}
-                  />
+                    onPress={handleGetCurrentLocation}
+                    disabled={isGettingLocation}
+                    activeOpacity={0.7}
+                  >
+                    {isGettingLocation ? (
+                      <>
+                        <ActivityIndicator size="small" color={theme.colors.primary} style={{ marginRight: 8 }} />
+                        <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+                          Getting Location...
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <Ionicons name="location" size={20} color={theme.colors.primary} style={{ marginRight: 8 }} />
+                        <Text style={[styles.sectionTitle, { color: theme.colors.primary }]}>
+                          Send Current Location
+                        </Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                  {currentLocation ? (
+                    <View style={{ marginTop: 12, padding: 12, backgroundColor: theme.colors.background, borderRadius: 8, borderWidth: 1, borderColor: theme.colors.hint + '40' }}>
+                      <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, fontSize: 12, marginBottom: 4 }]}>
+                        Location Set:
+                      </Text>
+                      <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary, fontSize: 14 }]}>
+                        {currentLocation}
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
                 {/* Separator Line */}
                 <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
@@ -825,6 +1204,28 @@ const ServiceBookingScreen = () => {
                     value={vehicleType}
                     onChangeText={setVehicleType}
                   />
+                </View>
+                {/* Separator Line */}
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+                <View style={styles.section}>
+                  {/* Contact Phone */}
+                  <View>
+                    <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                      Contact Phone Number <Text style={{ color: '#FF3B30' }}>*</Text>
+                    </Text>
+                    <TextInput
+                      style={[styles.input, { 
+                        borderColor: theme.colors.hint,
+                        color: theme.colors.textPrimary,
+                        backgroundColor: theme.colors.background
+                      }]}
+                      placeholder="Enter your phone number"
+                      placeholderTextColor={theme.colors.hint}
+                      value={contactPhone}
+                      onChangeText={setContactPhone}
+                      keyboardType="phone-pad"
+                    />
+                  </View>
                 </View>
               </>
             );
@@ -868,39 +1269,93 @@ const ServiceBookingScreen = () => {
         visible={showLocationPicker}
         onClose={() => setShowLocationPicker(false)}
         locations={availableLocations}
-        selectedLocation={pickupLocation}
+        selectedLocation={(() => {
+          const categoryStr = (category || '').toLowerCase();
+          if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+            return eventLocation;
+          }
+          return pickupLocation;
+        })()}
         onLocationSelect={(location) => {
-          setPickupLocation(location.name);
+          const categoryStr = (category || '').toLowerCase();
+          if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+            setEventLocation(location.name);
+          } else {
+            setPickupLocation(location.name);
+          }
           setShowLocationPicker(false);
         }}
-        title="Select Pickup Location"
+        title={(() => {
+          const categoryStr = (category || '').toLowerCase();
+          if (categoryStr.includes('wedding') || categoryStr.includes('vip wedding')) {
+            return 'Select Event Location';
+          }
+          return 'Select Pickup Location';
+        })()}
       />
 
-      {/* Bottom Bar with Price and Pay Now Button - Fixed at bottom */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 20) }]}>
-        <View style={styles.bottomBarPrice}>
-          <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
-          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            {service?.price || 'KSh 0'}
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={[
-            styles.payNowButton, 
-            { 
-              backgroundColor: isFormComplete() ? '#FF1577' : theme.colors.hint,
-              opacity: isFormComplete() ? 1 : 0.6,
-            }
-          ]}
-          onPress={isFormComplete() ? handleContinue : null}
-          activeOpacity={isFormComplete() ? 0.8 : 1}
-          disabled={!isFormComplete()}
-        >
-          <Text style={[styles.payNowButtonText, { color: theme.colors.white }]}>
-            Pay Now
-          </Text>
-        </TouchableOpacity>
+      {/* Bottom Bar with Price and Button - Fixed at bottom */}
+      <View style={[styles.footer, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 12) }]}>
+        {(() => {
+          const categoryStr = (category || '').toLowerCase();
+          const isDriverService = categoryStr.includes('hire professional drivers') || (categoryStr.includes('drivers') && !categoryStr.includes('road trips'));
+          const isRoadsideAssistance = categoryStr.includes('roadside');
+          
+          if (isDriverService || isRoadsideAssistance) {
+            // For drivers and roadside assistance, no price shown, just centered button
+            return (
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity
+                  style={[
+                    styles.payNowButton, 
+                    { 
+                      backgroundColor: isFormComplete ? '#FF1577' : theme.colors.hint,
+                      opacity: isFormComplete ? 1 : 0.6,
+                      minWidth: 200,
+                    }
+                  ]}
+                  onPress={handleContinue}
+                  activeOpacity={isFormComplete ? 0.8 : 1}
+                  disabled={!isFormComplete}
+                >
+                  <Text style={[styles.payNowButtonText, { color: theme.colors.white }]}>
+                    Review Request
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }
+          
+          // For other services (including movers), show price and Pay Now button
+          return (
+            <>
+              <View style={styles.bottomBarPrice}>
+                <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
+                <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
+                  {service?.price || 'KSh 0'}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[
+                  styles.payNowButton, 
+                  { 
+                    backgroundColor: isFormComplete ? '#FF1577' : theme.colors.hint,
+                    opacity: isFormComplete ? 1 : 0.6,
+                  }
+                ]}
+                onPress={handleContinue}
+                activeOpacity={isFormComplete ? 0.8 : 1}
+                disabled={!isFormComplete}
+              >
+                <Text style={[styles.payNowButtonText, { color: theme.colors.white }]}>
+                  Pay Now
+                </Text>
+              </TouchableOpacity>
+            </>
+          );
+        })()}
       </View>
+
     </View>
   );
 };
@@ -1023,7 +1478,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     flexDirection: 'row',
@@ -1037,7 +1492,7 @@ const styles = StyleSheet.create({
   bottomBarLabel: {
     fontSize: 12,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   bottomBarPriceValue: {
     fontSize: 20,
@@ -1047,7 +1502,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
     borderRadius: 20,
     maxWidth: 200,
   },
@@ -1065,9 +1520,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dateSectionLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   dateSectionValue: {
     fontSize: 16,
@@ -1123,6 +1578,26 @@ const styles = StyleSheet.create({
   },
   removeAreaButton: {
     padding: 2,
+  },
+  // Job Type styles
+  jobTypeContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 10,
+  },
+  jobTypeOption: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  jobTypeText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

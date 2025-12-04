@@ -532,7 +532,7 @@ const ServiceDetailsScreen = () => {
       </ScrollView>
 
       {/* Fixed Bottom Bar */}
-      <View style={[styles.bottomBar, { backgroundColor: theme.colors.white, paddingBottom: insets.bottom + 16 }]}>
+      <View style={[styles.bottomBar, { backgroundColor: theme.colors.white, paddingBottom: Math.max(insets.bottom, 10) }]}>
         <View style={styles.priceContainer}>
           <Text style={[styles.priceLabel, { color: theme.colors.hint }]}>Price</Text>
           <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
@@ -879,8 +879,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 16,
-    paddingTop: 16,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     gap: 16,
@@ -889,16 +888,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   priceLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   priceValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Nunito_700Bold',
   },
   reserveButton: {
-    paddingVertical: 14,
+    paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 20,
   },

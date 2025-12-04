@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
@@ -55,16 +55,50 @@ const CarDetailsScreen = () => {
   const [showMoreRules, setShowMoreRules] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
-  // Auto-swap images every 3 seconds
+  // Video URL from Supabase
+  const carVideoUrl = 'https://gfckrsileizyfyawanvh.supabase.co/storage/v1/object/sign/carvideos/video1.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZmM4MzNhZS01OWNlLTQ5ODctYTljNC1iMGZiZmRmYzg4ZDQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjYXJ2aWRlb3MvdmlkZW8xLm1wNCIsImlhdCI6MTc2NDg3OTkwMywiZXhwIjoxNzk2NDE1OTAzfQ.AnhmEL2WaxyZok5aBgI1ImyijPpN8r0V2CONd2oxkZg';
+
+  // HTML for video player
+  const videoHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #000; }
+        video { 
+          width: 100%; 
+          height: 100%; 
+          object-fit: cover;
+        }
+      </style>
+    </head>
+    <body>
+      <video 
+        src="${carVideoUrl}" 
+        controls 
+        autoplay 
+        loop 
+        playsinline
+        style="width: 100%; height: 100%; object-fit: cover;"
+      ></video>
+    </body>
+    </html>
+  `;
+
+  // Auto-swap images every 3 seconds (only when showing images)
   useEffect(() => {
-    if (carImages.length > 1) {
+    if (!showVideo && carImages.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prev) => (prev + 1) % carImages.length);
       }, 3000);
       return () => clearInterval(interval);
     }
-  }, [carImages.length]);
+  }, [carImages.length, showVideo]);
+
 
   // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
@@ -240,15 +274,39 @@ const CarDetailsScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Image Carousel */}
+        {/* Image Carousel / Video Player */}
         <View style={styles.carouselContainer}>
-          <View style={styles.carouselImageWrapper}>
-            <Image
-              source={carImages[currentImageIndex]}
-              style={styles.carouselImage}
-              resizeMode="cover"
-            />
-          </View>
+          {showVideo ? (
+            <View style={styles.videoWrapper}>
+              <WebView
+                source={{ html: videoHTML }}
+                style={styles.videoPlayer}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                allowsInlineMediaPlayback={true}
+                mediaPlaybackRequiresUserAction={false}
+                originWhitelist={['*']}
+                mixedContentMode="always"
+                scrollEnabled={false}
+                onError={(syntheticEvent) => {
+                  const { nativeEvent } = syntheticEvent;
+                  console.warn('Video WebView error: ', nativeEvent);
+                }}
+                onHttpError={(syntheticEvent) => {
+                  const { nativeEvent } = syntheticEvent;
+                  console.warn('Video WebView HTTP error: ', nativeEvent);
+                }}
+              />
+            </View>
+          ) : (
+            <View style={styles.carouselImageWrapper}>
+              <Image
+                source={carImages[currentImageIndex]}
+                style={styles.carouselImage}
+                resizeMode="cover"
+              />
+            </View>
+          )}
           
           {/* Floating Action Buttons */}
           <View style={[styles.floatingButtons, { paddingTop: insets.top + 8 }]}>
@@ -261,6 +319,21 @@ const CarDetailsScreen = () => {
             </TouchableOpacity>
             
             <View style={styles.rightButtons}>
+              {/* Toggle Video/Images Button */}
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={() => {
+                  setShowVideo(!showVideo);
+                }}
+                activeOpacity={0.8}
+              >
+                <Ionicons 
+                  name={showVideo ? "images-outline" : "videocam-outline"} 
+                  size={20} 
+                  color={theme.colors.textPrimary} 
+                />
+              </TouchableOpacity>
+              
               <TouchableOpacity
                 style={styles.floatingButton}
                 onPress={() => setIsLiked(!isLiked)}
@@ -285,7 +358,7 @@ const CarDetailsScreen = () => {
             </View>
           </View>
           
-          {carImages.length > 1 && (
+          {!showVideo && carImages.length > 1 && (
             <View style={styles.carouselIndicators}>
               {carImages.map((_, index) => (
                 <View
@@ -300,6 +373,16 @@ const CarDetailsScreen = () => {
                   ]}
                 />
               ))}
+            </View>
+          )}
+          
+          {/* Video indicator label */}
+          {showVideo && (
+            <View style={styles.videoIndicator}>
+              <View style={styles.videoLabel}>
+                <Ionicons name="videocam" size={14} color={theme.colors.white} />
+                <Text style={styles.videoLabelText}>Video</Text>
+              </View>
             </View>
           )}
         </View>
@@ -1028,6 +1111,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  videoWrapper: {
+    width: '100%',
+    height: '100%',
+  },
+  videoPlayer: {
+    width: '100%',
+    height: '100%',
+  },
   floatingButtons: {
     position: 'absolute',
     top: 0,
@@ -1070,6 +1161,27 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
+  },
+  videoIndicator: {
+    position: 'absolute',
+    bottom: 16,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  videoLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    gap: 6,
+  },
+  videoLabelText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
   },
   section: {
     paddingHorizontal: 24,

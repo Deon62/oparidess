@@ -57,6 +57,7 @@ import LiabilityInsuranceScreen from '../../screens/shared/LiabilityInsuranceScr
 import IntellectualPropertyScreen from '../../screens/shared/IntellectualPropertyScreen';
 import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
+import ShareFeedbackScreen from '../../screens/shared/ShareFeedbackScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
 import CrossCountryTravelDetailsScreen from '../../screens/shared/CrossCountryTravelDetailsScreen';
@@ -716,6 +717,16 @@ const ProfileStack = () => {
         component={CustomerSupportScreen}
         options={{ 
           title: 'Customer Support',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="ShareFeedback" 
+        component={ShareFeedbackScreen}
+        options={{ 
+          title: 'Help us Improve',
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',

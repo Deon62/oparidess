@@ -380,6 +380,18 @@ const RenterProfileScreen = () => {
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={() => navigation.navigate('ShareFeedback')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="chatbubble-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Help us Improve
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
       </View>
 
       {/* Separator Line */}

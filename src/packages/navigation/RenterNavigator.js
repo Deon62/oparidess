@@ -32,10 +32,7 @@ import ChangePasswordScreen from '../../screens/renter/ChangePasswordScreen';
 import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
-import BecomeServiceProviderScreen from '../../screens/renter/BecomeServiceProviderScreen';
-import ServiceProviderStep1Screen from '../../screens/renter/ServiceProviderStep1Screen';
-import ServiceProviderStep2Screen from '../../screens/renter/ServiceProviderStep2Screen';
-import ServiceProviderStep3Screen from '../../screens/renter/ServiceProviderStep3Screen';
+import OpaHostAppScreen from '../../screens/renter/OpaHostAppScreen';
 import ServiceDetailsScreen from '../../screens/renter/ServiceDetailsScreen';
 import ServiceBookingScreen from '../../screens/renter/ServiceBookingScreen';
 import ServiceBookingConfirmationScreen from '../../screens/renter/ServiceBookingConfirmationScreen';
@@ -289,35 +286,21 @@ const HomeStack = () => {
         }}
       />
       <Stack.Screen 
-        name="ServiceProviderStep1" 
-        component={ServiceProviderStep1Screen}
+        name="OpaHostApp" 
+        component={OpaHostAppScreen}
         options={{ 
-          title: 'Business Information',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="ServiceProviderStep2" 
-        component={ServiceProviderStep2Screen}
-        options={{ 
-          title: 'Documents & Verification',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="ServiceProviderStep3" 
-        component={ServiceProviderStep3Screen}
-        options={{ 
-          title: 'Review & Submit',
-          headerShown: true 
-        }}
-      />
-      <Stack.Screen 
-        name="BecomeServiceProvider" 
-        component={BecomeServiceProviderScreen}
-        options={{ 
-          title: 'Become Service Provider',
-          headerShown: true 
+          title: 'Opa Owner/Service Provider',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#FFFFFF',
+          },
+          headerTintColor: '#000000',
+          headerTitleStyle: {
+            fontFamily: 'Nunito_600SemiBold',
+            color: '#000000',
+          },
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: '#FFFFFF',
         }}
       />
       <Stack.Screen 
@@ -787,27 +770,21 @@ const ProfileStack = () => {
         }}
       />
       <Stack.Screen 
-        name="ServiceProviderStep1" 
-        component={ServiceProviderStep1Screen}
+        name="OpaHostApp" 
+        component={OpaHostAppScreen}
         options={{ 
-          title: 'Business Information',
-          headerShown: false 
-        }}
-      />
-      <Stack.Screen 
-        name="ServiceProviderStep2" 
-        component={ServiceProviderStep2Screen}
-        options={{ 
-          title: 'Documents & Verification',
-          headerShown: false 
-        }}
-      />
-      <Stack.Screen 
-        name="ServiceProviderStep3" 
-        component={ServiceProviderStep3Screen}
-        options={{ 
-          title: 'Review & Submit',
-          headerShown: false 
+          title: 'Opa Owner/Service Provider',
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: '#FFFFFF',
+          },
+          headerTintColor: '#000000',
+          headerTitleStyle: {
+            fontFamily: 'Nunito_600SemiBold',
+            color: '#000000',
+          },
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: '#FFFFFF',
         }}
       />
     </Stack.Navigator>

@@ -172,8 +172,8 @@ const RenterProfileScreen = () => {
     );
   };
 
-  const handleBecomeServiceProvider = () => {
-    navigation.navigate('ServiceProviderStep1');
+  const handleOpaHostApp = () => {
+    navigation.navigate('OpaHostApp');
   };
 
   const handleAddPayment = () => {
@@ -321,12 +321,12 @@ const RenterProfileScreen = () => {
         </View>
         <TouchableOpacity
           style={styles.additionalActionButton}
-          onPress={handleBecomeServiceProvider}
+          onPress={handleOpaHostApp}
           activeOpacity={0.7}
         >
           <Ionicons name="business-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Become Service Provider
+            List car & services
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>

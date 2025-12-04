@@ -79,6 +79,16 @@ const ServiceBookingScreen = () => {
     }, [navigation])
   );
 
+  // Ensure StatusBar is dark when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBarStyle('dark-content', true);
+      return () => {
+        // StatusBar will be restored by other screens
+      };
+    }, [])
+  );
+
   // Restore tab bar when component unmounts (navigating away completely)
   useEffect(() => {
     return () => {

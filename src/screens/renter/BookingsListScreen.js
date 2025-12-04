@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Modal, TextInput, Linking, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -243,6 +243,86 @@ const BookingsListScreen = () => {
                       {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                     </Text>
                   </View>
+                  {/* Quick Actions for Active Bookings */}
+                  {booking.status === 'active' && (
+                    <View style={styles.quickActionsContainer}>
+                      <TouchableOpacity
+                        style={[styles.quickActionButton, { backgroundColor: theme.colors.primary + '15' }]}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          const hostPhone = booking.ownerPhone || '+254 712 345 678';
+                          Linking.openURL(`tel:${hostPhone}`).catch(() => {
+                            Alert.alert('Error', 'Unable to make phone call');
+                          });
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="call-outline" size={16} color={theme.colors.primary} />
+                        <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
+                          Call Owner
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.quickActionButton, { backgroundColor: theme.colors.primary + '15' }]}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          // Navigate to car manual
+                          const carManual = {
+                            available: true,
+                            sections: [
+                              {
+                                title: 'Getting Started',
+                                content: [
+                                  'Locate the key fob in the provided key box',
+                                  'Press unlock button twice to unlock all doors',
+                                  'Adjust driver seat and mirrors before starting',
+                                  'Insert key or press start button (if keyless)',
+                                ],
+                              },
+                              {
+                                title: 'Starting the Vehicle',
+                                content: [
+                                  'Press brake pedal firmly',
+                                  'Press start button or turn key to start',
+                                  'Wait for all warning lights to turn off',
+                                  'Check fuel level before driving',
+                                ],
+                              },
+                              {
+                                title: 'Important Controls',
+                                content: [
+                                  'AC controls: Located on center console',
+                                  'Parking brake: Pull lever up to engage',
+                                  'Headlights: Turn dial on left side of steering wheel',
+                                  'Hazard lights: Red triangle button on dashboard',
+                                ],
+                              },
+                              {
+                                title: 'Safety Features',
+                                content: [
+                                  'ABS braking system active',
+                                  'Airbags located in front and sides',
+                                  'Emergency brake assist enabled',
+                                  'Tire pressure monitoring system',
+                                ],
+                              },
+                            ],
+                          };
+                          navigation.navigate('CarManual', {
+                            car: { name: booking.carName },
+                            manual: carManual,
+                            hostPhone: booking.ownerPhone || '+254 712 345 678',
+                          });
+                        }}
+                        activeOpacity={0.7}
+                      >
+                        <Ionicons name="book-outline" size={16} color={theme.colors.primary} />
+                        <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
+                          Manual
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </View>
               </View>
             </TouchableOpacity>
@@ -455,23 +535,39 @@ const styles = StyleSheet.create({
   },
   bookingContent: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    gap: 12,
   },
   bookingTitle: {
     fontSize: 17,
     fontFamily: 'Nunito_600SemiBold',
-    flex: 1,
-    marginRight: 8,
+    marginBottom: 4,
   },
   statusBadge: {
+    alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 12,
   },
   statusText: {
     fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  quickActionsContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+  },
+  quickActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    flex: 1,
+  },
+  quickActionText: {
+    fontSize: 13,
     fontFamily: 'Nunito_600SemiBold',
   },
   // Rating Modal Styles

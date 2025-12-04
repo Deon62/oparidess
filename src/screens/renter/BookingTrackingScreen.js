@@ -655,6 +655,84 @@ const BookingTrackingScreen = () => {
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
+          onPress={() => {
+            const hostPhone = bookingDetails?.car?.ownerPhone || '+254 712 345 678';
+            Linking.openURL(`tel:${hostPhone}`).catch(() => {
+              Alert.alert('Error', 'Unable to make phone call');
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="call-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              Call Owner
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.manageItem}
+          onPress={() => {
+            const carManual = {
+              available: true,
+              sections: [
+                {
+                  title: 'Getting Started',
+                  content: [
+                    'Locate the key fob in the provided key box',
+                    'Press unlock button twice to unlock all doors',
+                    'Adjust driver seat and mirrors before starting',
+                    'Insert key or press start button (if keyless)',
+                  ],
+                },
+                {
+                  title: 'Starting the Vehicle',
+                  content: [
+                    'Press brake pedal firmly',
+                    'Press start button or turn key to start',
+                    'Wait for all warning lights to turn off',
+                    'Check fuel level before driving',
+                  ],
+                },
+                {
+                  title: 'Important Controls',
+                  content: [
+                    'AC controls: Located on center console',
+                    'Parking brake: Pull lever up to engage',
+                    'Headlights: Turn dial on left side of steering wheel',
+                    'Hazard lights: Red triangle button on dashboard',
+                  ],
+                },
+                {
+                  title: 'Safety Features',
+                  content: [
+                    'ABS braking system active',
+                    'Airbags located in front and sides',
+                    'Emergency brake assist enabled',
+                    'Tire pressure monitoring system',
+                  ],
+                },
+              ],
+            };
+            navigation.navigate('CarManual', {
+              car: bookingDetails?.car || { name: 'Car' },
+              manual: carManual,
+              hostPhone: bookingDetails?.car?.ownerPhone || '+254 712 345 678',
+            });
+          }}
+          activeOpacity={0.7}
+        >
+          <View style={styles.manageItemLeft}>
+            <Ionicons name="book-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
+              View Car Manual
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
       </View>
 
       {/* Separator Line */}

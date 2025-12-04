@@ -10,6 +10,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import RenterHomeScreen from '../../screens/renter/RenterHomeScreen';
 import CarListScreen from '../../screens/renter/CarListScreen';
 import CarDetailsScreen from '../../screens/renter/CarDetailsScreen';
+import CarManualScreen from '../../screens/renter/CarManualScreen';
 import ServiceListScreen from '../../screens/renter/ServiceListScreen';
 import DiscoverListScreen from '../../screens/renter/DiscoverListScreen';
 import DiscoverDetailsScreen from '../../screens/renter/DiscoverDetailsScreen';
@@ -150,6 +151,15 @@ const HomeStack = () => {
         component={CarDetailsScreen}
         options={{ 
           title: 'Car Details',
+          headerShown: true,
+          animation: 'simple_push',
+        }}
+      />
+      <Stack.Screen 
+        name="CarManual" 
+        component={CarManualScreen}
+        options={{ 
+          title: 'Car Manual',
           headerShown: true,
           animation: 'simple_push',
         }}

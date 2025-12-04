@@ -175,12 +175,14 @@ const CarDetailsScreen = () => {
     rating: 4.8,
     tripsCount: 47,
     responseTime: '15 minutes',
+    phone: '+254 712 345 678',
     verified: {
       id: true,
       phone: true,
     },
     description: 'Car enthusiast who maintains my vehicles perfectly. I ensure all cars are in excellent condition for your comfort and safety.',
   };
+
 
   // Car availability
   const availability = {
@@ -393,6 +395,37 @@ const CarDetailsScreen = () => {
             {/* Description */}
             <Text style={[styles.carDescription, { color: theme.colors.textSecondary }]}>
               {carData.description || 'A reliable and well-maintained vehicle perfect for your travel needs.'}
+            </Text>
+          </View>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Check-in Options Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Check-in Options
+          </Text>
+          <View style={styles.checkInCard}>
+            <View style={[styles.checkInOption, { backgroundColor: theme.colors.white }]}>
+              <Text style={[styles.checkInTitle, { color: theme.colors.textPrimary }]}>
+                Self Check-in
+              </Text>
+              <Text style={[styles.checkInDescription, { color: theme.colors.textSecondary }]}>
+                Get the key from the secure key box and locate your car independently
+              </Text>
+            </View>
+            <View style={[styles.checkInOption, { backgroundColor: theme.colors.white }]}>
+              <Text style={[styles.checkInTitle, { color: theme.colors.textPrimary }]}>
+                Assisted Check-in
+              </Text>
+              <Text style={[styles.checkInDescription, { color: theme.colors.textSecondary }]}>
+                Meet the owner for a guided walkthrough and car inspection
+              </Text>
+            </View>
+            <Text style={[styles.checkInNote, { color: theme.colors.hint }]}>
+              You can select your preferred option during booking
             </Text>
           </View>
         </View>
@@ -1606,6 +1639,31 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
     letterSpacing: -0.1,
+  },
+  // Check-in Options styles
+  checkInCard: {
+    gap: 16,
+  },
+  checkInOption: {
+    padding: 16,
+    borderRadius: 12,
+    gap: 4,
+  },
+  checkInTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  checkInDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  checkInNote: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    fontStyle: 'italic',
+    marginTop: 4,
   },
 });
 

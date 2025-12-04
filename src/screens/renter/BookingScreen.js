@@ -44,6 +44,7 @@ const BookingScreen = () => {
   const [payOnSite, setPayOnSite] = useState(false);
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [crossCountryTravelEnabled, setCrossCountryTravelEnabled] = useState(false);
+  const [checkInPreference, setCheckInPreference] = useState('self'); // 'self' or 'assisted'
   
   // Modal states for age verification
   const [showAgeRequirementModal, setShowAgeRequirementModal] = useState(false);
@@ -348,6 +349,7 @@ const BookingScreen = () => {
         dropoffLocation: sameDropoffLocation ? pickupLocation : dropoffLocation,
         days,
         specialRequirements,
+        checkInPreference,
         insuranceEnabled,
         insuranceCost,
         crossCountryTravelEnabled,
@@ -786,6 +788,81 @@ const BookingScreen = () => {
               value={crossCountryTravelEnabled}
               onValueChange={setCrossCountryTravelEnabled}
             />
+          </View>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Check-in Preference */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Check-in Preference
+          </Text>
+          <View style={styles.checkInOptionsContainer}>
+            <TouchableOpacity
+              style={[
+                styles.checkInOption,
+                checkInPreference === 'self' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
+                { borderWidth: 2, borderColor: theme.colors.hint + '40' }
+              ]}
+              onPress={() => setCheckInPreference('self')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.checkInOptionContent}>
+                <Ionicons 
+                  name="key-outline" 
+                  size={24} 
+                  color={checkInPreference === 'self' ? theme.colors.primary : theme.colors.hint} 
+                />
+                <View style={styles.checkInOptionText}>
+                  <Text style={[
+                    styles.checkInOptionTitle, 
+                    { color: checkInPreference === 'self' ? theme.colors.textPrimary : theme.colors.textSecondary }
+                  ]}>
+                    Self Check-in
+                  </Text>
+                  <Text style={[styles.checkInOptionDesc, { color: theme.colors.textSecondary }]}>
+                    Get key from secure box independently
+                  </Text>
+                </View>
+              </View>
+              {checkInPreference === 'self' && (
+                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.checkInOption,
+                checkInPreference === 'assisted' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
+                { borderWidth: 2, borderColor: theme.colors.hint + '40' }
+              ]}
+              onPress={() => setCheckInPreference('assisted')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.checkInOptionContent}>
+                <Ionicons 
+                  name="person-outline" 
+                  size={24} 
+                  color={checkInPreference === 'assisted' ? theme.colors.primary : theme.colors.hint} 
+                />
+                <View style={styles.checkInOptionText}>
+                  <Text style={[
+                    styles.checkInOptionTitle, 
+                    { color: checkInPreference === 'assisted' ? theme.colors.textPrimary : theme.colors.textSecondary }
+                  ]}>
+                    Assisted Check-in
+                  </Text>
+                  <Text style={[styles.checkInOptionDesc, { color: theme.colors.textSecondary }]}>
+                    Meet owner for guided walkthrough
+                  </Text>
+                </View>
+              </View>
+              {checkInPreference === 'assisted' && (
+                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+              )}
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -1464,6 +1541,37 @@ const styles = StyleSheet.create({
   daysText: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
+  },
+  checkInOptionsContainer: {
+    gap: 12,
+  },
+  checkInOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+  },
+  checkInOptionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    flex: 1,
+  },
+  checkInOptionText: {
+    flex: 1,
+    gap: 4,
+  },
+  checkInOptionTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  checkInOptionDesc: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
   },
   requirementsInput: {
     borderWidth: 1,

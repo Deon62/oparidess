@@ -304,9 +304,6 @@ const SettingsScreen = () => {
         />
       </View>
 
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
       {/* Logout Button */}
       <TouchableOpacity
         style={styles.logoutButton}
@@ -318,6 +315,19 @@ const SettingsScreen = () => {
           Logout
         </Text>
       </TouchableOpacity>
+
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40', marginTop: 24 }]} />
+
+      {/* App Version Section */}
+      <View style={styles.versionSection}>
+        <Text style={[styles.versionText, { color: theme.colors.textPrimary }]}>
+          Version 1.0.0 Beta
+        </Text>
+        <Text style={[styles.versionDescription, { color: theme.colors.textSecondary }]}>
+          This app is currently under development. We are working to have all features up based on user feedback.
+        </Text>
+      </View>
 
       {/* Logout Confirmation Modal */}
       <Modal
@@ -733,6 +743,24 @@ const styles = StyleSheet.create({
   biometricModalButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  // Version Section Styles
+  versionSection: {
+    paddingHorizontal: 24,
+    paddingVertical: 24,
+    alignItems: 'center',
+  },
+  versionText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 8,
+  },
+  versionDescription: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 20,
+    paddingHorizontal: 16,
   },
 });
 

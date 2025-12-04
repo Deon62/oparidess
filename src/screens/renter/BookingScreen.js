@@ -31,7 +31,7 @@ const BookingScreen = () => {
 
   const getDayAfterTomorrow = () => {
     const dayAfter = new Date();
-    dayAfter.setDate(dayAfter.getDate() + 2);
+    dayAfter.setDate(dayAfter.getDate() + 4); // Set to 4 days from today (3 days rental minimum: pickup on day 1, dropoff on day 4 = 3 days rental)
     dayAfter.setHours(10, 0, 0, 0);
     return dayAfter;
   };

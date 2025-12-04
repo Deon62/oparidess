@@ -235,13 +235,15 @@ const BookingsListScreen = () => {
                   </View>
                 )}
                 <View style={styles.bookingContent}>
-                  <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>
-                    {booking.carName}
-                  </Text>
-                  <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
-                    <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
-                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                  <View style={styles.bookingTitleRow}>
+                    <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                      {booking.carName}
                     </Text>
+                    <View style={[styles.statusBadge, { backgroundColor: getStatusColor(booking.status) + '20' }]}>
+                      <Text style={[styles.statusText, { color: getStatusColor(booking.status) }]}>
+                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                      </Text>
+                    </View>
                   </View>
                   {/* Quick Actions for Active Bookings */}
                   {booking.status === 'active' && (
@@ -535,18 +537,25 @@ const styles = StyleSheet.create({
   },
   bookingContent: {
     flex: 1,
-    gap: 12,
+    gap: 8,
+  },
+  bookingTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+    marginBottom: 4,
   },
   bookingTitle: {
     fontSize: 17,
     fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 4,
+    flex: 1,
   },
   statusBadge: {
-    alignSelf: 'flex-start',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 12,
+    flexShrink: 0,
   },
   statusText: {
     fontSize: 12,
@@ -555,7 +564,6 @@ const styles = StyleSheet.create({
   quickActionsContainer: {
     flexDirection: 'row',
     gap: 8,
-    marginTop: 8,
   },
   quickActionButton: {
     flexDirection: 'row',

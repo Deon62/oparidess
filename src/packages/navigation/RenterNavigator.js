@@ -716,7 +716,9 @@ const ProfileStack = () => {
         component={CustomerSupportScreen}
         options={{ 
           title: 'Customer Support',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

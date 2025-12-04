@@ -745,50 +745,21 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Cross Country Travel Toggle */}
+        {/* Special Requirements */}
         <View style={styles.section}>
-          <View style={styles.crossCountryCard}>
-            <View style={styles.crossCountryInfo}>
-              <Text style={[styles.crossCountryTitle, { color: theme.colors.textPrimary }]}>
-                Cross Country Travel
-              </Text>
-              <Text style={[styles.crossCountryDescription, { color: theme.colors.textSecondary }]}>
-                Enable this option if you plan to travel across different countries or regions (+KSh 5,000/day)
-              </Text>
-              
-              {/* Instructions List */}
-              <View style={styles.crossCountryInstructions}>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Required for travel outside the vehicle's registered country
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Includes border crossing documentation support
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Additional insurance coverage for international travel
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Owner must approve cross-country travel in advance
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <Toggle
-              value={crossCountryTravelEnabled}
-              onValueChange={setCrossCountryTravelEnabled}
-            />
-          </View>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Special Requirements
+          </Text>
+          <TextInput
+            style={[styles.requirementsInput, { color: theme.colors.textPrimary }]}
+            placeholder="Any special requests or requirements..."
+            placeholderTextColor={theme.colors.hint}
+            value={specialRequirements}
+            onChangeText={setSpecialRequirements}
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
         </View>
 
         {/* Separator Line */}
@@ -869,28 +840,13 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Special Requirements */}
+        {/* Optional Price Add-ons */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Special Requirements
+            Optional Price Add-ons
           </Text>
-          <TextInput
-            style={[styles.requirementsInput, { color: theme.colors.textPrimary }]}
-            placeholder="Any special requests or requirements..."
-            placeholderTextColor={theme.colors.hint}
-            value={specialRequirements}
-            onChangeText={setSpecialRequirements}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Insurance Toggle */}
-        <View style={styles.section}>
+          
+          {/* Insurance Toggle */}
           <View style={styles.insuranceCard}>
             <View style={styles.insuranceInfo}>
               <Text style={[styles.insuranceTitle, { color: theme.colors.textPrimary }]}>
@@ -943,6 +899,71 @@ const BookingScreen = () => {
             <Toggle
               value={insuranceEnabled}
               onValueChange={setInsuranceEnabled}
+            />
+          </View>
+
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Cross Country Travel Toggle */}
+        <View style={styles.section}>
+          <View style={styles.crossCountryCard}>
+            <View style={styles.crossCountryInfo}>
+              <Text style={[styles.crossCountryTitle, { color: theme.colors.textPrimary }]}>
+                Cross Country Travel
+              </Text>
+              <Text style={[styles.crossCountryDescription, { color: theme.colors.textSecondary }]}>
+                Enable this option if you plan to travel across different countries or regions (+KSh 5,000/day)
+              </Text>
+              
+              {/* Instructions List */}
+              <View style={styles.crossCountryInstructions}>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Required for travel outside the vehicle's registered country
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Includes border crossing documentation support
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Additional insurance coverage for international travel
+                  </Text>
+                </View>
+                <View style={styles.crossCountryInstructionItem}>
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
+                    Owner must approve cross-country travel in advance
+                  </Text>
+                </View>
+              </View>
+              
+              {/* Read More Link */}
+              <TouchableOpacity
+                onPress={() => {
+                  // TODO: Navigate to CrossCountryTravelDetails screen when implemented
+                  // navigation.navigate('CrossCountryTravelDetails');
+                }}
+                activeOpacity={0.7}
+                style={styles.readMoreButton}
+              >
+                <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+                  Read more
+                </Text>
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+              </TouchableOpacity>
+            </View>
+            <Toggle
+              value={crossCountryTravelEnabled}
+              onValueChange={setCrossCountryTravelEnabled}
             />
           </View>
         </View>
@@ -1000,86 +1021,6 @@ const BookingScreen = () => {
                 </Text>
               </View>
             </View>
-          )}
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Price Summary */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Price Summary
-          </Text>
-
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-              Base Price ({days || 0} {days === 1 ? 'day' : 'days'})
-            </Text>
-            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-              {formatCurrency(basePrice)}
-            </Text>
-          </View>
-
-          {insuranceEnabled && (
-            <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Insurance ({days || 0} {days === 1 ? 'day' : 'days'})
-              </Text>
-              <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(insuranceCost)}
-              </Text>
-            </View>
-          )}
-
-          {crossCountryTravelEnabled && (
-            <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Cross Country Travel ({days || 0} {days === 1 ? 'day' : 'days'})
-              </Text>
-              <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(crossCountryTravelCost)}
-              </Text>
-            </View>
-          )}
-
-          {payOnSite && (
-            <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Booking Fee
-              </Text>
-              <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
-                {formatCurrency(bookingFee)}
-              </Text>
-            </View>
-          )}
-
-          <View style={[styles.priceRow, styles.priceRowTotal]}>
-            <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
-              {payOnSite ? 'Total Rental Price' : 'Total'}
-            </Text>
-            <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-              {formatCurrency(totalPrice)}
-            </Text>
-          </View>
-
-          {payOnSite && (
-            <>
-              <View style={styles.priceSummaryDivider} />
-              <View style={[styles.priceRow, styles.priceRowPayNow]}>
-                <View style={styles.payNowLabelContainer}>
-                  <Text style={[styles.payNowLabel, { color: theme.colors.textPrimary }]}>
-                    Amount to Pay Now
-                  </Text>
-                  <Text style={[styles.payNowSubtext, { color: theme.colors.textSecondary }]}>
-                    Booking fee only
-                  </Text>
-                </View>
-                <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(bookingFee)}
-                </Text>
-              </View>
-            </>
           )}
         </View>
 

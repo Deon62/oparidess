@@ -429,6 +429,15 @@ const BookingsStack = () => {
         }}
       />
       <Stack.Screen 
+        name="CarManual" 
+        component={CarManualScreen}
+        options={{ 
+          title: 'Car Manual',
+          headerShown: true,
+          animation: 'simple_push',
+        }}
+      />
+      <Stack.Screen 
         name="ImageRepository" 
         component={ImageRepositoryScreen}
         options={{ 

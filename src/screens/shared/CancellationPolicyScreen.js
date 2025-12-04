@@ -1,13 +1,20 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Card } from '../../packages/components';
+import { Card, Toggle } from '../../packages/components';
 
 const CancellationPolicyScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
+  
+  // Terms agreement toggle - default to true (always on)
+  const [agreeToTerms, setAgreeToTerms] = useState(true);
+  
+  // Check if we came from BookingConfirmationScreen
+  const fromBookingConfirmation = route.params?.fromBookingConfirmation || false;
 
   const policySections = [
     {
@@ -149,6 +156,65 @@ const CancellationPolicyScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Terms and Conditions Agreement */}
+      <View style={styles.section}>
+        <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.termsHeader}>
+            <Ionicons name="document-text-outline" size={24} color={theme.colors.primary} />
+            <Text style={[styles.termsTitle, { color: theme.colors.textPrimary, flex: 1 }]}>
+              Terms and Conditions Agreement
+            </Text>
+          </View>
+          <View style={styles.termsRow}>
+            <Toggle
+              value={agreeToTerms}
+              onValueChange={setAgreeToTerms}
+            />
+            <View style={styles.termsTextContainer}>
+              <Text style={[styles.termsText, { color: theme.colors.textPrimary }]}>
+                I agree to the Terms and Conditions and Cancellation Policy
+              </Text>
+            </View>
+          </View>
+          {!agreeToTerms && (
+            <View style={[styles.warningBox, { backgroundColor: '#FF9800' + '15' }]}>
+              <Ionicons name="warning-outline" size={20} color="#FF9800" />
+              <Text style={[styles.warningText, { color: '#FF9800' }]}>
+                You must agree to the terms to proceed with booking
+              </Text>
+            </View>
+          )}
+        </Card>
+      </View>
+
+      {fromBookingConfirmation && (
+        <View style={styles.section}>
+          <TouchableOpacity
+            style={[
+              styles.proceedButton,
+              { 
+                backgroundColor: agreeToTerms ? theme.colors.primary : theme.colors.hint,
+                opacity: agreeToTerms ? 1 : 0.6
+              }
+            ]}
+            onPress={() => {
+              if (!agreeToTerms) {
+                Alert.alert('Required', 'Please agree to the terms and conditions to proceed');
+                return;
+              }
+              // Navigate back to BookingConfirmationScreen with terms agreed
+              navigation.goBack();
+            }}
+            activeOpacity={0.7}
+            disabled={!agreeToTerms}
+          >
+            <Text style={[styles.proceedButtonText, { color: theme.colors.white }]}>
+              Agree and Continue
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <View style={{ height: 40 }} />
     </ScrollView>
@@ -296,6 +362,55 @@ const styles = StyleSheet.create({
   supportButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  termsCard: {
+    padding: 20,
+    borderRadius: 16,
+  },
+  termsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 16,
+  },
+  termsTitle: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  termsRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  termsTextContainer: {
+    flex: 1,
+  },
+  termsText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  warningBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  warningText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  proceedButton: {
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  proceedButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
   },
 });
 

@@ -41,7 +41,7 @@ const BookingScreen = () => {
   const [showPickupDatePicker, setShowPickupDatePicker] = useState(false);
   const [showDropoffDatePicker, setShowDropoffDatePicker] = useState(false);
   const [specialRequirements, setSpecialRequirements] = useState('');
-  const [payOnSite, setPayOnSite] = useState(false);
+  // Pay on Site will be handled in BookingConfirmationScreen
   const [insuranceEnabled, setInsuranceEnabled] = useState(false);
   const [crossCountryTravelEnabled, setCrossCountryTravelEnabled] = useState(false);
   const [checkInPreference, setCheckInPreference] = useState('self'); // 'self' or 'assisted'
@@ -228,10 +228,8 @@ const BookingScreen = () => {
   const basePrice = rentalInfo.perDay * days;
   const totalPrice = basePrice + insuranceCost + crossCountryTravelCost;
   
-  // Commission rate (15%)
+  // Commission rate (15%) - will be calculated in BookingConfirmationScreen based on payment option
   const COMMISSION_RATE = 0.15;
-  const bookingFee = payOnSite ? totalPrice * COMMISSION_RATE : 0;
-  const balanceToPayOnSite = payOnSite ? totalPrice - bookingFee : 0;
 
   // Date formatting functions
   const formatDateRange = () => {
@@ -354,8 +352,8 @@ const BookingScreen = () => {
         insuranceCost,
         crossCountryTravelEnabled,
         crossCountryTravelCost,
-        payOnSite,
-        bookingFee: payOnSite ? bookingFee : 0,
+        payOnSite: false, // Default to Pay Now, can be changed in BookingConfirmationScreen
+        bookingFee: 0, // Will be calculated in BookingConfirmationScreen
         totalRentalPrice: totalPrice,
         basePrice,
         rentalInfo,
@@ -968,62 +966,6 @@ const BookingScreen = () => {
           </View>
         </View>
 
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Pay on Site Option */}
-        <View style={styles.section}>
-          <View style={styles.payOnSiteHeader}>
-            <View style={styles.payOnSiteHeaderLeft}>
-              <Ionicons name="location-outline" size={24} color={theme.colors.primary} />
-              <View style={styles.payOnSiteTitleContainer}>
-                <Text style={[styles.payOnSiteTitle, { color: theme.colors.textPrimary }]}>
-                  Pay on Site
-                </Text>
-                <Text style={[styles.payOnSiteSubtitle, { color: theme.colors.textSecondary }]}>
-                  Reserve now, pay owner at pickup
-                </Text>
-              </View>
-            </View>
-            <Toggle value={payOnSite} onValueChange={setPayOnSite} />
-          </View>
-
-          {payOnSite && (
-            <View style={[styles.payOnSiteInfo, { backgroundColor: theme.colors.primary + '10' }]}>
-              <View style={styles.infoRow}>
-                <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
-                <Text style={[styles.infoText, { color: theme.colors.textPrimary }]}>
-                  Reserve your booking by paying the booking fee (platform commission). You'll pay the car owner directly when you pick up the car.
-                </Text>
-              </View>
-              <View style={styles.bookingFeeRow}>
-                <Text style={[styles.bookingFeeLabel, { color: theme.colors.textSecondary }]}>
-                  Booking Fee
-                </Text>
-                <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(bookingFee)}
-                </Text>
-              </View>
-              <View style={[styles.balanceOnSiteRow, { backgroundColor: '#FF9800' + '15' }]}>
-                <View style={styles.balanceOnSiteLeft}>
-                  <Ionicons name="cash-outline" size={18} color="#FF9800" />
-                  <View style={styles.balanceOnSiteLabelContainer}>
-                    <Text style={[styles.balanceOnSiteLabel, { color: theme.colors.textPrimary }]}>
-                      Balance to Pay on Site
-                    </Text>
-                    <Text style={[styles.balanceOnSiteSubtext, { color: theme.colors.textSecondary }]}>
-                      Pay directly to owner at pickup
-                    </Text>
-                  </View>
-                </View>
-                <Text style={[styles.balanceOnSiteValue, { color: '#FF9800' }]}>
-                  {formatCurrency(balanceToPayOnSite)}
-                </Text>
-              </View>
-            </View>
-          )}
-        </View>
-
         {/* Bottom Spacing */}
         <View style={{ height: 100 }} />
       </ScrollView>
@@ -1032,10 +974,10 @@ const BookingScreen = () => {
       <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
-            {payOnSite ? 'Booking Fee' : 'Total'}
+            Total
           </Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            {formatCurrency(payOnSite ? bookingFee : totalPrice)}
+            {formatCurrency(totalPrice)}
           </Text>
         </View>
         <Button

@@ -14,7 +14,14 @@ const BookingConfirmationScreen = () => {
   const insets = useSafeAreaInsets();
   const { bookingDetails } = route.params || {};
 
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
+  // Payment option: 'payNow' (default) or 'payOnSite'
+  const [paymentOption, setPaymentOption] = useState('payNow');
+  
+  // Commission rate (15%)
+  const COMMISSION_RATE = 0.15;
+  const totalRentalPrice = bookingDetails?.totalRentalPrice || 0;
+  const bookingFee = paymentOption === 'payOnSite' ? totalRentalPrice * COMMISSION_RATE : 0;
+  const balanceToPayOnSite = paymentOption === 'payOnSite' ? totalRentalPrice - bookingFee : 0;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,18 +73,15 @@ const BookingConfirmationScreen = () => {
   };
 
   const handleProceedToPayment = () => {
-    if (!agreeToTerms) {
-      Alert.alert('Required', 'Please accept the terms and conditions to continue');
-      return;
-    }
-
-    const paymentAmount = bookingDetails.payOnSite ? bookingDetails.bookingFee : bookingDetails.totalRentalPrice;
+    const paymentAmount = paymentOption === 'payOnSite' ? bookingFee : totalRentalPrice;
 
     navigation.navigate('Payment', {
       totalPrice: paymentAmount,
       bookingDetails: {
         ...bookingDetails,
         bookingId,
+        payOnSite: paymentOption === 'payOnSite',
+        bookingFee: paymentOption === 'payOnSite' ? bookingFee : 0,
       },
     });
   };
@@ -304,27 +308,16 @@ const BookingConfirmationScreen = () => {
             );
           })()}
 
-          {bookingDetails?.payOnSite && (
-            <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Booking Fee
-              </Text>
-              <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
-                {formatCurrency(bookingDetails?.bookingFee || 0)}
-              </Text>
-            </View>
-          )}
-
           <View style={[styles.priceRow, styles.priceRowTotal]}>
             <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
-              {bookingDetails?.payOnSite ? 'Total Rental Price' : 'Total'}
+              {paymentOption === 'payOnSite' ? 'Total Rental Price' : 'Total'}
             </Text>
             <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
-              {formatCurrency(bookingDetails?.totalRentalPrice || 0)}
+              {formatCurrency(totalRentalPrice)}
             </Text>
           </View>
 
-          {bookingDetails?.payOnSite && (
+          {paymentOption === 'payOnSite' && (
             <>
               <View style={styles.priceDivider} />
               <View style={[styles.priceRow, styles.priceRowPayNow]}>
@@ -337,13 +330,125 @@ const BookingConfirmationScreen = () => {
                   </Text>
                 </View>
                 <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(bookingDetails?.bookingFee || 0)}
+                  {formatCurrency(bookingFee)}
                 </Text>
               </View>
             </>
           )}
         </Card>
       </View>
+
+      {/* Payment Options */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Payment Options
+        </Text>
+        <Card style={[styles.paymentOptionsCard, { backgroundColor: theme.colors.white }]}>
+          {/* Pay Now Option */}
+          <TouchableOpacity
+            style={[
+              styles.paymentOption,
+              paymentOption === 'payNow' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
+              { borderWidth: 2, borderColor: theme.colors.hint + '40' }
+            ]}
+            onPress={() => setPaymentOption('payNow')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.paymentOptionContent}>
+              <Ionicons 
+                name="card-outline" 
+                size={24} 
+                color={paymentOption === 'payNow' ? theme.colors.primary : theme.colors.hint} 
+              />
+              <View style={styles.paymentOptionText}>
+                <Text style={[
+                  styles.paymentOptionTitle, 
+                  { color: paymentOption === 'payNow' ? theme.colors.textPrimary : theme.colors.textSecondary }
+                ]}>
+                  Pay Now
+                </Text>
+                <Text style={[styles.paymentOptionDesc, { color: theme.colors.textSecondary }]}>
+                  Pay the full amount now
+                </Text>
+              </View>
+            </View>
+            {paymentOption === 'payNow' && (
+              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+            )}
+          </TouchableOpacity>
+
+          {/* Pay on Site Option */}
+          <TouchableOpacity
+            style={[
+              styles.paymentOption,
+              paymentOption === 'payOnSite' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
+              { borderWidth: 2, borderColor: theme.colors.hint + '40', marginTop: 12 }
+            ]}
+            onPress={() => setPaymentOption('payOnSite')}
+            activeOpacity={0.7}
+          >
+            <View style={styles.paymentOptionContent}>
+              <Ionicons 
+                name="location-outline" 
+                size={24} 
+                color={paymentOption === 'payOnSite' ? theme.colors.primary : theme.colors.hint} 
+              />
+              <View style={styles.paymentOptionText}>
+                <Text style={[
+                  styles.paymentOptionTitle, 
+                  { color: paymentOption === 'payOnSite' ? theme.colors.textPrimary : theme.colors.textSecondary }
+                ]}>
+                  Pay on Site
+                </Text>
+                <Text style={[styles.paymentOptionDesc, { color: theme.colors.textSecondary }]}>
+                  Reserve now, pay owner at pickup
+                </Text>
+              </View>
+            </View>
+            {paymentOption === 'payOnSite' && (
+              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+            )}
+          </TouchableOpacity>
+
+          {paymentOption === 'payOnSite' && (
+            <View style={[styles.payOnSiteInfo, { backgroundColor: theme.colors.primary + '10', marginTop: 16 }]}>
+              <View style={styles.infoRow}>
+                <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
+                <Text style={[styles.infoText, { color: theme.colors.textPrimary }]}>
+                  Reserve your booking by paying the booking fee (platform commission). You'll pay the car owner directly when you pick up the car.
+                </Text>
+              </View>
+              <View style={[styles.bookingFeeRow, { borderTopColor: theme.colors.hint + '30' }]}>
+                <Text style={[styles.bookingFeeLabel, { color: theme.colors.textSecondary }]}>
+                  Booking Fee
+                </Text>
+                <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
+                  {formatCurrency(bookingFee)}
+                </Text>
+              </View>
+              <View style={[styles.balanceOnSiteRow, { backgroundColor: '#FF9800' + '15' }]}>
+                <View style={styles.balanceOnSiteLeft}>
+                  <Ionicons name="cash-outline" size={18} color="#FF9800" />
+                  <View style={styles.balanceOnSiteLabelContainer}>
+                    <Text style={[styles.balanceOnSiteLabel, { color: theme.colors.textPrimary }]}>
+                      Balance to Pay on Site
+                    </Text>
+                    <Text style={[styles.balanceOnSiteSubtext, { color: theme.colors.textSecondary }]}>
+                      Pay directly to owner at pickup
+                    </Text>
+                  </View>
+                </View>
+                <Text style={[styles.balanceOnSiteValue, { color: '#FF9800' }]}>
+                  {formatCurrency(balanceToPayOnSite)}
+                </Text>
+              </View>
+            </View>
+          )}
+        </Card>
+      </View>
+
+      {/* Separator Line */}
+      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
       {/* Cancellation Policy */}
       <View style={styles.section}>
@@ -397,7 +502,7 @@ const BookingConfirmationScreen = () => {
           </View>
           <TouchableOpacity
             style={styles.viewPolicyButton}
-            onPress={() => navigation.navigate('CancellationPolicy')}
+            onPress={() => navigation.navigate('CancellationPolicy', { fromBookingConfirmation: true })}
             activeOpacity={0.7}
           >
             <Text style={[styles.viewPolicyText, { color: theme.colors.primary }]}>
@@ -436,45 +541,30 @@ const BookingConfirmationScreen = () => {
                 Late returns may incur additional charges
               </Text>
             </View>
-            {bookingDetails?.payOnSite && (
-              <View style={styles.noteItem}>
-                <Text style={[styles.noteBullet, { color: '#FF9800' }]}>•</Text>
-                <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
-                  You'll pay the remaining balance directly to the car owner at pickup
-                </Text>
-              </View>
-            )}
+          {paymentOption === 'payOnSite' && (
+            <View style={styles.noteItem}>
+              <Text style={[styles.noteBullet, { color: '#FF9800' }]}>•</Text>
+              <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
+                You'll pay the remaining balance directly to the car owner at pickup
+              </Text>
+            </View>
+          )}
           </View>
         </View>
       </View>
 
-      {/* Terms and Conditions - Moved to bottom */}
+      {/* Terms Statement */}
       <View style={styles.section}>
         <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.termsRow}>
-            <Toggle
-              value={agreeToTerms}
-              onValueChange={setAgreeToTerms}
-            />
-            <View style={styles.termsTextContainer}>
-              <Text style={[styles.termsText, { color: theme.colors.textPrimary }]}>
-                I agree to the{' '}
-                <Text 
-                  style={[styles.termsLink, { color: theme.colors.primary }]}
-                  onPress={() => navigation.navigate('TermsAndConditions')}
-                >
-                  Terms and Conditions
-                </Text>
-                {' '}and{' '}
-                <Text 
-                  style={[styles.termsLink, { color: theme.colors.primary }]}
-                  onPress={() => navigation.navigate('CancellationPolicy')}
-                >
-                  Cancellation Policy
-                </Text>
-              </Text>
-            </View>
-          </View>
+          <Text style={[styles.termsStatement, { color: theme.colors.textSecondary }]}>
+            By proceeding, you agree to all{' '}
+            <Text 
+              style={[styles.termsLink, { color: theme.colors.primary }]}
+              onPress={() => navigation.navigate('CancellationPolicy')}
+            >
+              Terms and Conditions
+            </Text>
+          </Text>
         </Card>
       </View>
 
@@ -485,10 +575,10 @@ const BookingConfirmationScreen = () => {
     <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
       <View style={styles.bottomBarPrice}>
         <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
-          {bookingDetails?.payOnSite ? 'Booking Fee' : 'Total'}
+          {paymentOption === 'payOnSite' ? 'Booking Fee' : 'Total'}
         </Text>
         <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-          {formatCurrency(bookingDetails?.payOnSite ? bookingDetails?.bookingFee : bookingDetails?.totalRentalPrice || 0)}
+          {formatCurrency(paymentOption === 'payOnSite' ? bookingFee : totalRentalPrice)}
         </Text>
       </View>
       <Button
@@ -496,7 +586,6 @@ const BookingConfirmationScreen = () => {
         onPress={handleProceedToPayment}
         variant="primary"
         style={[styles.proceedButton, { backgroundColor: '#FF1577' }]}
-        disabled={!agreeToTerms}
       />
     </View>
     </View>
@@ -665,21 +754,106 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 16,
   },
-  termsRow: {
+  termsStatement: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+    textAlign: 'center',
+    paddingVertical: 8,
+  },
+  termsLink: {
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  paymentOptionsCard: {
+    padding: 20,
+    borderRadius: 16,
+  },
+  paymentOption: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: '#F8F9FA',
+  },
+  paymentOptionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
     gap: 12,
   },
-  termsTextContainer: {
+  paymentOptionText: {
     flex: 1,
   },
-  termsText: {
+  paymentOptionTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  paymentOptionDesc: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  payOnSiteInfo: {
+    padding: 16,
+    borderRadius: 12,
+    gap: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'flex-start',
+  },
+  infoText: {
+    flex: 1,
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 20,
   },
-  termsLink: {
+  bookingFeeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+  },
+  bookingFeeLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  bookingFeeValue: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+  },
+  balanceOnSiteRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  balanceOnSiteLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  balanceOnSiteLabelContainer: {
+    flex: 1,
+  },
+  balanceOnSiteLabel: {
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 2,
+  },
+  balanceOnSiteSubtext: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  balanceOnSiteValue: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
   },
   notesCard: {
     padding: 20,
@@ -800,6 +974,12 @@ const styles = StyleSheet.create({
   },
   proceedButton: {
     minWidth: 160,
+  },
+  sectionSeparator: {
+    height: 1,
+    borderTopWidth: 1,
+    marginHorizontal: 24,
+    marginTop: 24,
   },
 });
 

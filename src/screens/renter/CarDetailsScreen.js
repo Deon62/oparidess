@@ -7,6 +7,7 @@ import { Toggle } from '../../packages/components';
 import { WebView } from 'react-native-webview';
 import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 
 // Import car images
 const carImage1 = require('../../../assets/images/car1.webp');
@@ -43,13 +44,29 @@ const CarDetailsScreen = () => {
     location: 'Nairobi, Kenya',
   };
 
-  // Car images for carousel (up to 4)
-  const carImages = [
-    carData.image || carImage1,
-    carImage2,
-    carImage3,
-    carImage4,
-  ].slice(0, 4);
+  // Car images for carousel - use Supabase images if available, otherwise fallback to local images
+  let carImages = [];
+  let carImageUris = []; // For ImageRepository (needs string URIs)
+  
+  if (carData.imageKey) {
+    // Get images from Supabase using the imageKey (e.g., 'porsche', 'pickup', 'rolls', 'x')
+    const supabaseImages = getCarImages(carData.imageKey);
+    carImageUris = supabaseImages; // Keep as strings for ImageRepository
+    carImages = supabaseImages.map(uri => ({ uri })); // Convert to format React Native Image expects
+  } else if (carData.images && Array.isArray(carData.images)) {
+    // Use provided images array (already from Supabase)
+    carImageUris = carData.images; // Keep as strings
+    carImages = carData.images.map(uri => ({ uri }));
+  } else {
+    // Fallback to local images
+    carImages = [
+      carData.image || carImage1,
+      carImage2,
+      carImage3,
+      carImage4,
+    ].slice(0, 4);
+    carImageUris = carImages; // For local images, pass as-is (will be handled by ImageRepository)
+  }
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMoreRules, setShowMoreRules] = useState(false);
@@ -57,8 +74,8 @@ const CarDetailsScreen = () => {
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
 
-  // Video URL from Supabase
-  const carVideoUrl = 'https://gfckrsileizyfyawanvh.supabase.co/storage/v1/object/sign/carvideos/video1.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8wZmM4MzNhZS01OWNlLTQ5ODctYTljNC1iMGZiZmRmYzg4ZDQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjYXJ2aWRlb3MvdmlkZW8xLm1wNCIsImlhdCI6MTc2NDg3OTkwMywiZXhwIjoxNzk2NDE1OTAzfQ.AnhmEL2WaxyZok5aBgI1ImyijPpN8r0V2CONd2oxkZg';
+  // Video URL from Supabase - use from car data if available, otherwise default
+  const carVideoUrl = carData.videoUrl || getCarVideoUrl();
 
   // HTML for video player
   const videoHTML = `
@@ -525,7 +542,7 @@ const CarDetailsScreen = () => {
             style={styles.imageRepositoryCard}
             onPress={() => {
               navigation.navigate('ImageRepository', {
-                images: carImages,
+                images: carImageUris.length > 0 ? carImageUris : carImages,
                 title: `${carData.name} - Images`,
               });
             }}

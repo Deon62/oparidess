@@ -7,6 +7,7 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 import { parseCurrency } from '../../packages/utils/currency';
 import { useWishlist } from '../../packages/context/WishlistContext';
+import { getCarPrimaryImage, getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 // Location import - will use expo-location if available
 let Location = null;
 try {
@@ -313,23 +314,47 @@ const RenterHomeScreen = () => {
     'West Pokot',
   ];
 
-  // Map car images to IDs
-  const carImages = {
-    1: carImage1,
-    2: carImage2,
-    3: carImage3,
-    4: carImage4,
-  };
+  // Legacy carImages object - no longer used, all images now from Supabase
+  // Keeping for backward compatibility but will be overridden by Supabase images
+  const carImages = {};
 
+  // Car mapping to Supabase image names and metadata
   const carClasses = [
     {
       id: 'essential',
       name: 'Everyday Picks',
       description: 'Affordable and reliable rides for daily movement.',
       cars: [
-        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1, rating: 4.8, tag: 'Fuel Efficient' },
-        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2, rating: 4.7 },
-        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3, rating: 4.6 },
+        { 
+          id: 1, 
+          name: 'BMW X Series', 
+          price: 'KSh 15,000/day', 
+          seats: 5, 
+          fuel: 'Petrol', 
+          color: 'White', 
+          imageKey: 'x', // Maps to x.jpg, x1.jpg, x3.jpg, x4.jpg in Supabase
+          imageUri: getCarPrimaryImage('x'),
+          images: getCarImages('x'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Premium SUV',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 2, 
+          name: 'Audi A6', 
+          price: 'KSh 12,000/day', 
+          seats: 5, 
+          fuel: 'Petrol', 
+          color: 'Silver', 
+          imageKey: 'audi', // Maps to audi.jpg, audi1.jpg, audi2.jpg, audi3.jpg
+          imageUri: getCarPrimaryImage('audi'),
+          images: getCarImages('audi'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.7, 
+          tag: 'Executive',
+          transmission: 'Automatic',
+        },
       ],
     },
     {
@@ -337,9 +362,81 @@ const RenterHomeScreen = () => {
       name: 'Premium & Luxury',
       description: 'Elevated comfort for business or special events.',
       cars: [
-        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4, rating: 4.9, tag: 'Boss Vibe' },
-        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1, rating: 4.8 },
-        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2, rating: 4.7 },
+        { 
+          id: 4, 
+          name: 'Porsche 911', 
+          price: 'KSh 35,000/day', 
+          seats: 2, 
+          fuel: 'Petrol', 
+          color: 'Black', 
+          imageKey: 'porsche', // Maps to porsche.jpg, porsche1.jpg, porsche2.jpg, porsche3.jpg
+          imageUri: getCarPrimaryImage('porsche'),
+          images: getCarImages('porsche'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.9, 
+          tag: 'Boss Vibe',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 5, 
+          name: 'Mercedes E-Class', 
+          price: 'KSh 18,000/day', 
+          seats: 5, 
+          fuel: 'Petrol', 
+          color: 'Silver', 
+          imageKey: 'mercedes', // Maps to mercedes.jpg, mercedes1.jpg, mercedes2.jpg, mercedes3.jpg
+          imageUri: getCarPrimaryImage('mercedes'),
+          images: getCarImages('mercedes'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Luxury Sedan',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 6, 
+          name: 'BMW 5 Series', 
+          price: 'KSh 16,000/day', 
+          seats: 5, 
+          fuel: 'Petrol', 
+          color: 'Black', 
+          imageKey: 'i', // Maps to i.jpg, i1.jpg, i2.jpg, i3.jpg
+          imageUri: getCarPrimaryImage('i'),
+          images: getCarImages('i'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Premium',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 11, 
+          name: 'BMW M5 CSL', 
+          price: 'KSh 45,000/day', 
+          seats: 5, 
+          fuel: 'Petrol', 
+          color: 'Black', 
+          imageKey: 'bmw1', // Maps to bmw1.jpg, bmw2.jpg, bmw3.jpg, bmw4.jpg
+          imageUri: getCarPrimaryImage('bmw1'),
+          images: getCarImages('bmw1'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.9, 
+          tag: 'Track Ready',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 12, 
+          name: 'BMW M5 Hybrid', 
+          price: 'KSh 42,000/day', 
+          seats: 5, 
+          fuel: 'Hybrid', 
+          color: 'Blue', 
+          imageKey: 'm5', // Maps to m5.jpg, m51.jpg, m52.jpg, m53.jpg
+          imageUri: getCarPrimaryImage('m5'),
+          images: getCarImages('m5'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Eco Performance',
+          transmission: 'Automatic',
+        },
       ],
     },
     {
@@ -347,9 +444,66 @@ const RenterHomeScreen = () => {
       name: 'Elite Collection',
       description: 'Ultimate luxury and prestige for extraordinary moments.',
       cars: [
-        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3, rating: 5.0, tag: 'Royal Feel' },
-        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4, rating: 4.9 },
-        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1, rating: 5.0 },
+        { 
+          id: 7, 
+          name: 'Rolls Royce', 
+          price: 'KSh 80,000/day', 
+          seats: 4, 
+          fuel: 'Petrol', 
+          color: 'White', 
+          imageKey: 'rolls', // Maps to rolls.jpg, rolls1.jpg, rolls2.jpg, rolls3.jpg
+          imageUri: getCarPrimaryImage('rolls'),
+          images: getCarImages('rolls'),
+          videoUrl: getCarVideoUrl(),
+          rating: 5.0, 
+          tag: 'Royal Feel',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 8, 
+          name: 'Bentley Continental', 
+          price: 'KSh 65,000/day', 
+          seats: 4, 
+          fuel: 'Petrol', 
+          color: 'White', 
+          imageKey: 'bentley', // Maps to bentley.jpg, bentley1.jpg, bentley2.jpg, bentley3.jpg
+          imageUri: getCarPrimaryImage('bentley'),
+          images: getCarImages('bentley'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.9, 
+          tag: 'Ultra Luxury',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 9, 
+          name: 'Lamborghini Huracán', 
+          price: 'KSh 95,000/day', 
+          seats: 2, 
+          fuel: 'Petrol', 
+          color: 'Yellow', 
+          imageKey: 'lambo', // Maps to lambo.jpg, lambo1.jpg, lambo2.jpg, lambo3.jpg
+          imageUri: getCarPrimaryImage('lambo'),
+          images: getCarImages('lambo'),
+          videoUrl: getCarVideoUrl(),
+          rating: 5.0, 
+          tag: 'Supercar',
+          transmission: 'Automatic',
+        },
+        { 
+          id: 10, 
+          name: 'Tesla Model S', 
+          price: 'KSh 45,000/day', 
+          seats: 5, 
+          fuel: 'Electric', 
+          color: 'Red', 
+          imageKey: 'tesla', // Maps to tesla.jpg, tesla1.jpg, tesla2.jpg, tesla3.jpg
+          imageUri: getCarPrimaryImage('tesla'),
+          images: getCarImages('tesla'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.9, 
+          tag: 'Electric Luxury',
+          transmission: 'Automatic',
+        },
       ],
     },
   ];
@@ -361,9 +515,21 @@ const RenterHomeScreen = () => {
       name: 'Pickups',
       description: 'Rugged and versatile for work and adventure',
       vehicles: [
-        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', image: car12, rating: 4.9, tag: 'Best Offroader' },
-        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', image: car5, rating: 4.7 },
-        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', image: car6, rating: 4.6 },
+        { 
+          id: 101, 
+          name: 'Pickup Truck', 
+          price: 'KSh 8,000/day', 
+          seats: 5, 
+          fuel: 'Diesel', 
+          color: 'White', 
+          imageKey: 'pickup', // Maps to pickup.jpg, pickup1.jpg, pickup2.jpg, pickup3.jpg
+          imageUri: getCarPrimaryImage('pickup'),
+          images: getCarImages('pickup'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.9, 
+          tag: 'Best Offroader',
+          transmission: 'Manual',
+        },
       ],
     },
     {
@@ -371,9 +537,21 @@ const RenterHomeScreen = () => {
       name: 'Vans',
       description: 'Spacious and practical for groups and cargo',
       vehicles: [
-        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', image: car9, rating: 4.8, tag: 'Spacious' },
-        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', image: car10, rating: 4.7 },
-        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', image: car11, rating: 4.9 },
+        { 
+          id: 201, 
+          name: 'Van', 
+          price: 'KSh 10,000/day', 
+          seats: 14, 
+          fuel: 'Diesel', 
+          color: 'White', 
+          imageKey: 'van', // Maps to van.jpg, van1.jpg, van2.jpg, van3.jpg
+          imageUri: getCarPrimaryImage('van'),
+          images: getCarImages('van'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Spacious',
+          transmission: 'Manual',
+        },
       ],
     },
     {
@@ -381,9 +559,21 @@ const RenterHomeScreen = () => {
       name: 'Trucks',
       description: 'Heavy-duty vehicles for commercial transport',
       vehicles: [
-        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car7, rating: 4.8, tag: 'Heavy Duty' },
-        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car8, rating: 4.7 },
-        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car13, rating: 4.9 },
+        { 
+          id: 301, 
+          name: 'Truck', 
+          price: 'KSh 15,000/day', 
+          seats: 3, 
+          fuel: 'Diesel', 
+          color: 'White', 
+          imageKey: 'truck', // Maps to truck.jpg, truck1.jpg, truck2.jpg, truck3.jpg
+          imageUri: getCarPrimaryImage('truck'),
+          images: getCarImages('truck'),
+          videoUrl: getCarVideoUrl(),
+          rating: 4.8, 
+          tag: 'Heavy Duty',
+          transmission: 'Manual',
+        },
       ],
     },
   ];
@@ -2546,7 +2736,7 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                 <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
                   <View style={styles.carImageContainer}>
                     <Image 
-                      source={car.image || carImages[car.id] || carImage1} 
+                      source={car.imageUri ? { uri: car.imageUri } : (car.image ? { uri: car.image } : { uri: getCarPrimaryImage('x') })} 
                       style={styles.carImage}
                       resizeMode="cover"
                     />
@@ -2643,7 +2833,7 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                   <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
                     <View style={styles.carImageContainer}>
                       <Image 
-                        source={vehicle.image} 
+                        source={vehicle.imageUri ? { uri: vehicle.imageUri } : vehicle.image} 
                         style={styles.carImage}
                         resizeMode="cover"
                       />

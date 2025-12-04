@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert } from 'react-native';
+import React, { useLayoutEffect, useCallback, useState } from 'react';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -16,6 +16,7 @@ const ServiceBookingConfirmationScreen = () => {
   const service = bookingDetails?.service || {};
   const category = bookingDetails?.category || '';
   const categoryStr = (category || '').toLowerCase();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -57,19 +58,7 @@ const ServiceBookingConfirmationScreen = () => {
       );
     } else if (isRoadsideAssistance) {
       // For roadside assistance, send request (no payment)
-      Alert.alert(
-        'Request Sent',
-        'Your roadside assistance request has been sent successfully. Help is on the way!',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Navigate back to home
-              navigation.navigate('HomeTab', { screen: 'Home' });
-            },
-          },
-        ]
-      );
+      setShowSuccessModal(true);
     } else {
       // For other services, proceed to payment
       navigation.navigate('Payment', {
@@ -546,6 +535,77 @@ const ServiceBookingConfirmationScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Success Modal for Roadside Assistance */}
+      <Modal
+        visible={showSuccessModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setShowSuccessModal(false);
+          // Reset the HomeStack (current navigator) to only have RenterHome
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'RenterHome' }],
+            })
+          );
+          
+          // Then navigate to BookingsTab
+          const tabNavigator = navigation.getParent();
+          if (tabNavigator) {
+            setTimeout(() => {
+              tabNavigator.navigate('BookingsTab', {
+                screen: 'BookingsList',
+              });
+            }, 100);
+          }
+        }}
+        statusBarTranslucent={true}
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Request Sent!
+            </Text>
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              Your roadside assistance request has been sent successfully. Help is on the way!
+            </Text>
+            <TouchableOpacity
+              style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                setShowSuccessModal(false);
+                // Reset the HomeStack (current navigator) to only have RenterHome
+                // This clears ServiceBookingConfirmation, ServiceBooking, etc. from the stack
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'RenterHome' }],
+                  })
+                );
+                
+                // Then navigate to BookingsTab
+                const tabNavigator = navigation.getParent();
+                if (tabNavigator) {
+                  setTimeout(() => {
+                    tabNavigator.navigate('BookingsTab', {
+                      screen: 'BookingsList',
+                    });
+                  }, 100);
+                }
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.successModalButtonText, { color: theme.colors.white }]}>
+                View Bookings
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -666,6 +726,62 @@ const styles = StyleSheet.create({
   proceedButtonText: {
     fontSize: 16,
     fontFamily: 'Nunito_700Bold',
+  },
+  // Success Modal styles
+  successModalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 20,
+  },
+  successModalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+  },
+  successIconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  successModalTitle: {
+    fontSize: 24,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successModalMessage: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  successModalButton: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successModalButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

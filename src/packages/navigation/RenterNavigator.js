@@ -271,7 +271,9 @@ const HomeStack = () => {
         component={UploadDocsScreen}
         options={{ 
           title: 'Upload Documents',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 
@@ -703,7 +705,9 @@ const ProfileStack = () => {
         component={UploadDocsScreen}
         options={{ 
           title: 'Upload Documents',
-          headerShown: true 
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         }}
       />
       <Stack.Screen 

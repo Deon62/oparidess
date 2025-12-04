@@ -11,11 +11,8 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // Import profile image for host
 const profileImage = require('../../../assets/logo/profile.jpg');
-// Import car images
-const carImage1 = require('../../../assets/images/car1.webp');
-const carImage2 = require('../../../assets/images/car2.webp');
-const carImage3 = require('../../../assets/images/car3.webp');
-const carImage4 = require('../../../assets/images/car4.webp');
+// Car images now loaded from Supabase
+import { getCarImages } from '../../packages/utils/supabaseImages';
 
 const BookingTrackingScreen = () => {
   const theme = useTheme();
@@ -24,13 +21,9 @@ const BookingTrackingScreen = () => {
   const insets = useSafeAreaInsets();
   const { bookingDetails, paymentMethod, totalPrice } = route.params || {};
 
-  // Car images for repository (up to 4)
-  const carImages = [
-    bookingDetails?.car?.image || carImage1,
-    carImage2,
-    carImage3,
-    carImage4,
-  ].slice(0, 4);
+  // Car images for repository (up to 4) - use Supabase images
+  const defaultImages = getCarImages(bookingDetails?.car?.imageKey || 'x');
+  const carImages = bookingDetails?.car?.images || defaultImages;
 
   const [daysUntilPickup, setDaysUntilPickup] = useState(0);
   const [hoursUntilPickup, setHoursUntilPickup] = useState(0);

@@ -7,11 +7,8 @@ import { Button } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// Import car images
-const carImage1 = require('../../../assets/images/car1.webp');
-const carImage2 = require('../../../assets/images/car2.webp');
-const carImage3 = require('../../../assets/images/car3.webp');
-const carImage4 = require('../../../assets/images/car4.webp');
+// Car images now loaded from Supabase
+import { getCarImages } from '../../packages/utils/supabaseImages';
 
 const PendingRentalDetailsScreen = () => {
   const theme = useTheme();
@@ -20,13 +17,9 @@ const PendingRentalDetailsScreen = () => {
   const insets = useSafeAreaInsets();
   const { booking } = route.params || {};
 
-  // Car images for repository (up to 4)
-  const carImages = [
-    booking?.image || carImage1,
-    carImage2,
-    carImage3,
-    carImage4,
-  ].slice(0, 4);
+  // Car images for repository (up to 4) - use Supabase images
+  const defaultImages = getCarImages(booking?.imageKey || 'x');
+  const carImages = booking?.images || defaultImages;
 
   // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {

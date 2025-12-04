@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -39,9 +39,6 @@ const LandingScreen = () => {
     navigation.navigate('Login');
   };
 
-  const handleCarOwnerRegister = () => {
-    navigation.navigate('Signup', { userType: 'owner' });
-  };
 
   return (
     <LinearGradient
@@ -111,21 +108,6 @@ const LandingScreen = () => {
         />
       </View>
 
-      {/* Car Owner Register Link */}
-      <View style={styles.carOwnerContainer}>
-        <TouchableOpacity
-          onPress={handleCarOwnerRegister}
-          activeOpacity={0.7}
-          style={styles.carOwnerLinkContainer}
-        >
-          <Text style={[styles.carOwnerText, { color: theme.colors.textSecondary }]}>
-            List your car?{' '}
-            <Text style={[styles.carOwnerLink, { color: theme.colors.primary }]}>
-              Become a Car Owner
-            </Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
     </ScrollView>
     </LinearGradient>
   );
@@ -140,7 +122,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    paddingBottom: 40,
+    justifyContent: 'space-between',
   },
   logoContainer: {
     width: '100%',
@@ -157,7 +139,7 @@ const styles = StyleSheet.create({
   },
   taglineContainer: {
     position: 'absolute',
-    top: 360,
+    top: 420,
     left: 0,
     right: 0,
     paddingHorizontal: 24,
@@ -222,34 +204,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingHorizontal: 24,
     paddingTop: 32,
+    paddingBottom: 40,
     gap: 14,
-    marginTop: 20,
   },
   primaryButton: {
     marginBottom: 0,
   },
   secondaryButton: {
     marginBottom: 0,
-  },
-  carOwnerContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 40,
-    alignItems: 'center',
-  },
-  carOwnerLinkContainer: {
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  carOwnerText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
-  },
-  carOwnerLink: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

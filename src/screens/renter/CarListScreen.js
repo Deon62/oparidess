@@ -5,11 +5,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 
-// Import car images
-const carImage1 = require('../../../assets/images/car1.webp');
-const carImage2 = require('../../../assets/images/car2.webp');
-const carImage3 = require('../../../assets/images/car3.webp');
-const carImage4 = require('../../../assets/images/car4.webp');
+// Car images now loaded from Supabase
+import { getCarPrimaryImage } from '../../packages/utils/supabaseImages';
 
 const CarListScreen = () => {
   const theme = useTheme();
@@ -31,7 +28,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'White',
         transmission: 'Automatic',
-        image: carImage1,
+        imageUri: getCarPrimaryImage('x'),
+        imageKey: 'x',
       },
       {
         id: 2,
@@ -41,7 +39,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Silver',
         transmission: 'Automatic',
-        image: carImage2,
+        imageUri: getCarPrimaryImage('audi'),
+        imageKey: 'audi',
       },
       {
         id: 3,
@@ -51,7 +50,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Black',
         transmission: 'Manual',
-        image: carImage3,
+        imageUri: getCarPrimaryImage('x'),
+        imageKey: 'x',
       },
       {
         id: 10,
@@ -61,7 +61,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Blue',
         transmission: 'Automatic',
-        image: carImage4,
+        imageUri: getCarPrimaryImage('audi'),
+        imageKey: 'audi',
       },
     ],
     executive: [
@@ -73,7 +74,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Black',
         transmission: 'Automatic',
-        image: carImage4,
+        imageUri: getCarPrimaryImage('i'),
+        imageKey: 'i',
       },
       {
         id: 5,
@@ -83,7 +85,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Silver',
         transmission: 'Automatic',
-        image: carImage1,
+        imageUri: getCarPrimaryImage('mercedes'),
+        imageKey: 'mercedes',
       },
       {
         id: 6,
@@ -93,7 +96,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'White',
         transmission: 'Automatic',
-        image: carImage2,
+        imageUri: getCarPrimaryImage('audi'),
+        imageKey: 'audi',
       },
       {
         id: 11,
@@ -103,7 +107,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Black',
         transmission: 'Automatic',
-        image: carImage3,
+        imageUri: getCarPrimaryImage('porsche'),
+        imageKey: 'porsche',
       },
     ],
     signature: [
@@ -115,7 +120,8 @@ const CarListScreen = () => {
         fuel: 'Electric',
         color: 'Red',
         transmission: 'Automatic',
-        image: carImage3,
+        imageUri: getCarPrimaryImage('tesla'),
+        imageKey: 'tesla',
       },
       {
         id: 8,
@@ -125,7 +131,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Black',
         transmission: 'Manual',
-        image: carImage4,
+        imageUri: getCarPrimaryImage('porsche'),
+        imageKey: 'porsche',
       },
       {
         id: 9,
@@ -135,7 +142,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'White',
         transmission: 'Automatic',
-        image: carImage1,
+        imageUri: getCarPrimaryImage('bentley'),
+        imageKey: 'bentley',
       },
       {
         id: 12,
@@ -145,7 +153,8 @@ const CarListScreen = () => {
         fuel: 'Petrol',
         color: 'Yellow',
         transmission: 'Automatic',
-        image: carImage2,
+        imageUri: getCarPrimaryImage('lambo'),
+        imageKey: 'lambo',
       },
     ],
   };
@@ -213,7 +222,7 @@ const CarListScreen = () => {
             >
               <Card style={styles.carCard}>
                 <View style={styles.carImageContainer}>
-                  <Image source={car.image} style={styles.carImage} resizeMode="cover" />
+                  <Image source={car.imageUri ? { uri: car.imageUri } : { uri: getCarPrimaryImage('x') }} style={styles.carImage} resizeMode="cover" />
                   <View style={styles.carActions}>
                     <TouchableOpacity
                       onPress={(e) => {

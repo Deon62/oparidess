@@ -7,20 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '../../packages/components';
 import { useWishlist } from '../../packages/context/WishlistContext';
 
-// Import car images
-const carImage1 = require('../../../assets/images/car1.webp');
-const carImage2 = require('../../../assets/images/car2.webp');
-const carImage3 = require('../../../assets/images/car3.webp');
-const carImage4 = require('../../../assets/images/car4.webp');
-const car5 = require('../../../assets/images/car5.webp');
-const car6 = require('../../../assets/images/car6.webp');
-const car7 = require('../../../assets/images/car7.webp');
-const car8 = require('../../../assets/images/car8.webp');
-const car9 = require('../../../assets/images/car9.webp');
-const car10 = require('../../../assets/images/car10.webp');
-const car11 = require('../../../assets/images/car11.webp');
-const car12 = require('../../../assets/images/car12.webp');
-const car13 = require('../../../assets/images/car13.webp');
+// Car images now loaded from Supabase
+import { getCarPrimaryImage, getCarImages } from '../../packages/utils/supabaseImages';
 
 // Import destination images
 const mombasaImage = require('../../../assets/images/mombasa.webp');
@@ -75,27 +63,27 @@ const WishlistScreen = () => {
       id: 'essential',
       name: 'Essential',
       cars: [
-        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage1 },
-        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage2 },
-        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage3 },
+        { id: 1, name: 'Toyota Corolla', price: 'KSh 4,500/day', seats: 5, fuel: 'Petrol', color: 'White', imageUri: getCarPrimaryImage('x'), imageKey: 'x' },
+        { id: 2, name: 'Honda Civic', price: 'KSh 4,800/day', seats: 5, fuel: 'Petrol', color: 'Silver', imageUri: getCarPrimaryImage('audi'), imageKey: 'audi' },
+        { id: 3, name: 'Nissan Sentra', price: 'KSh 4,200/day', seats: 5, fuel: 'Petrol', color: 'Black', imageUri: getCarPrimaryImage('x'), imageKey: 'x' },
       ],
     },
     {
       id: 'executive',
       name: 'Executive',
       cars: [
-        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', image: carImage1 },
-        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', image: carImage2 },
+        { id: 4, name: 'BMW 5 Series', price: 'KSh 12,000/day', seats: 5, fuel: 'Petrol', color: 'Black', imageUri: getCarPrimaryImage('i'), imageKey: 'i' },
+        { id: 5, name: 'Mercedes E-Class', price: 'KSh 12,500/day', seats: 5, fuel: 'Petrol', color: 'Silver', imageUri: getCarPrimaryImage('mercedes'), imageKey: 'mercedes' },
+        { id: 6, name: 'Audi A6', price: 'KSh 11,800/day', seats: 5, fuel: 'Petrol', color: 'White', imageUri: getCarPrimaryImage('audi'), imageKey: 'audi' },
       ],
     },
     {
       id: 'signature',
       name: 'Signature',
       cars: [
-        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', image: carImage3 },
-        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', image: carImage4 },
-        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', image: carImage1 },
+        { id: 7, name: 'Tesla Model S', price: 'KSh 20,000/day', seats: 5, fuel: 'Electric', color: 'Red', imageUri: getCarPrimaryImage('tesla'), imageKey: 'tesla' },
+        { id: 8, name: 'Porsche 911', price: 'KSh 35,000/day', seats: 2, fuel: 'Petrol', color: 'Black', imageUri: getCarPrimaryImage('porsche'), imageKey: 'porsche' },
+        { id: 9, name: 'Bentley Continental', price: 'KSh 45,000/day', seats: 4, fuel: 'Petrol', color: 'White', imageUri: getCarPrimaryImage('bentley'), imageKey: 'bentley' },
       ],
     },
   ];
@@ -105,27 +93,27 @@ const WishlistScreen = () => {
       id: 'pickups',
       name: 'Pickups',
       vehicles: [
-        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', image: car12 },
-        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', image: car5 },
-        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', image: car6 },
+        { id: 101, name: 'Toyota Hilux', price: 'KSh 8,000/day', seats: 5, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('pickup'), imageKey: 'pickup' },
+        { id: 102, name: 'Ford Ranger', price: 'KSh 8,500/day', seats: 5, fuel: 'Diesel', color: 'Black', imageUri: getCarPrimaryImage('pickup'), imageKey: 'pickup' },
+        { id: 103, name: 'Nissan Navara', price: 'KSh 7,500/day', seats: 5, fuel: 'Diesel', color: 'Silver', imageUri: getCarPrimaryImage('pickup'), imageKey: 'pickup' },
       ],
     },
     {
       id: 'vans',
       name: 'Vans',
       vehicles: [
-        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', image: car9 },
-        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', image: car10 },
-        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', image: car11 },
+        { id: 201, name: 'Toyota Hiace', price: 'KSh 10,000/day', seats: 14, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('van'), imageKey: 'van' },
+        { id: 202, name: 'Nissan Urvan', price: 'KSh 9,500/day', seats: 15, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('van'), imageKey: 'van' },
+        { id: 203, name: 'Mercedes Sprinter', price: 'KSh 12,000/day', seats: 16, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('van'), imageKey: 'van' },
       ],
     },
     {
       id: 'trucks',
       name: 'Trucks',
       vehicles: [
-        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car7 },
-        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car8 },
-        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', image: car13 },
+        { id: 301, name: 'Isuzu N-Series', price: 'KSh 15,000/day', seats: 3, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('truck'), imageKey: 'truck' },
+        { id: 302, name: 'Mitsubishi Fuso', price: 'KSh 16,000/day', seats: 3, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('truck'), imageKey: 'truck' },
+        { id: 303, name: 'Hino Truck', price: 'KSh 18,000/day', seats: 3, fuel: 'Diesel', color: 'White', imageUri: getCarPrimaryImage('truck'), imageKey: 'truck' },
       ],
     },
   ];
@@ -304,7 +292,7 @@ const WishlistScreen = () => {
                   >
                     <Card style={styles.carCard}>
                       <View style={styles.carImageContainer}>
-                        <Image source={vehicle.image} style={styles.carImage} resizeMode="cover" />
+                        <Image source={vehicle.imageUri ? { uri: vehicle.imageUri } : { uri: getCarPrimaryImage('x') }} style={styles.carImage} resizeMode="cover" />
                         <TouchableOpacity
                           onPress={(e) => {
                             e.stopPropagation();

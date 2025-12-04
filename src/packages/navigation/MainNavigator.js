@@ -5,7 +5,6 @@ import { useTheme } from '../theme/ThemeProvider';
 
 import AuthNavigator from './AuthNavigator';
 import RenterNavigator from './RenterNavigator';
-import OwnerNavigator from './OwnerNavigator';
 
 const MainNavigator = () => {
   const { isAuthenticated, userType, isLoading } = useUser();
@@ -28,8 +27,6 @@ const MainNavigator = () => {
   switch (userType) {
     case 'renter':
       return <RenterNavigator />;
-    case 'owner':
-      return <OwnerNavigator />;
     default:
       return <AuthNavigator />;
   }

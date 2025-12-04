@@ -9,11 +9,7 @@ import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 
-// Import car images
-const carImage1 = require('../../../assets/images/car1.webp');
-const carImage2 = require('../../../assets/images/car2.webp');
-const carImage3 = require('../../../assets/images/car3.webp');
-const carImage4 = require('../../../assets/images/car4.webp');
+// Car images now loaded from Supabase
 
 // Import profile image
 const profileImage = require('../../../assets/logo/profile.jpg');
@@ -36,7 +32,7 @@ const CarDetailsScreen = () => {
     fuel: 'Petrol',
     color: 'White',
     transmission: 'Automatic', // 'Automatic' or 'Manual'
-    image: carImage1,
+    imageUri: getCarPrimaryImage('x'),
     description: 'A reliable and fuel-efficient sedan perfect for city driving and road trips. This well-maintained Toyota Corolla offers comfort, safety, and excellent value for your rental needs.',
     rating: 4.8,
     tag: 'Fuel Efficient',
@@ -58,13 +54,9 @@ const CarDetailsScreen = () => {
     carImageUris = carData.images; // Keep as strings
     carImages = carData.images.map(uri => ({ uri }));
   } else {
-    // Fallback to local images
-    carImages = [
-      carData.image || carImage1,
-      carImage2,
-      carImage3,
-      carImage4,
-    ].slice(0, 4);
+    // Fallback to Supabase images (use x car as default)
+    const fallbackImages = getCarImages('x');
+    carImages = fallbackImages.map(uri => ({ uri }));
     carImageUris = carImages; // For local images, pass as-is (will be handled by ImageRepository)
   }
 

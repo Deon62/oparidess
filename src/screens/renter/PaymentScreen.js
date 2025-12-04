@@ -210,7 +210,7 @@ const PaymentScreen = () => {
         const bookingToSave = {
           id: bookingDetails.bookingId || `BK-${Date.now()}`,
           carName: bookingDetails.car?.name || 'Car',
-          image: bookingDetails.car?.image || require('../../../assets/images/car1.webp'),
+          imageUri: bookingDetails.car?.imageUri || require('../../packages/utils/supabaseImages').getCarPrimaryImage('x'),
           date: bookingDetails.pickupDate || new Date().toISOString(),
           pickupDate: bookingDetails.pickupDate || new Date().toISOString(),
           dropoffDate: bookingDetails.dropoffDate || new Date().toISOString(),

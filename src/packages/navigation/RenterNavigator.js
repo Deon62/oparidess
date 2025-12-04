@@ -772,6 +772,30 @@ const ProfileStack = () => {
           statusBarBackgroundColor: 'transparent',
         }}
       />
+      <Stack.Screen 
+        name="ServiceProviderStep1" 
+        component={ServiceProviderStep1Screen}
+        options={{ 
+          title: 'Business Information',
+          headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceProviderStep2" 
+        component={ServiceProviderStep2Screen}
+        options={{ 
+          title: 'Documents & Verification',
+          headerShown: false 
+        }}
+      />
+      <Stack.Screen 
+        name="ServiceProviderStep3" 
+        component={ServiceProviderStep3Screen}
+        options={{ 
+          title: 'Review & Submit',
+          headerShown: false 
+        }}
+      />
     </Stack.Navigator>
   );
 };

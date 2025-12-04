@@ -1,4 +1,5 @@
 import React from 'react';
+import { Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -733,6 +734,31 @@ const RenterNavigator = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
+  // Calculate safe bottom padding for Android devices with button navigation bars
+  // Some devices (like Tecno) may report insets.bottom as 0 or very small
+  // even when they have button navigation bars that overlap the app
+  const getSafeBottomPadding = () => {
+    if (Platform.OS === 'android') {
+      // Minimum padding for button navigation bars (typically 48-56px)
+      const MIN_BOTTOM_PADDING = 48; // Standard Android navigation bar height
+      const MIN_BOTTOM_INSET_THRESHOLD = 8; // Threshold below which we assume button navigation
+      
+      // If insets.bottom is very small or zero (likely button navigation on some devices),
+      // use minimum padding to prevent overlap
+      if (insets.bottom < MIN_BOTTOM_INSET_THRESHOLD) {
+        return MIN_BOTTOM_PADDING;
+      }
+      // If insets.bottom is already sufficient (like on Samsung with proper safe area),
+      // use it as-is with a small minimum to ensure readability
+      return Math.max(insets.bottom, 4);
+    }
+    // For iOS, use the actual inset
+    return Math.max(insets.bottom, 4);
+  };
+
+  const safeBottomPadding = getSafeBottomPadding();
+  const tabBarHeight = 58 + safeBottomPadding;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -775,8 +801,8 @@ const RenterNavigator = () => {
           shadowOffset: { width: 0, height: -3 },
           shadowOpacity: 0.12,
           shadowRadius: 12,
-          height: 58 + insets.bottom,
-          paddingBottom: Math.max(insets.bottom, 4),
+          height: tabBarHeight,
+          paddingBottom: safeBottomPadding,
           paddingTop: 2,
         },
         headerShown: false,

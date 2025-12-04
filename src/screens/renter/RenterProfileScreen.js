@@ -181,9 +181,7 @@ const RenterProfileScreen = () => {
   };
 
   const handleReferFriends = () => {
-    navigation.navigate('HomeTab', {
-      screen: 'ReferFriends',
-    });
+    navigation.navigate('ReferFriends');
   };
 
   const handleLogout = () => {

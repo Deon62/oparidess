@@ -748,6 +748,14 @@ const ProfileStack = () => {
           headerShown: false 
         }}
       />
+      <Stack.Screen 
+        name="ReferFriends" 
+        component={ReferFriendsScreen}
+        options={{ 
+          title: 'Refer Friends',
+          headerShown: true 
+        }}
+      />
     </Stack.Navigator>
   );
 };

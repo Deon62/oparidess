@@ -5,8 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const opaLogo = require('../../../assets/logo/logo.webp');
-
 const MessagesScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -38,14 +36,6 @@ const MessagesScreen = () => {
     });
   };
 
-  const handleOpaPress = () => {
-    navigation.navigate('Chat', { 
-      chatId: 'opa-official',
-      userName: 'Opa Support',
-      userAvatar: opaLogo,
-      isOfficial: true,
-    });
-  };
 
   return (
     <ScrollView
@@ -53,38 +43,6 @@ const MessagesScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {/* Pinned Opa Conversation */}
-      <TouchableOpacity
-        onPress={handleOpaPress}
-        activeOpacity={0.7}
-        style={[styles.messageItem, styles.pinnedMessage]}
-      >
-        <View style={styles.avatarContainer}>
-          <Image source={opaLogo} style={styles.avatar} resizeMode="cover" />
-          <View style={[styles.onlineIndicator, { backgroundColor: '#4CAF50' }]} />
-        </View>
-        <View style={styles.messageContent}>
-          <View style={styles.messageHeader}>
-            <Text style={[styles.messageName, { color: theme.colors.textPrimary }]}>
-              Opa Support
-            </Text>
-            <Ionicons name="pin" size={16} color={theme.colors.primary} style={styles.pinIcon} />
-          </View>
-          <View style={styles.messageFooter}>
-            <Text
-              style={[styles.lastMessage, { color: theme.colors.textSecondary }]}
-              numberOfLines={1}
-            >
-              Official support channel - We're here to help!
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      {/* Divider */}
-      <View style={[styles.divider, { backgroundColor: theme.colors.hint }]} />
-
-      {/* Custom Messages */}
       {messages.length > 0 ? (
         messages.map((message) => (
           <TouchableOpacity
@@ -255,19 +213,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
     borderWidth: 2,
     borderColor: '#FFFFFF',
-  },
-  pinnedMessage: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  pinIcon: {
-    marginLeft: 8,
-  },
-  divider: {
-    height: 1,
-    marginVertical: 8,
-    opacity: 0.2,
   },
   emptyState: {
     alignItems: 'center',

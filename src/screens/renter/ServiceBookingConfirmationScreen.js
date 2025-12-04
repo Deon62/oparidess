@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useCallback, useState } from 'react';
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -17,6 +17,7 @@ const ServiceBookingConfirmationScreen = () => {
   const category = bookingDetails?.category || '';
   const categoryStr = (category || '').toLowerCase();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showDriverSuccessModal, setShowDriverSuccessModal] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,19 +44,7 @@ const ServiceBookingConfirmationScreen = () => {
     
     if (isDriverService) {
       // For drivers, send request (no payment)
-      Alert.alert(
-        'Request Sent',
-        'Your driver request has been sent successfully. The service provider will contact you soon.',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              // Navigate back to home or bookings
-              navigation.navigate('HomeTab', { screen: 'Home' });
-            },
-          },
-        ]
-      );
+      setShowDriverSuccessModal(true);
     } else if (isRoadsideAssistance) {
       // For roadside assistance, send request (no payment)
       setShowSuccessModal(true);
@@ -588,6 +577,77 @@ const ServiceBookingConfirmationScreen = () => {
                 );
                 
                 // Then navigate to BookingsTab
+                const tabNavigator = navigation.getParent();
+                if (tabNavigator) {
+                  setTimeout(() => {
+                    tabNavigator.navigate('BookingsTab', {
+                      screen: 'BookingsList',
+                    });
+                  }, 100);
+                }
+              }}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.successModalButtonText, { color: theme.colors.white }]}>
+                View Bookings
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Success Modal for Driver Service */}
+      <Modal
+        visible={showDriverSuccessModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setShowDriverSuccessModal(false);
+          // Reset the HomeStack (current navigator) to only have RenterHome
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'RenterHome' }],
+            })
+          );
+          
+          // Then navigate to BookingsTab
+          const tabNavigator = navigation.getParent();
+          if (tabNavigator) {
+            setTimeout(() => {
+              tabNavigator.navigate('BookingsTab', {
+                screen: 'BookingsList',
+              });
+            }, 100);
+          }
+        }}
+        statusBarTranslucent={true}
+      >
+        <View style={styles.successModalOverlay}>
+          <View style={[styles.successModalContent, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.successIconCircle, { backgroundColor: '#4CAF50' + '20' }]}>
+              <Ionicons name="checkmark-circle" size={80} color="#4CAF50" />
+            </View>
+            <Text style={[styles.successModalTitle, { color: theme.colors.textPrimary }]}>
+              Request Sent!
+            </Text>
+            <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
+              Your driver request has been sent successfully. The service provider will contact you soon.
+            </Text>
+            <TouchableOpacity
+              style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                setShowDriverSuccessModal(false);
+                // Reset the HomeStack (current navigator) to only have RenterHome
+                // This clears ServiceBookingConfirmation, ServiceBooking, etc. from the stack
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'RenterHome' }],
+                  })
+                );
+                
+                // Then navigate to BookingsTab (Past Rentals page)
                 const tabNavigator = navigation.getParent();
                 if (tabNavigator) {
                   setTimeout(() => {

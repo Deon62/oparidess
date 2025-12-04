@@ -548,6 +548,8 @@ const MessagesStack = () => {
           title: route.params?.userName || 'Chat',
           headerShown: true,
           animation: 'simple_push',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
         })}
       />
     </Stack.Navigator>

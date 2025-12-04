@@ -10,10 +10,11 @@ import {
   Platform,
   Keyboard,
   Animated,
+  StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
 const ChatScreen = () => {
@@ -136,6 +137,16 @@ const ChatScreen = () => {
     });
   }, [navigation, theme]);
 
+  // Ensure StatusBar is dark when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content', true);
+      return () => {
+        // StatusBar will be restored by other screens
+      };
+    }, [])
+  );
+
   const renderMessage = ({ item }) => (
     <View
       style={[
@@ -175,9 +186,11 @@ const ChatScreen = () => {
   const InputContainer = Platform.OS === 'android' ? Animated.View : View;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Messages List */}
-      <FlatList
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        {/* Messages List */}
+        <FlatList
         ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
@@ -324,7 +337,8 @@ const ChatScreen = () => {
           </View>
         </KeyboardAvoidingView>
       )}
-    </View>
+      </View>
+    </>
   );
 };
 

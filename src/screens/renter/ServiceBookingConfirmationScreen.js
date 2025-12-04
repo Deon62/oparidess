@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useCallback, useState } from 'react';
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Platform, Modal, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -35,6 +35,16 @@ const ServiceBookingConfirmationScreen = () => {
         // Don't restore here to prevent flickering
       };
     }, [navigation])
+  );
+
+  // Ensure StatusBar is dark when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      StatusBar.setBarStyle('dark-content', true);
+      return () => {
+        // StatusBar will be restored by other screens
+      };
+    }, [])
   );
 
   const handleProceedToPayment = () => {
@@ -434,8 +444,10 @@ const ServiceBookingConfirmationScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 100 }]}
         showsVerticalScrollIndicator={false}
@@ -666,7 +678,8 @@ const ServiceBookingConfirmationScreen = () => {
           </View>
         </View>
       </Modal>
-    </View>
+      </View>
+    </>
   );
 };
 

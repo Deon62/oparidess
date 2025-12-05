@@ -6,6 +6,7 @@ import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, Button } from '../../packages/components';
 import { useBookings } from '../../packages/context/BookingsContext';
+import { getCarPrimaryImage } from '../../packages/utils/supabaseImages';
 
 const BookingsListScreen = () => {
   const theme = useTheme();
@@ -229,11 +230,21 @@ const BookingsListScreen = () => {
               disabled={booking.status !== 'active' && booking.status !== 'completed' && booking.status !== 'pending'}
             >
               <View style={[styles.bookingCard, { backgroundColor: theme.colors.background }]}>
-                {booking.image && (
-                  <View style={styles.bookingImageContainer}>
-                    <Image source={booking.image} style={styles.bookingImage} resizeMode="cover" />
-                  </View>
-                )}
+                <View style={styles.bookingImageContainer}>
+                  <Image 
+                    source={
+                      booking.image 
+                        ? booking.image 
+                        : booking.imageUri 
+                        ? { uri: booking.imageUri }
+                        : booking.imageKey
+                        ? { uri: getCarPrimaryImage(booking.imageKey) }
+                        : { uri: getCarPrimaryImage('x') }
+                    } 
+                    style={styles.bookingImage} 
+                    resizeMode="cover" 
+                  />
+                </View>
                 <View style={styles.bookingContent}>
                   <View style={styles.bookingTitleRow}>
                     <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>

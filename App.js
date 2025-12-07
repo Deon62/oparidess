@@ -5,12 +5,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-google-fonts/nunito';
+import NetInfo from '@react-native-community/netinfo';
 
 import { ThemeProvider, useTheme } from './src/packages/theme/ThemeProvider';
 import { UserProvider } from './src/packages/context/UserContext';
 import { WishlistProvider } from './src/packages/context/WishlistContext';
 import { BookingsProvider } from './src/packages/context/BookingsContext';
 import MainNavigator from './src/packages/navigation/MainNavigator';
+import OfflineScreen from './src/screens/shared/OfflineScreen';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -43,6 +45,28 @@ export default function App() {
 
 const AppContent = () => {
   const theme = useTheme();
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    // Check initial network state
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected ?? false);
+    });
+
+    // Also check immediately
+    NetInfo.fetch().then(state => {
+      setIsConnected(state.isConnected ?? false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  // Show offline screen when disconnected
+  if (!isConnected) {
+    return <OfflineScreen />;
+  }
 
   return (
     <UserProvider>

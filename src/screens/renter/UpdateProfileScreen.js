@@ -43,6 +43,7 @@ const UpdateProfileScreen = () => {
   const [showDlIssueDateModal, setShowDlIssueDateModal] = useState(false);
   const [showDlExpiryDateModal, setShowDlExpiryDateModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDlSectionExpanded, setIsDlSectionExpanded] = useState(false);
 
   // Set header title
   useLayoutEffect(() => {
@@ -436,102 +437,127 @@ const UpdateProfileScreen = () => {
 
       {/* Driving License Information Section */}
       <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          Driving License Information
-        </Text>
-        <Text style={[styles.sectionSubtitle, { color: theme.colors.textSecondary }]}>
-          Optional - for self-drive car rental
-        </Text>
+        <TouchableOpacity
+          style={styles.dlHeader}
+          onPress={() => setIsDlSectionExpanded(!isDlSectionExpanded)}
+          activeOpacity={0.7}
+        >
+          <View style={styles.dlHeaderContent}>
+            <Ionicons 
+              name="card-outline" 
+              size={20} 
+              color={theme.colors.primary} 
+              style={styles.dlHeaderIcon}
+            />
+            <View style={styles.dlHeaderTextContainer}>
+              <Text style={[styles.dlHeaderTitle, { color: theme.colors.primary }]}>
+                Add Driving License Information
+              </Text>
+              <Text style={[styles.dlHeaderSubtitle, { color: theme.colors.textSecondary }]}>
+                Optional - for self-drive car rental
+              </Text>
+            </View>
+          </View>
+          <Ionicons 
+            name={isDlSectionExpanded ? "chevron-up-outline" : "chevron-down-outline"} 
+            size={24} 
+            color={theme.colors.primary} 
+          />
+        </TouchableOpacity>
 
-        <Input
-          label="Driving License Number"
-          placeholder="Enter your driving license number"
-          value={formData.dl_number}
-          onChangeText={(value) => updateField('dl_number', value)}
-          error={errors.dl_number}
-        />
+        {isDlSectionExpanded && (
+          <>
+            <Input
+              label="Driving License Number"
+              placeholder="Enter your driving license number"
+              value={formData.dl_number}
+              onChangeText={(value) => updateField('dl_number', value)}
+              error={errors.dl_number}
+            />
 
-        <Input
-          label="Driving License Category"
-          placeholder="e.g., B, C, D"
-          value={formData.dl_category}
-          onChangeText={(value) => updateField('dl_category', value)}
-          error={errors.dl_category}
-        />
+            <Input
+              label="Driving License Category"
+              placeholder="e.g., B, C, D"
+              value={formData.dl_category}
+              onChangeText={(value) => updateField('dl_category', value)}
+              error={errors.dl_category}
+            />
 
-        {/* DL Issue Date */}
-        <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Driving License Issue Date
-          </Text>
-          <TouchableOpacity
-            style={[
-              styles.selectInput,
-              {
-                borderColor: errors.dl_issue_date
-                  ? '#FF3B30'
-                  : '#E0E0E0',
-                backgroundColor: theme.colors.white,
-              },
-            ]}
-            onPress={() => setShowDlIssueDateModal(true)}
-            activeOpacity={0.7}
-          >
-            <Text
-              style={[
-                styles.selectInputText,
-                {
-                  color: formData.dl_issue_date
-                    ? theme.colors.textPrimary
-                    : theme.colors.hint,
-                },
-              ]}
-            >
-              {formData.dl_issue_date || 'Select issue date (YYYY-MM-DD)'}
-            </Text>
-            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-          </TouchableOpacity>
-          {errors.dl_issue_date && (
-            <Text style={styles.errorText}>{errors.dl_issue_date}</Text>
-          )}
-        </View>
+            {/* DL Issue Date */}
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
+                Driving License Issue Date
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.selectInput,
+                  {
+                    borderColor: errors.dl_issue_date
+                      ? '#FF3B30'
+                      : '#E0E0E0',
+                    backgroundColor: theme.colors.white,
+                  },
+                ]}
+                onPress={() => setShowDlIssueDateModal(true)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.selectInputText,
+                    {
+                      color: formData.dl_issue_date
+                        ? theme.colors.textPrimary
+                        : theme.colors.hint,
+                    },
+                  ]}
+                >
+                  {formData.dl_issue_date || 'Select issue date (YYYY-MM-DD)'}
+                </Text>
+                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              </TouchableOpacity>
+              {errors.dl_issue_date && (
+                <Text style={styles.errorText}>{errors.dl_issue_date}</Text>
+              )}
+            </View>
 
-        {/* DL Expiry Date */}
-        <View style={styles.inputContainer}>
-          <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-            Driving License Expiry Date
-          </Text>
-          <TouchableOpacity
-            style={[
-              styles.selectInput,
-              {
-                borderColor: errors.dl_expiry_date
-                  ? '#FF3B30'
-                  : '#E0E0E0',
-                backgroundColor: theme.colors.white,
-              },
-            ]}
-            onPress={() => setShowDlExpiryDateModal(true)}
-            activeOpacity={0.7}
-          >
-            <Text
-              style={[
-                styles.selectInputText,
-                {
-                  color: formData.dl_expiry_date
-                    ? theme.colors.textPrimary
-                    : theme.colors.hint,
-                },
-              ]}
-            >
-              {formData.dl_expiry_date || 'Select expiry date (YYYY-MM-DD)'}
-            </Text>
-            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-          </TouchableOpacity>
-          {errors.dl_expiry_date && (
-            <Text style={styles.errorText}>{errors.dl_expiry_date}</Text>
-          )}
-        </View>
+            {/* DL Expiry Date */}
+            <View style={styles.inputContainer}>
+              <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
+                Driving License Expiry Date
+              </Text>
+              <TouchableOpacity
+                style={[
+                  styles.selectInput,
+                  {
+                    borderColor: errors.dl_expiry_date
+                      ? '#FF3B30'
+                      : '#E0E0E0',
+                    backgroundColor: theme.colors.white,
+                  },
+                ]}
+                onPress={() => setShowDlExpiryDateModal(true)}
+                activeOpacity={0.7}
+              >
+                <Text
+                  style={[
+                    styles.selectInputText,
+                    {
+                      color: formData.dl_expiry_date
+                        ? theme.colors.textPrimary
+                        : theme.colors.hint,
+                    },
+                  ]}
+                >
+                  {formData.dl_expiry_date || 'Select expiry date (YYYY-MM-DD)'}
+                </Text>
+                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              </TouchableOpacity>
+              {errors.dl_expiry_date && (
+                <Text style={styles.errorText}>{errors.dl_expiry_date}</Text>
+              )}
+            </View>
+          </>
+        )}
       </View>
 
       {/* Action Buttons */}
@@ -752,6 +778,32 @@ const styles = StyleSheet.create({
   dateOptionText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  dlHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  dlHeaderContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  dlHeaderIcon: {
+    marginRight: 12,
+  },
+  dlHeaderTextContainer: {
+    flex: 1,
+  },
+  dlHeaderTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 2,
+  },
+  dlHeaderSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
   },
 });
 

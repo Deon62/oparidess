@@ -36,6 +36,17 @@ const RenterProfileScreen = () => {
     id_number: user?.id_number || '12345678',
   });
 
+  // Driver's license information
+  const dlInfo = {
+    dl_number: user?.dl_number || '',
+    dl_category: user?.dl_category || '',
+    dl_issue_date: user?.dl_issue_date || '',
+    dl_expiry_date: user?.dl_expiry_date || '',
+  };
+
+  // Check if user has driver's license information
+  const hasDlInfo = dlInfo.dl_number || dlInfo.dl_category || dlInfo.dl_issue_date || dlInfo.dl_expiry_date;
+
   // Update profile image URI when user context changes
   useEffect(() => {
     if (user?.profile_image_uri) {
@@ -274,7 +285,7 @@ const RenterProfileScreen = () => {
       <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
       {/* Personal Information */}
-      <View style={styles.section}>
+      <View style={[styles.section, styles.compactSection, { backgroundColor: theme.colors.white }]}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Personal Information
@@ -308,6 +319,55 @@ const RenterProfileScreen = () => {
           value={personalInfo.id_number}
         />
       </View>
+
+      {/* Driving License Information - Only show if user has DL info */}
+      {hasDlInfo && (
+        <>
+          <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+          <View style={[styles.section, styles.compactSection, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+                Driving License Information
+              </Text>
+              <TouchableOpacity
+                onPress={handleUpdateProfile}
+                style={styles.updateProfileIcon}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="create-outline" size={22} color={theme.colors.primary} />
+              </TouchableOpacity>
+            </View>
+            {dlInfo.dl_number && (
+              <InfoRow
+                icon="card-outline"
+                label="License Number"
+                value={dlInfo.dl_number}
+              />
+            )}
+            {dlInfo.dl_category && (
+              <InfoRow
+                icon="list-outline"
+                label="Category"
+                value={dlInfo.dl_category}
+              />
+            )}
+            {dlInfo.dl_issue_date && (
+              <InfoRow
+                icon="calendar-outline"
+                label="Issue Date"
+                value={dlInfo.dl_issue_date}
+              />
+            )}
+            {dlInfo.dl_expiry_date && (
+              <InfoRow
+                icon="time-outline"
+                label="Expiry Date"
+                value={dlInfo.dl_expiry_date}
+              />
+            )}
+          </View>
+        </>
+      )}
 
       {/* Separator Line */}
       <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
@@ -674,16 +734,21 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   section: {
-    marginHorizontal: 0,
-    paddingHorizontal: 24,
+    marginHorizontal: 24,
+    marginTop: 8,
+    borderRadius: 16,
+    paddingHorizontal: 20,
     paddingVertical: 20,
     marginBottom: 8,
+  },
+  compactSection: {
+    paddingVertical: 16,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 20,
@@ -696,7 +761,7 @@ const styles = StyleSheet.create({
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   infoRowLeft: {
     flexDirection: 'row',

@@ -1,35 +1,29 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, Animated } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { VideoView, useVideoPlayer } from 'expo-video';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Button } from '../../packages/components';
-import Logo from '../../components/Logo';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const LandingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  
-  // Animation for logo
-  const logoScale = useRef(new Animated.Value(0.9)).current;
-  const logoOpacity = useRef(new Animated.Value(0)).current;
-  
+  const insets = useSafeAreaInsets();
+
+  // Create video player - try using require() directly first
+  const player = useVideoPlayer(require('../../../assets/logo/landing.mp4'), (player) => {
+    player.loop = true;
+    player.muted = true;
+  });
+
   useEffect(() => {
-    // Logo fade in and scale animation
-    Animated.parallel([
-      Animated.timing(logoOpacity, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.spring(logoScale, {
-        toValue: 1,
-        tension: 50,
-        friction: 7,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
+    // Ensure video plays when component mounts
+    if (player) {
+      player.play();
+    }
+  }, [player]);
 
   const handleGetStarted = () => {
     navigation.navigate('Signup', { userType: 'renter' });
@@ -39,179 +33,131 @@ const LandingScreen = () => {
     navigation.navigate('Login');
   };
 
+  const handleTermsPress = () => {
+    navigation.navigate('TermsOfService');
+  };
 
   return (
-    <LinearGradient
-      colors={[theme.colors.background, theme.colors.background + 'F5', theme.colors.background]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      style={styles.gradientContainer}
-    >
-      <ScrollView 
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Logo Section */}
-        <View style={styles.logoContainer}>
-          <Animated.View 
-            style={[
-              styles.logoAlignLeft,
-              {
-                opacity: logoOpacity,
-                transform: [{ scale: logoScale }],
-              }
-            ]}
+    <View style={styles.container}>
+      {/* Video Background */}
+      <VideoView
+        player={player}
+        style={styles.video}
+        contentFit="cover"
+        nativeControls={false}
+      />
+
+      {/* Content Overlay */}
+      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 40 }]}>
+        {/* Buttons Section */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[styles.getStartedButton, { backgroundColor: '#FF1577' }]}
+            onPress={handleGetStarted}
+            activeOpacity={0.8}
           >
-            <Logo width={360} height={360} color={theme.colors.textPrimary} />
-          </Animated.View>
-          {/* Tagline Section - Below logo text */}
-          <View style={styles.taglineContainer}>
-            <Text style={[styles.tagline, { color: theme.colors.textPrimary }]}>
-              Your Complete Mobility Solution
+            <Text style={styles.getStartedButtonText}>Get Started</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[styles.loginButton, { backgroundColor: theme.colors.white }]}
+            onPress={handleLogin}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.loginButtonText, { color: theme.colors.textPrimary }]}>Login</Text>
+          </TouchableOpacity>
+
+          {/* Terms Text */}
+          <Text style={[styles.termsText, { color: theme.colors.white }]}>
+            By continuing, you agree to our{' '}
+            <Text 
+              style={[styles.termsLink, { color: theme.colors.white }]}
+              onPress={handleTermsPress}
+            >
+              Terms
             </Text>
-          </View>
+          </Text>
         </View>
-
-      {/* Commented out: Luxury Car Image Section */}
-      {/* <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: 'https://pngimg.com/uploads/tesla_car/tesla_car_PNG29.png' }}
-          style={styles.carImage}
-          resizeMode="contain"
-        />
-      </View> */}
-
-      {/* Commented out: Content Section */}
-      {/* <View style={styles.contentSection}>
-        <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-          Welcome to Opa
-        </Text>
-        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-          Alles Gut (Everything is Good) with Opa
-        </Text>
-      </View> */}
-
-      {/* Buttons Section */}
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Get Started"
-          onPress={handleGetStarted}
-          variant="primary"
-          style={styles.primaryButton}
-        />
-        <Button
-          title="Login"
-          onPress={handleLogin}
-          variant="secondary"
-          style={styles.secondaryButton}
-        />
       </View>
-
-    </ScrollView>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  gradientContainer: {
-    flex: 1,
-  },
   container: {
     flex: 1,
+    backgroundColor: '#000',
   },
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: 'space-between',
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
   },
-  logoContainer: {
-    width: '100%',
+  overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-    paddingTop: 100,
-    paddingBottom: 40,
-    paddingHorizontal: 20,
+    justifyContent: 'flex-end',
+    paddingHorizontal: 24,
+    zIndex: 1,
     position: 'relative',
   },
-  logoAlignLeft: {
-    marginLeft: -40,
+  buttonContainer: {
+    gap: 14,
   },
-  taglineContainer: {
-    position: 'absolute',
-    top: 420,
-    left: 0,
-    right: 0,
+  getStartedButton: {
+    paddingVertical: 16,
     paddingHorizontal: 24,
+    borderRadius: 28,
     alignItems: 'center',
-    zIndex: 1,
-  },
-  tagline: {
-    fontSize: 22,
-    fontFamily: 'Nunito_700Bold',
-    textAlign: 'center',
-    letterSpacing: 0.8,
-    lineHeight: 30,
+    justifyContent: 'center',
+    minHeight: 52,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 4,
     },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  // Commented out: Car image styles
-  // imageContainer: {
-  //   width: '100%',
-  //   height: 350,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   paddingTop: 40,
-  //   paddingHorizontal: 20,
-  // },
-  // carImage: {
-  //   width: '100%',
-  //   height: '100%',
-  // },
-  contentSection: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 38,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
-    textAlign: 'center',
-    letterSpacing: -0.8,
-  },
-  subtitle: {
-    fontSize: 19,
+  getStartedButtonText: {
+    fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 12,
-    textAlign: 'center',
-    lineHeight: 26,
+    color: '#FFFFFF',
   },
-  description: {
-    fontSize: 15,
+  loginButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 52,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  loginButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  termsText: {
+    fontSize: 12,
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
-    lineHeight: 22,
-    marginTop: 4,
-    paddingHorizontal: 16,
+    marginTop: 16,
+    opacity: 0.9,
   },
-  buttonContainer: {
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 40,
-    gap: 14,
-  },
-  primaryButton: {
-    marginBottom: 0,
-  },
-  secondaryButton: {
-    marginBottom: 0,
+  termsLink: {
+    fontFamily: 'Nunito_600SemiBold',
+    textDecorationLine: 'underline',
   },
 });
 

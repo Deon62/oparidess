@@ -100,6 +100,27 @@ const LegalScreen = () => {
         </View>
       ))}
 
+      {/* Legal Website Link */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+          Legal Information
+        </Text>
+        <Text style={[styles.sectionContent, { color: theme.colors.textSecondary }]}>
+          For complete legal information, terms, and policies, please visit our legal website.
+        </Text>
+        <TouchableOpacity
+          style={styles.websiteButton}
+          onPress={() => handleLinkPress('https://opa.deonhq.xyz')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="globe-outline" size={20} color={theme.colors.primary} />
+          <Text style={[styles.websiteButtonText, { color: theme.colors.primary }]}>
+            opa.deonhq.xyz
+          </Text>
+          <Ionicons name="open-outline" size={16} color={theme.colors.primary} />
+        </TouchableOpacity>
+      </View>
+
       {/* Contact for Legal Inquiries */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -155,6 +176,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
     textDecorationLine: 'underline',
+  },
+  websiteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 21, 119, 0.3)',
+    backgroundColor: 'rgba(255, 21, 119, 0.05)',
+    alignSelf: 'flex-start',
+  },
+  websiteButtonText: {
+    fontSize: 15,
+    fontFamily: 'Nunito_600SemiBold',
   },
   contactButton: {
     flexDirection: 'row',

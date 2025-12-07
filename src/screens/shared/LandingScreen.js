@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { VideoView, useVideoPlayer } from 'expo-video';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,6 +12,24 @@ const LandingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
+  // Force status bar to be light (white) for this screen
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      statusBarStyle: 'light',
+      statusBarBackgroundColor: 'transparent',
+    });
+  }, [navigation]);
+
+  // Ensure status bar stays light when screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.setOptions({
+        statusBarStyle: 'light',
+        statusBarBackgroundColor: 'transparent',
+      });
+    }, [navigation])
+  );
 
   // Create video player - try using require() directly first
   const player = useVideoPlayer(require('../../../assets/logo/landing.mp4'), (player) => {
@@ -34,11 +53,12 @@ const LandingScreen = () => {
   };
 
   const handleTermsPress = () => {
-    navigation.navigate('TermsOfService');
+    navigation.navigate('Legal');
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar style="light" />
       {/* Video Background */}
       <VideoView
         player={player}
@@ -49,6 +69,13 @@ const LandingScreen = () => {
 
       {/* Content Overlay */}
       <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 40 }]}>
+        {/* Tagline */}
+        <View style={styles.taglineContainer}>
+          <Text style={styles.tagline}>
+            You were meant for more than just passenger seats
+          </Text>
+        </View>
+
         {/* Buttons Section */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -103,6 +130,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     zIndex: 1,
     position: 'relative',
+  },
+  taglineContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    marginBottom: 40,
+  },
+  tagline: {
+    fontSize: 24,
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 32,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   buttonContainer: {
     gap: 14,

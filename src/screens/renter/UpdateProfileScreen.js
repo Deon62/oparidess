@@ -209,12 +209,16 @@ const UpdateProfileScreen = () => {
   };
 
   // Simple date picker component (you can replace with a proper date picker library)
-  const DatePickerModal = ({ visible, onClose, onConfirm, title, initialDate }) => {
+  const DatePickerModal = ({ visible, onClose, onConfirm, title, initialDate, allowFutureYears = false }) => {
     const parseDate = (dateString) => {
-      if (!dateString) return { year: new Date().getFullYear() - 25, month: 1, day: 1 };
+      if (!dateString) {
+        const defaultYear = allowFutureYears ? new Date().getFullYear() : new Date().getFullYear() - 25;
+        return { year: defaultYear, month: 1, day: 1 };
+      }
       const parts = dateString.split('-');
+      const currentYear = new Date().getFullYear();
       return {
-        year: parseInt(parts[0]) || new Date().getFullYear() - 25,
+        year: parseInt(parts[0]) || (allowFutureYears ? currentYear : currentYear - 25),
         month: parseInt(parts[1]) || 1,
         day: parseInt(parts[2]) || 1,
       };
@@ -225,7 +229,11 @@ const UpdateProfileScreen = () => {
     const [month, setMonth] = useState(initial.month);
     const [day, setDay] = useState(initial.day);
 
-    const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
+    // Generate years array - allow future years if needed (for expiry dates)
+    const currentYear = new Date().getFullYear();
+    const years = allowFutureYears
+      ? Array.from({ length: 120 }, (_, i) => currentYear - 100 + i) // 100 years back, 20 years forward
+      : Array.from({ length: 100 }, (_, i) => currentYear - i); // Only past years
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
 
@@ -653,6 +661,7 @@ const UpdateProfileScreen = () => {
         onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'dl_expiry_date')}
         title="Select License Expiry Date"
         initialDate={formData.dl_expiry_date}
+        allowFutureYears={true}
       />
     </ScrollView>
     </>

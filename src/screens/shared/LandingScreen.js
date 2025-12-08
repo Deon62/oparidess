@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, AppState } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -43,6 +43,25 @@ const LandingScreen = () => {
       player.play();
     }
   }, [player]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Resume playback when screen regains focus
+      if (player) {
+        player.play();
+      }
+
+      const appStateSubscription = AppState.addEventListener('change', (state) => {
+        if (state === 'active' && player) {
+          player.play();
+        }
+      });
+
+      return () => {
+        appStateSubscription.remove();
+      };
+    }, [player])
+  );
 
   const handleGetStarted = () => {
     navigation.navigate('Signup', { userType: 'renter' });
@@ -132,16 +151,17 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   taglineContainer: {
-    flex: 1,
-    justifyContent: 'center',
+    flex: 0,
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 24,
-    marginBottom: 40,
+    marginTop: 12,
+    marginBottom: 68,
   },
   tagline: {
     fontSize: 24,
-    fontFamily: 'Nunito_600SemiBold',
-    color: '#FFFFFF',
+    fontFamily: 'Nunito_300Light',
+    color: '#F4F6FB',
     textAlign: 'center',
     lineHeight: 32,
     textShadowColor: 'rgba(0, 0, 0, 0.5)',

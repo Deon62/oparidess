@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-google-fonts/nunito';
+import { Nunito_300Light, Nunito_400Regular, Nunito_600SemiBold, Nunito_700Bold } from '@expo-google-fonts/nunito';
 import NetInfo from '@react-native-community/netinfo';
 
 import { ThemeProvider, useTheme } from './src/packages/theme/ThemeProvider';
@@ -19,6 +19,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
+    Nunito_300Light,
     Nunito_400Regular,
     Nunito_600SemiBold,
     Nunito_700Bold,

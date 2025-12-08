@@ -87,7 +87,7 @@ const LandingScreen = () => {
       />
 
       {/* Content Overlay */}
-      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 40 }]}>
+      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 8 }]}>
         {/* Tagline */}
         <View style={styles.taglineContainer}>
           <Text style={styles.tagline}>
@@ -155,8 +155,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 24,
-    marginTop: 12,
-    marginBottom: 68,
+    marginTop: 24,
+    marginBottom: 52,
   },
   tagline: {
     fontSize: 24,

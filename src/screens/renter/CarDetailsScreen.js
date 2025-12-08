@@ -603,40 +603,6 @@ const CarDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Check-in Options Section */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Check-in Options
-          </Text>
-          <View style={styles.checkInCard}>
-            <View style={[styles.checkInOption, { backgroundColor: theme.colors.white }]}>
-              <Text style={[styles.checkInTitle, { color: theme.colors.textPrimary }]}>
-                Self Check-in
-              </Text>
-              <Text style={[styles.checkInDescription, { color: theme.colors.textSecondary }]}>
-                Get the key from the secure key box and locate your car independently
-              </Text>
-            </View>
-            <View style={[styles.checkInOption, { backgroundColor: theme.colors.white }]}>
-              <Text style={[styles.checkInTitle, { color: theme.colors.textPrimary }]}>
-                Assisted Check-in
-              </Text>
-              <Text style={[styles.checkInDescription, { color: theme.colors.textSecondary }]}>
-                Meet the owner for a guided walkthrough and car inspection
-              </Text>
-            </View>
-            <Text style={[styles.checkInNote, { color: theme.colors.hint }]}>
-              You can select your preferred option during booking
-            </Text>
-          </View>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
         {/* Image Repository Link */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -838,7 +804,7 @@ const CarDetailsScreen = () => {
         {/* Meet Car Owner Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Meet Your Host
+            Meet Your car Host
           </Text>
           <View style={styles.hostCard}>
             <View style={styles.hostHeader}>

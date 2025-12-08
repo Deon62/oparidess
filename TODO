@@ -1,2 +1,1 @@
-1. Investigate landing video behavior on app background/foreground; ensure video resumes playing.
-2. Adjust home tagline position and style per request.
+1. Fix Dispute screen back navigation to return to Active Rental page instead of Home.

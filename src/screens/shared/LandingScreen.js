@@ -77,6 +77,8 @@ const LandingScreen = () => {
           ? { email: 'test@google.com', name: 'Google User' }
           : { email: 'test@apple.com', name: 'Apple User' };
 
+      // Show spinner briefly to indicate activity before auto-login
+      await new Promise(resolve => setTimeout(resolve, 600));
       await login(userData, 'renter');
       setLoadingProvider(null);
     },
@@ -102,9 +104,9 @@ const LandingScreen = () => {
       <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 8 }]}>
         {/* Tagline */}
         <View style={styles.taglineContainer}>
-          <Text style={styles.tagline}>
+          {/* <Text style={styles.tagline}>
             You were meant for more than just passenger seats
-          </Text>
+          </Text> */}
         </View>
 
         {/* Social Login Section */}
@@ -116,6 +118,9 @@ const LandingScreen = () => {
             disabled={!!loadingProvider}
           >
             <View style={styles.socialContent}>
+              {loadingProvider === 'google' && (
+                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
+              )}
               <Image
                 source={{ uri: 'https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png' }}
                 style={styles.googleLogo}
@@ -124,9 +129,6 @@ const LandingScreen = () => {
               <Text style={[styles.socialText, { color: theme.colors.textPrimary }]}>
                 {loadingProvider === 'google' ? 'Connecting…' : 'Continue with Google'}
               </Text>
-              {loadingProvider === 'google' && (
-                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
-              )}
             </View>
           </TouchableOpacity>
 
@@ -137,13 +139,13 @@ const LandingScreen = () => {
             disabled={!!loadingProvider}
           >
             <View style={styles.socialContent}>
+              {loadingProvider === 'apple' && (
+                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
+              )}
               <Ionicons name="logo-apple" size={26} color={theme.colors.textPrimary} style={styles.socialIcon} />
               <Text style={[styles.socialText, { color: theme.colors.textPrimary }]}>
                 {loadingProvider === 'apple' ? 'Connecting…' : 'Continue with Apple'}
               </Text>
-              {loadingProvider === 'apple' && (
-                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
-              )}
             </View>
           </TouchableOpacity>
 

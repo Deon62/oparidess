@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, BackHandler } from 'react-native';
+import React, { useState, useLayoutEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -18,22 +18,9 @@ const DisputeScreen = () => {
   const [processing, setProcessing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const goBackToBooking = () => {
-    if (navigation.canGoBack()) {
-      navigation.goBack();
-      return;
-    }
-    navigation.navigate('BookingTracking', { bookingDetails });
-  };
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'File a Dispute',
-      headerLeft: () => (
-        <TouchableOpacity onPress={goBackToBooking} style={{ paddingHorizontal: 12 }}>
-          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-      ),
     });
     navigation.getParent()?.setOptions({
       tabBarStyle: { display: 'none' },
@@ -43,16 +30,7 @@ const DisputeScreen = () => {
         tabBarStyle: undefined,
       });
     };
-  }, [navigation, theme.colors.textPrimary, bookingDetails]);
-
-  useEffect(() => {
-    const onBack = () => {
-      goBackToBooking();
-      return true;
-    };
-    const sub = BackHandler.addEventListener('hardwareBackPress', onBack);
-    return () => sub.remove();
-  }, [goBackToBooking]);
+  }, [navigation]);
 
   const disputeTypes = [
     {
@@ -124,7 +102,7 @@ const DisputeScreen = () => {
 
   const handleSuccessClose = () => {
     setShowSuccessModal(false);
-    goBackToBooking();
+    navigation.goBack();
   };
 
   const formatDate = (date) => {

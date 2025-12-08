@@ -12,7 +12,7 @@ const CarManualScreen = () => {
   const insets = useSafeAreaInsets();
   const { car, manual, hostPhone } = route.params || {};
 
-  const [expandedSection, setExpandedSection] = useState(null);
+  const [expandedSections, setExpandedSections] = useState({});
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,7 +31,10 @@ const CarManualScreen = () => {
   };
 
   const toggleSection = (index) => {
-    setExpandedSection(expandedSection === index ? null : index);
+    setExpandedSections((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
   };
 
   return (
@@ -64,25 +67,53 @@ const CarManualScreen = () => {
         </TouchableOpacity>
 
         {/* Manual Sections */}
-        {manual?.sections?.map((section, index) => (
-          <View key={index} style={styles.section}>
-            <TouchableOpacity
-              style={styles.sectionHeader}
-              onPress={() => toggleSection(index)}
-              activeOpacity={0.7}
-            >
+        {(manual?.sections?.length ? manual.sections : [
+          {
+            title: 'Getting Started',
+            content: [
+              'Locate the key fob in the provided key box.',
+              'Press unlock button twice to unlock all doors.',
+              'Adjust driver seat and mirrors before starting.',
+              'Insert key or press start button (if keyless).',
+              'Fasten your seatbelt and ensure passengers do the same.',
+              'Check fuel level and tire pressure before driving.',
+            ],
+          },
+          {
+            title: 'Important Controls',
+            content: [
+              'AC controls are on the center console.',
+              'Parking brake: pull lever up to engage.',
+              'Headlights: turn dial on the left of steering wheel.',
+              'Hazard lights: press the red triangle button.',
+              'Wipers: toggle stalk on the right of steering wheel.',
+              'Fuel cap release is near the driver’s seat base.',
+            ],
+          },
+          {
+            title: 'Safety & Assistance',
+            content: [
+              'ABS braking system is active—apply steady pressure.',
+              'Airbags are located in front and side pillars.',
+              'Use child locks for rear doors when needed.',
+              'For breakdowns, pull over safely and switch on hazards.',
+              'Emergency contacts are in the glovebox and in the app.',
+              'Call the host if any warning lights stay on.',
+            ],
+          },
+        ]).map((section, index, arr) => {
+          const isExpanded = !!expandedSections[index];
+          const hasMore = section.content.length > 5;
+          const visibleContent = isExpanded ? section.content : section.content.slice(0, 5);
+
+          return (
+            <View key={index} style={styles.section}>
               <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                 {section.title}
               </Text>
-              <Ionicons
-                name={expandedSection === index ? 'chevron-up' : 'chevron-down'}
-                size={20}
-                color={theme.colors.hint}
-              />
-            </TouchableOpacity>
-            {expandedSection === index && (
+
               <View style={styles.sectionContent}>
-                {section.content.map((item, itemIndex) => (
+                {visibleContent.map((item, itemIndex) => (
                   <View key={itemIndex} style={styles.manualItem}>
                     <View style={[styles.bulletPoint, { backgroundColor: theme.colors.primary }]} />
                     <Text style={[styles.manualItemText, { color: theme.colors.textSecondary }]}>
@@ -90,10 +121,26 @@ const CarManualScreen = () => {
                     </Text>
                   </View>
                 ))}
+
+                {hasMore && (
+                  <TouchableOpacity
+                    onPress={() => toggleSection(index)}
+                    activeOpacity={0.7}
+                    style={styles.readMoreButton}
+                  >
+                    <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+                      {isExpanded ? 'Read less' : 'Read more'}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
-            )}
-          </View>
-        ))}
+
+              {index < arr.length - 1 && (
+                <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+              )}
+            </View>
+          );
+        })}
 
         {/* Bottom spacing */}
         <View style={{ height: 40 }} />
@@ -146,27 +193,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   section: {
-    marginBottom: 16,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-    backgroundColor: '#FFFFFF',
+    marginBottom: 20,
+    paddingVertical: 4,
   },
   sectionTitle: {
     fontSize: 18,
     fontFamily: 'Nunito_700Bold',
+    marginBottom: 8,
   },
   sectionContent: {
-    padding: 16,
-    paddingTop: 8,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    paddingVertical: 4,
   },
   manualItem: {
     flexDirection: 'row',
@@ -186,6 +222,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 22,
+  },
+  sectionSeparator: {
+    borderTopWidth: 1,
+    marginTop: 12,
+    marginBottom: 12,
   },
 });
 

@@ -1,0 +1,5 @@
+TODO:
+1. Update LandingScreen to show Google and Apple continue buttons with icons and loading/login behavior.
+2. Remove/disable navigation to Login and Signup screens; adjust AuthNavigator and entry points.
+3. Simplify handling so social buttons trigger loading state then login.
+4. Clean up unused screens/routes if needed and verify UI styling.

@@ -1,10 +1,12 @@
-import React, { useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, AppState } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, AppState, ActivityIndicator, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { VideoView, useVideoPlayer } from 'expo-video';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useUser } from '../../packages/context/UserContext';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -12,6 +14,8 @@ const LandingScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { login } = useUser();
+  const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'apple' | null
 
   // Force status bar to be light (white) for this screen
   useLayoutEffect(() => {
@@ -63,13 +67,21 @@ const LandingScreen = () => {
     }, [player])
   );
 
-  const handleGetStarted = () => {
-    navigation.navigate('Signup', { userType: 'renter' });
-  };
+  const handleSocialLogin = useCallback(
+    async (provider) => {
+      if (loadingProvider) return;
+      setLoadingProvider(provider);
 
-  const handleLogin = () => {
-    navigation.navigate('Login');
-  };
+      const userData =
+        provider === 'google'
+          ? { email: 'test@google.com', name: 'Google User' }
+          : { email: 'test@apple.com', name: 'Apple User' };
+
+      await login(userData, 'renter');
+      setLoadingProvider(null);
+    },
+    [loadingProvider, login]
+  );
 
   const handleTermsPress = () => {
     navigation.navigate('Legal');
@@ -95,22 +107,44 @@ const LandingScreen = () => {
           </Text>
         </View>
 
-        {/* Buttons Section */}
+        {/* Social Login Section */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.getStartedButton, { backgroundColor: '#FF1577' }]}
-            onPress={handleGetStarted}
-            activeOpacity={0.8}
+            style={[styles.socialButton, { backgroundColor: theme.colors.white }]}
+            onPress={() => handleSocialLogin('google')}
+            activeOpacity={0.85}
+            disabled={!!loadingProvider}
           >
-            <Text style={styles.getStartedButtonText}>Get Started</Text>
+            <View style={styles.socialContent}>
+              <Image
+                source={{ uri: 'https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png' }}
+                style={styles.googleLogo}
+                resizeMode="contain"
+              />
+              <Text style={[styles.socialText, { color: theme.colors.textPrimary }]}>
+                {loadingProvider === 'google' ? 'Connecting…' : 'Continue with Google'}
+              </Text>
+              {loadingProvider === 'google' && (
+                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
+              )}
+            </View>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
-            style={[styles.loginButton, { backgroundColor: theme.colors.white }]}
-            onPress={handleLogin}
-            activeOpacity={0.8}
+            style={[styles.socialButton, { backgroundColor: theme.colors.white }]}
+            onPress={() => handleSocialLogin('apple')}
+            activeOpacity={0.85}
+            disabled={!!loadingProvider}
           >
-            <Text style={[styles.loginButtonText, { color: theme.colors.textPrimary }]}>Login</Text>
+            <View style={styles.socialContent}>
+              <Ionicons name="logo-apple" size={26} color={theme.colors.textPrimary} style={styles.socialIcon} />
+              <Text style={[styles.socialText, { color: theme.colors.textPrimary }]}>
+                {loadingProvider === 'apple' ? 'Connecting…' : 'Continue with Apple'}
+              </Text>
+              {loadingProvider === 'apple' && (
+                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
+              )}
+            </View>
           </TouchableOpacity>
 
           {/* Terms Text */}
@@ -171,46 +205,43 @@ const styles = StyleSheet.create({
   buttonContainer: {
     gap: 14,
   },
-  getStartedButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
+  socialButton: {
+    paddingVertical: 15,
+    paddingHorizontal: 18,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 52,
+    minHeight: 54,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  getStartedButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    color: '#FFFFFF',
-  },
-  loginButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 52,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 6,
   },
-  loginButtonText: {
+  socialContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  socialText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  googleLogo: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+  },
+  socialIcon: {
+    width: 22,
+    textAlign: 'center',
+  },
+  socialSpinner: {
+    marginLeft: 6,
   },
   termsText: {
     fontSize: 12,

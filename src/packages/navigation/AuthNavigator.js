@@ -4,9 +4,6 @@ import { useTheme } from '../theme/ThemeProvider';
 
 // Shared authentication screens
 import LandingScreen from '../../screens/shared/LandingScreen';
-import LoginScreen from '../../screens/shared/LoginScreen';
-import SignupScreen from '../../screens/shared/SignupScreen';
-import ResetPasswordScreen from '../../screens/shared/ResetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,32 +36,6 @@ const AuthNavigator = () => {
         options={{ 
           headerShown: false,
           gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen 
-        name="Login" 
-        component={LoginScreen}
-        options={{ 
-          title: 'Login',
-          headerShown: false,
-          gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen 
-        name="Signup" 
-        component={SignupScreen}
-        options={{ 
-          title: 'Sign Up',
-          headerShown: false,
-          gestureEnabled: false,
-        }}
-      />
-      <Stack.Screen 
-        name="ResetPassword" 
-        component={ResetPasswordScreen}
-        options={{ 
-          title: 'Reset Password',
-          headerShown: true,
         }}
       />
     </Stack.Navigator>

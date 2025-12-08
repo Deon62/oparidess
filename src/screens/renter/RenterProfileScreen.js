@@ -285,7 +285,7 @@ const RenterProfileScreen = () => {
       <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
       {/* Personal Information */}
-      <View style={[styles.section, styles.compactSection, { backgroundColor: theme.colors.white }]}>
+      <View style={[styles.section, styles.plainSection, styles.compactSection]}>
         <View style={styles.sectionHeader}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Personal Information
@@ -324,7 +324,7 @@ const RenterProfileScreen = () => {
       {hasDlInfo && (
         <>
           <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-          <View style={[styles.section, styles.compactSection, { backgroundColor: theme.colors.white }]}>
+          <View style={[styles.section, styles.plainSection, styles.compactSection]}>
             <View style={styles.sectionHeader}>
               <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                 Driving License Information
@@ -740,6 +740,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     marginBottom: 8,
+  },
+  plainSection: {
+    backgroundColor: 'transparent',
   },
   compactSection: {
     paddingVertical: 16,

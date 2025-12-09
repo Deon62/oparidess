@@ -1,9 +1,10 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Card, Input } from '../../packages/components';
+import * as ImagePicker from 'expo-image-picker';
 
 const DisputeScreen = () => {
   const theme = useTheme();
@@ -65,9 +66,33 @@ const DisputeScreen = () => {
     },
   ];
 
-  const handleFileSelect = () => {
-    // TODO: Implement file picker
-    Alert.alert('File Upload', 'File upload feature will be implemented');
+  const handleFileSelect = async () => {
+    try {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission needed', 'Please allow access to your media library to upload files.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsMultipleSelection: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        quality: 0.8,
+      });
+
+      if (result.canceled) return;
+
+      const newFiles = result.assets.map((asset, index) => ({
+        uri: asset.uri,
+        name: asset.fileName || asset.uri.split('/').pop() || `File-${index + 1}`,
+        type: asset.type || 'file',
+        size: asset.fileSize,
+      }));
+
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
+    } catch (error) {
+      Alert.alert('Upload failed', 'There was a problem selecting files. Please try again.');
+    }
   };
 
   const handleSubmit = () => {

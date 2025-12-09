@@ -73,6 +73,15 @@ const BookingScreen = () => {
     { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi', coordinates: { latitude: -1.3192, longitude: 36.9278 } },
   ];
 
+  const handleSameDropoffToggle = (value) => {
+    setSameDropoffLocation(value);
+    if (value) {
+      setDropoffLocation(pickupLocation);
+    } else {
+      setDropoffLocation('');
+    }
+  };
+
   // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -463,7 +472,7 @@ const BookingScreen = () => {
       }
     };
 
-    return (
+  return (
       <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
         <View style={styles.datePickerModalOverlay}>
           <View style={[styles.datePickerModal, { backgroundColor: theme.colors.white }]}>
@@ -736,8 +745,46 @@ const BookingScreen = () => {
                 Same dropoff location
               </Text>
             </View>
-            <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
+            <Toggle value={sameDropoffLocation} onValueChange={handleSameDropoffToggle} />
           </View>
+
+          {!sameDropoffLocation && (
+            <View style={{ marginTop: 12, width: '100%' }}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary, marginBottom: 8 }]}>
+                Dropoff Location
+              </Text>
+              <View style={styles.dropoffInputRow}>
+                <TextInput
+                  style={[
+                    styles.dropoffTextInput,
+                    {
+                      borderColor: theme.colors.hint + '60',
+                      backgroundColor: theme.colors.white,
+                      color: theme.colors.textPrimary,
+                    },
+                  ]}
+                  placeholder="Enter dropoff location"
+                  placeholderTextColor={theme.colors.hint}
+                  value={dropoffLocation}
+                  onChangeText={setDropoffLocation}
+                  autoCapitalize="words"
+                  returnKeyType="done"
+                />
+                <TouchableOpacity
+                  style={[styles.dropoffPickButton, { borderColor: theme.colors.primary }]}
+                  onPress={() => {
+                    setIsSelectingPickupLocation(false);
+                    setShowLocationPicker(true);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.dropoffPickButtonText, { color: theme.colors.primary }]}>
+                    Pick
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
 
         {/* Separator Line */}
@@ -2004,6 +2051,31 @@ const styles = StyleSheet.create({
   },
   dropoffLocationText: {
     fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  dropoffInputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    width: '100%',
+  },
+  dropoffTextInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+  },
+  dropoffPickButton: {
+    paddingHorizontal: 14,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 10,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  dropoffPickButtonText: {
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
   },
   // Time Picker Modal Styles

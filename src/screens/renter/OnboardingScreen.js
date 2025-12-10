@@ -98,14 +98,13 @@ const OnboardingScreen = () => {
         {!isFirst ? (
           <TouchableOpacity
             onPress={handleBack}
-            style={styles.backButton}
+            style={[styles.backButton, { backgroundColor: theme.colors.white }]}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
-            <Text style={[styles.backText, { color: theme.colors.textPrimary }]}>Back</Text>
+            <Ionicons name="arrow-back" size={22} color={theme.colors.textPrimary} />
           </TouchableOpacity>
         ) : (
-          <View style={{ width: 76 }} />
+          <View style={{ width: 56 }} />
         )}
 
         <TouchableOpacity
@@ -172,15 +171,16 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   backButton: {
-    flexDirection: 'row',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     alignItems: 'center',
-    gap: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 4,
-  },
-  backText: {
-    fontSize: 15,
-    fontFamily: 'Nunito_600SemiBold',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 6,
+    elevation: 6,
   },
   nextButton: {
     width: 56,

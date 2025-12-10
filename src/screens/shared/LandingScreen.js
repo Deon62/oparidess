@@ -101,14 +101,7 @@ const LandingScreen = () => {
       />
 
       {/* Content Overlay */}
-      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 8 }]}>
-        {/* Tagline */}
-        <View style={styles.taglineContainer}>
-          {/* <Text style={styles.tagline}>
-            You were meant for more than just passenger seats
-          </Text> */}
-        </View>
-
+      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }]}>
         {/* Social Login Section */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -133,17 +126,17 @@ const LandingScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: theme.colors.white }]}
+            style={[styles.socialButton, { backgroundColor: '#FF1577' }]}
             onPress={() => handleSocialLogin('apple')}
-            activeOpacity={0.85}
+            activeOpacity={0.9}
             disabled={!!loadingProvider}
           >
             <View style={styles.socialContent}>
               {loadingProvider === 'apple' && (
-                <ActivityIndicator size="small" color={theme.colors.primary} style={styles.socialSpinner} />
+                <ActivityIndicator size="small" color={theme.colors.white} style={styles.socialSpinner} />
               )}
-              <Ionicons name="logo-apple" size={26} color={theme.colors.textPrimary} style={styles.socialIcon} />
-              <Text style={[styles.socialText, { color: theme.colors.textPrimary }]}>
+              <Ionicons name="logo-apple" size={26} color={theme.colors.white} style={styles.socialIcon} />
+              <Text style={[styles.socialText, { color: theme.colors.white }]}>
                 {loadingProvider === 'apple' ? 'Connecting…' : 'Continue with Apple'}
               </Text>
             </View>
@@ -186,26 +179,9 @@ const styles = StyleSheet.create({
     zIndex: 1,
     position: 'relative',
   },
-  taglineContainer: {
-    flex: 0,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    marginTop: 24,
-    marginBottom: 52,
-  },
-  tagline: {
-    fontSize: 24,
-    fontFamily: 'Nunito_300Light',
-    color: '#F4F6FB',
-    textAlign: 'center',
-    lineHeight: 32,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
-  },
   buttonContainer: {
-    gap: 14,
+    gap: 16,
+    paddingBottom: 12,
   },
   socialButton: {
     paddingVertical: 15,

@@ -4,6 +4,7 @@ import { useTheme } from '../theme/ThemeProvider';
 
 // Shared authentication screens
 import LandingScreen from '../../screens/shared/LandingScreen';
+import OnboardingScreen from '../../screens/renter/OnboardingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +13,7 @@ const AuthNavigator = () => {
 
   return (
     <Stack.Navigator
+      initialRouteName="Onboarding"
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.background,
@@ -30,6 +32,14 @@ const AuthNavigator = () => {
         statusBarBackgroundColor: theme.colors.background,
       }}
     >
+      <Stack.Screen 
+        name="Onboarding" 
+        component={OnboardingScreen}
+        options={{ 
+          headerShown: false,
+          gestureEnabled: false,
+        }}
+      />
       <Stack.Screen 
         name="Landing" 
         component={LandingScreen}

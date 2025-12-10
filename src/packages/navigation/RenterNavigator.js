@@ -23,6 +23,7 @@ import CancellationScreen from '../../screens/renter/CancellationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
+import OnboardingScreen from '../../screens/renter/OnboardingScreen';
 import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScreen';
 import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetailsScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
@@ -91,6 +92,16 @@ const HomeStack = () => {
         options={{ 
           title: 'Home',
           headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="Onboarding" 
+        component={OnboardingScreen}
+        options={{ 
+          headerShown: false,
+          animation: 'slide_from_right',
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
         }}

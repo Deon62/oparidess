@@ -6,6 +6,7 @@ import { useNavigation, useRoute, useFocusEffect, CommonActions } from '@react-n
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Button, Input } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
+import { getCarPrimaryImage } from '../../packages/utils/supabaseImages';
 import { useBookings } from '../../packages/context/BookingsContext';
 
 // Import payment logos
@@ -207,10 +208,16 @@ const PaymentScreen = () => {
 
       // Save booking to context after successful payment
       if (bookingDetails) {
+        const carImageKey = bookingDetails.car?.imageKey || bookingDetails.imageKey || 'x';
+        const carImages = bookingDetails.car?.images || bookingDetails.images;
         const bookingToSave = {
           id: bookingDetails.bookingId || `BK-${Date.now()}`,
           carName: bookingDetails.car?.name || 'Car',
-          imageUri: bookingDetails.car?.imageUri || require('../../packages/utils/supabaseImages').getCarPrimaryImage('x'),
+          imageKey: carImageKey,
+          images: carImages,
+          imageUri:
+            bookingDetails.car?.imageUri ||
+            getCarPrimaryImage(carImageKey),
           date: bookingDetails.pickupDate || new Date().toISOString(),
           pickupDate: bookingDetails.pickupDate || new Date().toISOString(),
           dropoffDate: bookingDetails.dropoffDate || new Date().toISOString(),
@@ -225,7 +232,11 @@ const PaymentScreen = () => {
           status: bookingDetails.payOnSite ? 'pending' : 'active', // Pay on site bookings are pending, full payments are active
           payOnSite: bookingDetails.payOnSite || false,
           bookingId: bookingDetails.bookingId || `BK-${Date.now()}`,
-          car: bookingDetails.car,
+          car: {
+            ...bookingDetails.car,
+            imageKey: carImageKey,
+            images: carImages,
+          },
         };
         addBooking(bookingToSave);
       }

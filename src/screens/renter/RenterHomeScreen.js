@@ -2908,6 +2908,15 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
       )}
       </ScrollView>
 
+      {/* Emergency floating button */}
+      <TouchableOpacity
+        style={[styles.emergencyFab, { bottom: Math.max(insets.bottom + 20, 28) }]}
+        activeOpacity={0.85}
+        onPress={() => navigation.navigate('EmergencyOptions')}
+      >
+        <Ionicons name="alert" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
+
       {/* Prices Include All Fees Message Banner - Bottom Above Navbar */}
       {showNoFeesMessage && (
         <Animated.View
@@ -3554,9 +3563,9 @@ const styles = StyleSheet.create({
   },
   noFeesBanner: {
     position: 'absolute',
-    bottom: 100,
-    left: 0,
-    right: 0,
+    left: 24,
+    right: 24,
+    bottom: 90,
     zIndex: 1000,
     paddingHorizontal: 24,
     paddingBottom: 8,
@@ -4540,6 +4549,22 @@ const styles = StyleSheet.create({
   },
   skeletonLine: {
     borderRadius: 4,
+  },
+  emergencyFab: {
+    position: 'absolute',
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 8,
+    zIndex: 2000,
   },
 });
 

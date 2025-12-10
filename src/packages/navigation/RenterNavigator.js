@@ -24,6 +24,7 @@ import BookingsListScreen from '../../screens/renter/BookingsListScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
 import OnboardingScreen from '../../screens/renter/OnboardingScreen';
+import EmergencyOptionsScreen from '../../screens/renter/EmergencyOptionsScreen';
 import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScreen';
 import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetailsScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
@@ -102,6 +103,17 @@ const HomeStack = () => {
         options={{ 
           headerShown: false,
           animation: 'slide_from_right',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="EmergencyOptions" 
+        component={EmergencyOptionsScreen}
+        options={{ 
+          headerShown: false,
+          presentation: 'modal',
+          animation: 'slide_from_bottom',
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
         }}

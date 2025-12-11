@@ -1,15 +1,14 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Alert, StatusBar } from 'react-native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CarManualScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const insets = useSafeAreaInsets();
   const { car, manual, hostPhone } = route.params || {};
 
   const [expandedSections, setExpandedSections] = useState({});
@@ -17,8 +16,21 @@ const CarManualScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
+      statusBarStyle: 'dark',
+      statusBarColor: theme.colors.background || '#f8f8f8',
+      statusBarHidden: false,
+      statusBarTranslucent: false,
     });
-  }, [navigation]);
+  }, [navigation, theme.colors.background]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content');
+      StatusBar.setBackgroundColor(theme.colors.background || '#f8f8f8');
+      StatusBar.setTranslucent(false);
+      StatusBar.setHidden(false);
+    }, [theme.colors.background])
+  );
 
   const handleCallOwner = () => {
     if (hostPhone) {
@@ -38,11 +50,16 @@ const CarManualScreen = () => {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={theme.colors.background || '#f8f8f8'}
+        translucent={false}
+        />
       <TouchableOpacity
         style={[
           styles.backButton,
-          { top: insets.top + 12, left: 16, backgroundColor: theme.colors.white },
+          { top: 36, left: 16, backgroundColor: theme.colors.white },
         ]}
         onPress={() => navigation.goBack()}
         activeOpacity={0.8}
@@ -51,7 +68,7 @@ const CarManualScreen = () => {
       </TouchableOpacity>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + 48 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 48 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Header Info */}
@@ -155,7 +172,7 @@ const CarManualScreen = () => {
         {/* Bottom spacing */}
         <View style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -291,21 +291,53 @@ const CarDetailsScreen = () => {
     { name: 'USB Charging', icon: 'battery-charging-outline' },
     { name: 'Leather Seats', icon: 'car-outline' },
   ];
-  // Icons for guarantees
-  const guaranteeIcons = {
-    verified: require('../../../assets/icons/verified.png'),
-    booking: require('../../../assets/icons/booking.png'),
-    support: require('../../../assets/icons/support.png'),
-    cancellation: require('../../../assets/icons/cancellation.png'),
-  };
 
-  // Icons for "Why Choose" section
-  const whyChooseIcons = {
-    maintained: require('../../../assets/icons/maintainance.png'),
-    rated: require('../../../assets/icons/rate.png'),
-    location: require('../../../assets/icons/location.png'),
-    fuel: require('../../../assets/icons/fuel.png'),
-  };
+  const whyChooseItems = [
+    {
+      title: 'Well Maintained',
+      description: 'Regularly serviced and kept in excellent condition',
+      icon: 'build-outline', // Wrench/tools = maintenance
+    },
+    {
+      title: 'Highly Rated',
+      description: 'Consistently receives 5-star reviews from renters',
+      icon: 'sparkles-outline', // Sparkles = excellence
+    },
+    {
+      title: 'Convenient Location',
+      description: 'Easy pickup and drop-off in central location',
+      icon: 'map-outline', // Map = location/navigation
+    },
+    {
+      title: 'Fuel Efficient',
+      description: 'Saves you money on fuel during your trip',
+      icon: 'speedometer-outline', // Speedometer = efficiency/performance
+    },
+  ];
+
+  // Opa Guarantees data (using Ionicons)
+  const guaranteeItems = [
+    {
+      title: 'Verified Vehicles',
+      description: 'All vehicles are verified and meet our quality standards',
+      icon: 'ribbon-outline',               // Badge/Ribbon = verified status 🎗️
+    },
+    {
+      title: 'Secure Booking',
+      description: 'Your booking is protected with secure payment processing',
+      icon: 'lock-closed-outline',
+    },
+    {
+      title: '24/7 Support',
+      description: 'Round-the-clock customer support for your peace of mind',
+      icon: 'person-circle-outline',        // Person with circle = support person 👤
+    },
+    {
+      title: 'Easy Cancellation',
+      description: 'Flexible cancellation policy for your convenience',
+      icon: 'calendar-clear-outline',       // Calendar = booking 📅
+    },
+  ];
 
   // Host information
   const hostInfo = {
@@ -916,58 +948,21 @@ const CarDetailsScreen = () => {
             Why Choose This Car
           </Text>
           <View style={styles.whyChooseCard}>
-            <View style={styles.whyChooseItem}>
-              <View style={styles.whyChooseNumberBadge}>
-                <Image source={whyChooseIcons.maintained} style={styles.whyChooseIcon} resizeMode="contain" />
+            {whyChooseItems.map((item, idx) => (
+              <View key={idx} style={styles.whyChooseItem}>
+                <View style={styles.whyChooseNumberBadge}>
+                  <Ionicons name={item.icon} size={18} color={theme.colors.primary} />
+                </View>
+                <View style={styles.whyChooseContent}>
+                  <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
+                    {item.title}
+                  </Text>
+                  <Text style={[styles.whyChooseDescription, { color: theme.colors.textSecondary }]}>
+                    {item.description}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.whyChooseContent}>
-                <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
-                  Well Maintained
-                </Text>
-                <Text style={[styles.whyChooseDescription, { color: theme.colors.textSecondary }]}>
-                  Regularly serviced and kept in excellent condition
-                </Text>
-              </View>
-            </View>
-            <View style={styles.whyChooseItem}>
-              <View style={styles.whyChooseNumberBadge}>
-                <Image source={whyChooseIcons.rated} style={styles.whyChooseIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.whyChooseContent}>
-                <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
-                  Highly Rated
-                </Text>
-                <Text style={[styles.whyChooseDescription, { color: theme.colors.textSecondary }]}>
-                  Consistently receives 5-star reviews from renters
-                </Text>
-              </View>
-            </View>
-            <View style={styles.whyChooseItem}>
-              <View style={styles.whyChooseNumberBadge}>
-                <Image source={whyChooseIcons.location} style={styles.whyChooseIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.whyChooseContent}>
-                <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
-                  Convenient Location
-                </Text>
-                <Text style={[styles.whyChooseDescription, { color: theme.colors.textSecondary }]}>
-                  Easy pickup and drop-off in central location
-                </Text>
-              </View>
-            </View>
-            <View style={styles.whyChooseItem}>
-              <View style={styles.whyChooseNumberBadge}>
-                <Image source={whyChooseIcons.fuel} style={styles.whyChooseIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.whyChooseContent}>
-                <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
-                  Fuel Efficient
-                </Text>
-                <Text style={[styles.whyChooseDescription, { color: theme.colors.textSecondary }]}>
-                  Saves you money on fuel during your trip
-                </Text>
-              </View>
-            </View>
+            ))}
           </View>
         </View>
 
@@ -980,58 +975,21 @@ const CarDetailsScreen = () => {
             Opa Guarantees
           </Text>
           <View style={styles.guaranteesCard}>
-            <View style={styles.guaranteeItem}>
-              <View style={styles.guaranteeBadge}>
-                <Image source={guaranteeIcons.verified} style={styles.guaranteeIcon} resizeMode="contain" />
+            {guaranteeItems.map((item, idx) => (
+              <View key={idx} style={styles.guaranteeItem}>
+                <View style={styles.guaranteeBadge}>
+                  <Ionicons name={item.icon} size={18} color={theme.colors.primary} />
+                </View>
+                <View style={styles.guaranteeContent}>
+                  <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
+                    {item.title}
+                  </Text>
+                  <Text style={[styles.guaranteeDescription, { color: theme.colors.textSecondary }]}>
+                    {item.description}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.guaranteeContent}>
-                <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
-                  Verified Vehicles
-                </Text>
-                <Text style={[styles.guaranteeDescription, { color: theme.colors.textSecondary }]}>
-                  All vehicles are verified and meet our quality standards
-                </Text>
-              </View>
-            </View>
-            <View style={styles.guaranteeItem}>
-              <View style={styles.guaranteeBadge}>
-                <Image source={guaranteeIcons.booking} style={styles.guaranteeIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.guaranteeContent}>
-                <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
-                  Secure Booking
-                </Text>
-                <Text style={[styles.guaranteeDescription, { color: theme.colors.textSecondary }]}>
-                  Your booking is protected with secure payment processing
-                </Text>
-              </View>
-            </View>
-            <View style={styles.guaranteeItem}>
-              <View style={styles.guaranteeBadge}>
-                <Image source={guaranteeIcons.support} style={styles.guaranteeIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.guaranteeContent}>
-                <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
-                  24/7 Support
-                </Text>
-                <Text style={[styles.guaranteeDescription, { color: theme.colors.textSecondary }]}>
-                  Round-the-clock customer support for your peace of mind
-                </Text>
-              </View>
-            </View>
-            <View style={styles.guaranteeItem}>
-              <View style={styles.guaranteeBadge}>
-                <Image source={guaranteeIcons.cancellation} style={styles.guaranteeIcon} resizeMode="contain" />
-              </View>
-              <View style={styles.guaranteeContent}>
-                <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
-                  Easy Cancellation
-                </Text>
-                <Text style={[styles.guaranteeDescription, { color: theme.colors.textSecondary }]}>
-                  Flexible cancellation policy for your convenience
-                </Text>
-              </View>
-            </View>
+            ))}
           </View>
         </View>
 
@@ -2088,18 +2046,14 @@ const styles = StyleSheet.create({
   },
   whyChooseItem: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 16,
+    alignItems: 'center',
+    gap: 10,
   },
   whyChooseNumberBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     flexShrink: 0,
-    overflow: 'hidden',
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 0,
   },
   whyChooseNumber: {
     fontSize: 15,
@@ -2109,6 +2063,7 @@ const styles = StyleSheet.create({
   whyChooseContent: {
     flex: 1,
     gap: 6,
+    paddingLeft: 8,
   },
   whyChooseTitle: {
     fontSize: 16,
@@ -2130,29 +2085,28 @@ const styles = StyleSheet.create({
   guaranteesCard: {
     paddingVertical: 12,
     paddingTop: 8,
+    paddingHorizontal: 8,
     gap: 18,
   },
   guaranteeItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: 10,
   },
   guaranteeBadge: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
   },
   guaranteeIcon: {
-    width: 28,
-    height: 28,
+    width: 20,
+    height: 20,
   },
   guaranteeContent: {
     flex: 1,
     gap: 6,
+    paddingLeft: 10,
   },
   guaranteeTitle: {
     fontSize: 16,

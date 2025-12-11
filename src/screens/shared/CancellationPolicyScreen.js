@@ -73,34 +73,37 @@ const CancellationPolicyScreen = () => {
       </View>
 
       {policySections.map((section, index) => (
-        <View key={index} style={styles.section}>
-          <Card style={[styles.policyCard, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.policyHeader, { borderLeftWidth: 0, paddingLeft: 0, marginLeft: 0 }]}>
-              <View style={styles.policyHeaderContent}>
-                <Text style={[styles.policyTitle, { color: theme.colors.textPrimary }]}>
-                  {section.title}
-                </Text>
-                <Text style={[styles.policyTimeFrame, { color: theme.colors.textSecondary }]}>
-                  {section.timeFrame}
-                </Text>
-              </View>
-            </View>
-            <View style={styles.policyDetails}>
-              {section.details.map((detail, detailIndex) => (
-                <View key={detailIndex} style={styles.detailItem}>
-                  <Ionicons name="ellipse-outline" size={14} color={theme.colors.textSecondary} />
-                  <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
-                    {detail}
+        <React.Fragment key={index}>
+          {index > 0 && <View style={styles.sectionSeparator} />}
+          <View style={styles.section}>
+            <View style={styles.policyCard}>
+              <View style={styles.policyHeader}>
+                <View style={styles.policyHeaderContent}>
+                  <Text style={[styles.policyTitle, { color: theme.colors.textPrimary }]}>
+                    {section.title}
+                  </Text>
+                  <Text style={[styles.policyTimeFrame, { color: theme.colors.textSecondary }]}>
+                    {section.timeFrame}
                   </Text>
                 </View>
-              ))}
+              </View>
+              <View style={styles.policyDetails}>
+                {section.details.map((detail, detailIndex) => (
+                  <View key={detailIndex} style={styles.detailItem}>
+                    <Ionicons name="ellipse-outline" size={14} color={theme.colors.textSecondary} />
+                    <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
+                      {detail}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             </View>
-          </Card>
-        </View>
+          </View>
+        </React.Fragment>
       ))}
 
       <View style={styles.section}>
-        <Card style={[styles.generalCard, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.generalCard}>
           <View style={styles.generalHeader}>
             <Ionicons name="document-text-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.generalTitle, { color: theme.colors.textPrimary }]}>
@@ -117,11 +120,11 @@ const CancellationPolicyScreen = () => {
               </View>
             ))}
           </View>
-        </Card>
+        </View>
       </View>
 
       <View style={styles.section}>
-        <View style={[styles.supportCard, { backgroundColor: theme.colors.white, borderColor: '#E0E0E0', borderWidth: 1 }]}>
+        <View style={[styles.supportCard, { backgroundColor: 'transparent', borderColor: '#E0E0E0', borderWidth: 1 }]}>
           <Ionicons name="help-circle-outline" size={32} color={theme.colors.textPrimary} />
           <Text style={[styles.supportTitle, { color: theme.colors.textPrimary }]}>
             Need Help?
@@ -242,19 +245,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   policyCard: {
-    padding: 20,
-    borderRadius: 16,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    borderRadius: 0,
   },
   policyHeader: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-    borderLeftWidth: 4,
-    paddingLeft: 12,
-    marginLeft: -12,
+    paddingBottom: 12,
   },
   policyBadge: {
     paddingHorizontal: 12,

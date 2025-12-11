@@ -275,15 +275,22 @@ const CarDetailsScreen = () => {
   `;
 
   // Features
+  // const features = [
+  //   'Air Conditioning',
+  //   'Bluetooth',
+  //   'GPS Navigation',
+  //   'Backup Camera',
+  //   'USB Charging',
+  //   'Leather Seats',
+  // ];
   const features = [
-    'Air Conditioning',
-    'Bluetooth',
-    'GPS Navigation',
-    'Backup Camera',
-    'USB Charging',
-    'Leather Seats',
+    { name: 'Air Conditioning', icon: 'thermometer-outline' },
+    { name: 'Bluetooth', icon: 'bluetooth-outline' },
+    { name: 'GPS Navigation', icon: 'map-outline' },
+    { name: 'Backup Camera', icon: 'videocam-outline' },
+    { name: 'USB Charging', icon: 'battery-charging-outline' },
+    { name: 'Leather Seats', icon: 'car-outline' },
   ];
-
   // Icons for guarantees
   const guaranteeIcons = {
     verified: require('../../../assets/icons/verified.png'),
@@ -651,15 +658,19 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Features
           </Text>
-          <View style={styles.featuresGrid}>
-            {features.map((feature, index) => (
-              <View key={index} style={styles.featureItem}>
-                <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
-                <Text style={[styles.featureText, { color: theme.colors.textSecondary }]}>
-                  {feature}
-                </Text>
-              </View>
-            ))}
+          <View style={styles.featuresWrapper}>
+            <View style={styles.featuresGrid}>
+              {features.map((feature, index) => (
+                <View key={index} style={styles.featureItem}>
+                  <View style={styles.featureIconCircle}>
+                    <Ionicons name={feature.icon} size={18} color={theme.colors.primary} />
+                  </View>
+                  <Text style={[styles.featureText, { color: theme.colors.textSecondary }]}>
+                    {feature.name}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
 
@@ -856,8 +867,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
 
+            {/* <View style={styles.hostMetaRow}> */}
             <View style={styles.hostMetaRow}>
-              <Ionicons name="musical-notes-outline" size={16} color={theme.colors.hint} />
+              <Ionicons name="car-sport-outline" size={16} color={theme.colors.hint} />
               <Text style={[styles.hostMetaText, { color: theme.colors.textSecondary }]}>
                 Favourite car: Bmw M4csl 
               </Text>
@@ -1660,6 +1672,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  featuresWrapper: {
+    paddingHorizontal: 4,
+    marginTop: 4,
+  },
   featuresGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -2174,6 +2190,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     fontStyle: 'italic',
     marginTop: 4,
+  },
+  featureIconCircle: {
+  width: 36,
+  height: 36,
+  borderRadius: 18,
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexShrink: 0,
   },
 });
 

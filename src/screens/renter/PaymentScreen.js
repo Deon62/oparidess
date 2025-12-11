@@ -355,7 +355,7 @@ const PaymentScreen = () => {
           scrollEnabled={true}
         >
         {/* Payment Methods */}
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Select Payment Method
           </Text>
@@ -424,7 +424,7 @@ const PaymentScreen = () => {
 
         {/* Payment Details Forms */}
         {selectedMethod === 'mpesa' && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               M-PESA Details
             </Text>
@@ -505,7 +505,7 @@ const PaymentScreen = () => {
         )}
 
         {selectedMethod === 'card' && (
-          <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Card Details
             </Text>
@@ -740,8 +740,8 @@ const styles = StyleSheet.create({
   section: {
     marginHorizontal: 24,
     marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
+    padding: 0,
+    borderRadius: 0,
   },
   sectionTitle: {
     fontSize: 20,

@@ -109,7 +109,7 @@ const BookingConfirmationScreen = () => {
           Booking Details
         </Text>
 
-        <Card style={[styles.detailCard, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.detailCard}>
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
               <Ionicons name="car-outline" size={20} color={theme.colors.primary} />
@@ -250,8 +250,10 @@ const BookingConfirmationScreen = () => {
               </View>
             </>
           )}
-        </Card>
+        </View>
       </View>
+
+      <View style={[styles.sectionSeparator, { borderTopColor: '#E0E0E0' }]} />
 
       {/* Price Summary */}
       <View style={styles.section}>
@@ -259,7 +261,7 @@ const BookingConfirmationScreen = () => {
           Price Summary
         </Text>
 
-        <Card style={[styles.priceCard, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.priceCard}>
           <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
               {paymentOption === 'payOnSite' ? 'Total Rental Price' : 'Total'}
@@ -356,8 +358,10 @@ const BookingConfirmationScreen = () => {
               )}
             </>
           )}
-        </Card>
+        </View>
       </View>
+      
+      <View style={[styles.sectionSeparator, { borderTopColor: '#E0E0E0' }]} />
 
       {/* Important Notes */}
       <View style={styles.section}>
@@ -418,7 +422,12 @@ const BookingConfirmationScreen = () => {
     </ScrollView>
 
     {/* Bottom Action Bar */}
-    <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
+    <View
+      style={[
+        styles.bottomBar,
+        { backgroundColor: theme.colors.white, marginBottom: insets.bottom + 0.1 },
+      ]}
+    >
       <View style={styles.bottomBarPrice}>
         <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
           {paymentOption === 'payOnSite' ? 'Booking Fee' : 'Total'}
@@ -470,7 +479,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   firstSection: {
-    marginTop: 20,
+    marginTop: 28,
   },
   sectionTitle: {
     fontSize: 20,
@@ -479,8 +488,8 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   detailCard: {
-    padding: 20,
-    borderRadius: 16,
+    padding: 0,
+    borderRadius: 0,
   },
   detailRow: {
     flexDirection: 'row',

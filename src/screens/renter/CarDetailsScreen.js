@@ -257,7 +257,15 @@ const CarDetailsScreen = () => {
           });
           
           map.on('load', function() {
-            new mapboxgl.Marker({ color: '#0A1D37' })
+            const markerEl = document.createElement('div');
+            markerEl.innerHTML = \`
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="#0A1D37">
+                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.54 5H6.46c-.62 0-1.18.42-1.38 1.01L3 11v7c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-7l-2.08-4.99zM6.85 7h10.3l1.04 2.5H5.81L6.85 7zM19 16H5v-4h14v4zm-11.5 1c.83 0 1.5-.67 1.5-1.5S8.33 14 7.5 14 6 14.67 6 15.5 6.67 17 7.5 17zm9 0c.83 0 1.5-.67 1.5-1.5S17.33 14 16.5 14 15 14.67 15 15.5s.67 1.5 1.5 1.5z"/>
+              </svg>
+            \`;
+            markerEl.style.transform = 'translate(-18px, -18px)';
+
+            new mapboxgl.Marker({ element: markerEl })
               .setLngLat([${rentalInfo.pickupCoordinates.longitude}, ${rentalInfo.pickupCoordinates.latitude}])
               .addTo(map);
           });

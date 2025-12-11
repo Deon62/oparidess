@@ -6,9 +6,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
 const emergencyOptions = [
-  { id: 'accident', label: 'Accident report', icon: 'car-sport-outline' },
-  { id: 'breakdown', label: 'Breakdown', icon: 'construct-outline' },
-  { id: 'security', label: 'Security threat', icon: 'shield-outline' },
+  { 
+    id: 'accident', 
+    label: 'Accident Report', 
+    icon: 'alert-circle-outline',
+    description: 'Report an accident and get immediate assistance'
+  },
+  { 
+    id: 'breakdown', 
+    label: 'Vehicle Breakdown', 
+    icon: 'construct-outline',
+    description: 'Get roadside assistance or towing services'
+  },
+  { 
+    id: 'security', 
+    label: 'Security Threat', 
+    icon: 'shield-outline',
+    description: 'Report suspicious activity or safety concerns'
+  },
 ];
 
 const EmergencyOptionsScreen = () => {
@@ -27,8 +42,14 @@ const EmergencyOptionsScreen = () => {
   );
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24, backgroundColor: theme.colors.background }]}>
-      <View style={[styles.header, { marginTop: 8 }]}>
+    <View style={[styles.container, { 
+      paddingTop: insets.top + 16, 
+      paddingBottom: insets.bottom + 24, 
+      backgroundColor: theme.colors.background 
+    }]}>
+      
+      {/* Header */}
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={[styles.backButton, { backgroundColor: theme.colors.white }]}
@@ -38,29 +59,70 @@ const EmergencyOptionsScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Emergency</Text>
+      {/* Main Content */}
+      <View style={styles.content}>
+        <View style={styles.titleContainer}>
+          <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
+            Emergency Assistance
+          </Text>
+          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+            Choose the type of emergency so we can connect you to the right help
+          </Text>
+        </View>
 
-      <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-        Choose the situation so we can get you to the right help quickly.
-      </Text>
+        {/* Emergency Options - No Cards, No Colors */}
+        <View style={styles.optionsContainer}>
+          {emergencyOptions.map((option, index) => (
+            <React.Fragment key={option.id}>
+              <TouchableOpacity
+                style={styles.optionItem}
+                activeOpacity={0.7}
+                onPress={() => {
+                  // navigation.navigate('Emergency' + option.id)
+                }}
+              >
+                <View style={styles.optionLeft}>
+                  <Ionicons name={option.icon} size={22} color={theme.colors.textPrimary} />
+                  <View style={styles.optionTextContainer}>
+                    <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>
+                      {option.label}
+                    </Text>
+                    <Text style={[styles.optionDescription, { color: theme.colors.textSecondary }]}>
+                      {option.description}
+                    </Text>
+                  </View>
+                </View>
+                <Ionicons 
+                  name="chevron-forward-outline" 
+                  size={20} 
+                  color={theme.colors.textSecondary} 
+                />
+              </TouchableOpacity>
+              
+              {/* Subtle separator line */}
+              {index < emergencyOptions.length - 1 && (
+                <View style={[styles.separator, { backgroundColor: theme.colors.border + '20' }]} />
+              )}
+            </React.Fragment>
+          ))}
+        </View>
 
-      <View style={styles.optionsContainer}>
-        {emergencyOptions.map(option => (
-          <TouchableOpacity
-            key={option.id}
-            style={[styles.optionCard, { backgroundColor: theme.colors.white, shadowColor: '#000' }]}
-            activeOpacity={0.85}
-            onPress={() => {
-              // Destination screens to be wired later
-              // navigation.navigate('Emergency' + option.id)
-            }}
-          >
-            <Ionicons name={option.icon} size={24} color={theme.colors.primary} />
-            <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>
-              {option.label}
+        {/* Emergency Contact Info */}
+        <View style={[styles.emergencyInfo, { backgroundColor: theme.colors.background + '80' }]}>
+          <View style={styles.infoRow}>
+            <Ionicons name="call-outline" size={18} color={theme.colors.textSecondary} />
+            <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
+              Direct Emergency Line:{' '}
+              <Text style={[styles.infoHighlight, { color: theme.colors.textPrimary }]}>999</Text>
             </Text>
-          </TouchableOpacity>
-        ))}
+          </View>
+          <View style={styles.infoRow}>
+            <Ionicons name="information-circle-outline" size={18} color={theme.colors.textSecondary} />
+            <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
+              For immediate danger, call 999 first
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -69,13 +131,10 @@ const EmergencyOptionsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginBottom: 6,
+    paddingHorizontal: 20,
+    marginBottom: 8,
   },
   backButton: {
     width: 40,
@@ -84,44 +143,84 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.16,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  titleContainer: {
+    marginBottom: 40,
+    paddingHorizontal: 4,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontFamily: 'Nunito_700Bold',
-    textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 8,
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: 'Nunito_400Regular',
-    textAlign: 'center',
-    marginBottom: 24,
     lineHeight: 22,
+    opacity: 0.8,
   },
   optionsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    gap: 14,
+    marginBottom: 32,
   },
-  optionCard: {
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
+    paddingHorizontal: 4,
+    backgroundColor: 'transparent',
+  },
+  optionLeft: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    flex: 1,
+    gap: 16,
+  },
+  optionTextContainer: {
+    flex: 1,
+  },
+  optionLabel: {
+    fontSize: 17,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 4,
+  },
+  optionDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    opacity: 0.7,
+  },
+  separator: {
+    height: 1,
+    marginLeft: 38, // Icon width (22) + gap (16) = 38
+    marginRight: 4,
+  },
+  emergencyInfo: {
+    padding: 20,
+    borderRadius: 12,
+    gap: 16,
+  },
+  infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-    borderRadius: 16,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
-    elevation: 5,
   },
-  optionLabel: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+  infoText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    flex: 1,
+    opacity: 0.9,
+  },
+  infoHighlight: {
+    fontFamily: 'Nunito_700Bold',
   },
 });
 

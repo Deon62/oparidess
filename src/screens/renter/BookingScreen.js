@@ -820,7 +820,7 @@ const BookingScreen = () => {
             Total
           </Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            {formatCurrency(totalPrice)}
+            {formatCurrency(totalPrice, { showDecimals: false })}
           </Text>
         </View>
         <Button

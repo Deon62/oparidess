@@ -16,6 +16,7 @@ const BookingConfirmationScreen = () => {
 
   // Payment option: 'payNow' (default) or 'payOnSite'
   const [paymentOption, setPaymentOption] = useState('payNow');
+  const [showBreakdown, setShowBreakdown] = useState(false);
   
   // Commission rate (15%)
   const COMMISSION_RATE = 0.15;
@@ -259,56 +260,7 @@ const BookingConfirmationScreen = () => {
         </Text>
 
         <Card style={[styles.priceCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.priceRow}>
-            <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-              Base Price ({bookingDetails?.days || 0} {bookingDetails?.days === 1 ? 'day' : 'days'})
-            </Text>
-            <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-              {formatCurrency(bookingDetails?.basePrice || 0)}
-            </Text>
-          </View>
-
-          {bookingDetails?.insuranceEnabled && (
-            <View style={styles.priceRow}>
-              <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                Insurance
-              </Text>
-              <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                {formatCurrency(bookingDetails?.insuranceCost || 0)}
-              </Text>
-            </View>
-          )}
-
-          {(() => {
-            // Calculate VAT breakdown from the total (VAT is already included)
-            const totalRentalPrice = bookingDetails?.totalRentalPrice || 0;
-            const subtotalBeforeVAT = totalRentalPrice / 1.16;
-            const vatAmount = totalRentalPrice - subtotalBeforeVAT;
-            
-            return (
-              <>
-                <View style={styles.priceRow}>
-                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                    Subtotal
-                  </Text>
-                  <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                    {formatCurrency(subtotalBeforeVAT)}
-                  </Text>
-                </View>
-
-                <View style={styles.priceRow}>
-                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
-                    VAT (16%)
-                  </Text>
-                  <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
-                    {formatCurrency(vatAmount)}
-                  </Text>
-                </View>
-              </>
-            );
-          })()}
-
-          <View style={[styles.priceRow, styles.priceRowTotal]}>
+          <View style={[styles.priceRow, styles.totalRow]}>
             <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
               {paymentOption === 'payOnSite' ? 'Total Rental Price' : 'Total'}
             </Text>
@@ -317,199 +269,93 @@ const BookingConfirmationScreen = () => {
             </Text>
           </View>
 
-          {paymentOption === 'payOnSite' && (
+          <TouchableOpacity
+            style={styles.breakdownToggle}
+            onPress={() => setShowBreakdown((prev) => !prev)}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.viewBreakdownText, { color: theme.colors.primary }]}>
+              {showBreakdown ? 'Hide breakdown' : 'View full breakdown'}
+            </Text>
+            <Ionicons
+              name={showBreakdown ? 'chevron-up' : 'chevron-down'}
+              size={18}
+              color={theme.colors.primary}
+            />
+          </TouchableOpacity>
+
+          {showBreakdown && (
             <>
               <View style={styles.priceDivider} />
-              <View style={[styles.priceRow, styles.priceRowPayNow]}>
-                <View style={styles.payNowLabelContainer}>
-                  <Text style={[styles.payNowLabel, { color: theme.colors.textPrimary }]}>
-                    Amount to Pay Now
+              <View style={styles.priceRow}>
+                <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                  Base Price ({bookingDetails?.days || 0} {bookingDetails?.days === 1 ? 'day' : 'days'})
+                </Text>
+                <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                  {formatCurrency(bookingDetails?.basePrice || 0)}
+                </Text>
+              </View>
+
+              {bookingDetails?.insuranceEnabled && (
+                <View style={styles.priceRow}>
+                  <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                    Insurance
                   </Text>
-                  <Text style={[styles.payNowSubtext, { color: theme.colors.textSecondary }]}>
-                    Booking fee only
+                  <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                    {formatCurrency(bookingDetails?.insuranceCost || 0)}
                   </Text>
                 </View>
-                <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(bookingFee)}
-                </Text>
-              </View>
-            </>
-          )}
-        </Card>
-      </View>
+              )}
 
-      {/* Payment Options */}
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-          Payment Options
-        </Text>
-        <Card style={[styles.paymentOptionsCard, { backgroundColor: theme.colors.white }]}>
-          {/* Pay Now Option */}
-          <TouchableOpacity
-            style={[
-              styles.paymentOption,
-              paymentOption === 'payNow' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
-              { borderWidth: 2, borderColor: theme.colors.hint + '40' }
-            ]}
-            onPress={() => setPaymentOption('payNow')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.paymentOptionContent}>
-              <Ionicons 
-                name="card-outline" 
-                size={24} 
-                color={paymentOption === 'payNow' ? theme.colors.primary : theme.colors.hint} 
-              />
-              <View style={styles.paymentOptionText}>
-                <Text style={[
-                  styles.paymentOptionTitle, 
-                  { color: paymentOption === 'payNow' ? theme.colors.textPrimary : theme.colors.textSecondary }
-                ]}>
-                  Pay Now
-                </Text>
-                <Text style={[styles.paymentOptionDesc, { color: theme.colors.textSecondary }]}>
-                  Pay the full amount now
-                </Text>
-              </View>
-            </View>
-            {paymentOption === 'payNow' && (
-              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-            )}
-          </TouchableOpacity>
+              {(() => {
+                // Calculate VAT breakdown from the total (VAT is already included)
+                const totalRentalPrice = bookingDetails?.totalRentalPrice || 0;
+                const subtotalBeforeVAT = totalRentalPrice / 1.16;
+                const vatAmount = totalRentalPrice - subtotalBeforeVAT;
+                
+                return (
+                  <>
+                    <View style={styles.priceRow}>
+                      <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                        Subtotal
+                      </Text>
+                      <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                        {formatCurrency(subtotalBeforeVAT)}
+                      </Text>
+                    </View>
 
-          {/* Pay on Site Option */}
-          <TouchableOpacity
-            style={[
-              styles.paymentOption,
-              paymentOption === 'payOnSite' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
-              { borderWidth: 2, borderColor: theme.colors.hint + '40', marginTop: 12 }
-            ]}
-            onPress={() => setPaymentOption('payOnSite')}
-            activeOpacity={0.7}
-          >
-            <View style={styles.paymentOptionContent}>
-              <Ionicons 
-                name="location-outline" 
-                size={24} 
-                color={paymentOption === 'payOnSite' ? theme.colors.primary : theme.colors.hint} 
-              />
-              <View style={styles.paymentOptionText}>
-                <Text style={[
-                  styles.paymentOptionTitle, 
-                  { color: paymentOption === 'payOnSite' ? theme.colors.textPrimary : theme.colors.textSecondary }
-                ]}>
-                  Pay on Site
-                </Text>
-                <Text style={[styles.paymentOptionDesc, { color: theme.colors.textSecondary }]}>
-                  Reserve now, pay owner at pickup
-                </Text>
-              </View>
-            </View>
-            {paymentOption === 'payOnSite' && (
-              <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-            )}
-          </TouchableOpacity>
+                    <View style={styles.priceRow}>
+                      <Text style={[styles.priceLabel, { color: theme.colors.textSecondary }]}>
+                        VAT (16%)
+                      </Text>
+                      <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
+                        {formatCurrency(vatAmount)}
+                      </Text>
+                    </View>
+                  </>
+                );
+              })()}
 
-          {paymentOption === 'payOnSite' && (
-            <View style={[styles.payOnSiteInfo, { backgroundColor: theme.colors.primary + '10', marginTop: 16 }]}>
-              <View style={styles.infoRow}>
-                <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
-                <Text style={[styles.infoText, { color: theme.colors.textPrimary }]}>
-                  Reserve your booking by paying the booking fee (platform commission). You'll pay the car owner directly when you pick up the car.
-                </Text>
-              </View>
-              <View style={[styles.bookingFeeRow, { borderTopColor: theme.colors.hint + '30' }]}>
-                <Text style={[styles.bookingFeeLabel, { color: theme.colors.textSecondary }]}>
-                  Booking Fee
-                </Text>
-                <Text style={[styles.bookingFeeValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(bookingFee)}
-                </Text>
-              </View>
-              <View style={[styles.balanceOnSiteRow, { backgroundColor: '#FF9800' + '15' }]}>
-                <View style={styles.balanceOnSiteLeft}>
-                  <Ionicons name="cash-outline" size={18} color="#FF9800" />
-                  <View style={styles.balanceOnSiteLabelContainer}>
-                    <Text style={[styles.balanceOnSiteLabel, { color: theme.colors.textPrimary }]}>
-                      Balance to Pay on Site
-                    </Text>
-                    <Text style={[styles.balanceOnSiteSubtext, { color: theme.colors.textSecondary }]}>
-                      Pay directly to owner at pickup
+              {paymentOption === 'payOnSite' && (
+                <>
+                  <View style={styles.priceDivider} />
+                  <View style={[styles.priceRow, styles.priceRowPayNow]}>
+                    <View style={styles.payNowLabelContainer}>
+                      <Text style={[styles.payNowLabel, { color: theme.colors.textPrimary }]}>
+                        Amount to Pay Now
+                      </Text>
+                      <Text style={[styles.payNowSubtext, { color: theme.colors.textSecondary }]}>
+                        Booking fee only
+                      </Text>
+                    </View>
+                    <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
+                      {formatCurrency(bookingFee)}
                     </Text>
                   </View>
-                </View>
-                <Text style={[styles.balanceOnSiteValue, { color: '#FF9800' }]}>
-                  {formatCurrency(balanceToPayOnSite)}
-                </Text>
-              </View>
-            </View>
+                </>
+              )}
+            </>
           )}
-        </Card>
-      </View>
-
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-      {/* Cancellation Policy */}
-      <View style={styles.section}>
-        <Card style={[styles.policyCard, { backgroundColor: theme.colors.white }]}>
-          <View style={styles.policyHeader}>
-            <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
-            <Text style={[styles.policyTitle, { color: theme.colors.textPrimary }]}>
-              Cancellation Policy
-            </Text>
-          </View>
-          <View style={styles.policyContent}>
-            <View style={styles.policyItem}>
-              <View style={[styles.policyBadge, { backgroundColor: '#4CAF50' + '20' }]}>
-                <Text style={[styles.policyBadgeText, { color: '#4CAF50' }]}>Free</Text>
-              </View>
-              <View style={styles.policyItemContent}>
-                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
-                  More than 48 hours before pickup
-                </Text>
-                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
-                  Full refund (100%)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.policyItem}>
-              <View style={[styles.policyBadge, { backgroundColor: '#FF9800' + '20' }]}>
-                <Text style={[styles.policyBadgeText, { color: '#FF9800' }]}>50%</Text>
-              </View>
-              <View style={styles.policyItemContent}>
-                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
-                  24-48 hours before pickup
-                </Text>
-                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
-                  Partial refund (50% of booking fee)
-                </Text>
-              </View>
-            </View>
-            <View style={styles.policyItem}>
-              <View style={[styles.policyBadge, { backgroundColor: '#F44336' + '20' }]}>
-                <Text style={[styles.policyBadgeText, { color: '#F44336' }]}>No</Text>
-              </View>
-              <View style={styles.policyItemContent}>
-                <Text style={[styles.policyItemTitle, { color: theme.colors.textPrimary }]}>
-                  Less than 24 hours before pickup
-                </Text>
-                <Text style={[styles.policyItemDesc, { color: theme.colors.textSecondary }]}>
-                  No refund (contact support for disputes)
-                </Text>
-              </View>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={styles.viewPolicyButton}
-            onPress={() => navigation.navigate('CancellationPolicy', { fromBookingConfirmation: true })}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.viewPolicyText, { color: theme.colors.primary }]}>
-              View Full Policy
-            </Text>
-            <Ionicons name="chevron-forward-outline" size={20} color={theme.colors.primary} />
-          </TouchableOpacity>
         </Card>
       </View>
 
@@ -578,7 +424,7 @@ const BookingConfirmationScreen = () => {
           {paymentOption === 'payOnSite' ? 'Booking Fee' : 'Total'}
         </Text>
         <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-          {formatCurrency(paymentOption === 'payOnSite' ? bookingFee : totalRentalPrice)}
+          {formatCurrency(paymentOption === 'payOnSite' ? bookingFee : totalRentalPrice, { showDecimals: false })}
         </Text>
       </View>
       <Button
@@ -683,14 +529,17 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     gap: 12,
   },
+  totalRow: {
+    marginBottom: 0,
+  },
   priceLabel: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     flex: 1,
     marginRight: 8,
   },
   priceValue: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
     flexShrink: 0,
     textAlign: 'right',
@@ -702,16 +551,27 @@ const styles = StyleSheet.create({
     borderTopColor: '#F0F0F0',
   },
   priceLabelTotal: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: 'Nunito_700Bold',
     flex: 1,
     marginRight: 8,
   },
   priceValueTotal: {
-    fontSize: 24,
+    fontSize: 21,
     fontFamily: 'Nunito_700Bold',
     flexShrink: 0,
     textAlign: 'right',
+  },
+  breakdownToggle: {
+    marginTop: 8,
+    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  viewBreakdownText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_700Bold',
   },
   priceDivider: {
     height: 1,
@@ -953,9 +813,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
-    paddingBottom: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
     gap: 16,
@@ -969,7 +828,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   bottomBarPriceValue: {
-    fontSize: 24,
+    fontSize: 22,
     fontFamily: 'Nunito_700Bold',
   },
   proceedButton: {

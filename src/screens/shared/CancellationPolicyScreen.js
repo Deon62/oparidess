@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card, Toggle } from '../../packages/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const CancellationPolicyScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
+  const insets = useSafeAreaInsets();
   
   // Terms agreement toggle - default to true (always on)
   const [agreeToTerms, setAgreeToTerms] = useState(true);
@@ -57,13 +59,28 @@ const CancellationPolicyScreen = () => {
     'Owner-initiated cancellations result in a full refund to the renter',
   ];
 
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
   return (
-    <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <TouchableOpacity
+        style={[
+          styles.backButton,
+          { top: insets.top + 12, left: 16, backgroundColor: theme.colors.white },
+        ]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + 48 }]}
+        showsVerticalScrollIndicator={false}
+      >
+      <View style={[styles.header]}>
         <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
           Cancellation Policy
         </Text>
@@ -101,7 +118,8 @@ const CancellationPolicyScreen = () => {
           </View>
         </React.Fragment>
       ))}
-
+      
+ <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
       <View style={styles.section}>
         <View style={styles.generalCard}>
           <View style={styles.generalHeader}>
@@ -213,13 +231,17 @@ const CancellationPolicyScreen = () => {
         </View>
       )}
 
-      <View style={{ height: 40 }} />
-    </ScrollView>
+        <View style={{ height: 40 }} />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollView: {
     flex: 1,
   },
   contentContainer: {
@@ -239,6 +261,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 22,
+  },
+  backButton: {
+    position: 'absolute',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+    zIndex: 10,
+  },
+  sectionSeparator: {
+    height: 1,
+    marginTop: 16,
+    marginHorizontal: 24,
+    backgroundColor: '#00000040',
   },
   section: {
     paddingHorizontal: 24,

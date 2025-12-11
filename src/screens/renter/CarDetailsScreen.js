@@ -533,9 +533,32 @@ const CarDetailsScreen = () => {
                 <Text style={[styles.summaryLocation, { color: theme.colors.textSecondary }]}>
                   {carData.location || 'Nairobi, Kenya'}
                 </Text>
-                <Text style={[styles.summarySpecs, { color: theme.colors.textSecondary }]}>
-                  {`${carData.seats || 4} seats · ${carData.transmission || 'Automatic'} · ${carData.fuel || 'Petrol'}`}
-                </Text>
+                <View style={styles.summarySpecsRow}>
+                  <View style={styles.summarySpecItem}>
+                    <Ionicons name="people-outline" size={14} color={theme.colors.hint} />
+                    <Text style={[styles.summarySpecText, { color: theme.colors.textSecondary }]}>
+                      {carData.seats || 4} seats
+                    </Text>
+                  </View>
+                  <Text style={[styles.summarySpecDot, { color: theme.colors.hint }]}>·</Text>
+                  <View style={styles.summarySpecItem}>
+                    <Ionicons 
+                      name={carData.transmission === 'Automatic' ? 'speedometer-outline' : 'git-branch-outline'} 
+                      size={14} 
+                      color={theme.colors.hint} 
+                    />
+                    <Text style={[styles.summarySpecText, { color: theme.colors.textSecondary }]}>
+                      {carData.transmission || 'Automatic'}
+                    </Text>
+                  </View>
+                  <Text style={[styles.summarySpecDot, { color: theme.colors.hint }]}>·</Text>
+                  <View style={styles.summarySpecItem}>
+                    <Ionicons name="flame-outline" size={14} color={theme.colors.hint} />
+                    <Text style={[styles.summarySpecText, { color: theme.colors.textSecondary }]}>
+                      {carData.fuel || 'Petrol'}
+                    </Text>
+                  </View>
+                </View>
               </View>
               <View style={styles.summaryRow}>
                 <View style={styles.summaryItem}>
@@ -1385,6 +1408,25 @@ const styles = StyleSheet.create({
   summarySpecs: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
+  },
+  summarySpecsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  summarySpecItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  summarySpecText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  summarySpecDot: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginHorizontal: 2,
   },
   summaryRow: {
     flexDirection: 'row',

@@ -1134,7 +1134,7 @@ const CarDetailsScreen = () => {
         >
             {reviews.map((review, index) => (
               <React.Fragment key={review.id}>
-                <View style={[styles.reviewCard, { backgroundColor: theme.colors.white }]}>
+                <View style={styles.reviewCard}>
                   <View style={styles.reviewHeader}>
                     <Image source={review.reviewerPhoto} style={styles.reviewerPhoto} resizeMode="cover" />
                     <View style={styles.reviewerInfo}>
@@ -2027,10 +2027,11 @@ const styles = StyleSheet.create({
   },
   reviewCard: {
     width: 270,
-    borderRadius: 16,
-    padding: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 0,
     marginRight: 12,
     gap: 14,
+    backgroundColor: 'transparent',
   },
   reviewHeader: {
     flexDirection: 'row',

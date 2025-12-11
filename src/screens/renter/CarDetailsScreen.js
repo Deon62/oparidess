@@ -1093,33 +1093,36 @@ const CarDetailsScreen = () => {
           contentContainerStyle={styles.reviewsContainer}
           style={styles.reviewsScrollView}
         >
-            {reviews.map((review) => (
-              <View key={review.id} style={[styles.reviewCard, { backgroundColor: theme.colors.white }]}>
-                <View style={styles.reviewHeader}>
-                  <Image source={review.reviewerPhoto} style={styles.reviewerPhoto} resizeMode="cover" />
-                  <View style={styles.reviewerInfo}>
-                    <Text style={[styles.reviewerName, { color: theme.colors.textPrimary }]}>
-                      {review.reviewerName}
-                    </Text>
-                    <View style={styles.reviewRating}>
-                      {[...Array(5)].map((_, i) => (
-                        <Ionicons
-                          key={i}
-                          name={i < review.rating ? 'star' : 'star-outline'}
-                          size={14}
-                          color="#FFD700"
-                        />
-                      ))}
+            {reviews.map((review, index) => (
+              <React.Fragment key={review.id}>
+                <View style={[styles.reviewCard, { backgroundColor: theme.colors.white }]}>
+                  <View style={styles.reviewHeader}>
+                    <Image source={review.reviewerPhoto} style={styles.reviewerPhoto} resizeMode="cover" />
+                    <View style={styles.reviewerInfo}>
+                      <Text style={[styles.reviewerName, { color: theme.colors.textPrimary }]}>
+                        {review.reviewerName}
+                      </Text>
+                      <View style={styles.reviewRating}>
+                        {[...Array(5)].map((_, i) => (
+                          <Ionicons
+                            key={i}
+                            name={i < review.rating ? 'star' : 'star-outline'}
+                            size={14}
+                            color="#FFD700"
+                          />
+                        ))}
+                      </View>
+                      <Text style={[styles.reviewDate, { color: theme.colors.textSecondary }]}>
+                        {review.date}
+                      </Text>
                     </View>
-                    <Text style={[styles.reviewDate, { color: theme.colors.textSecondary }]}>
-                      {review.date}
-                    </Text>
                   </View>
+                  <Text style={[styles.reviewComment, { color: theme.colors.textSecondary }]}>
+                    {review.comment}
+                  </Text>
                 </View>
-                <Text style={[styles.reviewComment, { color: theme.colors.textSecondary }]}>
-                  {review.comment}
-                </Text>
-              </View>
+                {index !== reviews.length - 1 && <View style={styles.reviewDivider} />}
+              </React.Fragment>
             ))}
         </ScrollView>
 
@@ -1783,7 +1786,7 @@ const styles = StyleSheet.create({
   },
   reviewSummaryRating: {
     fontSize: 44,
-    fontFamily: 'Nunito_800ExtraBold',
+    fontFamily: 'Nunito_700Bold',
     letterSpacing: -0.5,
     color: '#000',
   },
@@ -1818,6 +1821,13 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 2,
     backgroundColor: '#C0C0C0',
+  },
+  reviewDivider: {
+    width: 1,
+    height: '80%',
+    alignSelf: 'center',
+    backgroundColor: '#2C2C2C',
+    opacity: 0.25,
   },
   reviewCard: {
     width: 270,

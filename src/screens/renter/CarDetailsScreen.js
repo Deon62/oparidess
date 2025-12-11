@@ -284,6 +284,14 @@ const CarDetailsScreen = () => {
     'Leather Seats',
   ];
 
+  // Icons for guarantees
+  const guaranteeIcons = {
+    verified: require('../../../assets/icons/verified.png'),
+    booking: require('../../../assets/icons/booking.png'),
+    support: require('../../../assets/icons/support.png'),
+    cancellation: require('../../../assets/icons/cancellation.png'),
+  };
+
   // Host information
   const hostInfo = {
     name: 'John Kamau',
@@ -930,9 +938,7 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={styles.guaranteesCard}>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.guaranteeLabel}>A</Text>
-              </View>
+              <Image source={guaranteeIcons.verified} style={styles.guaranteeBadgeImage} resizeMode="contain" />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Verified Vehicles
@@ -943,9 +949,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.guaranteeLabel}>B</Text>
-              </View>
+              <Image source={guaranteeIcons.booking} style={styles.guaranteeBadgeImage} resizeMode="contain" />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Secure Booking
@@ -956,9 +960,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.guaranteeLabel}>C</Text>
-              </View>
+              <Image source={guaranteeIcons.support} style={styles.guaranteeBadgeImage} resizeMode="contain" />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   24/7 Support
@@ -969,9 +971,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <View style={[styles.guaranteeBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.guaranteeLabel}>D</Text>
-              </View>
+              <Image source={guaranteeIcons.cancellation} style={styles.guaranteeBadgeImage} resizeMode="contain" />
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Easy Cancellation
@@ -1990,26 +1990,20 @@ const styles = StyleSheet.create({
   },
   // Opa Guarantees section styles
   guaranteesCard: {
-    padding: 24,
-    gap: 24,
+    paddingVertical: 12,
+    paddingTop: 8,
+    gap: 18,
   },
   guaranteeItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 16,
   },
-  guaranteeBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
+  guaranteeBadgeImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     flexShrink: 0,
-  },
-  guaranteeLabel: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    color: '#FFFFFF',
   },
   guaranteeContent: {
     flex: 1,

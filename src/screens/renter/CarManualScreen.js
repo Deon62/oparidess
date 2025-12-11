@@ -16,9 +16,9 @@ const CarManualScreen = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: `${car?.name || 'Car'} Manual`,
+      headerShown: false,
     });
-  }, [navigation, car]);
+  }, [navigation]);
 
   const handleCallOwner = () => {
     if (hostPhone) {
@@ -39,9 +39,19 @@ const CarManualScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <TouchableOpacity
+        style={[
+          styles.backButton,
+          { top: insets.top + 12, left: 16, backgroundColor: theme.colors.white },
+        ]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + 48 }]}
         showsVerticalScrollIndicator={false}
       >
         {/* Header Info */}
@@ -159,6 +169,20 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 24,
   },
+  backButton: {
+    position: 'absolute',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 4,
+    zIndex: 10,
+  },
   headerSection: {
     marginBottom: 24,
     gap: 8,
@@ -227,6 +251,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     marginTop: 12,
     marginBottom: 12,
+  },
+  readMoreButton: {
+    paddingVertical: 6,
+  },
+  readMoreText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
   },
 });
 

@@ -527,73 +527,50 @@ const CarDetailsScreen = () => {
               </View>
             </View>
 
-            {/* Location and Type */}
-            <View style={styles.locationRow}>
-              <Ionicons name="location-outline" size={14} color={theme.colors.hint} />
-              <Text style={[styles.locationText, { color: theme.colors.textSecondary }]}>
-                {carData.location || 'Nairobi, Kenya'}
-              </Text>
-            </View>
-
-            {/* Key Specs - Clean Format with Icons */}
-            <View style={styles.specsRow}>
-              <View style={styles.specItem}>
-                <Ionicons name="people-outline" size={14} color={theme.colors.hint} />
-                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
-                  {carData.seats} seats
+            {/* Organized Summary */}
+            <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
+              <View style={styles.summaryHeader}>
+                <Text style={[styles.summaryLocation, { color: theme.colors.textSecondary }]}>
+                  {carData.location || 'Nairobi, Kenya'}
+                </Text>
+                <Text style={[styles.summarySpecs, { color: theme.colors.textSecondary }]}>
+                  {`${carData.seats || 4} seats · ${carData.transmission || 'Automatic'} · ${carData.fuel || 'Petrol'}`}
                 </Text>
               </View>
-              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
-              <View style={styles.specItem}>
-                <Ionicons name="car-outline" size={14} color={theme.colors.hint} />
-                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
-                  {carData.fuel}
-                </Text>
-              </View>
-              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
-              <View style={styles.specItem}>
-                <Ionicons 
-                  name={carData.transmission === 'Automatic' ? 'speedometer-outline' : 'git-branch-outline'} 
-                  size={14} 
-                  color={theme.colors.hint} 
-                />
-                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
-                  {carData.transmission || 'Automatic'}
-                </Text>
-              </View>
-              <Text style={[styles.specsSeparator, { color: theme.colors.hint }]}>·</Text>
-              <View style={styles.specItem}>
-                <Ionicons name="color-fill-outline" size={14} color={theme.colors.hint} />
-                <Text style={[styles.specsText, { color: theme.colors.textSecondary }]}>
-                  {carData.color}
-                </Text>
-              </View>
-            </View>
-
-            {/* Rating and Reviews */}
-            <View style={styles.ratingRow}>
-              <View style={styles.ratingContainer}>
-                <Ionicons name="star" size={16} color="#000000" />
-                <Text style={[styles.ratingText, { color: theme.colors.textPrimary }]}>
-                  {carData.rating || 4.8}
-                </Text>
-                <View style={styles.starsContainer}>
-                  {[...Array(5)].map((_, i) => (
-                    <Ionicons
-                      key={i}
-                      name={i < Math.floor(carData.rating || 4.8) ? 'star' : 'star-outline'}
-                      size={14}
-                      color="#000000"
-                      style={styles.starIcon}
-                    />
-                  ))}
+              <View style={styles.summaryRow}>
+                <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
+                    {carData.rating || 4.8}
+                  </Text>
+                  <View style={styles.summaryStars}>
+                    {[...Array(5)].map((_, i) => (
+                      <Ionicons
+                        key={i}
+                        name={i < Math.round(carData.rating || 4.8) ? 'star' : 'star-outline'}
+                        size={14}
+                        color="#000000"
+                      />
+                    ))}
+                  </View>
+                </View>
+                <View style={styles.summaryDivider} />
+                <View style={styles.summaryItem}>
+                  <View style={styles.summaryLaurels}>
+                    <Text style={styles.summaryLaurel}>🍃</Text>
+                    <Text style={[styles.summaryLabel, { color: theme.colors.textPrimary }]}>Guest favourite</Text>
+                    <Text style={styles.summaryLaurel}>🍃</Text>
+                  </View>
+                </View>
+                <View style={styles.summaryDivider} />
+                <View style={styles.summaryItem}>
+                  <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
+                    {carData.reviewCount || reviews.length}
+                  </Text>
+                  <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>
+                    Reviews
+                  </Text>
                 </View>
               </View>
-              {carData.reviewCount && (
-                <Text style={[styles.reviewCountText, { color: theme.colors.textSecondary }]}>
-                  {carData.reviewCount} Reviews
-                </Text>
-              )}
             </View>
 
             {/* Description */}
@@ -1386,6 +1363,69 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     marginHorizontal: 2,
+  },
+  summaryCard: {
+    marginTop: 12,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+    gap: 12,
+  },
+  summaryHeader: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  summaryLocation: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.2,
+  },
+  summarySpecs: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  summaryItem: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 6,
+    gap: 6,
+  },
+  summaryValue: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.2,
+  },
+  summaryStars: {
+    flexDirection: 'row',
+    gap: 2,
+  },
+  summaryLaurels: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingLeft: 6,
+  },
+  summaryLaurel: {
+    fontSize: 16,
+  },
+  summaryLabel: {
+    fontSize: 14,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  summaryDivider: {
+    width: 1,
+    height: 32,
+    backgroundColor: '#D3D3D3',
+    opacity: 0.9,
+    marginHorizontal: 4,
   },
   ratingRow: {
     flexDirection: 'row',

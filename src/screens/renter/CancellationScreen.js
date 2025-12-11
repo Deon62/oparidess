@@ -61,21 +61,18 @@ const CancellationScreen = () => {
         eligible: true,
         percentage: 100,
         message: 'Full refund (100%)',
-        color: '#4CAF50',
       };
     } else if (hours > 24) {
       return {
         eligible: true,
         percentage: 50,
         message: 'Partial refund (50% of booking fee)',
-        color: '#FF9800',
       };
     } else {
       return {
         eligible: false,
         percentage: 0,
         message: 'No refund (less than 24 hours)',
-        color: '#F44336',
       };
     }
   };
@@ -157,7 +154,7 @@ const CancellationScreen = () => {
         <View style={styles.section}>
           <Card style={[styles.bookingCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.bookingHeader}>
-              <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={24} color={theme.colors.textPrimary} />
               <View style={styles.bookingHeaderContent}>
                 <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]}>
                   Booking Details
@@ -193,7 +190,7 @@ const CancellationScreen = () => {
           <View style={styles.section}>
             <Card style={[styles.timeCard, { backgroundColor: theme.colors.white }]}>
               <View style={styles.timeHeader}>
-                <Ionicons name="time-outline" size={24} color={theme.colors.primary} />
+                <Ionicons name="time-outline" size={24} color={theme.colors.textPrimary} />
                 <View style={styles.timeContent}>
                   <Text style={[styles.timeLabel, { color: theme.colors.textSecondary }]}>
                     Time until pickup
@@ -214,12 +211,12 @@ const CancellationScreen = () => {
         <View style={styles.section}>
           <Card style={[styles.refundCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.refundHeader}>
-              <Ionicons name="cash-outline" size={24} color={refundInfo.color} />
+              <Ionicons name="cash-outline" size={24} color={theme.colors.textPrimary} />
               <View style={styles.refundHeaderContent}>
                 <Text style={[styles.refundTitle, { color: theme.colors.textPrimary }]}>
                   Refund Eligibility
                 </Text>
-                <Text style={[styles.refundMessage, { color: refundInfo.color }]}>
+                <Text style={[styles.refundMessage, { color: theme.colors.textPrimary }]}>
                   {refundInfo.message}
                 </Text>
               </View>
@@ -229,7 +226,7 @@ const CancellationScreen = () => {
                 <Text style={[styles.refundAmountLabel, { color: theme.colors.textSecondary }]}>
                   Estimated Refund
                 </Text>
-                <Text style={[styles.refundAmountValue, { color: refundInfo.color }]}>
+                <Text style={[styles.refundAmountValue, { color: theme.colors.textPrimary }]}>
                   {formatCurrency(refundAmount)}
                 </Text>
                 <Text style={[styles.refundNote, { color: theme.colors.textSecondary }]}>
@@ -243,12 +240,12 @@ const CancellationScreen = () => {
                   Cancellations within 24 hours of pickup are not eligible for refunds. You may contact support for special circumstances or file a dispute.
                 </Text>
                 <TouchableOpacity
-                  style={[styles.disputeButton, { borderColor: theme.colors.primary }]}
+                  style={[styles.disputeButton, { borderColor: theme.colors.textPrimary }]}
                   onPress={() => navigation.navigate('Dispute', { bookingDetails })}
                   activeOpacity={0.7}
                 >
-                  <Ionicons name="alert-circle-outline" size={20} color={theme.colors.primary} />
-                  <Text style={[styles.disputeButtonText, { color: theme.colors.primary }]}>
+                  <Ionicons name="alert-circle-outline" size={20} color={theme.colors.textPrimary} />
+                  <Text style={[styles.disputeButtonText, { color: theme.colors.textPrimary }]}>
                     File a Dispute
                   </Text>
                 </TouchableOpacity>
@@ -270,10 +267,10 @@ const CancellationScreen = () => {
                   styles.reasonButton,
                   {
                     backgroundColor: cancellationReason === reason 
-                      ? theme.colors.primary + '20' 
+                      ? theme.colors.background 
                       : theme.colors.white,
                     borderColor: cancellationReason === reason 
-                      ? theme.colors.primary 
+                      ? theme.colors.textPrimary 
                       : '#E0E0E0',
                   },
                 ]}
@@ -285,7 +282,7 @@ const CancellationScreen = () => {
                     styles.reasonButtonText,
                     {
                       color: cancellationReason === reason 
-                        ? theme.colors.primary 
+                        ? theme.colors.textPrimary 
                         : theme.colors.textPrimary,
                       fontFamily: cancellationReason === reason 
                         ? 'Nunito_600SemiBold' 
@@ -296,7 +293,7 @@ const CancellationScreen = () => {
                   {reason}
                 </Text>
                 {cancellationReason === reason && (
-                  <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+                  <Ionicons name="checkmark" size={18} color={theme.colors.textPrimary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -322,8 +319,8 @@ const CancellationScreen = () => {
         <Button
           title="Cancel Booking"
           onPress={handleCancel}
-          variant="primary"
-          style={[styles.cancelButton, { backgroundColor: '#F44336' }]}
+          variant="secondary"
+          style={[styles.cancelButton, { borderColor: theme.colors.textPrimary, borderWidth: 1 }]}
           disabled={!cancellationReason.trim() || processing}
         />
       </View>
@@ -337,8 +334,8 @@ const CancellationScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.modalIconContainer, { backgroundColor: '#F44336' + '20' }]}>
-              <Ionicons name="alert-circle" size={64} color="#F44336" />
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.background }]}>
+              <Ionicons name="alert-circle-outline" size={48} color={theme.colors.textPrimary} />
             </View>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               Confirm Cancellation
@@ -347,8 +344,8 @@ const CancellationScreen = () => {
               Are you sure you want to cancel this booking? This action cannot be undone.
             </Text>
             {refundInfo.eligible && (
-              <View style={[styles.modalRefundInfo, { backgroundColor: refundInfo.color + '10' }]}>
-                <Text style={[styles.modalRefundText, { color: refundInfo.color }]}>
+              <View style={[styles.modalRefundInfo, { backgroundColor: theme.colors.background }]}>
+                <Text style={[styles.modalRefundText, { color: theme.colors.textPrimary }]}>
                   You will receive a refund of {formatCurrency(refundAmount)}
                 </Text>
               </View>
@@ -364,8 +361,8 @@ const CancellationScreen = () => {
               <Button
                 title="Yes, Cancel"
                 onPress={confirmCancellation}
-                variant="primary"
-                style={[styles.modalButton, { backgroundColor: '#F44336' }]}
+                variant="secondary"
+                style={[styles.modalButton, { borderColor: theme.colors.textPrimary, borderWidth: 1 }]}
                 loading={processing}
                 disabled={processing}
               />
@@ -383,8 +380,8 @@ const CancellationScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.modalIconContainer, { backgroundColor: '#4CAF50' + '20' }]}>
-              <Ionicons name="checkmark-circle" size={64} color="#4CAF50" />
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.background }]}>
+              <Ionicons name="checkmark-circle-outline" size={48} color={theme.colors.textPrimary} />
             </View>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               Booking Cancelled
@@ -393,8 +390,8 @@ const CancellationScreen = () => {
               Your booking has been cancelled successfully.
             </Text>
             {refundInfo.eligible && (
-              <View style={[styles.modalRefundInfo, { backgroundColor: '#4CAF50' + '10' }]}>
-                <Text style={[styles.modalRefundText, { color: '#4CAF50' }]}>
+              <View style={[styles.modalRefundInfo, { backgroundColor: theme.colors.background }]}>
+                <Text style={[styles.modalRefundText, { color: theme.colors.textPrimary }]}>
                   Refund of {formatCurrency(refundAmount)} will be processed within 5-7 business days
                 </Text>
               </View>
@@ -402,8 +399,8 @@ const CancellationScreen = () => {
             <Button
               title="Done"
               onPress={handleSuccessClose}
-              variant="primary"
-              style={styles.modalButton}
+              variant="secondary"
+              style={[styles.modalButton, { borderColor: theme.colors.textPrimary, borderWidth: 1 }]}
             />
           </View>
         </View>

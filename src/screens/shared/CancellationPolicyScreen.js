@@ -21,7 +21,6 @@ const CancellationPolicyScreen = () => {
       title: 'Free Cancellation',
       timeFrame: 'More than 48 hours before pickup',
       refund: '100% refund',
-      color: '#4CAF50',
       details: [
         'Full refund of booking fee and rental amount',
         'No cancellation charges',
@@ -32,7 +31,6 @@ const CancellationPolicyScreen = () => {
       title: 'Partial Refund',
       timeFrame: '24-48 hours before pickup',
       refund: '50% refund of booking fee',
-      color: '#FF9800',
       details: [
         '50% of booking fee will be refunded',
         'Full rental amount is non-refundable',
@@ -43,7 +41,6 @@ const CancellationPolicyScreen = () => {
       title: 'No Refund',
       timeFrame: 'Less than 24 hours before pickup',
       refund: 'No refund',
-      color: '#F44336',
       details: [
         'No refund for cancellations within 24 hours',
         'You may contact support for special circumstances',
@@ -78,12 +75,7 @@ const CancellationPolicyScreen = () => {
       {policySections.map((section, index) => (
         <View key={index} style={styles.section}>
           <Card style={[styles.policyCard, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.policyHeader, { borderLeftColor: section.color }]}>
-              <View style={[styles.policyBadge, { backgroundColor: section.color + '20' }]}>
-                <Text style={[styles.policyBadgeText, { color: section.color }]}>
-                  {section.refund}
-                </Text>
-              </View>
+            <View style={[styles.policyHeader, { borderLeftWidth: 0, paddingLeft: 0, marginLeft: 0 }]}>
               <View style={styles.policyHeaderContent}>
                 <Text style={[styles.policyTitle, { color: theme.colors.textPrimary }]}>
                   {section.title}
@@ -96,7 +88,7 @@ const CancellationPolicyScreen = () => {
             <View style={styles.policyDetails}>
               {section.details.map((detail, detailIndex) => (
                 <View key={detailIndex} style={styles.detailItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={section.color} />
+                  <Ionicons name="ellipse-outline" size={14} color={theme.colors.textSecondary} />
                   <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
                     {detail}
                   </Text>
@@ -110,7 +102,7 @@ const CancellationPolicyScreen = () => {
       <View style={styles.section}>
         <Card style={[styles.generalCard, { backgroundColor: theme.colors.white }]}>
           <View style={styles.generalHeader}>
-            <Ionicons name="document-text-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="document-text-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.generalTitle, { color: theme.colors.textPrimary }]}>
               General Terms
             </Text>
@@ -118,7 +110,7 @@ const CancellationPolicyScreen = () => {
           <View style={styles.generalList}>
             {generalTerms.map((term, index) => (
               <View key={index} style={styles.termItem}>
-                <Text style={[styles.termBullet, { color: theme.colors.primary }]}>•</Text>
+                <Text style={[styles.termBullet, { color: theme.colors.textSecondary }]}>•</Text>
                 <Text style={[styles.termText, { color: theme.colors.textSecondary }]}>
                   {term}
                 </Text>
@@ -129,8 +121,8 @@ const CancellationPolicyScreen = () => {
       </View>
 
       <View style={styles.section}>
-        <View style={[styles.supportCard, { backgroundColor: theme.colors.primary + '10' }]}>
-          <Ionicons name="help-circle-outline" size={32} color={theme.colors.primary} />
+        <View style={[styles.supportCard, { backgroundColor: theme.colors.white, borderColor: '#E0E0E0', borderWidth: 1 }]}>
+          <Ionicons name="help-circle-outline" size={32} color={theme.colors.textPrimary} />
           <Text style={[styles.supportTitle, { color: theme.colors.textPrimary }]}>
             Need Help?
           </Text>
@@ -138,7 +130,7 @@ const CancellationPolicyScreen = () => {
             If you have questions about cancellations or need to file a dispute, our support team is here to help.
           </Text>
           <TouchableOpacity
-            style={[styles.supportButton, { backgroundColor: theme.colors.primary }]}
+            style={[styles.supportButton, { backgroundColor: theme.colors.white, borderColor: theme.colors.textPrimary, borderWidth: 1 }]}
             onPress={() => {
               // Navigate to CustomerSupport in the ProfileTab
               const parent = navigation.getParent();
@@ -150,7 +142,7 @@ const CancellationPolicyScreen = () => {
             }}
             activeOpacity={0.7}
           >
-            <Text style={[styles.supportButtonText, { color: theme.colors.white }]}>
+            <Text style={[styles.supportButtonText, { color: theme.colors.textPrimary }]}>
               Contact Support
             </Text>
           </TouchableOpacity>
@@ -161,7 +153,7 @@ const CancellationPolicyScreen = () => {
       <View style={styles.section}>
         <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
           <View style={styles.termsHeader}>
-            <Ionicons name="document-text-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="document-text-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.termsTitle, { color: theme.colors.textPrimary, flex: 1 }]}>
               Terms and Conditions Agreement
             </Text>
@@ -178,9 +170,9 @@ const CancellationPolicyScreen = () => {
             </View>
           </View>
           {!agreeToTerms && (
-            <View style={[styles.warningBox, { backgroundColor: '#FF9800' + '15' }]}>
-              <Ionicons name="warning-outline" size={20} color="#FF9800" />
-              <Text style={[styles.warningText, { color: '#FF9800' }]}>
+            <View style={[styles.warningBox, { backgroundColor: theme.colors.background }]}>
+              <Ionicons name="warning-outline" size={20} color={theme.colors.textPrimary} />
+              <Text style={[styles.warningText, { color: theme.colors.textPrimary }]}>
                 You must agree to the terms to proceed with booking
               </Text>
             </View>
@@ -194,7 +186,9 @@ const CancellationPolicyScreen = () => {
             style={[
               styles.proceedButton,
               { 
-                backgroundColor: agreeToTerms ? theme.colors.primary : theme.colors.hint,
+                backgroundColor: theme.colors.white,
+                borderColor: theme.colors.textPrimary,
+                borderWidth: 1,
                 opacity: agreeToTerms ? 1 : 0.6
               }
             ]}
@@ -209,7 +203,7 @@ const CancellationPolicyScreen = () => {
             activeOpacity={0.7}
             disabled={!agreeToTerms}
           >
-            <Text style={[styles.proceedButtonText, { color: theme.colors.white }]}>
+            <Text style={[styles.proceedButtonText, { color: theme.colors.textPrimary }]}>
               Agree and Continue
             </Text>
           </TouchableOpacity>

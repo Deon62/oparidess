@@ -630,6 +630,14 @@ const BookingScreen = () => {
             </TouchableOpacity>
           </View>
 
+          {/* Separator between pickup and dropoff */}
+          <View
+            style={[
+              styles.sectionSeparator,
+              { borderTopColor: theme.colors.hint + '40', marginTop: 16, marginHorizontal: -16 },
+            ]}
+          />
+
           {/* Dropoff Date */}
           <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
             <View style={styles.dateSectionContent}>
@@ -738,168 +746,6 @@ const BookingScreen = () => {
             </View>
             <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
           </View>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Special Requirements */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Special Requirements
-          </Text>
-          <TextInput
-            style={[styles.requirementsInput, { color: theme.colors.textPrimary }]}
-            placeholder="Any special requests or requirements..."
-            placeholderTextColor={theme.colors.hint}
-            value={specialRequirements}
-            onChangeText={setSpecialRequirements}
-            multiline
-            numberOfLines={4}
-            textAlignVertical="top"
-          />
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Check-in Preference */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Check-in Preference
-          </Text>
-          <View style={styles.checkInOptionsContainer}>
-            <TouchableOpacity
-              style={[
-                styles.checkInOption,
-                checkInPreference === 'self' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
-                { borderWidth: 2, borderColor: theme.colors.hint + '40' }
-              ]}
-              onPress={() => setCheckInPreference('self')}
-              activeOpacity={0.7}
-            >
-              <View style={styles.checkInOptionContent}>
-                <Ionicons 
-                  name="key-outline" 
-                  size={24} 
-                  color={checkInPreference === 'self' ? theme.colors.primary : theme.colors.hint} 
-                />
-                <View style={styles.checkInOptionText}>
-                  <Text style={[
-                    styles.checkInOptionTitle, 
-                    { color: checkInPreference === 'self' ? theme.colors.textPrimary : theme.colors.textSecondary }
-                  ]}>
-                    Self Check-in
-                  </Text>
-                  <Text style={[styles.checkInOptionDesc, { color: theme.colors.textSecondary }]}>
-                    Get key from secure box independently
-                  </Text>
-                </View>
-              </View>
-              {checkInPreference === 'self' && (
-                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-              )}
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.checkInOption,
-                checkInPreference === 'assisted' && { backgroundColor: theme.colors.primary + '15', borderColor: theme.colors.primary },
-                { borderWidth: 2, borderColor: theme.colors.hint + '40' }
-              ]}
-              onPress={() => setCheckInPreference('assisted')}
-              activeOpacity={0.7}
-            >
-              <View style={styles.checkInOptionContent}>
-                <Ionicons 
-                  name="person-outline" 
-                  size={24} 
-                  color={checkInPreference === 'assisted' ? theme.colors.primary : theme.colors.hint} 
-                />
-                <View style={styles.checkInOptionText}>
-                  <Text style={[
-                    styles.checkInOptionTitle, 
-                    { color: checkInPreference === 'assisted' ? theme.colors.textPrimary : theme.colors.textSecondary }
-                  ]}>
-                    Assisted Check-in
-                  </Text>
-                  <Text style={[styles.checkInOptionDesc, { color: theme.colors.textSecondary }]}>
-                    Meet owner for guided walkthrough
-                  </Text>
-                </View>
-              </View>
-              {checkInPreference === 'assisted' && (
-                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
-              )}
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Optional Price Add-ons */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Optional Price Add-ons
-          </Text>
-          
-          {/* Insurance Toggle */}
-          <View style={styles.insuranceCard}>
-            <View style={styles.insuranceInfo}>
-              <Text style={[styles.insuranceTitle, { color: theme.colors.textPrimary }]}>
-                Additional Insurance
-              </Text>
-              <Text style={[styles.insuranceDescription, { color: theme.colors.textSecondary }]}>
-                Add comprehensive insurance coverage for extra protection (+KSh 1,500/day)
-              </Text>
-              
-              {/* Common Covers List */}
-              <View style={styles.coversList}>
-                <View style={styles.coverItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
-                    Collision Damage Waiver
-                  </Text>
-                </View>
-                <View style={styles.coverItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
-                    Theft Protection
-                  </Text>
-                </View>
-                <View style={styles.coverItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
-                    Third Party Liability
-                  </Text>
-                </View>
-                <View style={styles.coverItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.coverText, { color: theme.colors.textSecondary }]}>
-                    Personal Accident Coverage
-                  </Text>
-                </View>
-              </View>
-              
-              {/* Read More Link */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate('InsuranceDetails')}
-                activeOpacity={0.7}
-                style={styles.readMoreButton}
-              >
-                <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
-                  Read more
-                </Text>
-                <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
-              </TouchableOpacity>
-            </View>
-            <Toggle
-              value={insuranceEnabled}
-              onValueChange={setInsuranceEnabled}
-            />
-          </View>
-
         </View>
 
         {/* Separator Line */}

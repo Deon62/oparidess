@@ -10,7 +10,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const slides = [
   {
     id: 'discover',
-    title: 'Discover unique rides',
+    title: 'Discover unique cars',
     subtitle: 'Browse curated cars and services tailored to every trip.',
     icon: 'compass-outline',
     accent: '#2D9CDB',
@@ -24,14 +24,14 @@ const slides = [
   },
   {
     id: 'track',
-    title: 'Track your journey',
-    subtitle: 'Real-time updates from pickup to drop-off with peace of mind.',
+    title: 'Track your Booking',
+    subtitle: 'Real-time updates from Payments, pickup to drop-off with peace of mind.',
     icon: 'navigate-outline',
     accent: '#F2994A',
   },
   {
     id: 'enjoy',
-    title: 'Enjoy the drive',
+    title: 'Enjoy the car experience',
     subtitle: 'Premium support and seamless experiences wherever you go.',
     icon: 'car-sport-outline',
     accent: '#9B51E0',

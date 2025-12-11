@@ -341,12 +341,12 @@ const CarDetailsScreen = () => {
 
   // Host information
   const hostInfo = {
-    name: 'John Kamau',
+    name: 'Deon Chinese',
     photo: profileImage,
     rating: 4.8,
     tripsCount: 47,
     responseTime: '15 minutes',
-    phone: '+254 712 345 678',
+    phone: '+254 702 248 984',
     verified: {
       id: true,
       phone: true,
@@ -918,7 +918,7 @@ const CarDetailsScreen = () => {
                 {hostInfo.name} is a Superhost
               </Text>
               <Text style={[styles.hostDescription, { color: theme.colors.textSecondary }]}>
-                Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.
+                Opa Superowners are trusted partners with proven track records of maintaining quality vehicles and delivering exceptional rental experiences.
               </Text>
             </View>
 

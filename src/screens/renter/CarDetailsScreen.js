@@ -1143,6 +1143,7 @@ const CarDetailsScreen = () => {
             ))}
         </ScrollView>
 
+         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
         {/* Things to keep in mind */}
         <View style={styles.keepMindSection}>
@@ -1165,7 +1166,7 @@ const CarDetailsScreen = () => {
             <TouchableOpacity
               style={[styles.keepMindItem, styles.keepMindItemLast]}
               activeOpacity={0.8}
-              onPress={() => Alert.alert('Coming soon', 'Car manual will be available shortly.')}
+              onPress={() => navigation.navigate('CarManual')}
             >
               <Text style={[styles.keepMindText, { color: theme.colors.textPrimary }]}>
                 Car manual
@@ -1176,7 +1177,7 @@ const CarDetailsScreen = () => {
         </View>
 
         {/* Bottom spacing for fixed bar */}
-        <View style={{ height: 100 }} />
+        <View style={{ height: 48 }} />
         </View>
       </ScrollView>
 

@@ -951,7 +951,7 @@ const CarDetailsScreen = () => {
             {whyChooseItems.map((item, idx) => (
               <View key={idx} style={styles.whyChooseItem}>
                 <View style={styles.whyChooseNumberBadge}>
-                  <Ionicons name={item.icon} size={18} color={theme.colors.primary} />
+                  <Ionicons name={item.icon} size={20} color={theme.colors.primary} />
                 </View>
                 <View style={styles.whyChooseContent}>
                   <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -1883,7 +1883,7 @@ const styles = StyleSheet.create({
   ruleItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: 8,
   },
   ruleText: {
     flex: 1,
@@ -2063,7 +2063,7 @@ const styles = StyleSheet.create({
   whyChooseContent: {
     flex: 1,
     gap: 6,
-    paddingLeft: 8,
+    paddingLeft: 10,
   },
   whyChooseTitle: {
     fontSize: 16,

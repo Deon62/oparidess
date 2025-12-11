@@ -1,16 +1,15 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
-import { Card, Toggle } from '../../packages/components';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Toggle } from '../../packages/components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CancellationPolicyScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
-  const insets = useSafeAreaInsets();
   
   // Terms agreement toggle - default to true (always on)
   const [agreeToTerms, setAgreeToTerms] = useState(true);
@@ -60,15 +59,35 @@ const CancellationPolicyScreen = () => {
   ];
 
   useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
+    navigation.setOptions({
+      headerShown: false,
+      statusBarStyle: 'dark',
+      statusBarColor: theme.colors.background || '#f8f8f8',
+      statusBarHidden: false,
+      statusBarTranslucent: false,
+    });
+  }, [navigation, theme.colors.background]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBarStyle('dark-content');
+      StatusBar.setBackgroundColor(theme.colors.background || '#f8f8f8');
+      StatusBar.setTranslucent(false);
+      StatusBar.setHidden(false);
+    }, [theme.colors.background])
+  );
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]} edges={['top']}>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor={theme.colors.background || '#f8f8f8'}
+        translucent={false}
+      />
       <TouchableOpacity
         style={[
           styles.backButton,
-          { top: insets.top + 12, left: 16, backgroundColor: theme.colors.white },
+          { top: 44, left: 16, backgroundColor: theme.colors.white },
         ]}
         onPress={() => navigation.goBack()}
         activeOpacity={0.8}
@@ -77,7 +96,7 @@ const CancellationPolicyScreen = () => {
       </TouchableOpacity>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.contentContainer, { paddingTop: insets.top + 48 }]}
+        contentContainerStyle={[styles.contentContainer, { paddingTop: 56 }]}
         showsVerticalScrollIndicator={false}
       >
       <View style={[styles.header]}>
@@ -172,11 +191,11 @@ const CancellationPolicyScreen = () => {
 
       {/* Terms and Conditions Agreement */}
       <View style={styles.section}>
-        <Card style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
+        <View style={[styles.termsCard, { backgroundColor: theme.colors.white }]}>
           <View style={styles.termsHeader}>
             <Ionicons name="document-text-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.termsTitle, { color: theme.colors.textPrimary, flex: 1 }]}>
-              Terms and Conditions Agreement
+              Terms & Conditions
             </Text>
           </View>
           <View style={styles.termsRow}>
@@ -198,7 +217,7 @@ const CancellationPolicyScreen = () => {
               </Text>
             </View>
           )}
-        </Card>
+        </View>
       </View>
 
       {fromBookingConfirmation && (
@@ -233,7 +252,7 @@ const CancellationPolicyScreen = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -292,6 +292,14 @@ const CarDetailsScreen = () => {
     cancellation: require('../../../assets/icons/cancellation.png'),
   };
 
+  // Icons for "Why Choose" section
+  const whyChooseIcons = {
+    maintained: require('../../../assets/icons/maintainance.png'),
+    rated: require('../../../assets/icons/rate.png'),
+    location: require('../../../assets/icons/location.png'),
+    fuel: require('../../../assets/icons/fuel.png'),
+  };
+
   // Host information
   const hostInfo = {
     name: 'John Kamau',
@@ -874,8 +882,8 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={styles.whyChooseCard}>
             <View style={styles.whyChooseItem}>
-              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.whyChooseNumber}>1</Text>
+              <View style={styles.whyChooseNumberBadge}>
+                <Image source={whyChooseIcons.maintained} style={styles.whyChooseIcon} resizeMode="contain" />
               </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -887,8 +895,8 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.whyChooseNumber}>2</Text>
+              <View style={styles.whyChooseNumberBadge}>
+                <Image source={whyChooseIcons.rated} style={styles.whyChooseIcon} resizeMode="contain" />
               </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -900,8 +908,8 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.whyChooseNumber}>3</Text>
+              <View style={styles.whyChooseNumberBadge}>
+                <Image source={whyChooseIcons.location} style={styles.whyChooseIcon} resizeMode="contain" />
               </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -913,8 +921,8 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.whyChooseItem}>
-              <View style={[styles.whyChooseNumberBadge, { backgroundColor: theme.colors.primary }]}>
-                <Text style={styles.whyChooseNumber}>4</Text>
+              <View style={styles.whyChooseNumberBadge}>
+                <Image source={whyChooseIcons.fuel} style={styles.whyChooseIcon} resizeMode="contain" />
               </View>
               <View style={styles.whyChooseContent}>
                 <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -938,7 +946,9 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={styles.guaranteesCard}>
             <View style={styles.guaranteeItem}>
-              <Image source={guaranteeIcons.verified} style={styles.guaranteeBadgeImage} resizeMode="contain" />
+              <View style={styles.guaranteeBadge}>
+                <Image source={guaranteeIcons.verified} style={styles.guaranteeIcon} resizeMode="contain" />
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Verified Vehicles
@@ -949,7 +959,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Image source={guaranteeIcons.booking} style={styles.guaranteeBadgeImage} resizeMode="contain" />
+              <View style={styles.guaranteeBadge}>
+                <Image source={guaranteeIcons.booking} style={styles.guaranteeIcon} resizeMode="contain" />
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Secure Booking
@@ -960,7 +972,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Image source={guaranteeIcons.support} style={styles.guaranteeBadgeImage} resizeMode="contain" />
+              <View style={styles.guaranteeBadge}>
+                <Image source={guaranteeIcons.support} style={styles.guaranteeIcon} resizeMode="contain" />
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   24/7 Support
@@ -971,7 +985,9 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.guaranteeItem}>
-              <Image source={guaranteeIcons.cancellation} style={styles.guaranteeBadgeImage} resizeMode="contain" />
+              <View style={styles.guaranteeBadge}>
+                <Image source={guaranteeIcons.cancellation} style={styles.guaranteeIcon} resizeMode="contain" />
+              </View>
               <View style={styles.guaranteeContent}>
                 <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
                   Easy Cancellation
@@ -1951,8 +1967,9 @@ const styles = StyleSheet.create({
   },
   // Why Choose This Car section styles
   whyChooseCard: {
-    padding: 24,
-    gap: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    gap: 18,
   },
   whyChooseItem: {
     flexDirection: 'row',
@@ -1960,12 +1977,14 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   whyChooseNumberBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
     flexShrink: 0,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
   },
   whyChooseNumber: {
     fontSize: 15,
@@ -1989,6 +2008,10 @@ const styles = StyleSheet.create({
     letterSpacing: -0.1,
   },
   // Opa Guarantees section styles
+  whyChooseIcon: {
+    width: 28,
+    height: 28,
+  },
   guaranteesCard: {
     paddingVertical: 12,
     paddingTop: 8,
@@ -1996,14 +2019,21 @@ const styles = StyleSheet.create({
   },
   guaranteeItem: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 16,
+    alignItems: 'center',
+    gap: 14,
   },
-  guaranteeBadgeImage: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    flexShrink: 0,
+  guaranteeBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  guaranteeIcon: {
+    width: 28,
+    height: 28,
   },
   guaranteeContent: {
     flex: 1,

@@ -1144,6 +1144,37 @@ const CarDetailsScreen = () => {
         </ScrollView>
 
 
+        {/* Things to keep in mind */}
+        <View style={styles.keepMindSection}>
+          <Text style={[styles.keepMindTitle, { color: theme.colors.textPrimary }]}>
+            Things to keep in mind
+          </Text>
+
+          <View style={styles.keepMindList}>
+            <TouchableOpacity
+              style={styles.keepMindItem}
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('CancellationPolicy')}
+            >
+              <Text style={[styles.keepMindText, { color: theme.colors.textPrimary }]}>
+                Cancellation policy
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.hint} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.keepMindItem, styles.keepMindItemLast]}
+              activeOpacity={0.8}
+              onPress={() => Alert.alert('Coming soon', 'Car manual will be available shortly.')}
+            >
+              <Text style={[styles.keepMindText, { color: theme.colors.textPrimary }]}>
+                Car manual
+              </Text>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.hint} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         {/* Bottom spacing for fixed bar */}
         <View style={{ height: 100 }} />
         </View>
@@ -1861,6 +1892,39 @@ const styles = StyleSheet.create({
   hostMessageText: {
     fontSize: 14,
     fontFamily: 'Nunito_700Bold',
+  },
+  keepMindSection: {
+    marginTop: 28,
+    paddingVertical: 0,
+    paddingHorizontal: 0,
+    borderRadius: 0,
+    gap: 10,
+  },
+  keepMindTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  keepMindList: {
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    marginTop: 4,
+  },
+  keepMindItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E6E6E6',
+  },
+  keepMindItemLast: {
+    borderBottomWidth: 0,
+  },
+  keepMindText: {
+    fontFamily: 'Nunito_600SemiBold',
+    fontSize: 15,
+    letterSpacing: -0.1,
   },
   // Availability section styles
   availabilityCard: {

@@ -564,7 +564,7 @@ const CarDetailsScreen = () => {
         </View>
 
         {/* Content Container with Curved Top */}
-        <View style={[styles.contentContainer, { backgroundColor: theme.colors.background }]}>
+        <View style={[styles.contentContainer, { backgroundColor: 'transparent', paddingHorizontal: 24 }]}>
         {/* Car Details & Description - Airbnb Style */}
         <View style={styles.section}>
           <View style={styles.carOverviewCard}>
@@ -583,7 +583,7 @@ const CarDetailsScreen = () => {
             </View>
 
             {/* Organized Summary */}
-            <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}>
+            <View style={[styles.summaryCard, { backgroundColor: 'transparent' }]}>
               <View style={styles.summaryHeader}>
                 <Text style={[styles.summaryLocation, { color: theme.colors.textSecondary }]}>
                   {carData.location || 'Nairobi, Kenya'}
@@ -632,7 +632,7 @@ const CarDetailsScreen = () => {
                   </View>
                 </View>
                 <View style={styles.summaryDivider} />
-                <View style={styles.summaryItem}>
+                <View style={[styles.summaryItem, { paddingLeft: 12 }]}>
                   <View style={styles.summaryLaurels}>
                     <Text style={styles.summaryLaurel}>🍃</Text>
                     <Text style={[styles.summaryLabel, { color: theme.colors.textPrimary }]}>Guest favourite</Text>
@@ -640,7 +640,7 @@ const CarDetailsScreen = () => {
                   </View>
                 </View>
                 <View style={styles.summaryDivider} />
-                <View style={styles.summaryItem}>
+                <View style={[styles.summaryItem, { paddingRight: 12, paddingLeft: 12 }]}>
                   <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>
                     {carData.reviewCount || reviews.length}
                   </Text>
@@ -1215,10 +1215,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   contentContainer: {
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    marginTop: -12,
-    paddingTop: 20,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    marginTop: 0,
+    paddingTop: 0,
+    paddingHorizontal: 24,
   },
   carouselContainer: {
     width: SCREEN_WIDTH,
@@ -1325,7 +1326,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
   },
   section: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 0,
     marginTop: 24,
   },
   sectionSeparator: {
@@ -1398,11 +1399,10 @@ const styles = StyleSheet.create({
   },
   summaryCard: {
     marginTop: 12,
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-    borderWidth: 1,
-    borderColor: '#E6E6E6',
+    borderRadius: 0,
+    paddingVertical: 12,
+    paddingHorizontal: 0,
+    borderWidth: 0,
     gap: 12,
   },
   summaryHeader: {
@@ -1463,6 +1463,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     paddingLeft: 6,
+    paddingRight: 10,
   },
   summaryLaurel: {
     fontSize: 16,
@@ -1474,8 +1475,8 @@ const styles = StyleSheet.create({
   summaryDivider: {
     width: 1,
     height: 32,
-    backgroundColor: '#D3D3D3',
-    opacity: 0.9,
+    backgroundColor: '#A0A0A0',
+    opacity: 0.8,
     marginHorizontal: 4,
   },
   ratingRow: {

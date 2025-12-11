@@ -822,53 +822,76 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Meet Your car Host
           </Text>
-          <View style={styles.hostCard}>
-            <View style={styles.hostHeader}>
-              <Image source={hostInfo.photo} style={styles.hostPhoto} resizeMode="cover" />
-              <View style={styles.hostInfo}>
-                <Text style={[styles.hostName, { color: theme.colors.textPrimary }]}>
-                  {hostInfo.name}
-                </Text>
-                <View style={styles.hostRatingRow}>
-                  <Ionicons name="star" size={16} color="#FFD700" />
-                  <Text style={[styles.hostRating, { color: theme.colors.textPrimary }]}>
-                    {hostInfo.rating}
-                  </Text>
-                  <Text style={[styles.hostTrips, { color: theme.colors.textSecondary }]}>
-                    ({hostInfo.tripsCount} trips)
-                  </Text>
+          <View style={[styles.hostCard, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.hostTopRow}>
+              <View style={styles.hostAvatarWrapper}>
+                <Image source={hostInfo.photo} style={styles.hostAvatar} resizeMode="cover" />
+              </View>
+              <View style={styles.hostStats}>
+                <View style={styles.hostStatItem}>
+                  <Text style={[styles.hostStatValue, { color: theme.colors.textPrimary }]}>{hostInfo.tripsCount}</Text>
+                  <Text style={[styles.hostStatLabel, { color: theme.colors.textSecondary }]}>Reviews</Text>
                 </View>
-                <View style={styles.hostResponseTime}>
-                  <Ionicons name="time-outline" size={14} color={theme.colors.hint} />
-                  <Text style={[styles.responseTimeText, { color: theme.colors.textSecondary }]}>
-                    Usually responds in {hostInfo.responseTime}
-                  </Text>
+                <View style={styles.hostStatDivider} />
+                <View style={styles.hostStatItem}>
+                  <View style={styles.hostRatingRow}>
+                    <Text style={[styles.hostStatValue, { color: theme.colors.textPrimary }]}>{hostInfo.rating}</Text>
+                    <Ionicons name="star" size={14} color="#FFD700" />
+                  </View>
+                  <Text style={[styles.hostStatLabel, { color: theme.colors.textSecondary }]}>Rating</Text>
+                </View>
+                <View style={styles.hostStatDivider} />
+                <View style={styles.hostStatItem}>
+                  <Text style={[styles.hostStatValue, { color: theme.colors.textPrimary }]}>2</Text>
+                  <Text style={[styles.hostStatLabel, { color: theme.colors.textSecondary }]}>Years hosting</Text>
                 </View>
               </View>
             </View>
-            <View style={styles.verificationBadges}>
-              {hostInfo.verified.id && (
-                <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
-                    ID Verified
-                  </Text>
-                </View>
-              )}
-              {hostInfo.verified.phone && (
-                <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
-                  <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
-                    Phone Verified
-                  </Text>
-                </View>
-              )}
+
+            <View style={styles.hostNameRow}>
+              <Text style={[styles.hostName, { color: theme.colors.textPrimary }]}>{hostInfo.name}</Text>
+              <View style={styles.hostSuperBadge}>
+                <Ionicons name="checkmark-circle" size={14} color={theme.colors.primary} />
+                <Text style={[styles.hostSuperText, { color: theme.colors.primary }]}>Superhost</Text>
+              </View>
             </View>
-            {hostInfo.description && (
-              <Text style={[styles.hostDescription, { color: theme.colors.textSecondary }]}>
-                {hostInfo.description}
+
+            <View style={styles.hostMetaRow}>
+              <Ionicons name="musical-notes-outline" size={16} color={theme.colors.hint} />
+              <Text style={[styles.hostMetaText, { color: theme.colors.textSecondary }]}>
+                Favourite car: Bmw M4csl 
               </Text>
-            )}
+            </View>
+            <View style={styles.hostMetaRow}>
+              <Ionicons name="bulb-outline" size={16} color={theme.colors.hint} />
+              <Text style={[styles.hostMetaText, { color: theme.colors.textSecondary }]}>
+                Fun fact: Loves chilling
+              </Text>
+            </View>
+
+            <View style={styles.hostInfoBlock}>
+              <Text style={[styles.hostInfoTitle, { color: theme.colors.textPrimary }]}>
+                {hostInfo.name} is a Superhost
+              </Text>
+              <Text style={[styles.hostDescription, { color: theme.colors.textSecondary }]}>
+                Superhosts are experienced, highly rated hosts who are committed to providing great stays for guests.
+              </Text>
+            </View>
+
+            <View style={styles.hostInfoBlock}>
+              <Text style={[styles.hostInfoTitle, { color: theme.colors.textPrimary }]}>Host details</Text>
+              <Text style={[styles.hostDetailLine, { color: theme.colors.textSecondary }]}>
+                Response rate: 100%
+              </Text>
+              <Text style={[styles.hostDetailLine, { color: theme.colors.textSecondary }]}>
+                Responds within an hour
+              </Text>
+            </View>
+
+            <TouchableOpacity style={[styles.hostMessageButton, { backgroundColor: theme.colors.white }]} activeOpacity={0.85}>
+              <Ionicons name="chatbubble-ellipses-outline" size={16} color={theme.colors.textPrimary} />
+              <Text style={[styles.hostMessageText, { color: theme.colors.textPrimary }]}>Message Host</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -1713,73 +1736,148 @@ const styles = StyleSheet.create({
   },
   // Host section styles
   hostCard: {
-    padding: 24,
-    gap: 18,
+    padding: 20,
+    gap: 16,
+    borderRadius: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  hostHeader: {
+  hostTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 18,
+    gap: 16,
   },
-  hostPhoto: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+  hostAvatarWrapper: {
+    width: 82,
+    height: 82,
+    borderRadius: 41,
+    backgroundColor: '#F4F6F8',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  hostAvatar: {
+    width: 82,
+    height: 82,
+    borderRadius: 41,
+  },
+  hostBadge: {
+    position: 'absolute',
+    right: -4,
+    bottom: -4,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#FF1577',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#E0E0E0',
+    borderColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  hostInfo: {
+  hostStats: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  hostStatItem: {
+    flex: 1,
+    alignItems: 'center',
     gap: 4,
   },
-  hostName: {
-    fontSize: 18,
+  hostStatValue: {
+    fontSize: 16,
     fontFamily: 'Nunito_700Bold',
+  },
+  hostStatLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  hostStatDivider: {
+    width: 1,
+    height: 38,
+    backgroundColor: '#E6E6E6',
+  },
+  hostNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  hostName: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+  },
+  hostSuperBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backgroundColor: '#F4F6F8',
+  },
+  hostSuperText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_700Bold',
+  },
+  hostMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  hostMetaText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  hostInfoBlock: {
+    gap: 4,
+  },
+  hostInfoTitle: {
+    fontSize: 15,
+    fontFamily: 'Nunito_700Bold',
+  },
+  hostDescription: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+  },
+  hostDetailLine: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
   },
   hostRatingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  hostRating: {
-    fontSize: 15,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  hostTrips: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-  },
-  hostResponseTime: {
+  hostMessageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-  },
-  responseTimeText: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
-  },
-  verificationBadges: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
     gap: 8,
-  },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    marginTop: 8,
+    paddingVertical: 12,
     borderRadius: 12,
-    gap: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 6,
   },
-  badgeText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
-  },
-  hostDescription: {
+  hostMessageText: {
     fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
-    marginTop: 4,
+    fontFamily: 'Nunito_700Bold',
   },
   // Availability section styles
   availabilityCard: {

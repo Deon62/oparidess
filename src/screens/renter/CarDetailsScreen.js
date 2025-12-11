@@ -1061,6 +1061,31 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Reviews
           </Text>
+          <View style={[styles.reviewSummaryCard, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.reviewSummaryBadgeRow}>
+              <Text style={styles.reviewSummaryLaurel}>🍃</Text>
+              <Text style={styles.reviewSummaryRating}>{carData.rating || 4.8}</Text>
+              <Text style={styles.reviewSummaryLaurel}>🍃</Text>
+            </View>
+            <Text style={[styles.reviewSummaryTitle, { color: theme.colors.textPrimary }]}>
+              Guest favourite
+            </Text>
+            <Text style={[styles.reviewSummarySubtitle, { color: theme.colors.textSecondary }]}>
+              This car is a guest favourite based on ratings, reviews and reliability.
+            </Text>
+            <View style={styles.reviewSummaryMeta}>
+              <View style={styles.reviewMetaItem}>
+                <Ionicons name="star" size={16} color="#000000" />
+                <Text style={[styles.reviewMetaText, { color: theme.colors.textSecondary }]}>
+                  {carData.rating || 4.8} overall
+                </Text>
+              </View>
+              <View style={styles.reviewMetaDot} />
+              <Text style={[styles.reviewMetaText, { color: theme.colors.textSecondary }]}>
+                {carData.reviewCount || reviews.length} reviews
+              </Text>
+            </View>
+          </View>
         </View>
         <ScrollView 
           horizontal 
@@ -1733,12 +1758,66 @@ const styles = StyleSheet.create({
   },
   // Reviews section styles
   reviewsScrollView: {
-    marginTop: -8,
+    marginTop: 16,
   },
   reviewsContainer: {
     paddingLeft: 24,
     paddingRight: 24,
     gap: 12,
+  },
+  reviewSummaryCard: {
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderColor: '#E6E6E6',
+  },
+  reviewSummaryBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  reviewSummaryLaurel: {
+    fontSize: 20,
+  },
+  reviewSummaryRating: {
+    fontSize: 44,
+    fontFamily: 'Nunito_800ExtraBold',
+    letterSpacing: -0.5,
+    color: '#000',
+  },
+  reviewSummaryTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 2,
+  },
+  reviewSummarySubtitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    textAlign: 'center',
+    lineHeight: 20,
+  },
+  reviewSummaryMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 4,
+  },
+  reviewMetaItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  reviewMetaText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  reviewMetaDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#C0C0C0',
   },
   reviewCard: {
     width: 270,

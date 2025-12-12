@@ -84,7 +84,11 @@ const OnboardingScreen = () => {
     <View style={[styles.container, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 20 }]}>
       <View style={styles.header}>
         <View />
-        <TouchableOpacity onPress={handleSkip} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+        <TouchableOpacity
+          onPress={handleSkip}
+          style={[styles.skipButton, { backgroundColor: theme.colors.white }]}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
           <Text style={[styles.skipText, { color: theme.colors.textSecondary }]}>Skip</Text>
         </TouchableOpacity>
       </View>
@@ -157,6 +161,16 @@ const styles = StyleSheet.create({
   skipText: {
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  skipButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 6,
   },
   content: {
     flex: 1.1,

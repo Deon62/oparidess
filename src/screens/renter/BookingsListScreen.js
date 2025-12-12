@@ -8,6 +8,8 @@ import { Card, Button } from '../../packages/components';
 import { useBookings } from '../../packages/context/BookingsContext';
 import { getCarPrimaryImage } from '../../packages/utils/supabaseImages';
 
+import BookingEmptyIcon from '../../../assets/icons/booking.svg';
+
 const BookingsListScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -166,7 +168,7 @@ const BookingsListScreen = () => {
       <View style={styles.bookingsList}>
         {displayedBookings.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="calendar-outline" size={64} color={theme.colors.hint} />
+            <BookingEmptyIcon width={220} height={220} />
             <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
               No rentals yet
             </Text>

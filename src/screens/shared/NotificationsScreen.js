@@ -5,6 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import NotificationsEmptyIcon from '../../../assets/icons/notifications.svg';
+
 const NotificationsScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -71,12 +73,12 @@ const NotificationsScreen = () => {
       >
         {notifications.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="notifications-off-outline" size={64} color={theme.colors.hint} />
+            <NotificationsEmptyIcon width={220} height={220} />
             <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
               No notifications yet
             </Text>
             <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-              When you get notifications about your bookings, messages, and updates, they'll appear here.
+              You have an empty slate for now but worry not  once we see something, you'll be the first one to know.
             </Text>
           </View>
         ) : (

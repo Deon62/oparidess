@@ -5,6 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import MessagesEmptyIcon from '../../../assets/icons/messages.svg';
+
 const MessagesScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -90,7 +92,7 @@ const MessagesScreen = () => {
         ))
       ) : (
         <View style={styles.emptyState}>
-          <Ionicons name="chatbubbles-outline" size={64} color={theme.colors.hint} />
+          <MessagesEmptyIcon width={220} height={220} />
           <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
             No messages yet
           </Text>

@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card } from '../../packages/components';
 import { useWishlist } from '../../packages/context/WishlistContext';
 
+import WishlistEmptyIcon from '../../../assets/icons/wishlist.svg';
+
 // Car images now loaded from Supabase
 import { getCarPrimaryImage, getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 
@@ -458,7 +460,7 @@ const WishlistScreen = () => {
     >
       {totalLiked === 0 ? (
         <View style={styles.emptyState}>
-          <Ionicons name="heart-outline" size={64} color={theme.colors.hint} />
+          <WishlistEmptyIcon width={220} height={220} />
           <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
             Your wishlist is empty
           </Text>

@@ -5,24 +5,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
+import EmergencyIcon from '../../../assets/icons/emergency.svg';
+
 const emergencyOptions = [
   { 
     id: 'accident', 
-    label: 'Accident Report', 
-    icon: 'alert-circle-outline',
-    description: 'Report an accident and get immediate assistance'
+    label: 'Report accident', 
   },
   { 
     id: 'breakdown', 
-    label: 'Vehicle Breakdown', 
-    icon: 'construct-outline',
-    description: 'Get roadside assistance or towing services'
+    label: 'Report breakdown', 
   },
   { 
     id: 'security', 
-    label: 'Security Threat', 
-    icon: 'shield-outline',
-    description: 'Report suspicious activity or safety concerns'
+    label: 'Report security threat', 
   },
 ];
 
@@ -61,12 +57,13 @@ const EmergencyOptionsScreen = () => {
 
       {/* Main Content */}
       <View style={styles.content}>
+        <View style={styles.hero}>
+          <EmergencyIcon width={220} height={220} />
+        </View>
+
         <View style={styles.titleContainer}>
           <Text style={[styles.title, { color: theme.colors.textPrimary }]}>
-            Emergency Assistance
-          </Text>
-          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-            Choose the type of emergency so we can connect you to the right help
+            Emergency
           </Text>
         </View>
 
@@ -81,22 +78,10 @@ const EmergencyOptionsScreen = () => {
                   // navigation.navigate('Emergency' + option.id)
                 }}
               >
-                <View style={styles.optionLeft}>
-                  <Ionicons name={option.icon} size={22} color={theme.colors.textPrimary} />
-                  <View style={styles.optionTextContainer}>
-                    <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>
-                      {option.label}
-                    </Text>
-                    <Text style={[styles.optionDescription, { color: theme.colors.textSecondary }]}>
-                      {option.description}
-                    </Text>
-                  </View>
-                </View>
-                <Ionicons 
-                  name="chevron-forward-outline" 
-                  size={20} 
-                  color={theme.colors.textSecondary} 
-                />
+                <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>
+                  {option.label}
+                </Text>
+                <Ionicons name="chevron-forward" size={18} color={theme.colors.textSecondary} />
               </TouchableOpacity>
               
               {/* Subtle separator line */}
@@ -105,23 +90,6 @@ const EmergencyOptionsScreen = () => {
               )}
             </React.Fragment>
           ))}
-        </View>
-
-        {/* Emergency Contact Info */}
-        <View style={[styles.emergencyInfo, { backgroundColor: theme.colors.background + '80' }]}>
-          <View style={styles.infoRow}>
-            <Ionicons name="call-outline" size={18} color={theme.colors.textSecondary} />
-            <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
-              Direct Emergency Line:{' '}
-              <Text style={[styles.infoHighlight, { color: theme.colors.textPrimary }]}>999</Text>
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Ionicons name="information-circle-outline" size={18} color={theme.colors.textSecondary} />
-            <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
-              For immediate danger, call 999 first
-            </Text>
-          </View>
         </View>
       </View>
     </View>
@@ -152,24 +120,27 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
+  hero: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+    marginBottom: 6,
+  },
   titleContainer: {
-    marginBottom: 40,
+    marginBottom: 20,
     paddingHorizontal: 4,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 8,
     letterSpacing: -0.3,
-  },
-  subtitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 22,
-    opacity: 0.8,
+    textAlign: 'center',
   },
   optionsContainer: {
-    marginBottom: 32,
+    marginBottom: 16,
   },
   optionItem: {
     flexDirection: 'row',
@@ -179,48 +150,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     backgroundColor: 'transparent',
   },
-  optionLeft: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    flex: 1,
-    gap: 16,
-  },
-  optionTextContainer: {
-    flex: 1,
-  },
   optionLabel: {
     fontSize: 17,
     fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 4,
-  },
-  optionDescription: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    opacity: 0.7,
+    flex: 1,
   },
   separator: {
     height: 1,
-    marginLeft: 38, // Icon width (22) + gap (16) = 38
+    marginLeft: 4,
     marginRight: 4,
-  },
-  emergencyInfo: {
-    padding: 20,
-    borderRadius: 12,
-    gap: 16,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  infoText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    flex: 1,
-    opacity: 0.9,
-  },
-  infoHighlight: {
-    fontFamily: 'Nunito_700Bold',
   },
 });
 

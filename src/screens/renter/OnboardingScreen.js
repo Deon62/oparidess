@@ -5,35 +5,51 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
+import StorytimeIcon from '../../../assets/icons/storytime.svg';
+import OpaSolutionIcon from '../../../assets/icons/opasolution.svg';
+import PeopleLoveIcon from '../../../assets/icons/pplelove.svg';
+import TryItOutIcon from '../../../assets/icons/tryitout.svg';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+const OnboardingIcon = ({ slideId, size }) => {
+  switch (slideId) {
+    case 'problem':
+      return <StorytimeIcon width={size} height={size} />;
+    case 'solution':
+      return <OpaSolutionIcon width={size} height={size} />;
+    case 'result':
+      return <PeopleLoveIcon width={size} height={size} />;
+    case 'invitation':
+      return <TryItOutIcon width={size} height={size} />;
+    default:
+      return null;
+  }
+};
 
 const slides = [
   {
-    id: 'discover',
-    title: 'Discover unique cars',
-    subtitle: 'Browse curated cars and services tailored to every trip.',
-    icon: 'compass-outline',
+    id: 'problem',
+    title: 'Once upon a time...',
+    subtitle: 'Car rentals were filled with hidden fees, confusing terms, and endless paperwork. Finding the right car felt like finding a needle in a haystack.',
+    accent: '#FF6B35',
+  },
+  {
+    id: 'solution',
+    title: 'Then came Opa',
+    subtitle: 'We fixed everything. Transparent pricing, video walkarounds, verified owners, and booking in under 60 seconds. No hidden fees, no surprises.',
     accent: '#2D9CDB',
   },
   {
-    id: 'book',
-    title: 'Book in minutes',
-    subtitle: 'Transparent pricing, instant confirmations, and secure payments.',
-    icon: 'card-outline',
+    id: 'result',
+    title: 'People loved it!',
+    subtitle: 'Thousands of Kenyans now travel with confidence. Owners earn more, renters save more, and everyone enjoys peace of mind.',
     accent: '#27AE60',
   },
   {
-    id: 'track',
-    title: 'Track your Booking',
-    subtitle: 'Real-time updates from Payments, pickup to drop-off with peace of mind.',
-    icon: 'navigate-outline',
-    accent: '#F2994A',
-  },
-  {
-    id: 'enjoy',
-    title: 'Enjoy the car experience',
-    subtitle: 'Premium support and seamless experiences wherever you go.',
-    icon: 'car-sport-outline',
+    id: 'invitation',
+    title: 'Your turn to experience it',
+    subtitle: 'Join thousands of happy travelers. Find your perfect ride, book with confidence, and create unforgettable memories.',
     accent: '#9B51E0',
   },
 ];
@@ -74,8 +90,15 @@ const OnboardingScreen = () => {
       </View>
 
       <View style={styles.content}>
+        <View style={styles.hero}>
+          <OnboardingIcon slideId={currentSlide.id} size={SCREEN_WIDTH * 0.56} />
+        </View>
+
+        <View style={styles.textBlock}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>{currentSlide.title}</Text>
         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>{currentSlide.subtitle}</Text>
+
+        </View>
 
         <View style={styles.dots}>
           {slides.map((slide, index) => {
@@ -142,11 +165,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
+  hero: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  textBlock: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10,
+  },
   title: {
     fontSize: 26,
     fontFamily: 'Nunito_700Bold',
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   subtitle: {
     fontSize: 15,

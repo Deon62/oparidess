@@ -75,7 +75,9 @@ const EmergencyOptionsScreen = () => {
                 style={styles.optionItem}
                 activeOpacity={0.7}
                 onPress={() => {
-                  // navigation.navigate('Emergency' + option.id)
+                  if (option.id === 'security') {
+                    navigation.navigate('ReportSecurityThreat');
+                  }
                 }}
               >
                 <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>

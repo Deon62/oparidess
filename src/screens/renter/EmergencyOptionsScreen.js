@@ -75,6 +75,9 @@ const EmergencyOptionsScreen = () => {
                 style={styles.optionItem}
                 activeOpacity={0.7}
                 onPress={() => {
+                  if (option.id === 'accident') {
+                    navigation.navigate('ReportAccident');
+                  }
                   if (option.id === 'security') {
                     navigation.navigate('ReportSecurityThreat');
                   }

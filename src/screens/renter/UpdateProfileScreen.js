@@ -22,10 +22,6 @@ const UpdateProfileScreen = () => {
       date_of_birth: params?.date_of_birth || user?.date_of_birth || '',
       gender: params?.gender || user?.gender || '',
       id_number: params?.id_number || user?.id_number || '',
-      dl_number: params?.dl_number || user?.dl_number || '',
-      dl_category: params?.dl_category || user?.dl_category || '',
-      dl_issue_date: params?.dl_issue_date || user?.dl_issue_date || '',
-      dl_expiry_date: params?.dl_expiry_date || user?.dl_expiry_date || '',
     };
     // Combine first_name and last_name into full_name
     baseData.full_name = baseData.first_name && baseData.last_name 
@@ -40,10 +36,7 @@ const UpdateProfileScreen = () => {
   const [errors, setErrors] = useState({});
   const [showGenderModal, setShowGenderModal] = useState(false);
   const [showDateModal, setShowDateModal] = useState(false);
-  const [showDlIssueDateModal, setShowDlIssueDateModal] = useState(false);
-  const [showDlExpiryDateModal, setShowDlExpiryDateModal] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isDlSectionExpanded, setIsDlSectionExpanded] = useState(false);
 
   // Set header title
   useLayoutEffect(() => {
@@ -103,20 +96,6 @@ const UpdateProfileScreen = () => {
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
       if (!dateRegex.test(formData.date_of_birth)) {
         newErrors.date_of_birth = 'Please use format YYYY-MM-DD';
-      }
-    }
-
-    if (formData.dl_issue_date.trim()) {
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      if (!dateRegex.test(formData.dl_issue_date)) {
-        newErrors.dl_issue_date = 'Please use format YYYY-MM-DD';
-      }
-    }
-
-    if (formData.dl_expiry_date.trim()) {
-      const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-      if (!dateRegex.test(formData.dl_expiry_date)) {
-        newErrors.dl_expiry_date = 'Please use format YYYY-MM-DD';
       }
     }
 
@@ -201,10 +180,6 @@ const UpdateProfileScreen = () => {
     updateField(field, formattedDate);
     if (field === 'date_of_birth') {
       setShowDateModal(false);
-    } else if (field === 'dl_issue_date') {
-      setShowDlIssueDateModal(false);
-    } else if (field === 'dl_expiry_date') {
-      setShowDlExpiryDateModal(false);
     }
   };
 
@@ -443,131 +418,6 @@ const UpdateProfileScreen = () => {
         />
       </View>
 
-      {/* Driving License Information Section */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
-        <TouchableOpacity
-          style={styles.dlHeader}
-          onPress={() => setIsDlSectionExpanded(!isDlSectionExpanded)}
-          activeOpacity={0.7}
-        >
-          <View style={styles.dlHeaderContent}>
-            <Ionicons 
-              name="card-outline" 
-              size={20} 
-              color={theme.colors.primary} 
-              style={styles.dlHeaderIcon}
-            />
-            <View style={styles.dlHeaderTextContainer}>
-              <Text style={[styles.dlHeaderTitle, { color: theme.colors.primary }]}>
-                Add Driving License Information
-              </Text>
-              <Text style={[styles.dlHeaderSubtitle, { color: theme.colors.textSecondary }]}>
-                Optional - for self-drive car rental
-              </Text>
-            </View>
-          </View>
-          <Ionicons 
-            name={isDlSectionExpanded ? "chevron-up-outline" : "chevron-down-outline"} 
-            size={24} 
-            color={theme.colors.primary} 
-          />
-        </TouchableOpacity>
-
-        {isDlSectionExpanded && (
-          <>
-            <Input
-              label="Driving License Number"
-              placeholder="Enter your driving license number"
-              value={formData.dl_number}
-              onChangeText={(value) => updateField('dl_number', value)}
-              error={errors.dl_number}
-            />
-
-            <Input
-              label="Driving License Category"
-              placeholder="e.g., B, C, D"
-              value={formData.dl_category}
-              onChangeText={(value) => updateField('dl_category', value)}
-              error={errors.dl_category}
-            />
-
-            {/* DL Issue Date */}
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-                Driving License Issue Date
-              </Text>
-              <TouchableOpacity
-                style={[
-                  styles.selectInput,
-                  {
-                    borderColor: errors.dl_issue_date
-                      ? '#FF3B30'
-                      : '#E0E0E0',
-                    backgroundColor: theme.colors.white,
-                  },
-                ]}
-                onPress={() => setShowDlIssueDateModal(true)}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.selectInputText,
-                    {
-                      color: formData.dl_issue_date
-                        ? theme.colors.textPrimary
-                        : theme.colors.hint,
-                    },
-                  ]}
-                >
-                  {formData.dl_issue_date || 'Select issue date (YYYY-MM-DD)'}
-                </Text>
-                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-              </TouchableOpacity>
-              {errors.dl_issue_date && (
-                <Text style={styles.errorText}>{errors.dl_issue_date}</Text>
-              )}
-            </View>
-
-            {/* DL Expiry Date */}
-            <View style={styles.inputContainer}>
-              <Text style={[styles.label, { color: theme.colors.textSecondary }]}>
-                Driving License Expiry Date
-              </Text>
-              <TouchableOpacity
-                style={[
-                  styles.selectInput,
-                  {
-                    borderColor: errors.dl_expiry_date
-                      ? '#FF3B30'
-                      : '#E0E0E0',
-                    backgroundColor: theme.colors.white,
-                  },
-                ]}
-                onPress={() => setShowDlExpiryDateModal(true)}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.selectInputText,
-                    {
-                      color: formData.dl_expiry_date
-                        ? theme.colors.textPrimary
-                        : theme.colors.hint,
-                    },
-                  ]}
-                >
-                  {formData.dl_expiry_date || 'Select expiry date (YYYY-MM-DD)'}
-                </Text>
-                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-              </TouchableOpacity>
-              {errors.dl_expiry_date && (
-                <Text style={styles.errorText}>{errors.dl_expiry_date}</Text>
-              )}
-            </View>
-          </>
-        )}
-      </View>
-
       {/* Action Buttons */}
       <View style={styles.actionButtonsContainer}>
         <Button
@@ -647,21 +497,6 @@ const UpdateProfileScreen = () => {
         onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'date_of_birth')}
         title="Select Date of Birth"
         initialDate={formData.date_of_birth}
-      />
-      <DatePickerModal
-        visible={showDlIssueDateModal}
-        onClose={() => setShowDlIssueDateModal(false)}
-        onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'dl_issue_date')}
-        title="Select License Issue Date"
-        initialDate={formData.dl_issue_date}
-      />
-      <DatePickerModal
-        visible={showDlExpiryDateModal}
-        onClose={() => setShowDlExpiryDateModal(false)}
-        onConfirm={(year, month, day) => handleDateSelect(year, month, day, 'dl_expiry_date')}
-        title="Select License Expiry Date"
-        initialDate={formData.dl_expiry_date}
-        allowFutureYears={true}
       />
     </ScrollView>
     </>
@@ -787,32 +622,6 @@ const styles = StyleSheet.create({
   dateOptionText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
-  },
-  dlHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-  },
-  dlHeaderContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  dlHeaderIcon: {
-    marginRight: 12,
-  },
-  dlHeaderTextContainer: {
-    flex: 1,
-  },
-  dlHeaderTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 2,
-  },
-  dlHeaderSubtitle: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
   },
 });
 

@@ -30,6 +30,7 @@ import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetail
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
+import DriversLicenseInfoScreen from '../../screens/renter/DriversLicenseInfoScreen';
 import ChangePasswordScreen from '../../screens/renter/ChangePasswordScreen';
 import WishlistScreen from '../../screens/renter/WishlistScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
@@ -734,6 +735,16 @@ const ProfileStack = () => {
         component={UpdateProfileScreen}
         options={{ 
           title: 'Update Profile',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="DriversLicenseInfo" 
+        component={DriversLicenseInfoScreen}
+        options={{ 
+          title: "Driver's Licence Info",
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',

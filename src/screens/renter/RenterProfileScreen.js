@@ -76,6 +76,10 @@ const RenterProfileScreen = () => {
     navigation.navigate('UpdateProfile', { personalInfo });
   };
 
+  const handleDriversLicenseInfo = () => {
+    navigation.navigate('DriversLicenseInfo');
+  };
+
   const handleEditName = () => {
     setEditedFirstName(personalInfo.first_name);
     setEditedLastName(personalInfo.last_name);
@@ -330,7 +334,7 @@ const RenterProfileScreen = () => {
                 Driving License Information
               </Text>
               <TouchableOpacity
-                onPress={handleUpdateProfile}
+                onPress={handleDriversLicenseInfo}
                 style={styles.updateProfileIcon}
                 activeOpacity={0.7}
               >
@@ -411,6 +415,18 @@ const RenterProfileScreen = () => {
           <Ionicons name="document-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             Upload Docs
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleDriversLicenseInfo}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Drivers licence info
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>

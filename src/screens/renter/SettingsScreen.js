@@ -88,10 +88,6 @@ const SettingsScreen = () => {
     }, [])
   );
 
-  const handleAccountEdit = () => {
-    navigation.navigate('UpdateProfile');
-  };
-
   const handleChangePassword = () => {
     navigation.navigate('ChangePassword');
   };
@@ -191,17 +187,6 @@ const SettingsScreen = () => {
           <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
             Settings
           </Text>
-          <View style={styles.headerRightContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Notifications');
-              }}
-              style={styles.iconButton}
-              activeOpacity={0.7}
-            >
-              <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
       <ScrollView
@@ -212,11 +197,6 @@ const SettingsScreen = () => {
       {/* Account Section */}
       <SectionHeader title="Account" />
       <View style={styles.section}>
-        <SettingItem
-          icon="person-outline"
-          title="Edit Account"
-          onPress={handleAccountEdit}
-        />
         <SettingItem
           icon="lock-closed-outline"
           title="Change Password"
@@ -542,14 +522,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
-  headerRightContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    paddingRight: 8,
-  },
   iconButton: {
-    padding: 8,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   onlineIndicator: {
     position: 'absolute',

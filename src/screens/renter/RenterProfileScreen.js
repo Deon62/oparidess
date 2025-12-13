@@ -759,6 +759,7 @@ const styles = StyleSheet.create({
   },
   plainSection: {
     backgroundColor: 'transparent',
+    paddingHorizontal: 0,
   },
   compactSection: {
     paddingVertical: 16,

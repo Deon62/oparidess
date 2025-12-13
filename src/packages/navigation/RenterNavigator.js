@@ -42,6 +42,7 @@ import WriteBlogScreen from '../../screens/renter/WriteBlogScreen';
 import PreviewBlogScreen from '../../screens/renter/PreviewBlogScreen';
 import SearchScreen from '../../screens/renter/SearchScreen';
 import ReportSecurityThreatScreen from '../../screens/renter/ReportSecurityThreatScreen';
+import ReportBreakdownScreen from '../../screens/renter/ReportBreakdownScreen';
 
 // Shared screens
 import MessagesScreen from '../../screens/shared/MessagesScreen';
@@ -122,6 +123,16 @@ const HomeStack = () => {
       <Stack.Screen 
         name="ReportSecurityThreat" 
         component={ReportSecurityThreatScreen}
+        options={{ 
+          headerShown: false,
+          animation: 'simple_push',
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="ReportBreakdown" 
+        component={ReportBreakdownScreen}
         options={{ 
           headerShown: false,
           animation: 'simple_push',

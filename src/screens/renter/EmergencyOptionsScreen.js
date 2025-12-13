@@ -78,6 +78,9 @@ const EmergencyOptionsScreen = () => {
                   if (option.id === 'security') {
                     navigation.navigate('ReportSecurityThreat');
                   }
+                  if (option.id === 'breakdown') {
+                    navigation.navigate('ReportBreakdown');
+                  }
                 }}
               >
                 <Text style={[styles.optionLabel, { color: theme.colors.textPrimary }]}>

@@ -396,7 +396,7 @@ const RenterProfileScreen = () => {
           onPress={handleReferHost}
           activeOpacity={0.7}
         >
-          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="person-add-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             Refer a host
           </Text>

@@ -388,17 +388,29 @@ const RenterProfileScreen = () => {
       <View style={styles.additionalActionsContainer}>
         <View style={styles.accountActionsHeader}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12 }]}>
-            Account Actions
+            Monetize and Grow
           </Text>
         </View>
         <TouchableOpacity
           style={styles.additionalActionButton}
-          onPress={handleJoinOpaPremium}
+          onPress={handleReferHost}
           activeOpacity={0.7}
         >
-          <Ionicons name="ribbon-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Join OPA Premium
+            Refer a host
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleReferFriends}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Refer to Friends
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
@@ -415,6 +427,23 @@ const RenterProfileScreen = () => {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleJoinOpaPremium}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="ribbon-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Join OPA Premium
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <View style={styles.accountActionsHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12, marginTop: 18 }]}>
+            Account Actions
+          </Text>
+        </View>
         <TouchableOpacity
           style={styles.additionalActionButton}
           onPress={handleAddPayment}
@@ -451,29 +480,11 @@ const RenterProfileScreen = () => {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleReferFriends}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Refer to Friends
+        <View style={styles.accountActionsHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12, marginTop: 18 }]}>
+            Community and Support
           </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleReferHost}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Refer a host
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           style={styles.additionalActionButton}

@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
+import { impactLight } from '../../packages/utils/haptics';
 
 import PartnerIcon from '../../../assets/icons/partner.svg';
 
@@ -47,6 +48,11 @@ const ReferHostScreen = () => {
 
   const handleCopyReferralLink = async () => {
     try {
+      try {
+        impactLight();
+      } catch {
+        // no-op
+      }
       const referralLink = `https://oparides.app/host?ref=${referralCode}&type=${selectedType}`;
       await Share.share({
         message: `Join Oparides as a host using my referral link: ${referralLink}`,

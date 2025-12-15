@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,6 +15,7 @@ const OpaPremiumScreen = () => {
   const [selectedPlanId, setSelectedPlanId] = useState('classic');
 
   const handleSelectPlan = (plan) => {
+    setSelectedPlanId(plan.id);
     navigation.navigate('SubscriptionCheckout', {
       planId: plan.id,
       planTitle: plan.title,
@@ -98,7 +100,7 @@ const OpaPremiumScreen = () => {
         amount: 135000,
         features: plusFeatures,
         isPremium: false,
-        cardStyle: { backgroundColor: theme.colors.white },
+        cardStyle: { backgroundColor: '#F7F8FC' },
         priceColor: monthlyAccentColor,
         buttonStyle: { backgroundColor: monthlyAccentColor },
         buttonTextStyle: { color: theme.colors.white },
@@ -147,73 +149,66 @@ const OpaPremiumScreen = () => {
           const isSelected = selectedPlanId === plan.id;
 
           return (
-            <Card
-              key={plan.id}
-              style={[
-                styles.planCard,
-                plan.cardStyle,
-                !plan.isPremium ? styles.planCardLight : null,
-                isSelected ? styles.planCardSelected : null,
-              ]}
-            >
-              {!!plan.badgeText && (
-                <View style={[styles.popularBadge, !plan.isPremium ? styles.popularBadgeLight : null]}>
-                  <Text style={[styles.popularText, !plan.isPremium ? styles.popularTextLight : null]}>
-                    {plan.badgeText}
+            <TouchableOpacity key={plan.id} activeOpacity={0.9} onPress={() => handleSelectPlan(plan)}>
+              <Card
+                style={[
+                  styles.planCard,
+                  plan.cardStyle,
+                  !plan.isPremium ? styles.planCardLight : null,
+                  isSelected ? styles.planCardSelected : null,
+                ]}
+              >
+                {!!plan.badgeText && (
+                  <View style={[styles.popularBadge, !plan.isPremium ? styles.popularBadgeLight : null]}>
+                    <Text style={[styles.popularText, !plan.isPremium ? styles.popularTextLight : null]}>
+                      {plan.badgeText}
+                    </Text>
+                  </View>
+                )}
+
+                <View style={styles.selectRow}>
+                  <Text style={[styles.planName, plan.isPremium ? styles.premiumText : { color: theme.colors.textPrimary }]}>
+                    {plan.title}
+                  </Text>
+                  <Ionicons
+                    name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
+                    size={22}
+                    color={plan.isPremium ? '#FFFFFF' : monthlyAccentColor}
+                  />
+                </View>
+
+                <View style={styles.priceRow}>
+                  <Text
+                    style={[
+                      styles.priceValue,
+                      plan.isPremium ? styles.premiumText : null,
+                      { color: plan.priceColor },
+                    ]}
+                  >
+                    {plan.price}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.priceUnit,
+                      plan.isPremium ? styles.premiumText : null,
+                      { color: plan.isPremium ? '#FFFFFF' : theme.colors.textSecondary },
+                    ]}
+                  >
+                    {plan.unit}
                   </Text>
                 </View>
-              )}
 
-              <TouchableOpacity
-                style={styles.selectRow}
-                onPress={() => setSelectedPlanId(plan.id)}
-                activeOpacity={0.8}
-              >
-                <Text style={[styles.planName, plan.isPremium ? styles.premiumText : { color: theme.colors.textPrimary }]}>
-                  {plan.title}
-                </Text>
-                <Ionicons
-                  name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
-                  size={22}
-                  color={plan.isPremium ? '#FFFFFF' : monthlyAccentColor}
-                />
-              </TouchableOpacity>
+                <View style={styles.featuresContainer}>
+                  {plan.features.map((item, index) => (
+                    <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
+                  ))}
+                </View>
 
-              <View style={styles.priceRow}>
-                <Text
-                  style={[
-                    styles.priceValue,
-                    plan.isPremium ? styles.premiumText : null,
-                    { color: plan.priceColor },
-                  ]}
-                >
-                  {plan.price}
-                </Text>
-                <Text
-                  style={[
-                    styles.priceUnit,
-                    plan.isPremium ? styles.premiumText : null,
-                    { color: plan.isPremium ? '#FFFFFF' : theme.colors.textSecondary },
-                  ]}
-                >
-                  {plan.unit}
-                </Text>
-              </View>
-
-              <View style={styles.featuresContainer}>
-                {plan.features.map((item, index) => (
-                  <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
-                ))}
-              </View>
-
-              <TouchableOpacity
-                style={[styles.getPlanButton, plan.buttonStyle]}
-                onPress={() => handleSelectPlan(plan)}
-                activeOpacity={0.85}
-              >
-                <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>Select Plan</Text>
-              </TouchableOpacity>
-            </Card>
+                <View style={[styles.getPlanButton, plan.buttonStyle]}>
+                  <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>Select Plan</Text>
+                </View>
+              </Card>
+            </TouchableOpacity>
           );
         })}
       </ScrollView>

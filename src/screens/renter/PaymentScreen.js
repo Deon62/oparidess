@@ -23,6 +23,12 @@ const PaymentScreen = () => {
   const { totalPrice, bookingDetails } = route.params || {};
   const { payOnSite, bookingFee, totalRentalPrice } = bookingDetails || {};
 
+  const formatCurrencyClean = (amount) => {
+    const num = parseFloat(amount || 0);
+    const isWholeNumber = Number.isFinite(num) && Math.floor(num) === num;
+    return formatCurrency(num, { showDecimals: !isWholeNumber });
+  };
+
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -225,7 +231,7 @@ const PaymentScreen = () => {
           dropoffTime: bookingDetails.dropoffTime || '10:00',
           days: bookingDetails.days || 1,
           duration: `${bookingDetails.days || 1} day${(bookingDetails.days || 1) > 1 ? 's' : ''}`,
-          price: formatCurrency(totalPrice || 0),
+          price: formatCurrencyClean(totalPrice || 0),
           pickupLocation: bookingDetails.pickupLocation || 'Nairobi CBD, Kenya',
           dropoffLocation: bookingDetails.dropoffLocation || bookingDetails.pickupLocation || 'Nairobi CBD, Kenya',
           paymentMethod: selectedMethod || 'mpesa',
@@ -583,11 +589,11 @@ const PaymentScreen = () => {
       </KeyboardAvoidingView>
 
       {/* Bottom Payment Bar - Fixed at bottom */}
-      <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 20) }]}>
+      <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 14) }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
-            {formatCurrency(totalPrice || 0)}
+            {formatCurrencyClean(totalPrice || 0)}
           </Text>
         </View>
         <Button
@@ -617,8 +623,8 @@ const PaymentScreen = () => {
             </Text>
             <Text style={[styles.successModalMessage, { color: theme.colors.textSecondary }]}>
               {payOnSite 
-                ? `Your booking fee of ${formatCurrency(totalPrice || 0)} has been processed. Your booking is confirmed! You'll pay the remaining ${formatCurrency((totalRentalPrice || 0) - (bookingFee || 0))} directly to the car owner at pickup.`
-                : `Your payment of ${formatCurrency(totalPrice || 0)} has been processed successfully.`
+                ? `Your booking fee of ${formatCurrencyClean(totalPrice || 0)} has been processed. Your booking is confirmed! You'll pay the remaining ${formatCurrencyClean((totalRentalPrice || 0) - (bookingFee || 0))} directly to the car owner at pickup.`
+                : `Your payment of ${formatCurrencyClean(totalPrice || 0)} has been processed successfully.`
               }
             </Text>
             <View style={styles.successModalDetails}>
@@ -635,7 +641,7 @@ const PaymentScreen = () => {
                   Amount Paid
                 </Text>
                 <Text style={[styles.successDetailValue, { color: theme.colors.primary }]}>
-                  {formatCurrency(totalPrice || 0)}
+                  {formatCurrencyClean(totalPrice || 0)}
                 </Text>
               </View>
             </View>

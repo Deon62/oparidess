@@ -214,8 +214,7 @@ const HomeStack = () => {
         name="CarDetails" 
         component={CarDetailsScreen}
         options={{ 
-          title: 'Car Details',
-          headerShown: true,
+          headerShown: false,
           animation: 'simple_push',
         }}
       />
@@ -586,6 +585,30 @@ const WishlistStack = () => {
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen
+        name="CarDetails"
+        component={CarDetailsScreen}
+        options={{
+          headerShown: false,
+          animation: 'simple_push',
+        }}
+      />
+      <Stack.Screen
+        name="ServiceDetails"
+        component={ServiceDetailsScreen}
+        options={{
+          headerShown: false,
+          animation: 'simple_push',
+        }}
+      />
+      <Stack.Screen
+        name="DiscoverDetails"
+        component={DiscoverDetailsScreen}
+        options={{
+          headerShown: false,
+          animation: 'simple_push',
         }}
       />
       <Stack.Screen

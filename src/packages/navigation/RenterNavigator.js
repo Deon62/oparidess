@@ -64,6 +64,7 @@ import NotificationsScreen from '../../screens/shared/NotificationsScreen';
 import CustomerSupportScreen from '../../screens/shared/CustomerSupportScreen';
 import ShareFeedbackScreen from '../../screens/shared/ShareFeedbackScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
+import ReferHostScreen from '../../screens/shared/ReferHostScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
 import CrossCountryTravelDetailsScreen from '../../screens/shared/CrossCountryTravelDetailsScreen';
 import DisputeScreen from '../../screens/shared/DisputeScreen';
@@ -368,6 +369,16 @@ const HomeStack = () => {
         options={{ 
           title: 'Refer Friends',
           headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="ReferHost" 
+        component={ReferHostScreen}
+        options={{ 
+          title: 'Refer a host',
+          headerShown: false,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
         }}
@@ -844,6 +855,16 @@ const ProfileStack = () => {
         options={{ 
           title: 'Refer Friends',
           headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="ReferHost" 
+        component={ReferHostScreen}
+        options={{ 
+          title: 'Refer a host',
+          headerShown: false,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
         }}

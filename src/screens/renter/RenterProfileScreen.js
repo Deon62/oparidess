@@ -80,6 +80,10 @@ const RenterProfileScreen = () => {
     navigation.navigate('DriversLicenseInfo');
   };
 
+  const handleReferHost = () => {
+    navigation.navigate('ReferHost');
+  };
+
   const handleEditName = () => {
     setEditedFirstName(personalInfo.first_name);
     setEditedLastName(personalInfo.last_name);
@@ -455,6 +459,18 @@ const RenterProfileScreen = () => {
           <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             Refer to Friends
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleReferHost}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Refer a host
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>

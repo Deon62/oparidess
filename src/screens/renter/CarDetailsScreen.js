@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { useWishlist } from '../../packages/context/WishlistContext';
 import { Toggle } from '../../packages/components';
 import { WebView } from 'react-native-webview';
 import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency';
@@ -21,6 +22,7 @@ const CarDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
+  const { likedCars, toggleCarLike } = useWishlist();
   const { car } = route.params || {};
   
   // Default car data if not provided
@@ -66,13 +68,14 @@ const CarDetailsScreen = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showMoreRules, setShowMoreRules] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(new Set());
   const [previousImageIndex, setPreviousImageIndex] = useState(null);
   const fadeAnimCurrent = useRef(new Animated.Value(1)).current;
   const fadeAnimPrevious = useRef(new Animated.Value(0)).current;
+
+  const isLiked = likedCars.has(carData.id);
 
   // Video URL from Supabase - use from car data if available, otherwise default
   const carVideoUrl = carData.videoUrl || getCarVideoUrl();
@@ -520,7 +523,7 @@ const CarDetailsScreen = () => {
               
               <TouchableOpacity
                 style={styles.floatingButton}
-                onPress={() => setIsLiked(!isLiked)}
+                onPress={() => toggleCarLike(carData.id)}
                 activeOpacity={0.8}
               >
                 <Ionicons 

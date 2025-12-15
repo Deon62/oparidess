@@ -184,12 +184,12 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   socialButton: {
-    paddingVertical: 15,
+    paddingVertical: 11,
     paddingHorizontal: 18,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 54,
+    minHeight: 46,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

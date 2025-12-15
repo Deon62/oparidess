@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import OfflineIcon from '../../../assets/icons/offline.svg';
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const OfflineScreen = () => {
   const theme = useTheme();
@@ -11,11 +15,10 @@ const OfflineScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
       <View style={styles.content}>
-        <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-          <Ionicons 
-            name="cloud-offline-outline" 
-            size={80} 
-            color={theme.colors.primary} 
+        <View style={styles.illustrationContainer}>
+          <OfflineIcon
+            width={Math.min(SCREEN_WIDTH * 0.92, 420)}
+            height={Math.min(SCREEN_HEIGHT * 0.35, 260)}
           />
         </View>
         
@@ -34,9 +37,9 @@ const OfflineScreen = () => {
             color={theme.colors.hint} 
             style={styles.hintIcon}
           />
-          <Text style={[styles.hint, { color: theme.colors.hint }]}>
+          {/* <Text style={[styles.hint, { color: theme.colors.hint }]}>
             Make sure Wi-Fi or mobile data is turned on
-          </Text>
+          </Text> */}
         </View>
       </View>
     </View>
@@ -54,13 +57,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     maxWidth: 320,
   },
-  iconContainer: {
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    justifyContent: 'center',
+  illustrationContainer: {
+    width: '100%',
     alignItems: 'center',
-    marginBottom: 32,
+    justifyContent: 'center',
+    marginBottom: 24,
   },
   title: {
     fontSize: 24,

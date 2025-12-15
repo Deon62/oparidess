@@ -24,6 +24,7 @@ const PastRentalDetailsScreen = () => {
   // Car images for repository (up to 4) - use Supabase images
   const defaultImages = getCarImages(booking?.imageKey || 'x');
   const carImages = booking?.images || defaultImages;
+  const previewImages = Array.isArray(carImages) ? carImages.slice(0, 4) : [];
 
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(0);
@@ -57,6 +58,26 @@ const PastRentalDetailsScreen = () => {
       month: 'short',
       day: 'numeric',
     });
+  };
+
+  const renderInfoRow = ({ icon, label, value, valueStyle }) => {
+    if (!value) return null;
+
+    return (
+      <View style={styles.infoRow}>
+        <View style={styles.infoRowLeft}>
+          <View style={styles.infoRowIconWrap}>
+            <Ionicons name={icon} size={18} color={theme.colors.hint} />
+          </View>
+          <Text style={[styles.infoLabel, styles.infoRowLabel, { color: theme.colors.textSecondary }]}>
+            {label}
+          </Text>
+        </View>
+        <Text style={[styles.infoValue, styles.infoRowValue, { color: theme.colors.textPrimary }, valueStyle]}>
+          {value}
+        </Text>
+      </View>
+    );
   };
 
   const handleRateBooking = () => {
@@ -117,24 +138,24 @@ const PastRentalDetailsScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Booking Status */}
-        {/* <View style={styles.section}>
-          <View style={styles.statusContainer}> */}
-            {/* <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
-            <Text style={[styles.statusText, { color: theme.colors.textPrimary }]}>
-              Rental Completed
-            </Text> */}
-          {/* </View>
-        </View> */}
 
-        {/* Separator Line */}
-        {/* <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} /> */}
-
-        {/* Image Repository Link */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Image Repository
           </Text>
+
+          {previewImages.length > 0 && (
+            <View style={styles.imagePreviewGrid}>
+              <View style={styles.imagePreviewItem}>
+                <Image
+                  source={{ uri: previewImages[0] }}
+                  style={styles.imagePreviewImage}
+                  resizeMode="cover"
+                />
+              </View>
+            </View>
+          )}
+
           <TouchableOpacity
             style={styles.imageRepositoryCard}
             onPress={() => {
@@ -149,30 +170,6 @@ const PastRentalDetailsScreen = () => {
               <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
               <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
                 View all images
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Return Verification */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Return verification
-          </Text>
-          <TouchableOpacity
-            style={styles.imageRepositoryCard}
-            onPress={() => {
-              navigation.navigate('ReturnVerification', { booking });
-            }}
-            activeOpacity={0.7}
-          >
-            <View style={styles.imageRepositoryLink}>
-              <Ionicons name="shield-checkmark-outline" size={18} color={theme.colors.primary} />
-              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
-                Upload return photos & mileage
               </Text>
             </View>
           </TouchableOpacity>
@@ -211,123 +208,69 @@ const PastRentalDetailsScreen = () => {
               </View>
             </View>
 
-            <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Pickup Date
-              </Text>
-              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {formatDate(booking.pickupDate || booking.date)}
-              </Text>
-            </View>
-            {booking.pickupTime && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Pickup Time
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.pickupTime}
-                </Text>
-              </View>
-            )}
-            <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Dropoff Date
-              </Text>
-              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {formatDate(booking.dropoffDate || booking.date)}
-              </Text>
-            </View>
-            {booking.dropoffTime && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Dropoff Time
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.dropoffTime}
-                </Text>
-              </View>
-            )}
-            <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Duration
-              </Text>
-              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
-              </Text>
-            </View>
-
-            {booking.pickupLocation && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Pickup Location
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.pickupLocation}
-                </Text>
-              </View>
-            )}
-            {booking.dropoffLocation && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Dropoff Location
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.dropoffLocation}
-                </Text>
-              </View>
-            )}
-
-            <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Total Paid
-              </Text>
-              <Text style={[styles.totalPrice, { color: theme.colors.primary }]}>
-                {booking.price || 'KSh 0'}
-              </Text>
-            </View>
-            {booking.paymentMethod && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Payment Method
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.paymentMethod === 'mpesa' ? 'M-PESA' : booking.paymentMethod === 'airtel' ? 'Airtel Money' : booking.paymentMethod === 'card' ? 'Card' : booking.paymentMethod}
-                </Text>
-              </View>
-            )}
-            {booking.bookingId && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Booking ID
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.bookingId}
-                </Text>
-              </View>
-            )}
+            {renderInfoRow({
+              icon: 'calendar-outline',
+              label: 'Pickup Date',
+              value: formatDate(booking.pickupDate || booking.date),
+            })}
+            {renderInfoRow({
+              icon: 'time-outline',
+              label: 'Pickup Time',
+              value: booking.pickupTime,
+            })}
+            {renderInfoRow({
+              icon: 'calendar-outline',
+              label: 'Dropoff Date',
+              value: formatDate(booking.dropoffDate || booking.date),
+            })}
+            {renderInfoRow({
+              icon: 'time-outline',
+              label: 'Dropoff Time',
+              value: booking.dropoffTime,
+            })}
+            {renderInfoRow({
+              icon: 'timer-outline',
+              label: 'Duration',
+              value: booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`,
+            })}
+            {renderInfoRow({
+              icon: 'location-outline',
+              label: 'Pickup Location',
+              value: booking.pickupLocation,
+            })}
+            {renderInfoRow({
+              icon: 'navigate-outline',
+              label: 'Dropoff Location',
+              value: booking.dropoffLocation,
+            })}
+            {renderInfoRow({
+              icon: 'wallet-outline',
+              label: 'Total Paid',
+              value: booking.price || 'KSh 0',
+              valueStyle: { ...styles.totalPrice, color: theme.colors.primary },
+            })}
+            {renderInfoRow({
+              icon: 'card-outline',
+              label: 'Payment Method',
+              value: booking.paymentMethod
+                ? booking.paymentMethod === 'mpesa'
+                  ? 'M-PESA'
+                  : booking.paymentMethod === 'airtel'
+                    ? 'Airtel Money'
+                    : booking.paymentMethod === 'card'
+                      ? 'Card'
+                      : booking.paymentMethod
+                : null,
+            })}
+            {renderInfoRow({
+              icon: 'barcode-outline',
+              label: 'Booking ID',
+              value: booking.bookingId,
+            })}
           </View>
         </View>
 
         {/* Separator Line */}
-        {!isRated && (
-          <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-        )}
-
-        {/* Rate Button */}
-        {!isRated && (
-          <View style={styles.section}>
-            <TouchableOpacity
-              style={[styles.rateButton, { backgroundColor: theme.colors.primary }]}
-              onPress={handleRateBooking}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.rateButtonText, { color: theme.colors.white }]}>
-                Rate Your Experience
-              </Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
         {isRated && (
           <>
             <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
@@ -345,6 +288,36 @@ const PastRentalDetailsScreen = () => {
         {/* Bottom Spacing */}
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      <View style={[styles.bottomActionBar, { backgroundColor: theme.colors.background, paddingBottom: insets.bottom + 12 }]}>
+        <TouchableOpacity
+          style={[
+            styles.bottomActionButton,
+            styles.bottomActionButtonSecondary,
+            { borderColor: theme.colors.hint + '50' },
+            isRated ? { opacity: 0.6 } : null,
+          ]}
+          onPress={() => {
+            if (!isRated) handleRateBooking();
+          }}
+          activeOpacity={0.8}
+          disabled={isRated}
+        >
+          <Text style={[styles.bottomActionButtonText, { color: theme.colors.textPrimary }]}>
+            {isRated ? 'Rated' : 'Rate'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.bottomActionButton, { backgroundColor: '#FF1577' }]}
+          onPress={() => navigation.navigate('ReturnVerification', { booking })}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.bottomActionButtonText, { color: theme.colors.white }]}>
+            Verify condition
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Rating Modal */}
       <Modal
@@ -479,7 +452,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: 140,
   },
   section: {
     paddingHorizontal: 24,
@@ -498,6 +471,23 @@ const styles = StyleSheet.create({
   },
   imageRepositoryCard: {
     padding: 16,
+  },
+  imagePreviewGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 10,
+    marginBottom: 12,
+  },
+  imagePreviewItem: {
+    width: '100%',
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#F2F2F2',
+  },
+  imagePreviewImage: {
+    width: '100%',
+    height: 230,
   },
   imageRepositoryLink: {
     flexDirection: 'row',
@@ -546,6 +536,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  infoRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    flexShrink: 1,
+  },
+  infoRowIconWrap: {
+    width: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  infoRowLabel: {
+    flexShrink: 1,
+  },
+  infoRowValue: {
+    flexShrink: 1,
+    textAlign: 'right',
+    maxWidth: '55%',
+  },
   infoLabel: {
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
@@ -585,6 +594,35 @@ const styles = StyleSheet.create({
   ratedText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  bottomActionBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    flexDirection: 'row',
+    gap: 12,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.06)',
+  },
+  bottomActionButton: {
+    flex: 1,
+    height: 52,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  bottomActionButtonSecondary: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+  },
+  bottomActionButtonText: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
   },
   ratingModalOverlay: {
     flex: 1,

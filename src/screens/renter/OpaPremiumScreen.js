@@ -11,11 +11,9 @@ const OpaPremiumScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const monthlyAccentColor = theme.colors.primary;
-  const [selectedPlanId, setSelectedPlanId] = useState('free');
+  const [selectedPlanId, setSelectedPlanId] = useState('classic');
 
   const handleSelectPlan = (plan) => {
-    if (plan.id === 'free') return;
-
     navigation.navigate('SubscriptionCheckout', {
       planId: plan.id,
       planTitle: plan.title,
@@ -50,16 +48,6 @@ const OpaPremiumScreen = () => {
     };
   }, [navigation]);
 
-  const freeFeatures = useMemo(
-    () => [
-      'Basic browsing & discovery',
-      'Save cars to wishlist',
-      'Standard support',
-      'Pay per booking',
-    ],
-    []
-  );
-
   const monthlyFeatures = useMemo(
     () => [
       '1 car of choice (Essential category)',
@@ -90,19 +78,6 @@ const OpaPremiumScreen = () => {
   const plans = useMemo(
     () => [
       {
-        id: 'free',
-        title: 'Free Plan',
-        price: 'KES 0',
-        unit: '/ month',
-        amount: 0,
-        features: freeFeatures,
-        isPremium: false,
-        cardStyle: { backgroundColor: theme.colors.white },
-        priceColor: theme.colors.textPrimary,
-        buttonStyle: { backgroundColor: theme.colors.primary },
-        buttonTextStyle: { color: theme.colors.white },
-      },
-      {
         id: 'classic',
         title: 'Classic Plan',
         price: 'KES 85,000',
@@ -131,7 +106,6 @@ const OpaPremiumScreen = () => {
       },
     ],
     [
-      freeFeatures,
       monthlyFeatures,
       monthlyAccentColor,
       plusFeatures,
@@ -165,13 +139,23 @@ const OpaPremiumScreen = () => {
       </TouchableOpacity>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Choose your plan</Text>
+        <View style={styles.hero}>
+          <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Choose your plan</Text>
+        </View>
 
         {plans.map((plan) => {
           const isSelected = selectedPlanId === plan.id;
 
           return (
-            <Card key={plan.id} style={[styles.planCard, plan.cardStyle]}>
+            <Card
+              key={plan.id}
+              style={[
+                styles.planCard,
+                plan.cardStyle,
+                !plan.isPremium ? styles.planCardLight : null,
+                isSelected ? styles.planCardSelected : null,
+              ]}
+            >
               {!!plan.badgeText && (
                 <View style={[styles.popularBadge, !plan.isPremium ? styles.popularBadgeLight : null]}>
                   <Text style={[styles.popularText, !plan.isPremium ? styles.popularTextLight : null]}>
@@ -216,8 +200,6 @@ const OpaPremiumScreen = () => {
                 </Text>
               </View>
 
-              <View style={[styles.divider, plan.isPremium ? styles.dividerWhite : null]} />
-
               <View style={styles.featuresContainer}>
                 {plan.features.map((item, index) => (
                   <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
@@ -228,11 +210,8 @@ const OpaPremiumScreen = () => {
                 style={[styles.getPlanButton, plan.buttonStyle]}
                 onPress={() => handleSelectPlan(plan)}
                 activeOpacity={0.85}
-                disabled={plan.id === 'free'}
               >
-                <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>
-                  {plan.id === 'free' ? 'Current Plan' : 'Select Plan'}
-                </Text>
+                <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>Select Plan</Text>
               </TouchableOpacity>
             </Card>
           );
@@ -269,10 +248,13 @@ const styles = StyleSheet.create({
     paddingTop: 92,
     paddingBottom: 40,
   },
+  hero: {
+    marginBottom: 18,
+  },
   pageTitle: {
     fontSize: 28,
     fontFamily: 'Nunito_700Bold',
-    marginBottom: 20,
+    marginBottom: 0,
     letterSpacing: -0.5,
   },
   planCard: {
@@ -285,13 +267,21 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 3,
   },
+  planCardLight: {
+    borderWidth: 1,
+    borderColor: 'rgba(10, 29, 55, 0.08)',
+  },
+  planCardSelected: {
+    borderWidth: 1,
+    borderColor: 'rgba(255, 21, 119, 0.45)',
+  },
   premiumCard: {
     shadowOpacity: 0.25,
   },
   popularBadge: {
     position: 'absolute',
-    top: 24,
-    right: 24,
+    top: 18,
+    right: 56,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     paddingHorizontal: 12,
     paddingVertical: 6,

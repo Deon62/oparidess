@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -199,6 +199,12 @@ const RenterProfileScreen = () => {
     navigation.navigate('ReferFriends');
   };
 
+  const handleJoinOpaPremium = () => {
+    Linking.openURL('https://opa.deonhq.xyz/premium').catch((err) =>
+      console.error('Failed to open URL:', err)
+    );
+  };
+
   const handleLogout = () => {
     setShowLogoutModal(true);
   };
@@ -383,6 +389,18 @@ const RenterProfileScreen = () => {
             Account Actions
           </Text>
         </View>
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleJoinOpaPremium}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="star-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Join OPA Premium
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
         <TouchableOpacity
           style={styles.additionalActionButton}
           onPress={handleOpaHostApp}

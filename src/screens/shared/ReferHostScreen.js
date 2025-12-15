@@ -31,12 +31,14 @@ const ReferHostScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      navigation.getParent()?.setOptions({
+      const tabNavigator = navigation.getParent()?.getParent?.() ?? navigation.getParent();
+
+      tabNavigator?.setOptions({
         tabBarStyle: { display: 'none' },
       });
 
       return () => {
-        navigation.getParent()?.setOptions({
+        tabNavigator?.setOptions({
           tabBarStyle: undefined,
         });
       };
@@ -128,7 +130,11 @@ const ReferHostScreen = () => {
 
             </View>
 
-            <TouchableOpacity activeOpacity={0.8} style={styles.howLink}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.howLink}
+              onPress={() => navigation.navigate('HowHostReferralsWork')}
+            >
               <Text style={[styles.howLinkText, { color: theme.colors.textSecondary }]}>How host referrals work</Text>
             </TouchableOpacity>
           </View>

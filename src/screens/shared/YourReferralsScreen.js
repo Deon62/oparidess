@@ -20,12 +20,14 @@ const YourReferralsScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      navigation.getParent()?.setOptions({
+      const tabNavigator = navigation.getParent()?.getParent?.() ?? navigation.getParent();
+
+      tabNavigator?.setOptions({
         tabBarStyle: { display: 'none' },
       });
 
       return () => {
-        navigation.getParent()?.setOptions({
+        tabNavigator?.setOptions({
           tabBarStyle: undefined,
         });
       };

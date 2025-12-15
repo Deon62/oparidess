@@ -66,6 +66,7 @@ import ShareFeedbackScreen from '../../screens/shared/ShareFeedbackScreen';
 import ReferFriendsScreen from '../../screens/shared/ReferFriendsScreen';
 import ReferHostScreen from '../../screens/shared/ReferHostScreen';
 import YourReferralsScreen from '../../screens/shared/YourReferralsScreen';
+import HowHostReferralsWorkScreen from '../../screens/shared/HowHostReferralsWorkScreen';
 import CancellationPolicyScreen from '../../screens/shared/CancellationPolicyScreen';
 import CrossCountryTravelDetailsScreen from '../../screens/shared/CrossCountryTravelDetailsScreen';
 import DisputeScreen from '../../screens/shared/DisputeScreen';
@@ -389,6 +390,16 @@ const HomeStack = () => {
         component={ReferHostScreen}
         options={{ 
           title: 'Refer a host',
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
+        name="HowHostReferralsWork" 
+        component={HowHostReferralsWorkScreen}
+        options={{ 
+          title: 'How it works',
           headerShown: false,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',
@@ -891,6 +902,16 @@ const ProfileStack = () => {
         }}
       />
       <Stack.Screen 
+        name="HowHostReferralsWork" 
+        component={HowHostReferralsWorkScreen}
+        options={{ 
+          title: 'How it works',
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen 
         name="AddPayment" 
         component={AddPaymentScreen}
         options={{ 
@@ -951,6 +972,31 @@ const RenterNavigator = () => {
   const safeBottomPadding = getSafeBottomPadding();
   const tabBarHeight = 58 + safeBottomPadding;
 
+  const defaultTabBarStyle = {
+    backgroundColor: theme.colors.white,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.hint + '30',
+    elevation: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    height: tabBarHeight,
+    paddingBottom: safeBottomPadding,
+    paddingTop: 2,
+  };
+
+  const getTabBarStyleForRoute = (route) => {
+    const focusedRouteName = getFocusedRouteNameFromRoute(route);
+    const hiddenRoutes = ['ReferHost', 'YourReferrals', 'HowHostReferralsWork'];
+
+    if (focusedRouteName && hiddenRoutes.includes(focusedRouteName)) {
+      return { display: 'none' };
+    }
+
+    return defaultTabBarStyle;
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -984,53 +1030,44 @@ const RenterNavigator = () => {
         tabBarIconStyle: {
           marginTop: 2,
         },
-        tabBarStyle: {
-          backgroundColor: theme.colors.white,
-          borderTopWidth: 1,
-          borderTopColor: theme.colors.hint + '30',
-          elevation: 12,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -3 },
-          shadowOpacity: 0.12,
-          shadowRadius: 12,
-          height: tabBarHeight,
-          paddingBottom: safeBottomPadding,
-          paddingTop: 2,
-        },
         headerShown: false,
       })}
     >
       <Tab.Screen 
         name="HomeTab" 
         component={HomeStack}
-        options={{ 
+        options={({ route }) => ({
           title: 'Home',
           tabBarLabel: 'Home',
-        }}
+          tabBarStyle: getTabBarStyleForRoute(route),
+        })}
       />
       <Tab.Screen 
         name="WishlistTab" 
         component={WishlistStack}
-        options={{ 
+        options={({ route }) => ({
           title: 'Wishlist',
           tabBarLabel: 'Wishlist',
-        }}
+          tabBarStyle: getTabBarStyleForRoute(route),
+        })}
       />
       <Tab.Screen 
         name="BookingsTab" 
         component={BookingsStack}
-        options={{ 
+        options={({ route }) => ({
           title: 'Bookings',
           tabBarLabel: 'Bookings',
-        }}
+          tabBarStyle: getTabBarStyleForRoute(route),
+        })}
       />
       <Tab.Screen 
         name="MessagesTab" 
         component={MessagesStack}
-        options={{ 
+        options={({ route }) => ({
           title: 'Messages',
           tabBarLabel: 'Messages',
-        }}
+          tabBarStyle: getTabBarStyleForRoute(route),
+        })}
       />
       <Tab.Screen 
         name="ProfileTab" 
@@ -1042,6 +1079,7 @@ const RenterNavigator = () => {
           return {
             title: 'Profile',
             tabBarLabel: 'Profile',
+            tabBarStyle: getTabBarStyleForRoute(route),
             tabBarIcon: ({ focused, color, size }) => {
               // Only highlight if we're on Profile screen
               const shouldHighlight = focused && isProfileScreen;

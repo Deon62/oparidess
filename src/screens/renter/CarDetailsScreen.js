@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity, Dimensions, Alert, Modal, Animated, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -536,7 +536,12 @@ const CarDetailsScreen = () => {
               <TouchableOpacity
                 style={styles.floatingButton}
                 onPress={() => {
-                  Alert.alert('Share', 'Share this car listing with your friends!');
+                  const priceLabel = carData.price || formatPricePerDay(carData.pricePerDay || carData.dailyRate || 0);
+                  const locationLabel = carData.location ? `Location: ${carData.location}` : '';
+                  const shareText = `${carData.name || 'Car'}\n${priceLabel}${locationLabel ? `\n${locationLabel}` : ''}\n\nCheck it out on Opa Rides.`;
+                  Share.share({ message: shareText }).catch(() => {
+                    Alert.alert('Error', 'Unable to open share options');
+                  });
                 }}
                 activeOpacity={0.8}
               >

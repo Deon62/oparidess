@@ -247,7 +247,7 @@ const SettingsScreen = () => {
       <SectionHeader title="Support & Information" />
       <View style={styles.section}>
         <SettingItem
-          icon="help-circle-outline"
+          icon="headset-outline"
           title="Customer Support"
           onPress={handleCustomerSupport}
         />

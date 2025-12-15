@@ -20,6 +20,17 @@ const CompletedRentalsScreen = () => {
     (booking) => booking.status === 'completed' || booking.status === 'past' || booking.status === 'done'
   );
 
+  const showEmptyState = false;
+  const sampleBooking = {
+    id: 'sample-completed',
+    status: 'completed',
+    carName: 'Porsche 911',
+    pickupLocation: 'Nairobi, Kenya',
+    startDate: '12 Dec 2025',
+    imageKey: 'porsche',
+  };
+  const visibleBookings = completedBookings.length > 0 ? completedBookings : [sampleBooking];
+
   useLayoutEffect(() => {
     navigation.setOptions({
       header: () => (
@@ -67,7 +78,7 @@ const CompletedRentalsScreen = () => {
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {completedBookings.length === 0 ? (
+      {showEmptyState && completedBookings.length === 0 ? (
         <View style={styles.emptyState}>
           <CompletedIcon width={220} height={220} />
           <Text style={[styles.emptyTitle, { color: theme.colors.textPrimary }]}>No completed rentals</Text>
@@ -77,7 +88,7 @@ const CompletedRentalsScreen = () => {
         </View>
       ) : (
         <View style={styles.list}>
-          {completedBookings.map((booking) => (
+          {visibleBookings.map((booking) => (
             <TouchableOpacity
               key={booking.id}
               activeOpacity={0.8}

@@ -394,7 +394,7 @@ const RenterProfileScreen = () => {
           onPress={handleJoinOpaPremium}
           activeOpacity={0.7}
         >
-          <Ionicons name="star-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="ribbon-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             Join OPA Premium
           </Text>

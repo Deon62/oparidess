@@ -152,7 +152,7 @@ const SettingsScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
-  const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true }) => (
+  const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true, iconColor }) => (
     <TouchableOpacity
       style={styles.settingItem}
       onPress={onPress}
@@ -160,7 +160,7 @@ const SettingsScreen = () => {
       disabled={!onPress}
     >
       <View style={styles.settingItemLeft}>
-        <Ionicons name={icon} size={22} color={theme.colors.textPrimary} />
+        <Ionicons name={icon} size={22} color={iconColor ?? theme.colors.textPrimary} />
         <Text style={[styles.settingItemTitle, { color: theme.colors.textPrimary }]}>
           {title}
         </Text>
@@ -278,9 +278,7 @@ const SettingsScreen = () => {
           icon="trash-outline"
           title="Delete Account"
           onPress={handleDeleteAccount}
-          rightComponent={
-            <Ionicons name="trash-outline" size={20} color="#F44336" />
-          }
+          iconColor="#F44336"
         />
       </View>
 
@@ -501,7 +499,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   settingItemLeft: {
     flexDirection: 'row',

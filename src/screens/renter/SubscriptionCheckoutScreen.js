@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -19,6 +19,8 @@ const SubscriptionCheckoutScreen = () => {
   const planTitle = route.params?.planTitle ?? 'Classic Plan';
   const planSubtitle = route.params?.planSubtitle ?? 'Seamless car subscriptions';
   const amount = route.params?.amount ?? 85_000;
+
+  const [paymentMethod, setPaymentMethod] = useState('card');
 
   const tax = useMemo(() => Math.round(amount * 0.02), [amount]);
   const total = useMemo(() => amount + tax, [amount, tax]);
@@ -78,28 +80,69 @@ const SubscriptionCheckoutScreen = () => {
           <Text style={[styles.planSubtitle, { color: theme.colors.textSecondary }]}>{planSubtitle}</Text>
         </View>
 
-        <View style={styles.cardMock}>
-          <View style={styles.cardTopRow}>
-            <Text style={styles.cardBrand}>MASTER CARD</Text>
-            <View style={styles.cardDots}>
-              <View style={[styles.dot, { backgroundColor: '#EB001B' }]} />
-              <View style={[styles.dot, { backgroundColor: '#F79E1B', marginLeft: -8 }]} />
-            </View>
-          </View>
+        <View style={[styles.methodSwitch, { backgroundColor: theme.colors.white }]}> 
+          <TouchableOpacity
+            style={[styles.methodPill, paymentMethod === 'card' ? { backgroundColor: theme.colors.primary } : null]}
+            onPress={() => setPaymentMethod('card')}
+            activeOpacity={0.85}
+          >
+            <Text style={[styles.methodText, { color: paymentMethod === 'card' ? theme.colors.white : theme.colors.textPrimary }]}>Card</Text>
+          </TouchableOpacity>
 
-          <Text style={styles.cardNumber}>5156  2402  5337  7173</Text>
-
-          <View style={styles.cardBottomRow}>
-            <View>
-              <Text style={styles.cardLabel}>CARD HOLDER</Text>
-              <Text style={styles.cardValue}>JANE FOX</Text>
-            </View>
-            <View>
-              <Text style={styles.cardLabel}>EXPIRES</Text>
-              <Text style={styles.cardValue}>09/28</Text>
-            </View>
-          </View>
+          <TouchableOpacity
+            style={[styles.methodPill, paymentMethod === 'mpesa' ? { backgroundColor: theme.colors.primary } : null]}
+            onPress={() => setPaymentMethod('mpesa')}
+            activeOpacity={0.85}
+          >
+            <Text style={[styles.methodText, { color: paymentMethod === 'mpesa' ? theme.colors.white : theme.colors.textPrimary }]}>M-Pesa</Text>
+          </TouchableOpacity>
         </View>
+
+        {paymentMethod === 'card' ? (
+          <View style={styles.cardMock}>
+            <View style={styles.cardTopRow}>
+              <Text style={styles.cardBrand}>MASTER CARD</Text>
+              <View style={styles.cardDots}>
+                <View style={[styles.dot, { backgroundColor: '#EB001B' }]} />
+                <View style={[styles.dot, { backgroundColor: '#F79E1B', marginLeft: -8 }]} />
+              </View>
+            </View>
+
+            <Text style={styles.cardNumber}>5156  2402  5337  7173</Text>
+
+            <View style={styles.cardBottomRow}>
+              <View>
+                <Text style={styles.cardLabel}>CARD HOLDER</Text>
+                <Text style={styles.cardValue}>JANE FOX</Text>
+              </View>
+              <View>
+                <Text style={styles.cardLabel}>EXPIRES</Text>
+                <Text style={styles.cardValue}>09/28</Text>
+              </View>
+            </View>
+          </View>
+        ) : (
+          <View style={[styles.mpesaPanel, { backgroundColor: theme.colors.white }]}>
+            <View style={styles.mpesaTopRow}>
+              <View style={styles.mpesaBadge}>
+                <Text style={styles.mpesaBadgeText}>M-PESA</Text>
+              </View>
+              <Ionicons name="phone-portrait-outline" size={18} color={theme.colors.textPrimary} />
+            </View>
+
+            <Text style={[styles.mpesaTitle, { color: theme.colors.textPrimary }]}>Pay with M-Pesa</Text>
+            <Text style={[styles.mpesaHint, { color: theme.colors.textSecondary }]}>You’ll receive an STK push to complete payment.</Text>
+
+            <View style={styles.mpesaRow}>
+              <Text style={[styles.mpesaRowLabel, { color: theme.colors.textSecondary }]}>Phone number</Text>
+              <Text style={[styles.mpesaRowValue, { color: theme.colors.textPrimary }]}>+254 7XX XXX XXX</Text>
+            </View>
+            <View style={styles.mpesaRow}>
+              <Text style={[styles.mpesaRowLabel, { color: theme.colors.textSecondary }]}>Business name</Text>
+              <Text style={[styles.mpesaRowValue, { color: theme.colors.textPrimary }]}>OPA Rides</Text>
+            </View>
+          </View>
+        )}
 
         <View style={[styles.summary, { backgroundColor: theme.colors.white }]}> 
           <View style={styles.summaryRow}>
@@ -189,6 +232,28 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Nunito_400Regular',
   },
+  methodSwitch: {
+    flexDirection: 'row',
+    padding: 6,
+    borderRadius: 16,
+    marginBottom: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  methodPill: {
+    flex: 1,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  methodText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_700Bold',
+  },
   cardMock: {
     backgroundColor: '#0B0F17',
     borderRadius: 18,
@@ -242,6 +307,59 @@ const styles = StyleSheet.create({
   },
   cardValue: {
     color: '#FFFFFF',
+    fontSize: 12,
+    fontFamily: 'Nunito_700Bold',
+  },
+  mpesaPanel: {
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 18,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  mpesaTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  mpesaBadge: {
+    backgroundColor: 'rgba(0, 128, 0, 0.10)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+  },
+  mpesaBadgeText: {
+    color: '#0B6B3A',
+    fontSize: 11,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: 0.4,
+  },
+  mpesaTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
+  },
+  mpesaHint: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 12,
+    lineHeight: 18,
+  },
+  mpesaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+  },
+  mpesaRowLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  mpesaRowValue: {
     fontSize: 12,
     fontFamily: 'Nunito_700Bold',
   },

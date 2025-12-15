@@ -2914,7 +2914,7 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
         activeOpacity={0.85}
         onPress={() => navigation.navigate('EmergencyOptions')}
       >
-        <Ionicons name="alert" size={24} color="#FFFFFF" />
+        <Ionicons name="alert" size={22} color="#FFFFFF" />
       </TouchableOpacity>
 
       {/* Prices Include All Fees Message Banner - Bottom Above Navbar */}
@@ -4553,9 +4553,9 @@ const styles = StyleSheet.create({
   emergencyFab: {
     position: 'absolute',
     right: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: '#FF3B30',
     justifyContent: 'center',
     alignItems: 'center',

@@ -73,7 +73,7 @@ const ReferHostScreen = () => {
 
         <TouchableOpacity
           style={[styles.referralsPill, { backgroundColor: theme.colors.white }]}
-          onPress={() => navigation.navigate('ReferFriends')}
+          onPress={() => navigation.navigate('YourReferrals')}
           activeOpacity={0.85}
         >
           <Text style={[styles.referralsText, { color: theme.colors.textPrimary }]}>Your referrals</Text>

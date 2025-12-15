@@ -262,7 +262,7 @@ const BookingsListScreen = () => {
                   {booking.status === 'active' && (
                     <View style={styles.quickActionsContainer}>
                       <TouchableOpacity
-                        style={[styles.quickActionButton, { backgroundColor: theme.colors.primary + '15' }]}
+                        style={styles.quickActionButton}
                         onPress={(e) => {
                           e.stopPropagation();
                           const hostPhone = booking.ownerPhone || '+254 712 345 678';
@@ -272,13 +272,10 @@ const BookingsListScreen = () => {
                         }}
                         activeOpacity={0.7}
                       >
-                        <Ionicons name="call-outline" size={16} color={theme.colors.primary} />
-                        <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
-                          Call Owner
-                        </Text>
+                        <Ionicons name="call-outline" size={20} color={theme.colors.textPrimary} />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={[styles.quickActionButton, { backgroundColor: theme.colors.primary + '15' }]}
+                        style={styles.quickActionButton}
                         onPress={(e) => {
                           e.stopPropagation();
                           // Navigate to car manual
@@ -331,10 +328,7 @@ const BookingsListScreen = () => {
                         }}
                         activeOpacity={0.7}
                       >
-                        <Ionicons name="book-outline" size={16} color={theme.colors.primary} />
-                        <Text style={[styles.quickActionText, { color: theme.colors.primary }]}>
-                          Manual
-                        </Text>
+                        <Ionicons name="book-outline" size={20} color={theme.colors.textPrimary} />
                       </TouchableOpacity>
                     </View>
                   )}
@@ -576,16 +570,15 @@ const styles = StyleSheet.create({
   },
   quickActionsContainer: {
     flexDirection: 'row',
-    gap: 8,
+    justifyContent: 'flex-end',
+    gap: 16,
   },
   quickActionButton: {
-    flexDirection: 'row',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    flex: 1,
+    justifyContent: 'center',
   },
   quickActionText: {
     fontSize: 13,

@@ -95,9 +95,7 @@ const YourReferralsScreen = () => {
       >
         <View style={[styles.summaryCard, { backgroundColor: theme.colors.white }]}> 
           <View style={styles.summaryTop}>
-            <View style={styles.summaryIconWrap}>
-              <Ionicons name="gift-outline" size={22} color={theme.colors.primary} />
-            </View>
+            <Ionicons name="gift-outline" size={22} color={theme.colors.textPrimary} style={styles.summaryIcon} />
             <View style={styles.summaryTextBlock}>
               <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Total earned</Text>
               <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>{formatKes(totalEarned)}</Text>
@@ -194,13 +192,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-  summaryIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 21, 119, 0.10)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  summaryIcon: {
     marginRight: 12,
   },
   summaryTextBlock: {

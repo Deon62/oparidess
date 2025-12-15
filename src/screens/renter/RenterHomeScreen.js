@@ -8,6 +8,7 @@ import { Card } from '../../packages/components';
 import { parseCurrency } from '../../packages/utils/currency';
 import { useWishlist } from '../../packages/context/WishlistContext';
 import { getCarPrimaryImage, getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
+import { impactLight } from '../../packages/utils/haptics';
 // Location import - will use expo-location if available
 let Location = null;
 try {
@@ -2912,7 +2913,10 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
       <TouchableOpacity
         style={[styles.emergencyFab, { bottom: Math.max(insets.bottom + 20, 28) }]}
         activeOpacity={0.85}
-        onPress={() => navigation.navigate('EmergencyOptions')}
+        onPress={async () => {
+          await impactLight();
+          navigation.navigate('EmergencyOptions');
+        }}
       >
         <Ionicons name="alert" size={22} color="#FFFFFF" />
       </TouchableOpacity>

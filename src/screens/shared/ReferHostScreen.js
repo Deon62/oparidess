@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 
+import PartnerIcon from '../../../assets/icons/partner.svg';
+
 const ReferHostScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -84,9 +86,14 @@ const ReferHostScreen = () => {
       >
         <View style={styles.pageBody}>
           <View>
+            <View style={styles.heroArtWrap}>
+              <PartnerIcon width={240} height={170} />
+            </View>
             <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Refer a host,{`\n`}earn a cash reward</Text>
             <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>What type of host are you referring?</Text>
 
+            <View style={styles.optionsWrap}>
+            
             <TouchableOpacity
               style={[
                 styles.optionCard,
@@ -118,6 +125,8 @@ const ReferHostScreen = () => {
               </View>
               <Ionicons name="briefcase-outline" size={32} color={theme.colors.textPrimary} />
             </TouchableOpacity>
+
+            </View>
 
             <TouchableOpacity activeOpacity={0.8} style={styles.howLink}>
               <Text style={[styles.howLinkText, { color: theme.colors.textSecondary }]}>How host referrals work</Text>
@@ -190,6 +199,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingBottom: 8,
+  },
+  heroArtWrap: {
+    alignItems: 'center',
+    marginTop: 6,
+    marginBottom: 8,
+  },
+  optionsWrap: {
+    marginTop: 10,
   },
   title: {
     fontSize: 30,

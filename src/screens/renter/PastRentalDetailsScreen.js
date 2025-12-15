@@ -157,6 +157,30 @@ const PastRentalDetailsScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
+        {/* Return Verification */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Return verification
+          </Text>
+          <TouchableOpacity
+            style={styles.imageRepositoryCard}
+            onPress={() => {
+              navigation.navigate('ReturnVerification', { booking });
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="shield-checkmark-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                Upload return photos & mileage
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Car Details */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>

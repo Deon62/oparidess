@@ -28,6 +28,7 @@ import OnboardingScreen from '../../screens/renter/OnboardingScreen';
 import EmergencyOptionsScreen from '../../screens/renter/EmergencyOptionsScreen';
 import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScreen';
 import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetailsScreen';
+import ReturnVerificationScreen from '../../screens/renter/ReturnVerificationScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
 import OpaPremiumScreen from '../../screens/renter/OpaPremiumScreen';
@@ -533,6 +534,15 @@ const BookingsStack = () => {
         component={PastRentalDetailsScreen}
         options={{ 
           title: 'Past Rental Details',
+          headerShown: false,
+          animation: 'simple_push',
+        }}
+      />
+      <Stack.Screen
+        name="ReturnVerification"
+        component={ReturnVerificationScreen}
+        options={{
+          title: 'Return verification',
           headerShown: false,
           animation: 'simple_push',
         }}

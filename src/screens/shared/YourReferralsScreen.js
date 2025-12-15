@@ -12,27 +12,7 @@ const YourReferralsScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
-  const referrals = useMemo(
-    () => [
-      {
-        id: 'r1',
-        type: 'Car',
-        name: 'Kevin M.',
-        status: 'Pending',
-        reward: 1000,
-        date: 'Dec 12, 2025',
-      },
-      {
-        id: 'r2',
-        type: 'Service',
-        name: 'Faith N.',
-        status: 'Completed',
-        reward: 2500,
-        date: 'Dec 02, 2025',
-      },
-    ],
-    []
-  );
+  const referrals = useMemo(() => [], []);
 
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });

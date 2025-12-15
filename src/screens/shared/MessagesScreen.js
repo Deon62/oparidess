@@ -24,6 +24,23 @@ const MessagesScreen = () => {
             <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
               Messages
             </Text>
+            <TouchableOpacity
+              onPress={() => {
+                const parent = navigation.getParent();
+                if (parent) {
+                  parent.navigate('ProfileTab', { screen: 'Notifications' });
+                } else {
+                  navigation.navigate('ProfileTab', { screen: 'Notifications' });
+                }
+              }}
+              style={styles.iconButton}
+              activeOpacity={0.7}
+            >
+              <View style={styles.notificationIconContainer}>
+                <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
+                <View style={styles.notificationDot} />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       ),
@@ -136,6 +153,21 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Nunito_600SemiBold',
     flex: 1,
+  },
+  iconButton: {
+    padding: 8,
+  },
+  notificationIconContainer: {
+    position: 'relative',
+  },
+  notificationDot: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#FF1577',
   },
   messageItem: {
     flexDirection: 'row',

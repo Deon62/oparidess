@@ -21,6 +21,7 @@ import BookingConfirmationScreen from '../../screens/renter/BookingConfirmationS
 import InsuranceDetailsScreen from '../../screens/renter/InsuranceDetailsScreen';
 import CancellationScreen from '../../screens/renter/CancellationScreen';
 import BookingsListScreen from '../../screens/renter/BookingsListScreen';
+import CompletedRentalsScreen from '../../screens/renter/CompletedRentalsScreen';
 import PaymentScreen from '../../screens/renter/PaymentScreen';
 import BookingTrackingScreen from '../../screens/renter/BookingTrackingScreen';
 import OnboardingScreen from '../../screens/renter/OnboardingScreen';
@@ -511,7 +512,17 @@ const BookingsStack = () => {
         name="BookingsList" 
         component={BookingsListScreen}
         options={{ 
-          title: 'Past rentals',
+          title: 'Active rentals',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen
+        name="CompletedRentals"
+        component={CompletedRentalsScreen}
+        options={{
+          title: 'Completed rentals',
           headerShown: true,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',

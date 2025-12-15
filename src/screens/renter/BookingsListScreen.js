@@ -30,7 +30,8 @@ const BookingsListScreen = () => {
   
   // Separate active and past bookings (exclude cancelled)
   const activeBookings = bookings.filter(booking => booking.status === 'active');
-  const pastBookings = bookings.filter(booking => booking.status !== 'active' && booking.status !== 'cancelled');
+  const pendingBookings = bookings.filter(booking => booking.status === 'pending');
+  const pastBookings = bookings.filter(booking => booking.status !== 'active' && booking.status !== 'pending' && booking.status !== 'cancelled');
   
   // Sort past bookings by status priority: pending > completed
   const statusPriority = {
@@ -42,10 +43,8 @@ const BookingsListScreen = () => {
     return (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
   });
   
-  // Display bookings: active first, then past bookings if showMore is true
-  const displayedBookings = showMore 
-    ? [...activeBookings, ...sortedPastBookings]
-    : activeBookings;
+  // Display bookings: active first, then pending
+  const displayedBookings = [...activeBookings, ...pendingBookings];
 
   // Set custom header with notifications and status bar
   useLayoutEffect(() => {
@@ -54,25 +53,14 @@ const BookingsListScreen = () => {
         <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
           <View style={styles.headerContent}>
             <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
-              Past rentals
+              Active rentals
             </Text>
             <TouchableOpacity
-              onPress={() => {
-                // Navigate to ProfileTab, then to Notifications screen
-                const parent = navigation.getParent();
-                if (parent) {
-                  parent.navigate('ProfileTab', { screen: 'Notifications' });
-                } else {
-                  navigation.navigate('ProfileTab', { screen: 'Notifications' });
-                }
-              }}
+              onPress={() => navigation.navigate('CompletedRentals')}
               style={styles.iconButton}
               activeOpacity={0.7}
             >
-              <View style={styles.notificationIconContainer}>
-                <Ionicons name="notifications-outline" size={24} color={theme.colors.textPrimary} />
-                <View style={styles.notificationDot} />
-              </View>
+              <Ionicons name="time-outline" size={24} color={theme.colors.textPrimary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -337,18 +325,7 @@ const BookingsListScreen = () => {
             </TouchableOpacity>
             ))}
             
-            {/* Show More/Less Link */}
-            {pastBookings.length > 0 && (
-              <TouchableOpacity
-                onPress={() => setShowMore(!showMore)}
-                style={styles.showMoreContainer}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.showMoreText, { color: theme.colors.primary }]}>
-                  {showMore ? 'Show less' : 'Show more'}
-                </Text>
-              </TouchableOpacity>
-            )}
+            {null}
           </>
         )}
       </View>

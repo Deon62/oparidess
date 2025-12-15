@@ -252,7 +252,7 @@ const SettingsScreen = () => {
           onPress={handleCustomerSupport}
         />
         <SettingItem
-          icon="shield-checkmark-outline"
+          icon="hand-left-outline"
           title="Privacy"
           onPress={handlePrivacy}
         />

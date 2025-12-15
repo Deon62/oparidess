@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
   bottomActionButton: {
     flex: 1,
     height: 52,
-    borderRadius: 12,
+    borderRadius: 18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

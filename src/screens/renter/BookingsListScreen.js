@@ -272,7 +272,7 @@ const BookingsListScreen = () => {
                         }}
                         activeOpacity={0.7}
                       >
-                        <Ionicons name="call-outline" size={20} color={theme.colors.textPrimary} />
+                        <Ionicons name="call" size={20} color={theme.colors.primary} />
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={styles.quickActionButton}

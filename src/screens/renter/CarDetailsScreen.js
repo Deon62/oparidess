@@ -643,7 +643,7 @@ const CarDetailsScreen = () => {
                 <View style={[styles.summaryItem, { paddingLeft: 12 }]}>
                   <View style={styles.summaryLaurels}>
                     <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
-                    <Text style={[styles.summaryLabel, { color: theme.colors.textPrimary }]}>Guest favourite</Text>
+                    <Text style={[styles.summaryLabel, styles.guestFavouriteLabel, { color: theme.colors.textPrimary }]}>Guest favourite</Text>
                     <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
                   </View>
                 </View>
@@ -1511,6 +1511,9 @@ const styles = StyleSheet.create({
   summaryLabel: {
     fontSize: 14,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  guestFavouriteLabel: {
+    marginLeft: 4,
   },
   summaryDivider: {
     width: 1,

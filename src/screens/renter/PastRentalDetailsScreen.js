@@ -128,54 +128,14 @@ const PastRentalDetailsScreen = () => {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 60 }]}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 18 }]}
         showsVerticalScrollIndicator={false}
       >
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Image Repository
-          </Text>
-
-          {previewImages.length > 0 && (
-            <View style={styles.imagePreviewGrid}>
-              <View style={styles.imagePreviewItem}>
-                <Image
-                  source={{ uri: previewImages[0] }}
-                  style={styles.imagePreviewImage}
-                  resizeMode="cover"
-                />
-              </View>
-            </View>
-          )}
-
-          <TouchableOpacity
-            style={styles.imageRepositoryCard}
-            onPress={() => {
-              navigation.navigate('ImageRepository', {
-                images: carImages,
-                title: `${booking.carName || 'Car'} - Images`,
-              });
-            }}
-            activeOpacity={0.7}
-          >
-            <View style={styles.imageRepositoryLink}>
-              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
-              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
-                View all images
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
         {/* Rental info */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+        <View style={[styles.section, styles.firstSection]}>
+          {/* <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Rental info
-          </Text>
+          </Text> */}
           <View style={styles.infoCard}>
             <View>
               <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
@@ -261,6 +221,45 @@ const PastRentalDetailsScreen = () => {
               value: booking.bookingId,
             })}
           </View>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Image Repository
+          </Text>
+
+          {previewImages.length > 0 && (
+            <View style={styles.imagePreviewGrid}>
+              <View style={styles.imagePreviewItem}>
+                <Image
+                  source={{ uri: previewImages[0] }}
+                  style={styles.imagePreviewImage}
+                  resizeMode="cover"
+                />
+              </View>
+            </View>
+          )}
+
+          <TouchableOpacity
+            style={styles.imageRepositoryCard}
+            onPress={() => {
+              navigation.navigate('ImageRepository', {
+                images: carImages,
+                title: `${booking.carName || 'Car'} - Images`,
+              });
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                View all images
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         {/* Separator Line */}
@@ -450,6 +449,9 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: 24,
     marginTop: 24,
+  },
+  firstSection: {
+    marginTop: 6,
   },
   sectionSeparator: {
     borderTopWidth: 1,

@@ -280,13 +280,6 @@ const RenterProfileScreen = () => {
           <Text style={[styles.profileName, { color: theme.colors.textPrimary }]}>
             {personalInfo.first_name} {personalInfo.last_name}
           </Text>
-          <TouchableOpacity
-            onPress={handleEditName}
-            style={styles.nameEditIcon}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="create-outline" size={18} color={theme.colors.primary} />
-          </TouchableOpacity>
         </View>
         <Text style={[styles.profileSubtext, { color: theme.colors.textSecondary }]}>
           {personalInfo.email}
@@ -294,42 +287,21 @@ const RenterProfileScreen = () => {
       </View>
 
       {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+      {/* <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} /> */}
 
       {/* Personal Information */}
-      <View style={[styles.section, styles.plainSection, styles.compactSection]}>
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Personal Information
+      <View style={styles.additionalActionsContainer}>
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleUpdateProfile}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="person-circle-outline" size={24} color={theme.colors.primary} />
+          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+            Personal info
           </Text>
-          <TouchableOpacity
-            onPress={handleUpdateProfile}
-            style={styles.updateProfileIcon}
-            activeOpacity={0.7}
-          >
-            <Ionicons name="create-outline" size={22} color={theme.colors.primary} />
-          </TouchableOpacity>
-        </View>
-        <InfoRow
-          icon="call-outline"
-          label="Phone Number"
-          value={personalInfo.phone_number}
-        />
-        <InfoRow
-          icon="calendar-outline"
-          label="Date of Birth"
-          value={personalInfo.date_of_birth}
-        />
-        <InfoRow
-          icon="person-circle-outline"
-          label="Gender"
-          value={personalInfo.gender}
-        />
-        <InfoRow
-          icon="card-outline"
-          label="ID Number"
-          value={personalInfo.id_number}
-        />
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
       </View>
 
       {/* Driving License Information - Only show if user has DL info */}
@@ -780,17 +752,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   profileName: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'Nunito_700Bold',
     textAlign: 'center',
   },
-  nameEditIcon: {
-    padding: 4,
-  },
   profileSubtext: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginBottom: 12,
+    marginTop: 4,
   },
   section: {
     marginHorizontal: 24,

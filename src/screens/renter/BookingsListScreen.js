@@ -60,7 +60,7 @@ const BookingsListScreen = () => {
               style={styles.iconButton}
               activeOpacity={0.7}
             >
-              <Ionicons name="time-outline" size={24} color={theme.colors.textPrimary} />
+              <Ionicons name="albums-outline" size={24} color={theme.colors.textPrimary} />
             </TouchableOpacity>
           </View>
         </View>

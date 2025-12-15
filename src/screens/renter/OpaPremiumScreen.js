@@ -1,25 +1,27 @@
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Dimensions } from 'react-native';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 
-import FreeIcon from '../../../assets/icons/free.svg';
-import ClassicIcon from '../../../assets/icons/classic.svg';
-import PremierIcon from '../../../assets/icons/premier.svg';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
 const OpaPremiumScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const monthlyAccentColor = theme.colors.primary;
-  const carouselRef = useRef(null);
   const [selectedPlanId, setSelectedPlanId] = useState('free');
-  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleSelectPlan = (plan) => {
+    if (plan.id === 'free') return;
+
+    navigation.navigate('SubscriptionCheckout', {
+      planId: plan.id,
+      planTitle: plan.title,
+      amount: plan.amount,
+    });
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -92,9 +94,9 @@ const OpaPremiumScreen = () => {
         title: 'Free Plan',
         price: 'KES 0',
         unit: '/ month',
+        amount: 0,
         features: freeFeatures,
         isPremium: false,
-        Icon: FreeIcon,
         cardStyle: { backgroundColor: theme.colors.white },
         priceColor: theme.colors.textPrimary,
         buttonStyle: { backgroundColor: theme.colors.primary },
@@ -105,26 +107,26 @@ const OpaPremiumScreen = () => {
         title: 'Classic Plan',
         price: 'KES 85,000',
         unit: '/ month',
+        amount: 85000,
         features: monthlyFeatures,
-        isPremium: false,
-        Icon: ClassicIcon,
-        cardStyle: { backgroundColor: theme.colors.white },
-        priceColor: monthlyAccentColor,
-        buttonStyle: { backgroundColor: monthlyAccentColor },
-        buttonTextStyle: { color: theme.colors.white },
+        isPremium: true,
+        cardStyle: { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary },
+        priceColor: theme.colors.white,
+        buttonStyle: { backgroundColor: theme.colors.white },
+        buttonTextStyle: { color: theme.colors.primary },
       },
       {
         id: 'premier',
         title: 'Premier Plan',
         price: 'KES 135,000',
         unit: '/ month',
+        amount: 135000,
         features: plusFeatures,
-        isPremium: true,
-        Icon: PremierIcon,
-        cardStyle: { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary },
-        priceColor: theme.colors.white,
-        buttonStyle: { backgroundColor: theme.colors.white },
-        buttonTextStyle: { color: theme.colors.primary },
+        isPremium: false,
+        cardStyle: { backgroundColor: theme.colors.white },
+        priceColor: monthlyAccentColor,
+        buttonStyle: { backgroundColor: monthlyAccentColor },
+        buttonTextStyle: { color: theme.colors.white },
         badgeText: 'Recommended',
       },
     ],
@@ -163,128 +165,78 @@ const OpaPremiumScreen = () => {
       </TouchableOpacity>
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.headerBlock}>
-          <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Choose your plan</Text>
-        </View>
+        <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Choose your plan</Text>
 
-        <View style={styles.carouselWrapper}>
-          <ScrollView
-            ref={carouselRef}
-            horizontal
-            pagingEnabled
-            snapToInterval={SCREEN_WIDTH}
-            decelerationRate="fast"
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.carouselContent}
-            onMomentumScrollEnd={(e) => {
-              const nextIndex = Math.round(e.nativeEvent.contentOffset.x / SCREEN_WIDTH);
-              setActiveIndex(nextIndex);
-            }}
-          >
-            {plans.map((plan) => {
-              const isSelected = selectedPlanId === plan.id;
-              const PlanIcon = plan.Icon;
+        {plans.map((plan) => {
+          const isSelected = selectedPlanId === plan.id;
 
-              return (
-                <View key={plan.id} style={styles.planPage}>
-                  <View style={styles.illustrationContainer}>
-                    <PlanIcon width={200} height={200} />
-                  </View>
-
-                  <Card style={[styles.planCard, styles.planCardInCarousel, plan.cardStyle]}>
-                    {!!plan.badgeText && (
-                      <View style={styles.popularBadge}>
-                        <Text style={styles.popularText}>{plan.badgeText}</Text>
-                      </View>
-                    )}
-
-                    <TouchableOpacity
-                      style={styles.selectRow}
-                      onPress={() => setSelectedPlanId(plan.id)}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={[styles.planName, plan.isPremium ? styles.premiumText : { color: theme.colors.textPrimary }]}>
-                        {plan.title}
-                      </Text>
-                      <Ionicons
-                        name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
-                        size={22}
-                        color={plan.isPremium ? '#FFFFFF' : monthlyAccentColor}
-                      />
-                    </TouchableOpacity>
-
-                    <View style={styles.priceRow}>
-                      <Text
-                        style={[
-                          styles.priceValue,
-                          plan.isPremium ? styles.premiumText : null,
-                          { color: plan.priceColor },
-                        ]}
-                      >
-                        {plan.price}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.priceUnit,
-                          plan.isPremium ? styles.premiumText : null,
-                          { color: plan.isPremium ? '#FFFFFF' : theme.colors.textSecondary },
-                        ]}
-                      >
-                        {plan.unit}
-                      </Text>
-                    </View>
-
-                    <View style={[styles.divider, plan.isPremium ? styles.dividerWhite : null]} />
-
-                    <View style={styles.featuresContainer}>
-                      {plan.features.map((item, index) => (
-                        <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
-                      ))}
-                    </View>
-
-                    <TouchableOpacity
-                      style={[styles.getPlanButton, plan.buttonStyle]}
-                      onPress={() => setSelectedPlanId(plan.id)}
-                      activeOpacity={0.85}
-                    >
-                      <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>
-                        {plan.id === 'free' ? 'Current Plan' : 'Select Plan'}
-                      </Text>
-                    </TouchableOpacity>
-                  </Card>
+          return (
+            <Card key={plan.id} style={[styles.planCard, plan.cardStyle]}>
+              {!!plan.badgeText && (
+                <View style={[styles.popularBadge, !plan.isPremium ? styles.popularBadgeLight : null]}>
+                  <Text style={[styles.popularText, !plan.isPremium ? styles.popularTextLight : null]}>
+                    {plan.badgeText}
+                  </Text>
                 </View>
-              );
-            })}
-          </ScrollView>
+              )}
 
-          {activeIndex > 0 && (
-            <TouchableOpacity
-              style={[styles.prevArrow, { backgroundColor: theme.colors.white }]}
-              onPress={() => {
-                const prev = Math.max(activeIndex - 1, 0);
-                carouselRef.current?.scrollTo({ x: prev * SCREEN_WIDTH, animated: true });
-                setActiveIndex(prev);
-              }}
-              activeOpacity={0.85}
-            >
-              <Ionicons name="chevron-back" size={22} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-          )}
+              <TouchableOpacity
+                style={styles.selectRow}
+                onPress={() => setSelectedPlanId(plan.id)}
+                activeOpacity={0.8}
+              >
+                <Text style={[styles.planName, plan.isPremium ? styles.premiumText : { color: theme.colors.textPrimary }]}>
+                  {plan.title}
+                </Text>
+                <Ionicons
+                  name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={22}
+                  color={plan.isPremium ? '#FFFFFF' : monthlyAccentColor}
+                />
+              </TouchableOpacity>
 
-          {activeIndex < plans.length - 1 && (
-            <TouchableOpacity
-              style={[styles.nextArrow, { backgroundColor: theme.colors.white }]}
-              onPress={() => {
-                const next = Math.min(activeIndex + 1, plans.length - 1);
-                carouselRef.current?.scrollTo({ x: next * SCREEN_WIDTH, animated: true });
-                setActiveIndex(next);
-              }}
-              activeOpacity={0.85}
-            >
-              <Ionicons name="chevron-forward" size={22} color={theme.colors.textPrimary} />
-            </TouchableOpacity>
-          )}
-        </View>
+              <View style={styles.priceRow}>
+                <Text
+                  style={[
+                    styles.priceValue,
+                    plan.isPremium ? styles.premiumText : null,
+                    { color: plan.priceColor },
+                  ]}
+                >
+                  {plan.price}
+                </Text>
+                <Text
+                  style={[
+                    styles.priceUnit,
+                    plan.isPremium ? styles.premiumText : null,
+                    { color: plan.isPremium ? '#FFFFFF' : theme.colors.textSecondary },
+                  ]}
+                >
+                  {plan.unit}
+                </Text>
+              </View>
+
+              <View style={[styles.divider, plan.isPremium ? styles.dividerWhite : null]} />
+
+              <View style={styles.featuresContainer}>
+                {plan.features.map((item, index) => (
+                  <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
+                ))}
+              </View>
+
+              <TouchableOpacity
+                style={[styles.getPlanButton, plan.buttonStyle]}
+                onPress={() => handleSelectPlan(plan)}
+                activeOpacity={0.85}
+                disabled={plan.id === 'free'}
+              >
+                <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>
+                  {plan.id === 'free' ? 'Current Plan' : 'Select Plan'}
+                </Text>
+              </TouchableOpacity>
+            </Card>
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -313,62 +265,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
+    paddingHorizontal: 24,
     paddingTop: 92,
     paddingBottom: 40,
-  },
-  headerBlock: {
-    paddingHorizontal: 24,
   },
   pageTitle: {
     fontSize: 28,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 20,
     letterSpacing: -0.5,
-  },
-  carouselWrapper: {
-    width: SCREEN_WIDTH,
-  },
-  carouselContent: {
-    paddingBottom: 10,
-  },
-  planPage: {
-    width: SCREEN_WIDTH,
-    paddingHorizontal: 24,
-  },
-  illustrationContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-  },
-  nextArrow: {
-    position: 'absolute',
-    right: 16,
-    top: 150,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  prevArrow: {
-    position: 'absolute',
-    left: 16,
-    top: 150,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 3,
   },
   planCard: {
     borderRadius: 20,
@@ -379,9 +284,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 3,
-  },
-  planCardInCarousel: {
-    marginBottom: 0,
   },
   premiumCard: {
     shadowOpacity: 0.25,
@@ -395,11 +297,17 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
   },
+  popularBadgeLight: {
+    backgroundColor: 'rgba(10, 29, 55, 0.08)',
+  },
   popularText: {
     color: '#FFFFFF',
     fontSize: 10,
     fontFamily: 'Nunito_700Bold',
     letterSpacing: 0.5,
+  },
+  popularTextLight: {
+    color: '#0A1D37',
   },
   planHeader: {
     marginBottom: 12,

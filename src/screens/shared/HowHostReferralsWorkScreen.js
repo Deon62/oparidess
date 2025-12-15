@@ -43,19 +43,15 @@ const HowHostReferralsWorkScreen = () => {
           <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
         </TouchableOpacity>
 
-        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>How it works</Text>
         <View style={styles.headerSpacer} />
       </View>
 
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]} showsVerticalScrollIndicator={false}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>How host referrals work</Text>
-        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Refer car hosts or service hosts and earn rewards when they successfully list and get verified.</Text>
 
         <View style={[styles.card, { backgroundColor: theme.colors.white }]}> 
           <View style={styles.stepRow}>
-            <View style={[styles.stepBadge, { backgroundColor: 'rgba(255, 21, 119, 0.10)' }]}>
-              <Text style={[styles.stepBadgeText, { color: '#FF1577' }]}>1</Text>
-            </View>
+            <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>1.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Share your referral link</Text>
               <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Choose Car or Service, then send the link to the host you’re inviting.</Text>
@@ -63,9 +59,7 @@ const HowHostReferralsWorkScreen = () => {
           </View>
 
           <View style={styles.stepRow}>
-            <View style={[styles.stepBadge, { backgroundColor: 'rgba(255, 21, 119, 0.10)' }]}>
-              <Text style={[styles.stepBadgeText, { color: '#FF1577' }]}>2</Text>
-            </View>
+            <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>2.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>They sign up and submit details</Text>
               <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>The host signs up and completes their listing information.</Text>
@@ -73,9 +67,7 @@ const HowHostReferralsWorkScreen = () => {
           </View>
 
           <View style={styles.stepRow}>
-            <View style={[styles.stepBadge, { backgroundColor: 'rgba(255, 21, 119, 0.10)' }]}>
-              <Text style={[styles.stepBadgeText, { color: '#FF1577' }]}>3</Text>
-            </View>
+            <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>3.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Verification</Text>
               <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Opa verifies the listing. Once approved, your referral is marked as completed.</Text>
@@ -83,9 +75,7 @@ const HowHostReferralsWorkScreen = () => {
           </View>
 
           <View style={styles.stepRow}>
-            <View style={[styles.stepBadge, { backgroundColor: 'rgba(255, 21, 119, 0.10)' }]}>
-              <Text style={[styles.stepBadgeText, { color: '#FF1577' }]}>4</Text>
-            </View>
+            <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>4.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Get rewarded</Text>
               <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Rewards are credited after verification. You can track progress in “Your referrals”.</Text>
@@ -131,7 +121,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
   },
   headerSpacer: {
-    width: 40,
+    flex: 1,
   },
   content: {
     paddingHorizontal: 24,
@@ -141,12 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 6,
-  },
-  subtitle: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 19,
-    marginBottom: 14,
   },
   card: {
     borderRadius: 18,
@@ -164,16 +148,10 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 10,
   },
-  stepBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepBadgeText: {
+  stepNumber: {
     fontSize: 14,
     fontFamily: 'Nunito_700Bold',
+    marginTop: 1,
   },
   stepTextWrap: {
     flex: 1,

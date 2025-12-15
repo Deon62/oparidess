@@ -87,10 +87,18 @@ const HomeStack = () => {
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.background,
+          elevation: 0,
+          shadowOpacity: 0,
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowRadius: 0,
+          borderBottomWidth: 0,
         },
+        headerShadowVisible: false,
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
           fontFamily: 'Nunito_600SemiBold',
+          fontSize: 22,
         },
         contentStyle: {
           backgroundColor: theme.colors.background,
@@ -361,6 +369,7 @@ const HomeStack = () => {
           headerTitleStyle: {
             fontFamily: 'Nunito_600SemiBold',
             color: '#000000',
+            fontSize: 22,
           },
           statusBarStyle: 'dark',
           statusBarBackgroundColor: '#FFFFFF',
@@ -490,6 +499,7 @@ const BookingsStack = () => {
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
           fontFamily: 'Nunito_600SemiBold',
+          fontSize: 22,
         },
         contentStyle: {
           backgroundColor: theme.colors.background,
@@ -566,10 +576,18 @@ const WishlistStack = () => {
       screenOptions={{
         headerStyle: {
           backgroundColor: theme.colors.background,
+          elevation: 0,
+          shadowOpacity: 0,
+          shadowColor: 'transparent',
+          shadowOffset: { width: 0, height: 0 },
+          shadowRadius: 0,
+          borderBottomWidth: 0,
         },
+        headerShadowVisible: false,
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
           fontFamily: 'Nunito_600SemiBold',
+          fontSize: 22,
         },
         contentStyle: {
           backgroundColor: theme.colors.background,
@@ -648,6 +666,7 @@ const MessagesStack = () => {
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
           fontFamily: 'Nunito_600SemiBold',
+          fontSize: 22,
         },
         contentStyle: {
           backgroundColor: theme.colors.background,
@@ -693,6 +712,7 @@ const ProfileStack = () => {
         headerTintColor: theme.colors.textPrimary,
         headerTitleStyle: {
           fontFamily: 'Nunito_600SemiBold',
+          fontSize: 22,
         },
         contentStyle: {
           backgroundColor: theme.colors.background,

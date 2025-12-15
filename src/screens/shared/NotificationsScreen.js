@@ -19,7 +19,7 @@ const NotificationsScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       header: () => (
-        <View style={[styles.customHeader, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
+        <View style={[styles.customHeader, { backgroundColor: theme.colors.background, paddingTop: insets.top }]}>
           <View style={styles.headerContent}>
             <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
               Notifications
@@ -97,11 +97,12 @@ const styles = StyleSheet.create({
   },
   customHeader: {
     position: 'relative',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
+    borderBottomWidth: 0,
   },
   headerContent: {
     flexDirection: 'row',
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: 'Nunito_600SemiBold',
     flex: 1,
   },

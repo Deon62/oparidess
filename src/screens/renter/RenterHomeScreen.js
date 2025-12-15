@@ -1204,7 +1204,11 @@ const RenterHomeScreen = () => {
             <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`roadtrips-${business.id}`);
+                          toggleServiceLike(`roadtrips-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, category: 'Road Trips Agencies' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1269,7 +1273,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`vipwedding-${business.id}`);
+                          toggleServiceLike(`vipwedding-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, category: 'VIP Wedding Fleet Hire' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1330,7 +1338,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`drivers-${driver.id}`);
+                          toggleServiceLike(`drivers-${driver.id}`, {
+                            title: driver.name,
+                            image: driver.image,
+                            payload: { ...driver, category: 'Hire Professional Drivers' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1395,7 +1407,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`movers-${business.id}`);
+                          toggleServiceLike(`movers-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, category: 'Movers' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1461,7 +1477,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`cardetailing-${business.id}`);
+                          toggleServiceLike(`cardetailing-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, category: 'VIP Car Detailing' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1526,7 +1546,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(`roadside-${business.id}`);
+                          toggleServiceLike(`roadside-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, category: 'Roadside Assistance' },
+                          });
                         }}
                         style={styles.serviceActionButton}
                         activeOpacity={0.7}
@@ -1707,7 +1731,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('destination-mombasa');
+                        toggleDiscoverLike('destination-mombasa', {
+                          title: 'Mombasa Beaches',
+                          image: mombasaImage,
+                          payload: {
+                            id: 'mombasa',
+                            name: 'Mombasa Beaches',
+                            description: 'Coastal paradise with beautiful beaches',
+                            image: mombasaImage,
+                            likeId: 'destination-mombasa',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1751,7 +1785,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('destination-nakuru');
+                        toggleDiscoverLike('destination-nakuru', {
+                          title: 'Lake Nakuru',
+                          image: nakuruImage,
+                          payload: {
+                            id: 'nakuru',
+                            name: 'Lake Nakuru',
+                            description: 'Wildlife and scenic lake views',
+                            image: nakuruImage,
+                            likeId: 'destination-nakuru',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1795,7 +1839,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('destination-egerton');
+                        toggleDiscoverLike('destination-egerton', {
+                          title: 'Lord Egerton Castle',
+                          image: egertonImage,
+                          payload: {
+                            id: 'egerton',
+                            name: 'Lord Egerton Castle',
+                            description: 'Historic castle with stunning architecture',
+                            image: egertonImage,
+                            likeId: 'destination-egerton',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1839,7 +1893,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('destination-hellsgate');
+                        toggleDiscoverLike('destination-hellsgate', {
+                          title: "Hell's Gate",
+                          image: hellsgateImage,
+                          payload: {
+                            id: 'hellsgate',
+                            name: "Hell's Gate",
+                            description: 'Spectacular canyon and geothermal park',
+                            image: hellsgateImage,
+                            likeId: 'destination-hellsgate',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1883,7 +1947,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('destination-pejeta');
+                        toggleDiscoverLike('destination-pejeta', {
+                          title: 'Ol Pejeta Conservancy',
+                          image: pejetaImage,
+                          payload: {
+                            id: 'pejeta',
+                            name: 'Ol Pejeta Conservancy',
+                            description: 'Wildlife conservation and safari experience',
+                            image: pejetaImage,
+                            likeId: 'destination-pejeta',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1951,7 +2025,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('event-nairobi');
+                        toggleDiscoverLike('event-nairobi', {
+                          title: 'Nairobi Auto Show',
+                          image: eventsImage,
+                          payload: {
+                            id: 'nairobi',
+                            name: 'Nairobi Auto Show',
+                            description: 'Biggest automotive exhibition in the region',
+                            image: eventsImage,
+                            likeId: 'event-nairobi',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -1995,7 +2079,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('event-classic');
+                        toggleDiscoverLike('event-classic', {
+                          title: 'Classic Car Exhibition',
+                          image: events1Image,
+                          payload: {
+                            id: 'classic',
+                            name: 'Classic Car Exhibition',
+                            description: 'Vintage and classic vehicles showcase',
+                            image: events1Image,
+                            likeId: 'event-classic',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2039,7 +2133,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('event-supercar');
+                        toggleDiscoverLike('event-supercar', {
+                          title: 'Supercar Rally',
+                          image: events2Image,
+                          payload: {
+                            id: 'supercar',
+                            name: 'Supercar Rally',
+                            description: 'High-performance supercars showcase',
+                            image: events2Image,
+                            likeId: 'event-supercar',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2083,7 +2187,17 @@ const RenterHomeScreen = () => {
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('event-motor');
+                        toggleDiscoverLike('event-motor', {
+                          title: 'Motor Expo',
+                          image: events3Image,
+                          payload: {
+                            id: 'motor',
+                            name: 'Motor Expo',
+                            description: 'Latest automotive technology and innovations',
+                            image: events3Image,
+                            likeId: 'event-motor',
+                          },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2160,7 +2274,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleDiscoverLike(`autoparts-${business.id}`);
+                          toggleDiscoverLike(`autoparts-${business.id}`, {
+                            title: business.name,
+                            image: business.image,
+                            payload: { ...business, likeId: `autoparts-${business.id}` },
+                          });
                         }}
                         style={styles.discoverActionButton}
                         activeOpacity={0.7}
@@ -2241,7 +2359,11 @@ const RenterHomeScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleDiscoverLike(`mechanic-${mechanic.id}`);
+                          toggleDiscoverLike(`mechanic-${mechanic.id}`, {
+                            title: mechanic.name,
+                            image: mechanic.image,
+                            payload: { ...mechanic, likeId: `mechanic-${mechanic.id}` },
+                          });
                         }}
                         style={styles.discoverActionButton}
                         activeOpacity={0.7}
@@ -2359,7 +2481,11 @@ Each destination offers unique experiences that will make your road trip unforge
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('blog-roadtrip');
+                        toggleDiscoverLike('blog-roadtrip', {
+                          title: 'Top 10 Road Trip Destinations in Kenya',
+                          image: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=400',
+                          payload: { likeId: 'blog-roadtrip', title: 'Top 10 Road Trip Destinations in Kenya' },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2462,7 +2588,11 @@ Following these tips will help ensure your road trip is safe, smooth, and stress
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('blog-maintenance');
+                        toggleDiscoverLike('blog-maintenance', {
+                          title: 'Car Maintenance Tips for Long Trips',
+                          image: 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?w=400',
+                          payload: { likeId: 'blog-maintenance', title: 'Car Maintenance Tips for Long Trips' },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2554,7 +2684,11 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('blog-parks');
+                        toggleDiscoverLike('blog-parks', {
+                          title: "Best Time to Visit Kenya's National Parks",
+                          image: 'https://images.unsplash.com/photo-1502877338535-766e1452684a?w=400',
+                          payload: { likeId: 'blog-parks', title: "Best Time to Visit Kenya's National Parks" },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2597,7 +2731,11 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('blog-coastal');
+                        toggleDiscoverLike('blog-coastal', {
+                          title: 'Coastal Getaways: A Complete Guide',
+                          image: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400',
+                          payload: { likeId: 'blog-coastal', title: 'Coastal Getaways: A Complete Guide' },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2640,7 +2778,11 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                     <TouchableOpacity
                       onPress={(e) => {
                         e.stopPropagation();
-                        toggleDiscoverLike('blog-safety');
+                        toggleDiscoverLike('blog-safety', {
+                          title: 'Safety Tips for Driving in Kenya',
+                          image: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400',
+                          payload: { likeId: 'blog-safety', title: 'Safety Tips for Driving in Kenya' },
+                        });
                       }}
                       style={styles.discoverActionButton}
                       activeOpacity={0.7}
@@ -2735,7 +2877,11 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleCarLike(car.id);
+                          toggleCarLike(car.id, {
+                            title: car.name,
+                            imageUri: car.imageUri || car.image,
+                            payload: car,
+                          });
                         }}
                         style={styles.actionButton}
                         activeOpacity={0.7}
@@ -2832,7 +2978,11 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                         <TouchableOpacity
                           onPress={(e) => {
                             e.stopPropagation();
-                            toggleCarLike(vehicle.id);
+                            toggleCarLike(vehicle.id, {
+                              title: vehicle.name,
+                              imageUri: vehicle.imageUri || vehicle.image,
+                              payload: vehicle,
+                            });
                           }}
                           style={styles.actionButton}
                           activeOpacity={0.7}

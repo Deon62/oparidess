@@ -180,7 +180,11 @@ Following these tips will help ensure your road trip is safe, smooth, and stress
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
-                toggleDiscoverLike(item.likeId);
+                toggleDiscoverLike(item.likeId, {
+                  title: item.name || item.title,
+                  image: item.image,
+                  payload: item,
+                });
               }}
               style={styles.actionButton}
               activeOpacity={0.7}
@@ -220,7 +224,11 @@ Following these tips will help ensure your road trip is safe, smooth, and stress
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
-                toggleDiscoverLike(item.likeId);
+                toggleDiscoverLike(item.likeId, {
+                  title: item.name || item.title,
+                  image: item.image,
+                  payload: item,
+                });
               }}
               style={styles.actionButton}
               activeOpacity={0.7}
@@ -280,7 +288,11 @@ Following these tips will help ensure your road trip is safe, smooth, and stress
             <TouchableOpacity
               onPress={(e) => {
                 e.stopPropagation();
-                toggleDiscoverLike(item.likeId);
+                toggleDiscoverLike(item.likeId, {
+                  title: item.name || item.title,
+                  image: item.image,
+                  payload: item,
+                });
               }}
               style={styles.actionButton}
               activeOpacity={0.7}

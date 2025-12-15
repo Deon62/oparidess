@@ -8,7 +8,7 @@ import { Toggle } from '../../packages/components';
 import { WebView } from 'react-native-webview';
 import { formatPricePerDay, formatCurrency } from '../../packages/utils/currency';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
+import { getCarPrimaryImage, getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 
 // Car images now loaded from Supabase
 
@@ -22,7 +22,7 @@ const CarDetailsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const insets = useSafeAreaInsets();
-  const { likedCars, toggleCarLike } = useWishlist();
+  const { likedCars, toggleCarLike, addRecentlyViewed } = useWishlist();
   const { car } = route.params || {};
   
   // Default car data if not provided
@@ -76,6 +76,16 @@ const CarDetailsScreen = () => {
   const fadeAnimPrevious = useRef(new Animated.Value(0)).current;
 
   const isLiked = likedCars.has(carData.id);
+
+  useEffect(() => {
+    addRecentlyViewed({
+      type: 'car',
+      id: carData.id,
+      title: carData.name,
+      imageUri: carData.imageUri,
+      payload: carData,
+    });
+  }, [addRecentlyViewed, carData]);
 
   // Video URL from Supabase - use from car data if available, otherwise default
   const carVideoUrl = carData.videoUrl || getCarVideoUrl();
@@ -523,7 +533,13 @@ const CarDetailsScreen = () => {
               
               <TouchableOpacity
                 style={styles.floatingButton}
-                onPress={() => toggleCarLike(carData.id)}
+                onPress={() =>
+                  toggleCarLike(carData.id, {
+                    title: carData.name,
+                    imageUri: carData.imageUri,
+                    payload: carData,
+                  })
+                }
                 activeOpacity={0.8}
               >
                 <Ionicons 

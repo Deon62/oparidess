@@ -57,7 +57,7 @@ const WishlistScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { likedCars, likedServices, likedDiscover, toggleCarLike, toggleServiceLike, toggleDiscoverLike } = useWishlist();
+  const { folders, recentlyViewed, likedCars, likedServices, likedDiscover } = useWishlist();
 
   // All cars data (matching RenterHomeScreen structure exactly)
   const carClasses = [
@@ -452,299 +452,94 @@ const WishlistScreen = () => {
     return '';
   };
 
+  const totalSaved = folders.reduce((sum, f) => sum + (f.items?.length || 0), 0);
+  const hasAny = totalSaved > 0 || recentlyViewed.length > 0;
+
+  const getFolderCover = (folder) => {
+    const first = folder?.items?.[0];
+    return first?.imageUri || first?.image || null;
+  };
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
-      {totalLiked === 0 ? (
+      {!hasAny ? (
         <View style={styles.emptyState}>
           <WishlistEmptyIcon width={220} height={220} />
           <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>
             Your wishlist is empty
           </Text>
           <Text style={[styles.emptyStateText, { color: theme.colors.textSecondary }]}>
-            Start liking vehicles, services, and discover items you're interested in to find them easily later
+            Save cars, services, and discover items to find them easily later.
           </Text>
         </View>
       ) : (
-        <>
-          {/* Vehicles Section */}
-          {likedVehicles.length > 0 && (
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                Vehicles ({likedVehicles.length})
-              </Text>
-              <View style={styles.carsGrid}>
-                {likedVehicles.map((vehicle) => (
-                  <TouchableOpacity
-                    key={vehicle.id}
-                    onPress={() => handleCarPress(vehicle)}
-                    activeOpacity={0.8}
-                    style={styles.carCardWrapper}
-                  >
-                    <Card style={styles.carCard}>
-                      <View style={styles.carImageContainer}>
-                        <Image source={vehicle.imageUri ? { uri: vehicle.imageUri } : { uri: getCarPrimaryImage('x') }} style={styles.carImage} resizeMode="cover" />
-                        <TouchableOpacity
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            toggleCarLike(vehicle.id);
-                          }}
-                          style={[styles.likeButton, { backgroundColor: theme.colors.white }]}
-                          activeOpacity={0.7}
-                        >
-                          <Ionicons name="heart" size={20} color="#FF3B30" />
-                        </TouchableOpacity>
-                      </View>
-                      <View style={styles.carInfo}>
-                        <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-                          {vehicle.name}
-                        </Text>
-                        <Text style={[styles.carPrice, { color: theme.colors.primary }]}>
-                          {vehicle.price}
-                        </Text>
-                        <View style={styles.carDetails}>
-                          <View style={styles.carDetailItem}>
-                            <Ionicons name="people-outline" size={16} color={theme.colors.hint} />
-                            <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                              {vehicle.seats}
-                            </Text>
-                          </View>
-                          <View style={styles.carDetailItem}>
-                            <Ionicons name="car-outline" size={16} color={theme.colors.hint} />
-                            <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                              {vehicle.fuel}
-                            </Text>
-                          </View>
-                          <View style={styles.carDetailItem}>
-                            <Ionicons name="color-palette-outline" size={16} color={theme.colors.hint} />
-                            <Text style={[styles.carDetailText, { color: theme.colors.hint }]}>
-                              {vehicle.color}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                    </Card>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Services Section */}
-          {likedServicesList.length > 0 && (
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                Services ({likedServicesList.length})
-              </Text>
-              <View style={styles.servicesGrid}>
-                {likedServicesList.map((service, index) => (
-                  <TouchableOpacity
-                    key={`${service.category}-${service.id}-${index}`}
-                    onPress={() => handleServicePress(service)}
-                    activeOpacity={0.8}
-                    style={styles.serviceCardWrapper}
-                  >
-                    <Card style={styles.serviceCard}>
-                      <View style={styles.serviceImageContainer}>
-                        {typeof service.image === 'number' ? (
-                          <Image source={service.image} style={styles.serviceImage} resizeMode="cover" />
-                        ) : (
-                          <Image source={{ uri: service.image }} style={styles.serviceImage} resizeMode="cover" />
-                        )}
-                        <TouchableOpacity
-                          onPress={(e) => {
-                            e.stopPropagation();
-                            toggleServiceLike(getServiceId(service));
-                          }}
-                          style={[styles.likeButton, { backgroundColor: theme.colors.white }]}
-                          activeOpacity={0.7}
-                        >
-                          <Ionicons name="heart" size={20} color="#FF3B30" />
-                        </TouchableOpacity>
-                      </View>
-                      <View style={styles.serviceInfo}>
-                        <Text style={[styles.serviceName, { color: theme.colors.textPrimary }]} numberOfLines={1}>
-                          {service.name}
-                        </Text>
-                        <Text style={[styles.serviceCategory, { color: theme.colors.textSecondary }]} numberOfLines={1}>
-                          {service.category}
-                        </Text>
-                        <View style={styles.serviceDetails}>
-                          {service.rating && (
-                            <View style={styles.serviceDetailItem}>
-                              <Ionicons name="star" size={14} color="#FFB800" />
-                              <Text style={[styles.serviceDetailText, { color: theme.colors.textSecondary }]}>
-                                {service.rating}
-                              </Text>
-                            </View>
-                          )}
-                          {service.location && (
-                            <View style={styles.serviceDetailItem}>
-                              <Ionicons name="location" size={14} color={theme.colors.hint} />
-                              <Text style={[styles.serviceDetailText, { color: theme.colors.hint }]} numberOfLines={1}>
-                                {service.location}
-                              </Text>
-                            </View>
-                          )}
-                          {service.experience && (
-                            <Text style={[styles.serviceDetailText, { color: theme.colors.hint }]}>
-                              {service.experience}
-                            </Text>
-                          )}
-                        </View>
-                        {service.price && service.price !== 'Various' && (
-                          <Text style={[styles.servicePrice, { color: theme.colors.primary }]}>
-                            {service.price}
-                          </Text>
-                        )}
-                      </View>
-                    </Card>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-          )}
-
-          {/* Discover Section */}
-          {(likedDiscoverList.destinations.length > 0 || likedDiscoverList.events.length > 0 || likedDiscoverList.blogs.length > 0) && (
-            <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-                Discover ({likedDiscoverList.destinations.length + likedDiscoverList.events.length + likedDiscoverList.blogs.length})
-              </Text>
-
-              {/* Destinations */}
-              {likedDiscoverList.destinations.length > 0 && (
-                <View style={styles.discoverSubsection}>
-                  <Text style={[styles.subsectionTitle, { color: theme.colors.textPrimary }]}>
-                    Destinations
-                  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.discoverScrollContainer}>
-                    {likedDiscoverList.destinations.map((destination) => (
-                      <TouchableOpacity
-                        key={destination.id}
-                        style={[styles.discoverCard, { backgroundColor: theme.colors.white }]}
-                        activeOpacity={0.8}
-                        onPress={() => handleDiscoverPress(destination)}
-                      >
-                        <View style={styles.discoverImageContainer}>
-                          <Image source={destination.image} style={styles.discoverImage} resizeMode="cover" />
-                          <View style={styles.discoverOverlay} />
-                          <TouchableOpacity
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              toggleDiscoverLike(getDiscoverId('destination', destination));
-                            }}
-                            style={[styles.discoverLikeButton, { backgroundColor: theme.colors.white }]}
-                            activeOpacity={0.7}
-                          >
-                            <Ionicons name="heart" size={18} color="#FF3B30" />
-                          </TouchableOpacity>
-                        </View>
-                        <View style={styles.discoverContent}>
-                          <Text style={[styles.discoverName, { color: theme.colors.textPrimary }]}>
-                            {destination.name}
-                          </Text>
-                          <Text style={[styles.discoverDescription, { color: theme.colors.textSecondary }]}>
-                            {destination.description}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
-
-              {/* Events */}
-              {likedDiscoverList.events.length > 0 && (
-                <View style={styles.discoverSubsection}>
-                  <Text style={[styles.subsectionTitle, { color: theme.colors.textPrimary }]}>
-                    Car Events
-                  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.discoverScrollContainer}>
-                    {likedDiscoverList.events.map((event) => (
-                      <TouchableOpacity
-                        key={event.id}
-                        style={[styles.discoverCard, { backgroundColor: theme.colors.white }]}
-                        activeOpacity={0.8}
-                        onPress={() => handleDiscoverPress(event)}
-                      >
-                        <View style={styles.discoverImageContainer}>
-                          <Image source={event.image} style={styles.discoverImage} resizeMode="cover" />
-                          <View style={styles.discoverOverlay} />
-                          <TouchableOpacity
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              toggleDiscoverLike(getDiscoverId('event', event));
-                            }}
-                            style={[styles.discoverLikeButton, { backgroundColor: theme.colors.white }]}
-                            activeOpacity={0.7}
-                          >
-                            <Ionicons name="heart" size={18} color="#FF3B30" />
-                          </TouchableOpacity>
-                        </View>
-                        <View style={styles.discoverContent}>
-                          <Text style={[styles.discoverName, { color: theme.colors.textPrimary }]}>
-                            {event.name}
-                          </Text>
-                          <Text style={[styles.discoverDescription, { color: theme.colors.textSecondary }]}>
-                            {event.description}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
-
-              {/* Blogs */}
-              {likedDiscoverList.blogs.length > 0 && (
-                <View style={styles.discoverSubsection}>
-                  <Text style={[styles.subsectionTitle, { color: theme.colors.textPrimary }]}>
-                    Blogs
-                  </Text>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.discoverScrollContainer}>
-                    {likedDiscoverList.blogs.map((blog) => (
-                      <TouchableOpacity
-                        key={blog.id}
-                        style={[styles.discoverCard, { backgroundColor: theme.colors.white }]}
-                        activeOpacity={0.8}
-                        onPress={() => handleDiscoverPress(blog)}
-                      >
-                        <View style={styles.discoverImageContainer}>
-                          <Image source={{ uri: blog.image }} style={styles.discoverImage} resizeMode="cover" />
-                          <TouchableOpacity
-                            onPress={(e) => {
-                              e.stopPropagation();
-                              toggleDiscoverLike(getDiscoverId('blog', blog));
-                            }}
-                            style={[styles.discoverLikeButton, { backgroundColor: theme.colors.white }]}
-                            activeOpacity={0.7}
-                          >
-                            <Ionicons name="heart" size={18} color="#FF3B30" />
-                          </TouchableOpacity>
-                        </View>
-                        <View style={styles.discoverContent}>
-                          <Text style={[styles.discoverName, { color: theme.colors.textPrimary }]} numberOfLines={2}>
-                            {blog.name}
-                          </Text>
-                          <Text style={[styles.discoverDescription, { color: theme.colors.textSecondary }]} numberOfLines={2}>
-                            {blog.description}
-                          </Text>
-                          <Text style={[styles.blogDate, { color: theme.colors.hint }]}>
-                            {blog.date}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
+        <View style={styles.tilesGrid}>
+          <TouchableOpacity
+            style={[styles.tileCard, { backgroundColor: theme.colors.white }]}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('RecentlyViewed')}
+          >
+            <View style={styles.tileImage}>
+              {recentlyViewed[0]?.imageUri || recentlyViewed[0]?.image ? (
+                <Image
+                  source={
+                    typeof (recentlyViewed[0]?.imageUri || recentlyViewed[0]?.image) === 'string'
+                      ? { uri: recentlyViewed[0]?.imageUri || recentlyViewed[0]?.image }
+                      : recentlyViewed[0]?.imageUri || recentlyViewed[0]?.image
+                  }
+                  style={styles.tileImageFill}
+                  resizeMode="cover"
+                />
+              ) : (
+                <View style={[styles.tileImagePlaceholder, { backgroundColor: theme.colors.hint + '25' }]}>
+                  <Ionicons name="time-outline" size={34} color={theme.colors.hint} />
                 </View>
               )}
             </View>
-          )}
-        </>
+            <Text style={[styles.tileTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+              Recently viewed
+            </Text>
+            <Text style={[styles.tileSubtitle, { color: theme.colors.textSecondary }]}>
+              {recentlyViewed.length} viewed
+            </Text>
+          </TouchableOpacity>
+
+          {folders.map((folder) => {
+            const cover = getFolderCover(folder);
+            return (
+              <TouchableOpacity
+                key={folder.id}
+                style={[styles.tileCard, { backgroundColor: theme.colors.white }]}
+                activeOpacity={0.85}
+                onPress={() => navigation.navigate('WishlistFolder', { folderId: folder.id })}
+              >
+                <View style={styles.tileImage}>
+                  {cover ? (
+                    <Image
+                      source={typeof cover === 'string' ? { uri: cover } : cover}
+                      style={styles.tileImageFill}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <View style={[styles.tileImagePlaceholder, { backgroundColor: theme.colors.hint + '25' }]}>
+                      <Ionicons name="heart-outline" size={30} color={theme.colors.hint} />
+                    </View>
+                  )}
+                </View>
+                <Text style={[styles.tileTitle, { color: theme.colors.textPrimary }]} numberOfLines={1}>
+                  {folder.name}
+                </Text>
+                <Text style={[styles.tileSubtitle, { color: theme.colors.textSecondary }]}>
+                  {folder.items.length} saved
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       )}
     </ScrollView>
   );
@@ -1008,6 +803,52 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'Nunito_400Regular',
     marginTop: 8,
+  },
+  tilesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    paddingTop: 12,
+    rowGap: 16,
+  },
+  tileCard: {
+    width: '48%',
+    height: 175,
+    borderRadius: 18,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  tileImage: {
+    width: '100%',
+    height: 110,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  tileImageFill: {
+    width: '100%',
+    height: '100%',
+  },
+  tileImagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tileTitle: {
+    fontSize: 13,
+    fontFamily: 'Nunito_700Bold',
+    lineHeight: 16,
+  },
+  tileSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 4,
   },
 });
 

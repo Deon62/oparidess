@@ -167,7 +167,11 @@ const ServiceListScreen = () => {
                       <TouchableOpacity
                         onPress={(e) => {
                           e.stopPropagation();
-                          toggleServiceLike(serviceId);
+                          toggleServiceLike(serviceId, {
+                            title: service.name,
+                            image: service.image,
+                            payload: { ...service, category: categoryName },
+                          });
                         }}
                         style={[styles.actionButton, { backgroundColor: theme.colors.white }]}
                         activeOpacity={0.7}

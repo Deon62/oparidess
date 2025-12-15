@@ -14,7 +14,7 @@ const ServiceDetailsScreen = () => {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   const { service, category } = route.params || {};
-  const { toggleServiceLike, likedServices } = useWishlist();
+  const { toggleServiceLike, likedServices, addRecentlyViewed } = useWishlist();
 
   // Default service data if not provided
   const serviceData = service || {
@@ -112,6 +112,16 @@ const ServiceDetailsScreen = () => {
   const serviceId = getServiceId();
   const isLiked = likedServices.has(serviceId);
 
+  useEffect(() => {
+    addRecentlyViewed({
+      type: 'service',
+      id: serviceId,
+      title: serviceData.name,
+      image: serviceData.image,
+      payload: serviceData,
+    });
+  }, [addRecentlyViewed, serviceData, serviceId]);
+
   // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -204,7 +214,13 @@ const ServiceDetailsScreen = () => {
               
               <TouchableOpacity
                 style={styles.floatingButton}
-                onPress={() => toggleServiceLike(serviceId)}
+                onPress={() =>
+                  toggleServiceLike(serviceId, {
+                    title: serviceData.name,
+                    image: serviceData.image,
+                    payload: serviceData,
+                  })
+                }
                 activeOpacity={0.8}
               >
                 <Ionicons

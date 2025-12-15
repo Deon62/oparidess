@@ -12,7 +12,7 @@ const DiscoverDetailsScreen = () => {
   const route = useRoute();
   const insets = useSafeAreaInsets();
   const { item, category } = route.params || {};
-  const { toggleDiscoverLike, likedDiscover } = useWishlist();
+  const { toggleDiscoverLike, likedDiscover, addRecentlyViewed } = useWishlist();
 
   // Default data if not provided
   const discoverItem = item || {
@@ -24,6 +24,16 @@ const DiscoverDetailsScreen = () => {
   };
 
   const isLiked = likedDiscover.has(discoverItem.likeId);
+
+  useLayoutEffect(() => {
+    addRecentlyViewed({
+      type: 'discover',
+      id: discoverItem.likeId,
+      title: discoverItem.name || discoverItem.title,
+      image: discoverItem.image,
+      payload: discoverItem,
+    });
+  }, [addRecentlyViewed, discoverItem]);
 
   // Hide header and tab bar
   useLayoutEffect(() => {
@@ -58,7 +68,11 @@ const DiscoverDetailsScreen = () => {
   };
 
   const handleLike = () => {
-    toggleDiscoverLike(discoverItem.likeId);
+    toggleDiscoverLike(discoverItem.likeId, {
+      title: discoverItem.name || discoverItem.title,
+      image: discoverItem.image,
+      payload: discoverItem,
+    });
   };
 
   // Get additional details based on category

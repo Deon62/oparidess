@@ -35,6 +35,8 @@ import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 import DriversLicenseInfoScreen from '../../screens/renter/DriversLicenseInfoScreen';
 import ChangePasswordScreen from '../../screens/renter/ChangePasswordScreen';
 import WishlistScreen from '../../screens/renter/WishlistScreen';
+import WishlistFolderScreen from '../../screens/renter/WishlistFolderScreen';
+import RecentlyViewedScreen from '../../screens/renter/RecentlyViewedScreen';
 import UploadDocsScreen from '../../screens/renter/UploadDocsScreen';
 import AddPaymentScreen from '../../screens/renter/AddPaymentScreen';
 import OpaHostAppScreen from '../../screens/renter/OpaHostAppScreen';
@@ -580,6 +582,26 @@ const WishlistStack = () => {
         name="Wishlist" 
         component={WishlistScreen}
         options={{ 
+          title: 'Wishlist',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen
+        name="RecentlyViewed"
+        component={RecentlyViewedScreen}
+        options={{
+          title: 'Recently viewed',
+          headerShown: true,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen
+        name="WishlistFolder"
+        component={WishlistFolderScreen}
+        options={{
           title: 'Wishlist',
           headerShown: true,
           statusBarStyle: 'dark',

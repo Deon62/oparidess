@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
+import React, { useMemo, useRef, useState, useLayoutEffect, useEffect } from 'react';
+import { Animated, View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -22,6 +22,9 @@ const RenterProfileScreen = () => {
   const [showNameSuccessModal, setShowNameSuccessModal] = useState(false);
   const [editedFirstName, setEditedFirstName] = useState('');
   const [editedLastName, setEditedLastName] = useState('');
+  const flipAnim = useRef(new Animated.Value(0)).current;
+  const flipSideRef = useRef(0);
+  const isFlippingRef = useRef(false);
 
   // Mock user data - in real app, this would come from context/API
   const [personalInfo, setPersonalInfo] = useState({
@@ -46,6 +49,83 @@ const RenterProfileScreen = () => {
 
   // Check if user has driver's license information
   const hasDlInfo = dlInfo.dl_number || dlInfo.dl_category || dlInfo.dl_issue_date || dlInfo.dl_expiry_date;
+
+  const memberSince = useMemo(() => {
+    const raw = user?.created_at || user?.member_since || user?.createdAt;
+    if (!raw) return '—';
+    try {
+      const d = new Date(raw);
+      if (Number.isNaN(d.getTime())) return '—';
+      return d.toLocaleDateString('en-KE', { month: 'short', year: 'numeric' });
+    } catch {
+      return '—';
+    }
+  }, [user?.created_at, user?.member_since, user?.createdAt]);
+
+  const rentalsCount = useMemo(() => {
+    const raw = user?.rentals_count ?? user?.rentalsCount ?? user?.total_rentals ?? user?.totalRentals;
+    const num = Number(raw);
+    if (Number.isFinite(num)) return num;
+    return 0;
+  }, [user?.rentals_count, user?.rentalsCount, user?.total_rentals, user?.totalRentals]);
+
+  const verificationRows = useMemo(() => {
+    const hasPhone = !!(personalInfo.phone_number && String(personalInfo.phone_number).trim());
+    const hasId = !!(personalInfo.id_number && String(personalInfo.id_number).trim());
+    const hasAvatar = !!profileImageUri;
+    const profileCompleteness = Number(user?.profile_completeness);
+    const isProfileComplete = Number.isFinite(profileCompleteness) ? profileCompleteness >= 80 : hasPhone;
+
+    return [
+      { label: 'Profile details', ok: isProfileComplete },
+      { label: 'ID number', ok: hasId },
+      { label: 'Driver’s license', ok: !!hasDlInfo },
+      { label: 'Profile photo', ok: hasAvatar },
+    ];
+  }, [personalInfo.phone_number, personalInfo.id_number, hasDlInfo, profileImageUri, user?.profile_completeness]);
+
+  const verificationProgress = useMemo(() => {
+    const total = verificationRows.length || 1;
+    const done = verificationRows.filter((r) => r.ok).length;
+    return {
+      total,
+      done,
+      ratio: Math.min(1, Math.max(0, done / total)),
+    };
+  }, [verificationRows]);
+
+  const missingDocsText = useMemo(() => {
+    const missing = verificationRows
+      .filter((r) => !r.ok)
+      .map((r) => {
+        if (r.label === 'Profile details') return 'complete profile details';
+        if (r.label === 'ID number') return 'add your ID number';
+        if (r.label === 'Driver’s license') return 'upload your driver’s license';
+        if (r.label === 'Profile photo') return 'add a profile photo';
+        return r.label;
+      });
+
+    if (missing.length === 0) return '';
+    if (missing.length === 1) return missing[0];
+    if (missing.length === 2) return `${missing[0]} and ${missing[1]}`;
+    return `${missing.slice(0, -1).join(', ')}, and ${missing[missing.length - 1]}`;
+  }, [verificationRows]);
+
+  const handleFlipVerificationCard = () => {
+    if (isFlippingRef.current) return;
+    isFlippingRef.current = true;
+
+    const toValue = flipSideRef.current === 1 ? 0 : 1;
+    flipSideRef.current = toValue;
+
+    Animated.timing(flipAnim, {
+      toValue,
+      duration: 450,
+      useNativeDriver: true,
+    }).start(() => {
+      isFlippingRef.current = false;
+    });
+  };
 
   // Update profile image URI when user context changes
   useEffect(() => {
@@ -284,6 +364,99 @@ const RenterProfileScreen = () => {
         <Text style={[styles.profileSubtext, { color: theme.colors.textSecondary }]}>
           {personalInfo.email}
         </Text>
+
+        <TouchableOpacity
+          style={styles.flipCardOuter}
+          onPress={handleFlipVerificationCard}
+          activeOpacity={0.9}
+        >
+          <View style={[styles.flipCard, { backgroundColor: theme.colors.white }]}> 
+            <Animated.View
+              style={[
+                styles.flipFace,
+                {
+                  transform: [
+                    { perspective: 800 },
+                    {
+                      rotateY: flipAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0deg', '180deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={styles.summaryTopRow}>
+                <View style={styles.summaryCell}>
+                  <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Member since</Text>
+                  <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>{memberSince}</Text>
+                </View>
+                <View style={[styles.summaryDivider, { backgroundColor: theme.colors.hint + '25' }]} />
+                <View style={styles.summaryCell}>
+                  <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Rentals</Text>
+                  <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>{rentalsCount}</Text>
+                </View>
+              </View>
+              <View style={styles.summaryHintRow}>
+                <Ionicons name="sync" size={14} color={theme.colors.hint} />
+                <Text style={[styles.summaryHintText, { color: theme.colors.textSecondary }]}>Tap to view verification</Text>
+              </View>
+            </Animated.View>
+
+            <Animated.View
+              style={[
+                styles.flipFace,
+                styles.flipBackFace,
+                {
+                  transform: [
+                    { perspective: 800 },
+                    {
+                      rotateY: flipAnim.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['180deg', '360deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
+              <View style={styles.verificationHeaderRow}>
+                <Text style={[styles.verificationTitle, { color: theme.colors.textPrimary }]}>Verification</Text>
+                <View style={styles.verificationHint}>
+                  <Ionicons name="return-up-back" size={14} color={theme.colors.hint} />
+                  <Text style={[styles.verificationHintText, { color: theme.colors.textSecondary }]}>Back</Text>
+                </View>
+              </View>
+
+              <View style={styles.verificationProgressWrap}>
+                <View style={[styles.progressTrack, { backgroundColor: theme.colors.hint + '25' }]}>
+                  <View
+                    style={[
+                      styles.progressFill,
+                      {
+                        width: `${Math.round(verificationProgress.ratio * 100)}%`,
+                        backgroundColor: verificationProgress.ratio === 1 ? '#4CAF50' : theme.colors.primary,
+                      },
+                    ]}
+                  />
+                </View>
+
+                <Text style={[styles.verificationSubtitle, { color: theme.colors.textSecondary }]}> 
+                  {verificationProgress.ratio === 1
+                    ? 'You are fully verified.'
+                    : `Verification ${verificationProgress.done}/${verificationProgress.total}`}
+                </Text>
+
+                {verificationProgress.ratio !== 1 && (
+                  <Text style={[styles.missingDocsText, { color: theme.colors.textPrimary }]} numberOfLines={2}>
+                    To finish verification, {missingDocsText}.
+                  </Text>
+                )}
+              </View>
+            </Animated.View>
+          </View>
+        </TouchableOpacity>
       </View>
 
       {/* Separator Line */}
@@ -760,6 +933,110 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     marginTop: 4,
+  },
+  flipCardOuter: {
+    width: '100%',
+    marginTop: 16,
+  },
+  flipCard: {
+    width: '100%',
+    height: 132,
+    borderRadius: 18,
+    padding: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  flipFace: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 14,
+    backfaceVisibility: 'hidden',
+  },
+  flipBackFace: {
+    // kept for semantic clarity; rotation is handled in Animated.View transform
+  },
+  summaryTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  summaryCell: {
+    flex: 1,
+  },
+  summaryDivider: {
+    width: 1,
+    height: 44,
+    marginHorizontal: 14,
+    borderRadius: 1,
+  },
+  summaryLabel: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    marginBottom: 6,
+  },
+  summaryValue: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.2,
+  },
+  summaryHintRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 10,
+  },
+  summaryHintText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+  },
+  verificationHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  verificationTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+  },
+  verificationHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  verificationHintText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  verificationProgressWrap: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  progressTrack: {
+    height: 10,
+    borderRadius: 999,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: 10,
+    borderRadius: 999,
+  },
+  verificationSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    marginTop: 10,
+  },
+  missingDocsText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
+    marginTop: 6,
   },
   section: {
     marginHorizontal: 24,

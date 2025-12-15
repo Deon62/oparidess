@@ -5,10 +5,6 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
-import FreeIcon from '../../../assets/icons/free.svg';
-import ClassicIcon from '../../../assets/icons/classic.svg';
-import PremierIcon from '../../../assets/icons/premier.svg';
-
 const SubscriptionCheckoutScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -25,16 +21,9 @@ const SubscriptionCheckoutScreen = () => {
   const tax = useMemo(() => Math.round(amount * 0.02), [amount]);
   const total = useMemo(() => amount + tax, [amount, tax]);
 
-  const PlanIcon = useMemo(() => {
-    switch (planId) {
-      case 'free':
-        return FreeIcon;
-      case 'premier':
-        return PremierIcon;
-      case 'classic':
-      default:
-        return ClassicIcon;
-    }
+  const ribbonIconName = useMemo(() => {
+    if (planId === 'free') return 'ribbon-outline';
+    return 'ribbon';
   }, [planId]);
 
   useLayoutEffect(() => {
@@ -73,9 +62,7 @@ const SubscriptionCheckoutScreen = () => {
 
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]} showsVerticalScrollIndicator={false}>
         <View style={styles.planTop}>
-          <View style={[styles.planIconWrap, { backgroundColor: theme.colors.white }]}> 
-            <PlanIcon width={64} height={64} />
-          </View>
+          <Ionicons name={ribbonIconName} size={74} color={theme.colors.primary} style={styles.ribbonIcon} />
           <Text style={[styles.planTitle, { color: theme.colors.textPrimary }]}>{planTitle}</Text>
           <Text style={[styles.planSubtitle, { color: theme.colors.textSecondary }]}>{planSubtitle}</Text>
         </View>
@@ -213,15 +200,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 18,
   },
-  planIconWrap: {
-    width: 86,
-    height: 86,
-    borderRadius: 43,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(10, 29, 55, 0.08)',
+  ribbonIcon: {
+    marginBottom: 8,
   },
   planTitle: {
     fontSize: 22,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
+import { impactLight } from '../utils/haptics';
 
 const Button = ({ 
   title, 
@@ -10,6 +11,7 @@ const Button = ({
   loading = false,
   style,
   textStyle,
+  enableHaptics = true,
 }) => {
   const theme = useTheme();
 
@@ -48,7 +50,12 @@ const Button = ({
         getButtonStyle(),
         style,
       ]}
-      onPress={onPress}
+      onPress={async (...args) => {
+        if (!disabled && !loading && enableHaptics) {
+          await impactLight();
+        }
+        onPress?.(...args);
+      }}
       disabled={disabled || loading}
       activeOpacity={0.8}
     >

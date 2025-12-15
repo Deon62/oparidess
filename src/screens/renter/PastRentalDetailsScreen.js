@@ -118,24 +118,17 @@ const PastRentalDetailsScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      {/* Header */}
-      <View style={[styles.header, { backgroundColor: theme.colors.white, paddingTop: insets.top }]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="arrow-back" size={24} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
-          Rental Details
-        </Text>
-        <View style={styles.headerRight} />
-      </View>
+      <TouchableOpacity
+        style={[styles.floatingBackButton, { top: insets.top + 10, backgroundColor: theme.colors.white }]}
+        onPress={() => navigation.goBack()}
+        activeOpacity={0.85}
+      >
+        <Ionicons name="arrow-back" size={22} color={theme.colors.textPrimary} />
+      </TouchableOpacity>
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 60 }]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -594,6 +587,21 @@ const styles = StyleSheet.create({
   ratedText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  floatingBackButton: {
+    position: 'absolute',
+    left: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 6,
   },
   bottomActionBar: {
     position: 'absolute',

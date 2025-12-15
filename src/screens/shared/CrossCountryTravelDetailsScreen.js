@@ -5,6 +5,8 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import CountryIcon from '../../../assets/icons/country.svg';
+
 const CrossCountryTravelDetailsScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
@@ -76,8 +78,8 @@ const CrossCountryTravelDetailsScreen = () => {
     >
       {/* Header Section */}
       <View style={styles.header}>
-        <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-          <Ionicons name="globe-outline" size={32} color={theme.colors.primary} />
+        <View style={[styles.iconContainer, { backgroundColor: theme.colors.hint + '15' }]}>
+          <CountryIcon width={44} height={44} />
         </View>
         <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
           Cross Country Travel
@@ -90,7 +92,7 @@ const CrossCountryTravelDetailsScreen = () => {
       {/* Allowed Countries Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="map-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="map-outline" size={24} color={theme.colors.textPrimary} />
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Allowed Countries
           </Text>
@@ -116,7 +118,7 @@ const CrossCountryTravelDetailsScreen = () => {
       {/* Requirements Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="document-text-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="document-text-outline" size={24} color={theme.colors.textPrimary} />
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Requirements
           </Text>
@@ -124,7 +126,7 @@ const CrossCountryTravelDetailsScreen = () => {
         <View style={styles.list}>
           {requirements.map((requirement, index) => (
             <View key={index} style={styles.listItem}>
-              <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+              <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.listText, { color: theme.colors.textSecondary }]}>
                 {requirement}
               </Text>
@@ -139,7 +141,7 @@ const CrossCountryTravelDetailsScreen = () => {
       {/* Benefits Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="star-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="star-outline" size={24} color={theme.colors.textPrimary} />
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             What's Included
           </Text>
@@ -147,7 +149,7 @@ const CrossCountryTravelDetailsScreen = () => {
         <View style={styles.list}>
           {benefits.map((benefit, index) => (
             <View key={index} style={styles.listItem}>
-              <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+              <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.listText, { color: theme.colors.textSecondary }]}>
                 {benefit}
               </Text>
@@ -162,7 +164,7 @@ const CrossCountryTravelDetailsScreen = () => {
       {/* Important Notes Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="information-circle-outline" size={24} color="#FF9800" />
+          <Ionicons name="information-circle-outline" size={24} color={theme.colors.textPrimary} />
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Important Notes
           </Text>
@@ -170,7 +172,7 @@ const CrossCountryTravelDetailsScreen = () => {
         <View style={styles.list}>
           {importantNotes.map((note, index) => (
             <View key={index} style={styles.listItem}>
-              <Ionicons name="alert-circle-outline" size={20} color="#FF9800" />
+              <Ionicons name="alert-circle-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.listText, { color: theme.colors.textSecondary }]}>
                 {note}
               </Text>

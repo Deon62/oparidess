@@ -642,9 +642,9 @@ const CarDetailsScreen = () => {
                 <View style={styles.summaryDivider} />
                 <View style={[styles.summaryItem, { paddingLeft: 12 }]}>
                   <View style={styles.summaryLaurels}>
-                    <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
+                    <Ionicons name="ribbon" size={18} color="#FF1577" />
                     <Text style={[styles.summaryLabel, styles.guestFavouriteLabel, { color: theme.colors.textPrimary }]}>Guest favourite</Text>
-                    <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
+                    <Ionicons name="ribbon" size={18} color="#FF1577" />
                   </View>
                 </View>
                 <View style={styles.summaryDivider} />
@@ -1080,9 +1080,9 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={[styles.reviewSummaryCard, { backgroundColor: theme.colors.white }]}>
             <View style={styles.reviewSummaryBadgeRow}>
-              <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
+              <Ionicons name="ribbon" size={18} color="#FF1577" />
               <Text style={styles.reviewSummaryRating}>{carData.rating || 4.8}</Text>
-              <Ionicons name="ribbon" size={18} color={theme.colors.primary} />
+              <Ionicons name="ribbon" size={18} color="#FF1577" />
             </View>
             <Text style={[styles.reviewSummaryTitle, { color: theme.colors.textPrimary }]}>
               Guest favourite

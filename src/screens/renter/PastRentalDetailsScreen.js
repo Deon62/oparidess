@@ -118,17 +118,17 @@ const PastRentalDetailsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Booking Status */}
-        <View style={styles.section}>
-          <View style={styles.statusContainer}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+        {/* <View style={styles.section}>
+          <View style={styles.statusContainer}> */}
+            {/* <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
             <Text style={[styles.statusText, { color: theme.colors.textPrimary }]}>
               Rental Completed
-            </Text>
-          </View>
-        </View>
+            </Text> */}
+          {/* </View>
+        </View> */}
 
         {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+        {/* <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} /> */}
 
         {/* Image Repository Link */}
         <View style={styles.section}>
@@ -181,43 +181,36 @@ const PastRentalDetailsScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Car Details */}
+        {/* Rental info */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Car Details
-          </Text>
-          <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-            {booking.carName}
-          </Text>
-          <View style={styles.carSpecs}>
-            {booking.seats && (
-              <View style={styles.specItem}>
-                <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {booking.seats} Seats
-                </Text>
-              </View>
-            )}
-            {booking.fuel && (
-              <View style={styles.specItem}>
-                <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
-                <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                  {booking.fuel}
-                </Text>
-              </View>
-            )}
-          </View>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Rental Period */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Rental Period
+            Rental info
           </Text>
           <View style={styles.infoCard}>
+            <View>
+              <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
+                {booking.carName}
+              </Text>
+              <View style={styles.carSpecs}>
+                {booking.seats && (
+                  <View style={styles.specItem}>
+                    <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
+                    <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                      {booking.seats} Seats
+                    </Text>
+                  </View>
+                )}
+                {booking.fuel && (
+                  <View style={styles.specItem}>
+                    <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
+                    <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
+                      {booking.fuel}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </View>
+
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
                 Pickup Date
@@ -262,54 +255,28 @@ const PastRentalDetailsScreen = () => {
                 {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
               </Text>
             </View>
-          </View>
-        </View>
 
-        {/* Separator Line */}
-        {(booking.pickupLocation || booking.dropoffLocation) && (
-          <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-        )}
+            {booking.pickupLocation && (
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                  Pickup Location
+                </Text>
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.pickupLocation}
+                </Text>
+              </View>
+            )}
+            {booking.dropoffLocation && (
+              <View style={styles.infoRow}>
+                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                  Dropoff Location
+                </Text>
+                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                  {booking.dropoffLocation}
+                </Text>
+              </View>
+            )}
 
-        {/* Locations */}
-        {(booking.pickupLocation || booking.dropoffLocation) && (
-          <View style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-              Locations
-            </Text>
-            <View style={styles.infoCard}>
-              {booking.pickupLocation && (
-                <View style={styles.infoRow}>
-                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Pickup Location
-                  </Text>
-                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.pickupLocation}
-                  </Text>
-                </View>
-              )}
-              {booking.dropoffLocation && (
-                <View style={styles.infoRow}>
-                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                    Dropoff Location
-                  </Text>
-                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                    {booking.dropoffLocation}
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        {/* Payment Information */}
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Payment Information
-          </Text>
-          <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
                 Total Paid
@@ -354,7 +321,6 @@ const PastRentalDetailsScreen = () => {
               onPress={handleRateBooking}
               activeOpacity={0.8}
             >
-              <Ionicons name="star-outline" size={24} color={theme.colors.white} />
               <Text style={[styles.rateButtonText, { color: theme.colors.white }]}>
                 Rate Your Experience
               </Text>

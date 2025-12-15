@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -200,9 +200,7 @@ const RenterProfileScreen = () => {
   };
 
   const handleJoinOpaPremium = () => {
-    Linking.openURL('https://opa.deonhq.xyz/premium').catch((err) =>
-      console.error('Failed to open URL:', err)
-    );
+    navigation.navigate('OpaPremium');
   };
 
   const handleLogout = () => {

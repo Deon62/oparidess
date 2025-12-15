@@ -29,6 +29,7 @@ import PastRentalDetailsScreen from '../../screens/renter/PastRentalDetailsScree
 import PendingRentalDetailsScreen from '../../screens/renter/PendingRentalDetailsScreen';
 import SettingsScreen from '../../screens/renter/SettingsScreen';
 import RenterProfileScreen from '../../screens/renter/RenterProfileScreen';
+import OpaPremiumScreen from '../../screens/renter/OpaPremiumScreen';
 import UpdateProfileScreen from '../../screens/renter/UpdateProfileScreen';
 import DriversLicenseInfoScreen from '../../screens/renter/DriversLicenseInfoScreen';
 import ChangePasswordScreen from '../../screens/renter/ChangePasswordScreen';
@@ -625,6 +626,16 @@ const ProfileStack = () => {
         component={RenterProfileScreen}
         options={{ 
           title: 'My Profile',
+          headerShown: false,
+          statusBarStyle: 'dark',
+          statusBarBackgroundColor: 'transparent',
+        }}
+      />
+      <Stack.Screen
+        name="OpaPremium"
+        component={OpaPremiumScreen}
+        options={{
+          title: 'OPA Premium',
           headerShown: false,
           statusBarStyle: 'dark',
           statusBarBackgroundColor: 'transparent',

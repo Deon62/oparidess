@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   imageRepositoryCard: {
-    padding: 16,
+    paddingVertical: 16,
   },
   imagePreviewGrid: {
     flexDirection: 'row',

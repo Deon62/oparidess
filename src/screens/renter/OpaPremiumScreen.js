@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Dimensions } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -7,11 +7,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { Card } from '../../packages/components';
 
+const { height: WINDOW_HEIGHT } = Dimensions.get('window');
+const CARD_MIN_HEIGHT = Math.round(WINDOW_HEIGHT * 0.72);
+
 const OpaPremiumScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const monthlyAccentColor = theme.colors.primary;
   const [selectedPlanId, setSelectedPlanId] = useState('classic');
 
   const handleSelectPlan = (plan) => {
@@ -82,54 +84,47 @@ const OpaPremiumScreen = () => {
       {
         id: 'classic',
         title: 'Classic Plan',
+        description:
+          'Perfect for everyday driving with predictable monthly costs. Get an essential car, insurance included, and zero booking fees. Simple, flexible, and easy to manage.',
         price: 'KES 85,000',
+        originalPrice: 'KES 120,000',
         unit: '/ month',
         amount: 85000,
         features: monthlyFeatures,
-        isPremium: true,
-        cardStyle: { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary },
-        priceColor: theme.colors.white,
-        buttonStyle: { backgroundColor: theme.colors.white },
-        buttonTextStyle: { color: theme.colors.primary },
+        cardStyle: { backgroundColor: '#FFFFFF', shadowColor: '#0B1B3A' },
+        priceColor: '#0B1B3A',
+        buttonStyle: { backgroundColor: '#FF1577' },
+        buttonTextStyle: { color: theme.colors.white },
       },
       {
         id: 'premier',
         title: 'Premier Plan',
+        description:
+          'For premium access with extra comfort and priority support. Enjoy executive cars, delivery & pickup, and more flexibility. Built for members who want the best experience.',
         price: 'KES 135,000',
+        originalPrice: 'KES 180,000',
         unit: '/ month',
         amount: 135000,
         features: plusFeatures,
-        isPremium: false,
-        cardStyle: { backgroundColor: '#F7F8FC' },
-        priceColor: monthlyAccentColor,
-        buttonStyle: { backgroundColor: monthlyAccentColor },
+        cardStyle: { backgroundColor: '#FFFFFF', shadowColor: '#0B1B3A' },
+        priceColor: '#0B1B3A',
+        buttonStyle: { backgroundColor: '#FF1577' },
         buttonTextStyle: { color: theme.colors.white },
         badgeText: 'Recommended',
       },
     ],
     [
       monthlyFeatures,
-      monthlyAccentColor,
       plusFeatures,
-      theme.colors.primary,
       theme.colors.textPrimary,
       theme.colors.white,
     ]
   );
 
-  const FeatureItem = ({ index, text, isPremium }) => (
-    <View style={styles.featureItem}>
-      <Text style={[styles.featureIndex, { color: isPremium ? '#FFFFFF' : monthlyAccentColor }]}>
-        {index + 1}.
-      </Text>
-      <Text style={[styles.featureText, { color: isPremium ? '#FFFFFF' : theme.colors.textSecondary }]}>
-        {text}
-      </Text>
-    </View>
-  );
+  const selectedPlan = useMemo(() => plans.find((p) => p.id === selectedPlanId) ?? plans[0], [plans, selectedPlanId]);
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={[styles.container, { backgroundColor: '#F6F7FB' }]}>
       <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
 
       <TouchableOpacity
@@ -140,77 +135,94 @@ const OpaPremiumScreen = () => {
         <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
       </TouchableOpacity>
 
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.hero}>
-          <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Choose your plan</Text>
-        </View>
-
-        {plans.map((plan) => {
-          const isSelected = selectedPlanId === plan.id;
-
-          return (
-            <TouchableOpacity key={plan.id} activeOpacity={0.9} onPress={() => handleSelectPlan(plan)}>
-              <Card
+          <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Pricing</Text>
+          <View style={styles.planToggleWrap}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => setSelectedPlanId('classic')}
+              style={[
+                styles.planTogglePill,
+                selectedPlanId === 'classic' ? styles.planTogglePillActive : null,
+              ]}
+            >
+              <Text
                 style={[
-                  styles.planCard,
-                  plan.cardStyle,
-                  !plan.isPremium ? styles.planCardLight : null,
-                  isSelected ? styles.planCardSelected : null,
+                  styles.planToggleText,
+                  selectedPlanId === 'classic' ? styles.planToggleTextActive : null,
                 ]}
               >
-                {!!plan.badgeText && (
-                  <View style={[styles.popularBadge, !plan.isPremium ? styles.popularBadgeLight : null]}>
-                    <Text style={[styles.popularText, !plan.isPremium ? styles.popularTextLight : null]}>
-                      {plan.badgeText}
-                    </Text>
-                  </View>
-                )}
-
-                <View style={styles.selectRow}>
-                  <Text style={[styles.planName, plan.isPremium ? styles.premiumText : { color: theme.colors.textPrimary }]}>
-                    {plan.title}
-                  </Text>
-                  <Ionicons
-                    name={isSelected ? 'checkmark-circle' : 'ellipse-outline'}
-                    size={22}
-                    color={plan.isPremium ? '#FFFFFF' : monthlyAccentColor}
-                  />
-                </View>
-
-                <View style={styles.priceRow}>
-                  <Text
-                    style={[
-                      styles.priceValue,
-                      plan.isPremium ? styles.premiumText : null,
-                      { color: plan.priceColor },
-                    ]}
-                  >
-                    {plan.price}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.priceUnit,
-                      plan.isPremium ? styles.premiumText : null,
-                      { color: plan.isPremium ? '#FFFFFF' : theme.colors.textSecondary },
-                    ]}
-                  >
-                    {plan.unit}
-                  </Text>
-                </View>
-
-                <View style={styles.featuresContainer}>
-                  {plan.features.map((item, index) => (
-                    <FeatureItem key={item} index={index} text={item} isPremium={plan.isPremium} />
-                  ))}
-                </View>
-
-                <View style={[styles.getPlanButton, plan.buttonStyle]}>
-                  <Text style={[styles.getPlanButtonText, plan.buttonTextStyle]}>Select Plan</Text>
-                </View>
-              </Card>
+                Classic
+              </Text>
             </TouchableOpacity>
-          );
-        })}
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => setSelectedPlanId('premier')}
+              style={[
+                styles.planTogglePill,
+                selectedPlanId === 'premier' ? styles.planTogglePillActive : null,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.planToggleText,
+                  selectedPlanId === 'premier' ? styles.planToggleTextActive : null,
+                ]}
+              >
+                Premier
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <Card style={[styles.planCard, selectedPlan.cardStyle]}>
+          <View style={styles.planCardInner}>
+            <View style={styles.selectRow}>
+              <Text style={[styles.planName, { color: '#0B1B3A' }]}>{selectedPlan.title}</Text>
+              {!!selectedPlan.badgeText && (
+                <View style={styles.popularBadgePremium}>
+                  <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
+                </View>
+              )}
+            </View>
+
+            <Text style={styles.planDescription}>{selectedPlan.description}</Text>
+
+            <View style={styles.priceRow}>
+              <View style={styles.priceStack}>
+                <Text style={styles.oldPriceText}>{selectedPlan.originalPrice}</Text>
+                <Text style={[styles.priceValue, { color: selectedPlan.priceColor }]}>
+                  {selectedPlan.price}
+                </Text>
+              </View>
+              <Text style={[styles.priceUnit, { color: 'rgba(11, 27, 58, 0.7)' }]}>
+                {selectedPlan.unit}
+              </Text>
+            </View>
+
+            <View style={styles.cardDivider} />
+
+            <View style={styles.featuresContainer}>
+              {selectedPlan.features.map((item, index) => (
+                <View key={item} style={styles.featureItemPremium}>
+                  <Text style={styles.featureIndex}>{index + 1}.</Text>
+                  <Text style={styles.featureTextPremium}>{item}</Text>
+                </View>
+              ))}
+            </View>
+
+            <TouchableOpacity activeOpacity={0.9} onPress={() => handleSelectPlan(selectedPlan)}>
+              <View style={[styles.getPlanButton, selectedPlan.buttonStyle]}>
+                <Text style={[styles.getPlanButtonText, selectedPlan.buttonTextStyle]}>Upgrade</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Card>
       </ScrollView>
     </View>
   );
@@ -241,10 +253,13 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 24,
     paddingTop: 92,
-    paddingBottom: 40,
+    paddingBottom: 28,
+    flexGrow: 1,
   },
   hero: {
     marginBottom: 18,
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   pageTitle: {
     fontSize: 28,
@@ -252,50 +267,69 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     letterSpacing: -0.5,
   },
+  planToggleWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+    borderRadius: 999,
+    backgroundColor: '#EEF1F6',
+    borderWidth: 1,
+    borderColor: 'rgba(11, 27, 58, 0.08)',
+    width: 210,
+    marginTop: 12,
+  },
+  planTogglePill: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    width: 98,
+    alignItems: 'center',
+  },
+  planTogglePillActive: {
+    backgroundColor: '#0B1B3A',
+  },
+  planToggleText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: 0.2,
+    color: 'rgba(11, 27, 58, 0.7)',
+  },
+  planToggleTextActive: {
+    color: '#FFFFFF',
+  },
   planCard: {
+    flex: 1,
+    minHeight: CARD_MIN_HEIGHT,
     borderRadius: 20,
-    padding: 18,
-    marginBottom: 20,
-    shadowColor: '#000',
+    padding: 20,
+    marginBottom: 0,
+    shadowColor: '#0B1B3A',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
-  },
-  planCardLight: {
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    elevation: 6,
     borderWidth: 1,
-    borderColor: 'rgba(10, 29, 55, 0.08)',
+    borderColor: 'rgba(11, 27, 58, 0.08)',
   },
-  planCardSelected: {
-    borderWidth: 1,
-    borderColor: 'rgba(255, 21, 119, 0.45)',
+  planCardInner: {
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingTop: 6,
   },
-  premiumCard: {
-    shadowOpacity: 0.25,
-  },
-  popularBadge: {
-    position: 'absolute',
-    top: 18,
-    right: 56,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  popularBadgePremium: {
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(11, 27, 58, 0.06)',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 20,
-  },
-  popularBadgeLight: {
-    backgroundColor: 'rgba(10, 29, 55, 0.08)',
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(11, 27, 58, 0.12)',
   },
   popularText: {
-    color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 11,
     fontFamily: 'Nunito_700Bold',
     letterSpacing: 0.5,
-  },
-  popularTextLight: {
-    color: '#0A1D37',
-  },
-  planHeader: {
-    marginBottom: 12,
+    color: '#0B1B3A',
   },
   planName: {
     fontSize: 22,
@@ -303,20 +337,36 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     letterSpacing: -0.3,
   },
+  planDescription: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 20,
+    color: 'rgba(11, 27, 58, 0.72)',
+    marginBottom: 12,
+  },
   selectRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 6,
-  },
-  premiumText: {
-    color: '#FFFFFF',
+    marginTop: 12,
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     gap: 8,
     marginBottom: 14,
+  },
+  priceStack: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  oldPriceText: {
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    color: 'rgba(11, 27, 58, 0.45)',
+    textDecorationLine: 'line-through',
+    marginBottom: 2,
   },
   priceValue: {
     fontSize: 32,
@@ -328,48 +378,45 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_600SemiBold',
     paddingBottom: 6,
   },
-  divider: {
+  cardDivider: {
     height: 1,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: 'rgba(11, 27, 58, 0.1)',
     marginBottom: 14,
-  },
-  dividerWhite: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   featuresContainer: {
     gap: 10,
-    marginBottom: 16,
+    marginBottom: 18,
+    flexGrow: 1,
+    justifyContent: 'flex-start',
   },
-  featureItem: {
+  featureItemPremium: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
+    alignItems: 'center',
+    gap: 10,
   },
   featureIndex: {
     width: 22,
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Nunito_700Bold',
-    lineHeight: 22,
+    color: 'rgba(11, 27, 58, 0.9)',
   },
-  featureText: {
+  featureTextPremium: {
     flex: 1,
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 22,
+    color: 'rgba(11, 27, 58, 0.75)',
   },
   getPlanButton: {
     height: 46,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: '#0B1B3A',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  getPlanButtonPremium: {
-    backgroundColor: '#FFFFFF',
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 3,
   },
   getPlanButtonText: {
     fontSize: 16,

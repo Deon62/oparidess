@@ -1,9 +1,11 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+
+const mpesaLogo = require('../../../assets/images/mpesa.png');
 
 const SubscriptionCheckoutScreen = () => {
   const theme = useTheme();
@@ -16,7 +18,7 @@ const SubscriptionCheckoutScreen = () => {
   const planSubtitle = route.params?.planSubtitle ?? 'Seamless car subscriptions';
   const amount = route.params?.amount ?? 85_000;
 
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState('mpesa');
 
   const tax = useMemo(() => Math.round(amount * 0.02), [amount]);
   const total = useMemo(() => amount + tax, [amount, tax]);
@@ -43,6 +45,9 @@ const SubscriptionCheckoutScreen = () => {
     navigation.goBack();
   };
 
+  const mpesaName = route.params?.mpesaName ?? 'John Doe';
+  const mpesaPhone = route.params?.mpesaPhone ?? '+254 7XX XXX XXX';
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}> 
       <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
@@ -67,69 +72,60 @@ const SubscriptionCheckoutScreen = () => {
           <Text style={[styles.planSubtitle, { color: theme.colors.textSecondary }]}>{planSubtitle}</Text>
         </View>
 
-        <View style={[styles.methodSwitch, { backgroundColor: theme.colors.white }]}> 
+        <View style={styles.paymentMethods}>
           <TouchableOpacity
-            style={[styles.methodPill, paymentMethod === 'card' ? { backgroundColor: theme.colors.primary } : null]}
-            onPress={() => setPaymentMethod('card')}
-            activeOpacity={0.85}
+            style={[
+              styles.paymentMethodCard,
+              { backgroundColor: theme.colors.white },
+              selectedPaymentMethodId === 'mpesa' ? styles.paymentMethodCardSelected : null,
+            ]}
+            onPress={() => setSelectedPaymentMethodId('mpesa')}
+            activeOpacity={0.9}
           >
-            <Text style={[styles.methodText, { color: paymentMethod === 'card' ? theme.colors.white : theme.colors.textPrimary }]}>Card</Text>
+            <View style={styles.paymentMethodTopRow}>
+              <View style={styles.paymentMethodLeft}>
+                <Image source={mpesaLogo} style={styles.mpesaLogo} resizeMode="contain" />
+                <View>
+                  <Text style={[styles.paymentMethodTitle, { color: theme.colors.textPrimary }]}>M-Pesa</Text>
+                  <Text style={[styles.paymentMethodSub, { color: theme.colors.textSecondary }]}>{mpesaName}</Text>
+                </View>
+              </View>
+              <Ionicons
+                name={selectedPaymentMethodId === 'mpesa' ? 'checkmark-circle' : 'ellipse-outline'}
+                size={20}
+                color={selectedPaymentMethodId === 'mpesa' ? '#0B1B3A' : theme.colors.hint}
+              />
+            </View>
+            <Text style={[styles.paymentMethodMeta, { color: theme.colors.textSecondary }]}>{mpesaPhone}</Text>
+            <Text style={[styles.paymentMethodHint, { color: theme.colors.textSecondary }]}>You’ll receive an STK push to complete payment.</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.methodPill, paymentMethod === 'mpesa' ? { backgroundColor: theme.colors.primary } : null]}
-            onPress={() => setPaymentMethod('mpesa')}
-            activeOpacity={0.85}
+            style={[
+              styles.paymentMethodCard,
+              { backgroundColor: theme.colors.white },
+              selectedPaymentMethodId === 'card' ? styles.paymentMethodCardSelected : null,
+            ]}
+            onPress={() => setSelectedPaymentMethodId('card')}
+            activeOpacity={0.9}
           >
-            <Text style={[styles.methodText, { color: paymentMethod === 'mpesa' ? theme.colors.white : theme.colors.textPrimary }]}>M-Pesa</Text>
+            <View style={styles.paymentMethodTopRow}>
+              <View style={styles.paymentMethodLeft}>
+                <Ionicons name="card-outline" size={22} color={theme.colors.textPrimary} />
+                <View>
+                  <Text style={[styles.paymentMethodTitle, { color: theme.colors.textPrimary }]}>Card</Text>
+                  <Text style={[styles.paymentMethodSub, { color: theme.colors.textSecondary }]}>•••• 7173</Text>
+                </View>
+              </View>
+              <Ionicons
+                name={selectedPaymentMethodId === 'card' ? 'checkmark-circle' : 'ellipse-outline'}
+                size={20}
+                color={selectedPaymentMethodId === 'card' ? '#0B1B3A' : theme.colors.hint}
+              />
+            </View>
+            <Text style={[styles.paymentMethodMeta, { color: theme.colors.textSecondary }]}>JANE FOX • 09/28</Text>
           </TouchableOpacity>
         </View>
-
-        {paymentMethod === 'card' ? (
-          <View style={styles.cardMock}>
-            <View style={styles.cardTopRow}>
-              <Text style={styles.cardBrand}>MASTER CARD</Text>
-              <View style={styles.cardDots}>
-                <View style={[styles.dot, { backgroundColor: '#EB001B' }]} />
-                <View style={[styles.dot, { backgroundColor: '#F79E1B', marginLeft: -8 }]} />
-              </View>
-            </View>
-
-            <Text style={styles.cardNumber}>5156  2402  5337  7173</Text>
-
-            <View style={styles.cardBottomRow}>
-              <View>
-                <Text style={styles.cardLabel}>CARD HOLDER</Text>
-                <Text style={styles.cardValue}>JANE FOX</Text>
-              </View>
-              <View>
-                <Text style={styles.cardLabel}>EXPIRES</Text>
-                <Text style={styles.cardValue}>09/28</Text>
-              </View>
-            </View>
-          </View>
-        ) : (
-          <View style={[styles.mpesaPanel, { backgroundColor: theme.colors.white }]}>
-            <View style={styles.mpesaTopRow}>
-              <View style={styles.mpesaBadge}>
-                <Text style={styles.mpesaBadgeText}>M-PESA</Text>
-              </View>
-              <Ionicons name="phone-portrait-outline" size={18} color={theme.colors.textPrimary} />
-            </View>
-
-            <Text style={[styles.mpesaTitle, { color: theme.colors.textPrimary }]}>Pay with M-Pesa</Text>
-            <Text style={[styles.mpesaHint, { color: theme.colors.textSecondary }]}>You’ll receive an STK push to complete payment.</Text>
-
-            <View style={styles.mpesaRow}>
-              <Text style={[styles.mpesaRowLabel, { color: theme.colors.textSecondary }]}>Phone number</Text>
-              <Text style={[styles.mpesaRowValue, { color: theme.colors.textPrimary }]}>+254 7XX XXX XXX</Text>
-            </View>
-            <View style={styles.mpesaRow}>
-              <Text style={[styles.mpesaRowLabel, { color: theme.colors.textSecondary }]}>Business name</Text>
-              <Text style={[styles.mpesaRowValue, { color: theme.colors.textPrimary }]}>OPA Rides</Text>
-            </View>
-          </View>
-        )}
 
         <View style={[styles.summary, { backgroundColor: theme.colors.white }]}> 
           <View style={styles.summaryRow}>
@@ -150,7 +146,7 @@ const SubscriptionCheckoutScreen = () => {
         </View>
 
         <TouchableOpacity
-          style={[styles.ctaButton, { backgroundColor: theme.colors.primary }]}
+          style={[styles.ctaButton, { backgroundColor: '#FF1577' }]}
           onPress={handleSubscribe}
           activeOpacity={0.9}
         >
@@ -212,136 +208,57 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Nunito_400Regular',
   },
-  methodSwitch: {
-    flexDirection: 'row',
-    padding: 6,
-    borderRadius: 16,
-    marginBottom: 14,
+  paymentMethods: {
+    gap: 12,
+    marginBottom: 18,
+  },
+  paymentMethodCard: {
+    borderRadius: 18,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(11, 27, 58, 0.10)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 10,
     elevation: 2,
   },
-  methodPill: {
-    flex: 1,
-    height: 40,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+  paymentMethodCardSelected: {
+    borderColor: 'rgba(11, 27, 58, 0.35)',
   },
-  methodText: {
-    fontSize: 13,
-    fontFamily: 'Nunito_700Bold',
-  },
-  cardMock: {
-    backgroundColor: '#0B0F17',
-    borderRadius: 18,
-    padding: 18,
-    marginBottom: 18,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 18,
-    elevation: 6,
-  },
-  cardTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  cardBrand: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    letterSpacing: 0.6,
-    fontFamily: 'Nunito_700Bold',
-    opacity: 0.9,
-  },
-  cardDots: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dot: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-  },
-  cardNumber: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
-    letterSpacing: 1,
-    marginBottom: 18,
-  },
-  cardBottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  cardLabel: {
-    color: 'rgba(255, 255, 255, 0.65)',
-    fontSize: 10,
-    fontFamily: 'Nunito_700Bold',
-    letterSpacing: 0.6,
-    marginBottom: 4,
-  },
-  cardValue: {
-    color: '#FFFFFF',
-    fontSize: 12,
-    fontFamily: 'Nunito_700Bold',
-  },
-  mpesaPanel: {
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 18,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  mpesaTopRow: {
+  paymentMethodTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  mpesaBadge: {
-    backgroundColor: 'rgba(0, 128, 0, 0.10)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-  },
-  mpesaBadgeText: {
-    color: '#0B6B3A',
-    fontSize: 11,
-    fontFamily: 'Nunito_700Bold',
-    letterSpacing: 0.4,
-  },
-  mpesaTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 4,
-  },
-  mpesaHint: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    marginBottom: 12,
-    lineHeight: 18,
-  },
-  mpesaRow: {
+  paymentMethodLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
+    gap: 12,
   },
-  mpesaRowLabel: {
+  mpesaLogo: {
+    width: 38,
+    height: 20,
+  },
+  paymentMethodTitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 2,
+  },
+  paymentMethodSub: {
     fontSize: 12,
     fontFamily: 'Nunito_400Regular',
   },
-  mpesaRowValue: {
+  paymentMethodMeta: {
     fontSize: 12,
     fontFamily: 'Nunito_700Bold',
+    marginBottom: 6,
+  },
+  paymentMethodHint: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
   },
   summary: {
     borderRadius: 18,

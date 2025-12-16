@@ -128,9 +128,30 @@ const PastRentalDetailsScreen = () => {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 18 }]}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: 0 }]}
         showsVerticalScrollIndicator={false}
       >
+        <TouchableOpacity
+          style={styles.heroImageWrap}
+          onPress={() => {
+            navigation.navigate('ImageRepository', {
+              images: carImages,
+              title: `${booking.carName || 'Car'} - Images`,
+            });
+          }}
+          activeOpacity={0.9}
+        >
+          {previewImages.length > 0 ? (
+            <Image
+              source={{ uri: previewImages[0] }}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={styles.heroImagePlaceholder} />
+          )}
+        </TouchableOpacity>
+
         {/* Rental info */}
         <View style={[styles.section, styles.firstSection]}>
           {/* <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -230,18 +251,6 @@ const PastRentalDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Image Repository
           </Text>
-
-          {previewImages.length > 0 && (
-            <View style={styles.imagePreviewGrid}>
-              <View style={styles.imagePreviewItem}>
-                <Image
-                  source={{ uri: previewImages[0] }}
-                  style={styles.imagePreviewImage}
-                  resizeMode="cover"
-                />
-              </View>
-            </View>
-          )}
 
           <TouchableOpacity
             style={styles.imageRepositoryCard}
@@ -445,6 +454,20 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 140,
+  },
+  heroImageWrap: {
+    width: '100%',
+    height: 280,
+    backgroundColor: '#F2F2F2',
+    overflow: 'hidden',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroImagePlaceholder: {
+    flex: 1,
+    backgroundColor: '#F2F2F2',
   },
   section: {
     paddingHorizontal: 24,

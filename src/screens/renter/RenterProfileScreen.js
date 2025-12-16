@@ -546,25 +546,37 @@ const RenterProfileScreen = () => {
                   </View>
                 ) : (
                   <>
-                    <View style={[styles.progressTrack, { backgroundColor: theme.colors.hint + '25' }]}>
-                      <View
-                        style={[
-                          styles.progressFill,
-                          {
-                            width: `${Math.round(verificationProgress.ratio * 100)}%`,
-                            backgroundColor: theme.colors.primary,
-                          },
-                        ]}
-                      />
+                    <View style={styles.unverifiedHeaderRow}>
+                      <Text style={[styles.unverifiedTitle, { color: theme.colors.textPrimary }]}>Get verified</Text>
+                      <View style={styles.unverifiedBackIconWrap} pointerEvents="none">
+                        <Ionicons name="return-up-back" size={16} color={theme.colors.hint} />
+                      </View>
                     </View>
 
-                    <Text style={[styles.verificationSubtitle, { color: theme.colors.textSecondary }]}> 
-                      {`Verification ${verificationProgress.done}/${verificationProgress.total}`}
+                    <Text style={[styles.unverifiedSubtitle, { color: theme.colors.textSecondary }]}>
+                      Complete these steps to verify your profile.
                     </Text>
 
-                    <Text style={[styles.missingDocsText, { color: theme.colors.textPrimary }]} numberOfLines={2}>
-                      To finish verification, {missingDocsText}.
-                    </Text>
+                    <View style={styles.requirementsList}>
+                      {displayVerificationRows.map((row) => (
+                        <View key={row.label} style={styles.requirementRow}>
+                          <Ionicons
+                            name={row.ok ? 'checkmark-circle' : 'ellipse-outline'}
+                            size={18}
+                            color={row.ok ? '#21C55D' : theme.colors.hint}
+                          />
+                          <Text
+                            style={[
+                              styles.requirementText,
+                              { color: row.ok ? theme.colors.textPrimary : theme.colors.textSecondary },
+                            ]}
+                            numberOfLines={1}
+                          >
+                            {row.label}
+                          </Text>
+                        </View>
+                      ))}
+                    </View>
                   </>
                 )}
               </View>
@@ -1146,6 +1158,38 @@ const styles = StyleSheet.create({
   progressFill: {
     height: 10,
     borderRadius: 999,
+  },
+  unverifiedHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  unverifiedBackIconWrap: {
+    opacity: 0.9,
+  },
+  unverifiedTitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.1,
+  },
+  unverifiedSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginBottom: 10,
+  },
+  requirementsList: {
+    gap: 10,
+  },
+  requirementRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  requirementText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    flex: 1,
   },
   verifiedPremiumWrap: {
     flex: 1,

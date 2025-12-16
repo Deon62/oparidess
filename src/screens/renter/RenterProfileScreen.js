@@ -53,7 +53,7 @@ const RenterProfileScreen = () => {
 
   const memberSince = useMemo(() => {
     const raw = user?.created_at || user?.member_since || user?.createdAt;
-    if (!raw) return '—';
+    if (!raw) return 'Jan 2025';
     try {
       const d = new Date(raw);
       if (Number.isNaN(d.getTime())) return '—';
@@ -65,6 +65,7 @@ const RenterProfileScreen = () => {
 
   const rentalsCount = useMemo(() => {
     const raw = user?.rentals_count ?? user?.rentalsCount ?? user?.total_rentals ?? user?.totalRentals;
+    if (raw === undefined || raw === null || raw === '') return 12;
     const num = Number(raw);
     if (Number.isFinite(num)) return num;
     return 0;
@@ -424,8 +425,8 @@ const RenterProfileScreen = () => {
                   style={[
                     styles.summaryHintPill,
                     {
-                      backgroundColor: theme.colors.primary + '12',
-                      borderColor: theme.colors.primary + '35',
+                      backgroundColor: '#FF1577',
+                      borderColor: '#FF1577',
                       transform: [
                         {
                           scale: hintPulse.interpolate({
@@ -437,9 +438,9 @@ const RenterProfileScreen = () => {
                     },
                   ]}
                 >
-                  <Ionicons name="hand-left-outline" size={16} color={theme.colors.primary} />
-                  <Text style={[styles.summaryHintPillText, { color: theme.colors.primary }]}>Tap to flip</Text>
-                  <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+                  <Ionicons name="hand-left-outline" size={16} color={theme.colors.white} />
+                  <Text style={[styles.summaryHintPillText, { color: theme.colors.white }]}>Tap to flip</Text>
+                  <Ionicons name="chevron-forward" size={16} color={theme.colors.white} />
                 </Animated.View>
               </View>
             </Animated.View>
@@ -1009,14 +1010,14 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   summaryLabel: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 6,
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 4,
   },
   summaryValue: {
-    fontSize: 18,
-    fontFamily: 'Nunito_700Bold',
-    letterSpacing: -0.2,
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
+    letterSpacing: 0,
   },
   summaryHintRow: {
     flexDirection: 'row',

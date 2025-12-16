@@ -987,9 +987,9 @@ const styles = StyleSheet.create({
   },
   flipCard: {
     width: '100%',
-    height: 132,
+    height: 170,
     borderRadius: 18,
-    padding: 14,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.08,
@@ -1002,7 +1002,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    padding: 14,
+    padding: 16,
     backfaceVisibility: 'hidden',
   },
   flipBackFace: {

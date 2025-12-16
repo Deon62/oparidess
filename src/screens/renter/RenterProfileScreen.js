@@ -1,7 +1,8 @@
 import React, { useMemo, useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { Animated, View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { Button } from '../../packages/components';
@@ -14,8 +15,11 @@ const profileImage = require('../../../assets/logo/profile.jpg');
 const RenterProfileScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const route = useRoute();
   const insets = useSafeAreaInsets();
   const { logout, user, updateUser } = useUser();
+  const PREVIEW_VERIFIED_PROFILE_KEY = '@oparides:preview_verified_profile';
+  const [previewVerified, setPreviewVerified] = useState(route?.params?.previewVerified === true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
   const [showNameEditModal, setShowNameEditModal] = useState(false);
@@ -94,17 +98,23 @@ const RenterProfileScreen = () => {
     ];
   }, [personalInfo.phone_number, personalInfo.id_number, hasDlInfo, profileImageUri, user?.profile_completeness]);
 
+  const displayVerificationRows = useMemo(() => {
+    if (!previewVerified) return verificationRows;
+    return verificationRows.map((r) => ({ ...r, ok: true }));
+  }, [previewVerified, verificationRows]);
+
   const verificationProgress = useMemo(() => {
-    const total = verificationRows.length || 1;
-    const done = verificationRows.filter((r) => r.ok).length;
+    const total = displayVerificationRows.length || 1;
+    const done = displayVerificationRows.filter((r) => r.ok).length;
     return {
       total,
       done,
       ratio: Math.min(1, Math.max(0, done / total)),
     };
-  }, [verificationRows]);
+  }, [displayVerificationRows]);
 
   const missingDocsText = useMemo(() => {
+    if (previewVerified) return '';
     const missing = verificationRows
       .filter((r) => !r.ok)
       .map((r) => {
@@ -119,7 +129,7 @@ const RenterProfileScreen = () => {
     if (missing.length === 1) return missing[0];
     if (missing.length === 2) return `${missing[0]} and ${missing[1]}`;
     return `${missing.slice(0, -1).join(', ')}, and ${missing[missing.length - 1]}`;
-  }, [verificationRows]);
+  }, [previewVerified, verificationRows]);
 
   const handleFlipVerificationCard = () => {
     if (isFlippingRef.current) return;
@@ -167,6 +177,28 @@ const RenterProfileScreen = () => {
     React.useCallback(() => {
       // StatusBar will be shown via the component
     }, [])
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let mounted = true;
+      const loadPreviewVerified = async () => {
+        try {
+          const value = await AsyncStorage.getItem(PREVIEW_VERIFIED_PROFILE_KEY);
+          const storedEnabled = value === 'true';
+          const routeEnabled = route?.params?.previewVerified === true;
+          if (mounted) setPreviewVerified(storedEnabled || routeEnabled);
+        } catch {
+          const routeEnabled = route?.params?.previewVerified === true;
+          if (mounted) setPreviewVerified(routeEnabled);
+        }
+      };
+
+      loadPreviewVerified();
+      return () => {
+        mounted = false;
+      };
+    }, [route?.params?.previewVerified])
   );
 
   const handleUploadDocs = () => {
@@ -484,28 +516,40 @@ const RenterProfileScreen = () => {
               </View>
 
               <View style={styles.verificationProgressWrap}>
-                <View style={[styles.progressTrack, { backgroundColor: theme.colors.hint + '25' }]}>
-                  <View
-                    style={[
-                      styles.progressFill,
-                      {
-                        width: `${Math.round(verificationProgress.ratio * 100)}%`,
-                        backgroundColor: verificationProgress.ratio === 1 ? '#4CAF50' : theme.colors.primary,
-                      },
-                    ]}
-                  />
-                </View>
+                {verificationProgress.ratio === 1 ? (
+                  <View style={[styles.verifiedPremiumWrap, { borderColor: theme.colors.hint + '25' }]}>
+                    <View style={styles.verifiedPremiumTopRow}>
+                      <View style={styles.verifiedBadge}>
+                        <Ionicons name="checkmark" size={12} color={theme.colors.white} />
+                      </View>
+                      <Text style={[styles.verifiedPremiumTitle, { color: theme.colors.textPrimary }]}>Verified</Text>
+                    </View>
+                    <Text style={[styles.verifiedPremiumSubtitle, { color: theme.colors.textSecondary }]}>
+                      Your profile is complete.
+                    </Text>
+                  </View>
+                ) : (
+                  <>
+                    <View style={[styles.progressTrack, { backgroundColor: theme.colors.hint + '25' }]}>
+                      <View
+                        style={[
+                          styles.progressFill,
+                          {
+                            width: `${Math.round(verificationProgress.ratio * 100)}%`,
+                            backgroundColor: theme.colors.primary,
+                          },
+                        ]}
+                      />
+                    </View>
 
-                <Text style={[styles.verificationSubtitle, { color: theme.colors.textSecondary }]}> 
-                  {verificationProgress.ratio === 1
-                    ? 'You are fully verified.'
-                    : `Verification ${verificationProgress.done}/${verificationProgress.total}`}
-                </Text>
+                    <Text style={[styles.verificationSubtitle, { color: theme.colors.textSecondary }]}> 
+                      {`Verification ${verificationProgress.done}/${verificationProgress.total}`}
+                    </Text>
 
-                {verificationProgress.ratio !== 1 && (
-                  <Text style={[styles.missingDocsText, { color: theme.colors.textPrimary }]} numberOfLines={2}>
-                    To finish verification, {missingDocsText}.
-                  </Text>
+                    <Text style={[styles.missingDocsText, { color: theme.colors.textPrimary }]} numberOfLines={2}>
+                      To finish verification, {missingDocsText}.
+                    </Text>
+                  </>
                 )}
               </View>
             </Animated.View>
@@ -1086,6 +1130,36 @@ const styles = StyleSheet.create({
   progressFill: {
     height: 10,
     borderRadius: 999,
+  },
+  verifiedPremiumWrap: {
+    borderWidth: 1,
+    borderRadius: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    backgroundColor: '#FFFFFF',
+  },
+  verifiedPremiumTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 6,
+  },
+  verifiedBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: '#FF1577',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verifiedPremiumTitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.1,
+  },
+  verifiedPremiumSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
   },
   verificationSubtitle: {
     fontSize: 12,

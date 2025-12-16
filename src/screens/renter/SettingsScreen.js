@@ -2,6 +2,7 @@ import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useUser } from '../../packages/context/UserContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,12 +20,14 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { logout } = useUser();
+  const PREVIEW_VERIFIED_PROFILE_KEY = '@oparides:preview_verified_profile';
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricType, setBiometricType] = useState('Biometric');
   const [showBiometricSuccessModal, setShowBiometricSuccessModal] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [previewVerifiedProfile, setPreviewVerifiedProfile] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -44,6 +47,18 @@ const SettingsScreen = () => {
       }
     };
     checkBiometrics();
+  }, []);
+
+  useEffect(() => {
+    const loadPreviewVerifiedProfile = async () => {
+      try {
+        const value = await AsyncStorage.getItem(PREVIEW_VERIFIED_PROFILE_KEY);
+        setPreviewVerifiedProfile(value === 'true');
+      } catch {
+        setPreviewVerifiedProfile(false);
+      }
+    };
+    loadPreviewVerifiedProfile();
   }, []);
 
   // Handle biometric toggle
@@ -152,6 +167,15 @@ const SettingsScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
+  const handlePreviewVerifiedProfileToggle = async (value) => {
+    setPreviewVerifiedProfile(value);
+    try {
+      await AsyncStorage.setItem(PREVIEW_VERIFIED_PROFILE_KEY, value ? 'true' : 'false');
+    } catch {
+      // ignore
+    }
+  };
+
   const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true, iconColor }) => (
     <TouchableOpacity
       style={styles.settingItem}
@@ -201,6 +225,18 @@ const SettingsScreen = () => {
           icon="lock-closed-outline"
           title="Change Password"
           onPress={handleChangePassword}
+        />
+        <SettingItem
+          icon="eye-outline"
+          title="Preview Verified Profile"
+          onPress={null}
+          showArrow={false}
+          rightComponent={
+            <Toggle
+              value={previewVerifiedProfile}
+              onValueChange={handlePreviewVerifiedProfileToggle}
+            />
+          }
         />
         <SettingItem
           icon={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}

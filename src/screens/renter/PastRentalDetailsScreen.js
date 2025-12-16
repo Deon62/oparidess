@@ -547,7 +547,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
   },
   infoCard: {
-    padding: 20,
+    paddingVertical: 8,
     gap: 16,
   },
   infoRow: {

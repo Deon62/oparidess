@@ -507,26 +507,42 @@ const RenterProfileScreen = () => {
                 },
               ]}
             >
-              <View style={styles.verificationHeaderRow}>
-                <Text style={[styles.verificationTitle, { color: theme.colors.textPrimary }]}>Verification</Text>
-                <View style={styles.verificationHint}>
-                  <Ionicons name="return-up-back" size={14} color={theme.colors.hint} />
-                  <Text style={[styles.verificationHintText, { color: theme.colors.textSecondary }]}>Back</Text>
-                </View>
-              </View>
-
               <View style={styles.verificationProgressWrap}>
                 {verificationProgress.ratio === 1 ? (
-                  <View style={[styles.verifiedPremiumWrap, { borderColor: theme.colors.hint + '25' }]}>
-                    <View style={styles.verifiedPremiumTopRow}>
-                      <View style={styles.verifiedBadge}>
-                        <Ionicons name="checkmark" size={12} color={theme.colors.white} />
-                      </View>
-                      <Text style={[styles.verifiedPremiumTitle, { color: theme.colors.textPrimary }]}>Verified</Text>
+                  <View style={[styles.verifiedPremiumWrap, { borderColor: '#0B1B3A' }]}>
+                    <View style={styles.verifiedSparksLayer} pointerEvents="none">
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark1]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark2]} />
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark3]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark4]} />
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark5]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark6]} />
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark7]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark8]} />
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark9]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark10]} />
+                      <View style={[styles.sparkDot, styles.sparkDotPink, styles.spark11]} />
+                      <View style={[styles.sparkDot, styles.sparkDotNavy, styles.spark12]} />
                     </View>
-                    <Text style={[styles.verifiedPremiumSubtitle, { color: theme.colors.textSecondary }]}>
-                      Your profile is complete.
-                    </Text>
+
+                    <View style={styles.verifiedBackIconWrap} pointerEvents="none">
+                      <Ionicons name="return-up-back" size={16} color={theme.colors.white} />
+                    </View>
+
+                    <View style={styles.verifiedPremiumContent}>
+                      <View style={styles.verifiedPremiumTopRow}>
+                        <View style={styles.verifiedBadge}>
+                          <Ionicons name="checkmark" size={12} color={theme.colors.white} />
+                        </View>
+                        <Text style={[styles.verifiedPremiumTitle, { color: theme.colors.white }]}>Verified</Text>
+                      </View>
+                      <Text style={[styles.verifiedPremiumSubtitle, { color: theme.colors.white }]}>
+                        Your profile is complete.
+                      </Text>
+                      <Text style={[styles.verifiedPremiumDisclaimer, { color: theme.colors.white }]}>
+                        A verified profile does not guarantee someone is who they claim to be. We use secure third‑party services to help verify user information.
+                      </Text>
+                    </View>
                   </View>
                 ) : (
                   <>
@@ -1132,11 +1148,28 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   verifiedPremiumWrap: {
+    flex: 1,
     borderWidth: 1,
     borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0B1B3A',
+    overflow: 'hidden',
+  },
+  verifiedBackIconWrap: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    zIndex: 3,
+    opacity: 0.95,
+  },
+  verifiedSparksLayer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  verifiedPremiumContent: {
+    position: 'relative',
+    zIndex: 2,
+    paddingTop: 6,
   },
   verifiedPremiumTopRow: {
     flexDirection: 'row',
@@ -1144,6 +1177,29 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 6,
   },
+  sparkDot: {
+    position: 'absolute',
+    borderRadius: 999,
+    opacity: 0.95,
+  },
+  sparkDotPink: {
+    backgroundColor: '#FF1577',
+  },
+  sparkDotNavy: {
+    backgroundColor: '#162B5A',
+  },
+  spark1: { top: 10, left: 14, width: 6, height: 6 },
+  spark2: { top: 18, right: 18, width: 4, height: 4 },
+  spark3: { top: 40, left: 44, width: 5, height: 5 },
+  spark4: { top: 52, right: 56, width: 7, height: 7, opacity: 0.3 },
+  spark5: { top: 66, left: 20, width: 4, height: 4 },
+  spark6: { top: 72, right: 24, width: 5, height: 5 },
+  spark7: { bottom: 18, left: 30, width: 7, height: 7, opacity: 0.35 },
+  spark8: { bottom: 12, right: 22, width: 4, height: 4 },
+  spark9: { bottom: 40, left: 64, width: 5, height: 5 },
+  spark10: { bottom: 34, right: 68, width: 6, height: 6, opacity: 0.35 },
+  spark11: { top: 28, left: 110, width: 3, height: 3 },
+  spark12: { bottom: 22, left: 140, width: 3, height: 3 },
   verifiedBadge: {
     width: 20,
     height: 20,
@@ -1160,6 +1216,13 @@ const styles = StyleSheet.create({
   verifiedPremiumSubtitle: {
     fontSize: 12,
     fontFamily: 'Nunito_400Regular',
+  },
+  verifiedPremiumDisclaimer: {
+    fontSize: 11,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 16,
+    marginTop: 10,
+    opacity: 0.85,
   },
   verificationSubtitle: {
     fontSize: 12,

@@ -398,7 +398,7 @@ const RenterProfileScreen = () => {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, { paddingBottom: insets.bottom + 90 }]}
         showsVerticalScrollIndicator={false}
       >
       {/* Profile Header */}

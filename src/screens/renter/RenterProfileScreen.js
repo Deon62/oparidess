@@ -25,6 +25,7 @@ const RenterProfileScreen = () => {
   const flipAnim = useRef(new Animated.Value(0)).current;
   const flipSideRef = useRef(0);
   const isFlippingRef = useRef(false);
+  const hintPulse = useRef(new Animated.Value(0)).current;
 
   // Mock user data - in real app, this would come from context/API
   const [personalInfo, setPersonalInfo] = useState({
@@ -133,6 +134,17 @@ const RenterProfileScreen = () => {
       setProfileImageUri(user.profile_image_uri);
     }
   }, [user?.profile_image_uri]);
+
+  useEffect(() => {
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(hintPulse, { toValue: 1, duration: 900, useNativeDriver: true }),
+        Animated.timing(hintPulse, { toValue: 0, duration: 900, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [hintPulse]);
 
   // Hide header and show only back button
   useLayoutEffect(() => {
@@ -408,8 +420,27 @@ const RenterProfileScreen = () => {
                 </View>
               </View>
               <View style={styles.summaryHintRow}>
-                <Ionicons name="sync" size={14} color={theme.colors.hint} />
-                <Text style={[styles.summaryHintText, { color: theme.colors.textSecondary }]}>Tap to view verification</Text>
+                <Animated.View
+                  style={[
+                    styles.summaryHintPill,
+                    {
+                      backgroundColor: theme.colors.primary + '12',
+                      borderColor: theme.colors.primary + '35',
+                      transform: [
+                        {
+                          scale: hintPulse.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [1, 1.05],
+                          }),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <Ionicons name="hand-left-outline" size={16} color={theme.colors.primary} />
+                  <Text style={[styles.summaryHintPillText, { color: theme.colors.primary }]}>Tap to flip</Text>
+                  <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+                </Animated.View>
               </View>
             </Animated.View>
 
@@ -990,12 +1021,23 @@ const styles = StyleSheet.create({
   summaryHintRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
     marginTop: 10,
+    justifyContent: 'center',
   },
-  summaryHintText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
+  summaryHintPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    borderWidth: 1,
+  },
+  summaryHintPillText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.1,
   },
   verificationHeaderRow: {
     flexDirection: 'row',

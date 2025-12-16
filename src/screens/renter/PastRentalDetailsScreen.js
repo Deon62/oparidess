@@ -152,6 +152,34 @@ const PastRentalDetailsScreen = () => {
           )}
         </TouchableOpacity>
 
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}
+          >
+            Image Repository
+          </Text>
+
+          <TouchableOpacity
+            style={styles.imageRepositoryCard}
+            onPress={() => {
+              navigation.navigate('ImageRepository', {
+                images: carImages,
+                title: `${booking.carName || 'Car'} - Images`,
+              });
+            }}
+            activeOpacity={0.7}
+          >
+            <View style={styles.imageRepositoryLink}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+                View all images
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
         {/* Rental info */}
         <View style={[styles.section, styles.firstSection]}>
           {/* <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -242,33 +270,6 @@ const PastRentalDetailsScreen = () => {
               value: booking.bookingId,
             })}
           </View>
-        </View>
-
-        {/* Separator Line */}
-        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Image Repository
-          </Text>
-
-          <TouchableOpacity
-            style={styles.imageRepositoryCard}
-            onPress={() => {
-              navigation.navigate('ImageRepository', {
-                images: carImages,
-                title: `${booking.carName || 'Car'} - Images`,
-              });
-            }}
-            activeOpacity={0.7}
-          >
-            <View style={styles.imageRepositoryLink}>
-              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
-              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
-                View all images
-              </Text>
-            </View>
-          </TouchableOpacity>
         </View>
 
         {/* Separator Line */}

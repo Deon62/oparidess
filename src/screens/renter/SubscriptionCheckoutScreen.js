@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
 const mpesaLogo = require('../../../assets/images/mpesa.png');
+const mastercardLogo = require('../../../assets/images/mastercard.png');
 
 const SubscriptionCheckoutScreen = () => {
   const theme = useTheme();
@@ -111,7 +112,7 @@ const SubscriptionCheckoutScreen = () => {
           >
             <View style={styles.paymentMethodTopRow}>
               <View style={styles.paymentMethodLeft}>
-                <Ionicons name="card-outline" size={22} color={theme.colors.textPrimary} />
+                <Image source={mastercardLogo} style={styles.cardBrandLogo} resizeMode="contain" />
                 <View>
                   <Text style={[styles.paymentMethodTitle, { color: theme.colors.textPrimary }]}>Card</Text>
                   <Text style={[styles.paymentMethodSub, { color: theme.colors.textSecondary }]}>•••• 7173</Text>
@@ -240,6 +241,10 @@ const styles = StyleSheet.create({
   mpesaLogo: {
     width: 38,
     height: 20,
+  },
+  cardBrandLogo: {
+    width: 34,
+    height: 22,
   },
   paymentMethodTitle: {
     fontSize: 14,

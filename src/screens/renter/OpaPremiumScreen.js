@@ -182,13 +182,14 @@ const OpaPremiumScreen = () => {
 
         <Card style={[styles.planCard, selectedPlan.cardStyle]}>
           <View style={styles.planCardInner}>
+            {!!selectedPlan.badgeText && (
+              <View style={styles.popularBadgePremium}>
+                <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
+              </View>
+            )}
+
             <View style={styles.selectRow}>
               <Text style={[styles.planName, { color: '#0B1B3A' }]}>{selectedPlan.title}</Text>
-              {!!selectedPlan.badgeText && (
-                <View style={styles.popularBadgePremium}>
-                  <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
-                </View>
-              )}
             </View>
 
             <Text style={styles.planDescription}>{selectedPlan.description}</Text>
@@ -362,8 +363,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   oldPriceText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_700Bold',
+    fontSize: 12,
+    fontFamily: 'Nunito_600SemiBold',
     color: 'rgba(11, 27, 58, 0.45)',
     textDecorationLine: 'line-through',
     marginBottom: 2,

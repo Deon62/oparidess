@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
@@ -32,6 +32,20 @@ const SubscriptionCheckoutScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+
+      return () => {
+        navigation.getParent()?.setOptions({
+          tabBarStyle: undefined,
+        });
+      };
+    }, [navigation])
+  );
 
   const formatKes = (value) => {
     try {

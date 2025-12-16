@@ -71,6 +71,14 @@ const RenterProfileScreen = () => {
     return 0;
   }, [user?.rentals_count, user?.rentalsCount, user?.total_rentals, user?.totalRentals]);
 
+  const ratingValue = useMemo(() => {
+    const raw = user?.rating ?? user?.avg_rating ?? user?.average_rating;
+    if (raw === undefined || raw === null || raw === '') return '4.8';
+    const num = Number(raw);
+    if (Number.isFinite(num)) return num.toFixed(1);
+    return '4.8';
+  }, [user?.rating, user?.avg_rating, user?.average_rating]);
+
   const verificationRows = useMemo(() => {
     const hasPhone = !!(personalInfo.phone_number && String(personalInfo.phone_number).trim());
     const hasId = !!(personalInfo.id_number && String(personalInfo.id_number).trim());
@@ -418,6 +426,11 @@ const RenterProfileScreen = () => {
                 <View style={styles.summaryCell}>
                   <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Rentals</Text>
                   <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>{rentalsCount}</Text>
+                </View>
+                <View style={[styles.summaryDivider, { backgroundColor: theme.colors.hint + '25' }]} />
+                <View style={styles.summaryCell}>
+                  <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Rating</Text>
+                  <Text style={[styles.summaryValue, { color: theme.colors.textPrimary }]}>{ratingValue}</Text>
                 </View>
               </View>
               <View style={styles.summaryHintRow}>
@@ -998,15 +1011,17 @@ const styles = StyleSheet.create({
   summaryTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     flex: 1,
   },
   summaryCell: {
     flex: 1,
+    alignItems: 'center',
   },
   summaryDivider: {
     width: 1,
-    height: 44,
-    marginHorizontal: 14,
+    height: 36,
+    marginHorizontal: 10,
     borderRadius: 1,
   },
   summaryLabel: {

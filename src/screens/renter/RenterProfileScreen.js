@@ -325,13 +325,22 @@ const RenterProfileScreen = () => {
         >
           <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.settingsButton, { backgroundColor: theme.colors.white }]}
-          onPress={() => navigation.navigate('Settings')}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="settings-outline" size={20} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
+        <View style={styles.topRightButtons}>
+          <TouchableOpacity
+            style={[styles.settingsButton, { backgroundColor: theme.colors.white }]}
+            onPress={handleJoinOpaPremium}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="ribbon-outline" size={20} color="#FF1577" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.settingsButton, { backgroundColor: theme.colors.white }]}
+            onPress={() => navigation.navigate('Settings')}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="settings-outline" size={20} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -568,18 +577,6 @@ const RenterProfileScreen = () => {
           <Ionicons name="business-outline" size={24} color={theme.colors.primary} />
           <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
             List car & services
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleJoinOpaPremium}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="ribbon-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Join OPA Premium
           </Text>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
@@ -841,6 +838,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     alignItems: 'center',
+  },
+  topRightButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   backButton: {
     width: 40,

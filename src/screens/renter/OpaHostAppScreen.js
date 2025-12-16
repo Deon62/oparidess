@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Linking, Image } from 'react-native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+
+const hostImage = require('../../../assets/images/host.png');
 
 const OpaHostAppScreen = () => {
   const theme = useTheme();
@@ -16,6 +18,25 @@ const OpaHostAppScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <View style={styles.content}>
+        <View style={styles.hostCard}>
+          <View style={styles.hostCardLeft}>
+            <Text style={[styles.hostTitle, { color: theme.colors.textPrimary }]}>Become a host</Text>
+            <Text style={[styles.hostDesc, { color: theme.colors.textSecondary }]}>
+              Join thousands of hosts building businesses and earning meaningful income on Opa.
+            </Text>
+            <TouchableOpacity
+              onPress={handleDownloadApp}
+              activeOpacity={0.9}
+            >
+              <Text style={styles.learnMoreLink}>Learn more</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.hostCardRight}>
+            <Image source={hostImage} style={styles.hostImage} resizeMode="cover" />
+          </View>
+        </View>
+
         <TouchableOpacity
           style={[styles.downloadButton, { backgroundColor: theme.colors.primary }]}
           onPress={handleDownloadApp}
@@ -36,9 +57,52 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 24,
+  },
+  hostCard: {
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+    marginBottom: 18,
+    height: 180,
+  },
+  hostCardLeft: {
+    flex: 1,
+    padding: 14,
+    justifyContent: 'center',
+  },
+  hostTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 6,
+  },
+  hostDesc: {
+    fontSize: 13,
+    fontFamily: 'Nunito_400Regular',
+    lineHeight: 18,
+    marginBottom: 10,
+  },
+  learnMoreLink: {
+    fontSize: 13,
+    fontFamily: 'Nunito_700Bold',
+    color: '#0B1B3A',
+    textDecorationLine: 'underline',
+  },
+  hostCardRight: {
+    width: 124,
+    backgroundColor: '#F2F4F8',
+  },
+  hostImage: {
+    width: '100%',
+    height: '100%',
   },
   downloadButton: {
     paddingVertical: 16,

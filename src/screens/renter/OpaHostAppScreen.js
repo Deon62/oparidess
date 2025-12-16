@@ -7,6 +7,13 @@ const hostImage = require('../../../assets/images/host.png');
 const OpaHostAppScreen = () => {
   const theme = useTheme();
 
+  const handleLearnMore = () => {
+    const url = 'https://opa.deonhq.xyz';
+    Linking.openURL(url).catch((err) => {
+      console.error('Failed to open learn more link:', err);
+    });
+  };
+
   const handleDownloadApp = () => {
     // TODO: Replace with actual app store/download link
     const downloadUrl = 'https://play.google.com/store/apps'; // Placeholder
@@ -25,7 +32,7 @@ const OpaHostAppScreen = () => {
               Join thousands of hosts building businesses and earning meaningful income on Opa.
             </Text>
             <TouchableOpacity
-              onPress={handleDownloadApp}
+              onPress={handleLearnMore}
               activeOpacity={0.9}
             >
               <Text style={styles.learnMoreLink}>Learn more</Text>

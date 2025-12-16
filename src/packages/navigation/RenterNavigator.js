@@ -362,10 +362,15 @@ const HomeStack = () => {
         name="OpaHostApp" 
         component={OpaHostAppScreen}
         options={{ 
-          title: 'Opa Owner/Service Provider',
+          title: 'Opa Host',
           headerShown: true,
+          headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: theme.colors.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            shadowColor: 'transparent',
+            borderBottomWidth: 0,
           },
           headerTintColor: '#000000',
           headerTitleStyle: {
@@ -374,7 +379,7 @@ const HomeStack = () => {
             fontSize: 22,
           },
           statusBarStyle: 'dark',
-          statusBarBackgroundColor: '#FFFFFF',
+          statusBarBackgroundColor: theme.colors.background,
         }}
       />
       <Stack.Screen 
@@ -1011,10 +1016,15 @@ const ProfileStack = () => {
         name="OpaHostApp" 
         component={OpaHostAppScreen}
         options={{ 
-          title: 'Opa Owner/Service Provider',
+          title: 'Opa Host',
           headerShown: true,
+          headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: theme.colors.background,
+            elevation: 0,
+            shadowOpacity: 0,
+            shadowColor: 'transparent',
+            borderBottomWidth: 0,
           },
           headerTintColor: '#000000',
           headerTitleStyle: {
@@ -1022,7 +1032,7 @@ const ProfileStack = () => {
             color: '#000000',
           },
           statusBarStyle: 'dark',
-          statusBarBackgroundColor: '#FFFFFF',
+          statusBarBackgroundColor: theme.colors.background,
         }}
       />
     </Stack.Navigator>

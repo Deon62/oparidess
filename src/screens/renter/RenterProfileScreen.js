@@ -449,6 +449,20 @@ const RenterProfileScreen = () => {
                 },
               ]}
             >
+              <View style={styles.verificationStatusRow}>
+                {verificationProgress.ratio === 1 ? (
+                  <View style={[styles.verificationStatusPill, styles.verificationStatusPillSuccess]}>
+                    <Ionicons name="checkmark-circle" size={16} color="#21C55D" />
+                    <Text style={[styles.verificationStatusText, { color: '#166534' }]}>Verified</Text>
+                  </View>
+                ) : (
+                  <View style={[styles.verificationStatusPill, styles.verificationStatusPillWarning]}>
+                    <Ionicons name="alert-circle-outline" size={16} color="#F59E0B" />
+                    <Text style={[styles.verificationStatusText, { color: '#92400E' }]}>Not verified yet</Text>
+                  </View>
+                )}
+              </View>
+
               <View style={styles.summaryTopRow}>
                 <View style={styles.summaryCell}>
                   <Text style={[styles.summaryLabel, { color: theme.colors.textSecondary }]}>Member since</Text>
@@ -588,17 +602,58 @@ const RenterProfileScreen = () => {
       {/* Separator Line */}
       {/* <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} /> */}
 
-      {/* Personal Information */}
-      <View style={styles.additionalActionsContainer}>
+      {/* Your account */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionCardTitle}>Your account</Text>
+
         <TouchableOpacity
           style={styles.additionalActionButton}
           onPress={handleUpdateProfile}
           activeOpacity={0.7}
         >
           <Ionicons name="person-circle-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Personal info
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Personal info
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Name, contact, and basic profile details
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleDriversLicenseInfo}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Driving license
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              License number and expiry details
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleUploadDocs}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="document-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Documents
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              ID, proof of address, and supporting files
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
       </View>
@@ -652,25 +707,46 @@ const RenterProfileScreen = () => {
         </>
       )}
 
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+      {/* Payment & billing */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionCardTitle}>Payment & billing</Text>
 
-      {/* Account Actions */}
-      <View style={styles.additionalActionsContainer}>
-        <View style={styles.accountActionsHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12 }]}>
-            Monetize and Grow
-          </Text>
-        </View>
+        <TouchableOpacity
+          style={styles.additionalActionButton}
+          onPress={handleAddPayment}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Payment methods
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Add or manage your saved payment options
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Earn with Opa */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionCardTitle}>Earn with Opa</Text>
+
         <TouchableOpacity
           style={styles.additionalActionButton}
           onPress={handleReferHost}
           activeOpacity={0.7}
         >
           <Ionicons name="person-add-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Refer a host
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Refer a host
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Invite car and service providers and earn rewards
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
 
@@ -680,9 +756,14 @@ const RenterProfileScreen = () => {
           activeOpacity={0.7}
         >
           <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Refer to Friends
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Refer friends
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Share Opa with renters you know
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
 
@@ -692,58 +773,21 @@ const RenterProfileScreen = () => {
           activeOpacity={0.7}
         >
           <Ionicons name="business-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            List car & services
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Become a host
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              List a car or service on Opa
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
+      </View>
 
-        <View style={styles.accountActionsHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12, marginTop: 18 }]}>
-            Account Actions
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleAddPayment}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Add Payment
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleUploadDocs}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="document-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Upload Docs
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.additionalActionButton}
-          onPress={handleDriversLicenseInfo}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Drivers licence info
-          </Text>
-          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
-        </TouchableOpacity>
-
-        <View style={styles.accountActionsHeader}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary, marginBottom: 12, marginTop: 18 }]}>
-            Community and Support
-          </Text>
-        </View>
+      {/* Community & support */}
+      <View style={styles.sectionCard}>
+        <Text style={styles.sectionCardTitle}>Community & support</Text>
 
         <TouchableOpacity
           style={styles.additionalActionButton}
@@ -751,9 +795,14 @@ const RenterProfileScreen = () => {
           activeOpacity={0.7}
         >
           <Ionicons name="create-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Write Opa Blog
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Write Opa blog
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Share your stories and tips with the community
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
 
@@ -763,9 +812,14 @@ const RenterProfileScreen = () => {
           activeOpacity={0.7}
         >
           <Ionicons name="chatbubble-outline" size={24} color={theme.colors.primary} />
-          <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
-            Help us Improve
-          </Text>
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Help us improve
+            </Text>
+            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
+              Send feedback about your experience
+            </Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
       </View>
@@ -1150,6 +1204,32 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  verificationStatusRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginBottom: 10,
+  },
+  verificationStatusPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    borderWidth: 1,
+    gap: 6,
+  },
+  verificationStatusPillSuccess: {
+    backgroundColor: 'rgba(34,197,94,0.10)',
+    borderColor: '#22C55E',
+  },
+  verificationStatusPillWarning: {
+    backgroundColor: 'rgba(245,158,11,0.10)',
+    borderColor: '#F59E0B',
+  },
+  verificationStatusText: {
+    fontSize: 12,
+    fontFamily: 'Nunito_700Bold',
+  },
   progressTrack: {
     height: 10,
     borderRadius: 999,
@@ -1337,6 +1417,26 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     gap: 0,
   },
+  sectionCard: {
+    marginHorizontal: 24,
+    marginTop: 8,
+    marginBottom: 8,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  sectionCardTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 10,
+    letterSpacing: -0.2,
+  },
   accountActionsHeader: {
     paddingHorizontal: 24,
     marginBottom: 8,
@@ -1344,14 +1444,22 @@ const styles = StyleSheet.create({
   additionalActionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
-    paddingHorizontal: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 4,
     gap: 16,
   },
   additionalActionText: {
     flex: 1,
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  additionalActionTextWrap: {
+    flex: 1,
+  },
+  additionalActionSubtitle: {
+    fontSize: 12,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 2,
   },
   logoutButton: {
     flexDirection: 'row',

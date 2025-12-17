@@ -51,16 +51,6 @@ const CompletedRentalsScreen = () => {
         </View>
       ),
     });
-
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
-
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: undefined,
-      });
-    };
   }, [navigation, theme, insets.top]);
 
   const handleBookingPress = (booking) => {

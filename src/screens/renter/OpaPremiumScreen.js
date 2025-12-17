@@ -182,14 +182,13 @@ const OpaPremiumScreen = () => {
 
         <Card style={[styles.planCard, selectedPlan.cardStyle]}>
           <View style={styles.planCardInner}>
-            {!!selectedPlan.badgeText && (
-              <View style={styles.popularBadgePremium}>
-                <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
-              </View>
-            )}
-
             <View style={styles.selectRow}>
               <Text style={[styles.planName, { color: '#0B1B3A' }]}>{selectedPlan.title}</Text>
+              {!!selectedPlan.badgeText && (
+                <View style={styles.popularBadgePremium}>
+                  <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
+                </View>
+              )}
             </View>
 
             <Text style={styles.planDescription}>{selectedPlan.description}</Text>

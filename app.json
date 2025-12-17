@@ -43,10 +43,10 @@
         {
           "android": {
             "jsEngine": "hermes",
-            "minifyEnabled": false,
-            "enableProguardInReleaseBuilds": false,
+            "minifyEnabled": true,
+            "enableProguardInReleaseBuilds": true,
             "enableR8": true,
-            "enableShrinkResources": false,
+            "enableShrinkResources": true,
             "enableSeparateBuildPerCPUArchitecture": true,
             "proguardFiles": [
               "proguard-rules.pro"
@@ -55,7 +55,7 @@
               "android.enableR8.fullMode": false,
               "android.enableResourceShrinking": false
             },
-            "enableMinifyInReleaseBuilds": false
+            "enableMinifyInReleaseBuilds": true
           }
         }
       ],

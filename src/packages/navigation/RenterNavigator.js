@@ -1084,7 +1084,15 @@ const RenterNavigator = () => {
 
   const getTabBarStyleForRoute = (route) => {
     const focusedRouteName = getFocusedRouteNameFromRoute(route);
-    const hiddenRoutes = ['ReferHost', 'YourReferrals', 'HowHostReferralsWork'];
+    const hiddenRoutes = [
+      'ReferHost',
+      'YourReferrals',
+      'HowHostReferralsWork',
+      'ReportAccident',
+      'ReportBreakdown',
+      'ReportSecurityThreat',
+      'CompletedRentals',
+    ];
 
     if (focusedRouteName && hiddenRoutes.includes(focusedRouteName)) {
       return { display: 'none' };

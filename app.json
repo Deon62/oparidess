@@ -43,24 +43,25 @@
         {
           "android": {
             "jsEngine": "hermes",
-            "minifyEnabled": true,
-            "enableProguardInReleaseBuilds": true,
+            "minifyEnabled": false,
+            "enableProguardInReleaseBuilds": false,
             "enableR8": true,
-            "enableShrinkResources": true,
+            "enableShrinkResources": false,
             "enableSeparateBuildPerCPUArchitecture": true,
             "proguardFiles": [
               "proguard-rules.pro"
             ],
             "gradleProperties": {
-              "android.enableR8.fullMode": true,
-              "android.enableResourceShrinking": true
+              "android.enableR8.fullMode": false,
+              "android.enableResourceShrinking": false
             },
-            "enableMinifyInReleaseBuilds": true
+            "enableMinifyInReleaseBuilds": false
           }
         }
       ],
       "expo-sqlite",
-      "expo-video"
+      "expo-video",
+      "expo-font"
     ],
     "extra": {
       "eas": {

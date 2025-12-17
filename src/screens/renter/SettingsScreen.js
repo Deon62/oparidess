@@ -219,8 +219,10 @@ const SettingsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
       {/* Account Section */}
-      <SectionHeader title="Account" />
-      <View style={styles.section}>
+      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
+          Account
+        </Text>
         <SettingItem
           icon="lock-closed-outline"
           title="Change Password"
@@ -253,12 +255,11 @@ const SettingsScreen = () => {
         />
       </View>
 
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
       {/* Preferences Section */}
-      <SectionHeader title="Preferences" />
-      <View style={styles.section}>
+      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
+          Preferences
+        </Text>
         <SettingItem
           icon="notifications-outline"
           title="Notification Preferences"
@@ -276,12 +277,11 @@ const SettingsScreen = () => {
         />
       </View>
 
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
       {/* Support & Info Section */}
-      <SectionHeader title="Support & Information" />
-      <View style={styles.section}>
+      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
+          Support & Information
+        </Text>
         <SettingItem
           icon="headset-outline"
           title="Customer Support"
@@ -304,34 +304,28 @@ const SettingsScreen = () => {
         />
       </View>
 
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
-
-      {/* Danger Zone */}
-      <SectionHeader title="Account Actions" />
-      <View style={styles.section}>
+      {/* Account Actions */}
+      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+        <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
+          Account actions
+        </Text>
         <SettingItem
           icon="trash-outline"
           title="Delete Account"
           onPress={handleDeleteAccount}
           iconColor="#F44336"
         />
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={handleLogout}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="log-out-outline" size={24} color="#F44336" />
+          <Text style={[styles.logoutText, { color: '#F44336' }]}>
+            Logout
+          </Text>
+        </TouchableOpacity>
       </View>
-
-      {/* Logout Button */}
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={handleLogout}
-        activeOpacity={0.7}
-      >
-        <Ionicons name="log-out-outline" size={24} color="#F44336" />
-        <Text style={[styles.logoutText, { color: '#F44336' }]}>
-          Logout
-        </Text>
-      </TouchableOpacity>
-
-      {/* Separator Line */}
-      <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40', marginTop: 24 }]} />
 
       {/* App Version Section */}
       <View style={styles.versionSection}>
@@ -529,6 +523,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 8,
     marginBottom: 8,
+  },
+  sectionCard: {
+    marginHorizontal: 24,
+    marginTop: 16,
+    marginBottom: 8,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  sectionCardTitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    marginBottom: 10,
+    letterSpacing: -0.2,
   },
   settingItem: {
     flexDirection: 'row',

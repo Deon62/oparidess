@@ -73,6 +73,8 @@ const BookingScreen = () => {
     { id: 5, name: 'Jomo Kenyatta Airport', address: 'Embakasi, Nairobi', coordinates: { latitude: -1.3192, longitude: 36.9278 } },
   ];
 
+  const [hasTriedContinue, setHasTriedContinue] = useState(false);
+
   // Hide bottom tab bar and header on this screen
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -227,6 +229,22 @@ const BookingScreen = () => {
   const crossCountryTravelCost = crossCountryTravelEnabled ? 5000 * days : 0;
   const basePrice = rentalInfo.perDay * days;
   const totalPrice = basePrice + insuranceCost + crossCountryTravelCost;
+
+  // Inline validation helpers
+  const isDateRangeUnavailable =
+    pickupDate && dropoffDate ? !isDateRangeAvailable(pickupDate, dropoffDate) : false;
+
+  const isDateRangeTooShort =
+    pickupDate && dropoffDate && days > 0 ? days < rentalInfo.minimumDays : false;
+
+  const showMissingDatesError =
+    hasTriedContinue && (!pickupDate || !dropoffDate);
+
+  const showPickupLocationError =
+    hasTriedContinue && !pickupLocation;
+
+  const showDropoffLocationError =
+    hasTriedContinue && !sameDropoffLocation && !dropoffLocation;
   
   // Commission rate (15%) - will be calculated in BookingConfirmationScreen based on payment option
   const COMMISSION_RATE = 0.15;
@@ -280,6 +298,8 @@ const BookingScreen = () => {
   };
 
   const handleContinue = () => {
+    setHasTriedContinue(true);
+
     // Age verification
     const ageEligible = isAgeEligible();
     if (ageEligible === false) {
@@ -607,6 +627,7 @@ const BookingScreen = () => {
           </View>
         )}
 
+        {/* 1. Dates & times */}
         {/* Date Selection - Airbnb Style */}
         <View style={styles.section}>
           {/* Pickup Date */}
@@ -670,6 +691,34 @@ const BookingScreen = () => {
               </Text>
             </View>
           )}
+
+          {showMissingDatesError && (
+            <View style={styles.inlineErrorRow}>
+              <Ionicons name="warning-outline" size={14} color="#DC2626" style={styles.inlineErrorIcon} />
+              <Text style={styles.inlineErrorText}>
+                Please select both pickup and dropoff dates.
+              </Text>
+            </View>
+          )}
+
+          {isDateRangeTooShort && (
+            <View style={styles.inlineErrorRow}>
+              <Ionicons name="warning-outline" size={14} color="#DC2626" style={styles.inlineErrorIcon} />
+              <Text style={styles.inlineErrorText}>
+                Minimum rental period is {rentalInfo.minimumDays}{' '}
+                {rentalInfo.minimumDays === 1 ? 'day' : 'days'}.
+              </Text>
+            </View>
+          )}
+
+          {pickupDate && dropoffDate && isDateRangeUnavailable && (
+            <View style={styles.inlineErrorRow}>
+              <Ionicons name="time-outline" size={14} color="#DC2626" style={styles.inlineErrorIcon} />
+              <Text style={styles.inlineErrorText}>
+                This car is already booked for one or more of the selected dates. Try different dates.
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Separator Line */}
@@ -704,6 +753,7 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
+        {/* 2. Pickup & dropoff locations */}
         {/* Location Selection - Airbnb Style */}
         <View style={styles.section}>
           <View style={styles.dateSectionRow}>
@@ -746,11 +796,30 @@ const BookingScreen = () => {
             </View>
             <Toggle value={sameDropoffLocation} onValueChange={setSameDropoffLocation} />
           </View>
+
+          {showPickupLocationError && (
+            <View style={[styles.inlineErrorRow, { marginTop: 8 }]}>
+              <Ionicons name="location-outline" size={14} color="#DC2626" style={styles.inlineErrorIcon} />
+              <Text style={styles.inlineErrorText}>
+                Please select a pickup location.
+              </Text>
+            </View>
+          )}
+
+          {showDropoffLocationError && (
+            <View style={[styles.inlineErrorRow, { marginTop: 4 }]}>
+              <Ionicons name="location-outline" size={14} color="#DC2626" style={styles.inlineErrorIcon} />
+              <Text style={styles.inlineErrorText}>
+                Please select a dropoff location.
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
+        {/* 3. Extras (insurance, cross‑country, check‑in) */}
         {/* Cross Country Travel Toggle */}
         <View style={styles.section}>
           <View style={styles.crossCountryCard}>
@@ -817,7 +886,7 @@ const BookingScreen = () => {
       <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
-            Total
+            {days > 0 ? `${days} ${days === 1 ? 'day' : 'days'}` : 'Total'}
           </Text>
           <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
             {formatCurrency(totalPrice, { showDecimals: false })}
@@ -828,7 +897,15 @@ const BookingScreen = () => {
           onPress={handleContinue}
           variant="primary"
           style={[styles.payButton, { backgroundColor: '#FF1577' }]}
-          disabled={!pickupDate || !dropoffDate || days < rentalInfo.minimumDays || !pickupLocation}
+          disabled={
+            !pickupDate ||
+            !dropoffDate ||
+            days < rentalInfo.minimumDays ||
+            !pickupLocation ||
+            (!sameDropoffLocation && !dropoffLocation) ||
+            isDateRangeUnavailable ||
+            isDateRangeTooShort
+          }
         />
       </View>
 

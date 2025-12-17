@@ -1083,7 +1083,6 @@ const RenterNavigator = () => {
   };
 
   const getTabBarStyleForRoute = (route) => {
-    const focusedRouteName = getFocusedRouteNameFromRoute(route);
     const hiddenRoutes = [
       'ReferHost',
       'YourReferrals',
@@ -1094,8 +1093,29 @@ const RenterNavigator = () => {
       'CompletedRentals',
     ];
 
+    // Direct check on the route itself (defensive)
+    if (route?.name && hiddenRoutes.includes(route.name)) {
+      return { display: 'none' };
+    }
+
+    const focusedRouteName = getFocusedRouteNameFromRoute(route);
+
+    // Primary: helper-provided focused route name
     if (focusedRouteName && hiddenRoutes.includes(focusedRouteName)) {
       return { display: 'none' };
+    }
+
+    // Fallback: walk nested navigation state to find any focused hidden route
+    let state = route?.state;
+    while (state && state.routes && typeof state.index === 'number') {
+      const currentRoute = state.routes[state.index];
+      if (!currentRoute) break;
+
+      if (hiddenRoutes.includes(currentRoute.name)) {
+        return { display: 'none' };
+      }
+
+      state = currentRoute.state;
     }
 
     return defaultTabBarStyle;

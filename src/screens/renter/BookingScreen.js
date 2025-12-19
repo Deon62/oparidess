@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Modal,
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUser } from '../../packages/context/UserContext';
 import { useBookings } from '../../packages/context/BookingsContext';
@@ -1273,14 +1274,14 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: SPACING.l,
     backgroundColor: 'transparent',
   },
   backButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1288,23 +1289,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: SPACING.l,
   },
   sectionSeparator: {
     borderTopWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 16,
+    borderTopColor: COLORS.border,
+    marginHorizontal: SPACING.l,
+    marginTop: SPACING.m,
   },
   section: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    padding: 16,
+    marginHorizontal: SPACING.l,
+    marginTop: SPACING.m,
+    padding: SPACING.m,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.card,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.m,
     letterSpacing: -0.3,
+    color: COLORS.text,
   },
   dateRow: {
     flexDirection: 'row',
@@ -1322,8 +1332,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: SPACING.m,
     paddingVertical: 14,
     gap: 12,
   },
@@ -1353,7 +1363,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     gap: 12,
   },
   checkInOptionContent: {
@@ -1379,7 +1389,7 @@ const styles = StyleSheet.create({
   requirementsInput: {
     borderWidth: 1,
     borderColor: '#E0E0E0',
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     padding: 16,
     fontSize: 16,
     fontFamily: 'Nunito_400Regular',
@@ -1564,7 +1574,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 16,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     gap: 12,
   },
   ageWarningContent: {
@@ -1652,7 +1662,7 @@ const styles = StyleSheet.create({
   datePickerDayContent: {
     width: '100%',
     height: '100%',
-    borderRadius: 20,
+    borderRadius: RADIUS.lg,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -1679,7 +1689,7 @@ const styles = StyleSheet.create({
   datePickerCancelButton: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     borderWidth: 1,
     alignItems: 'center',
   },
@@ -1690,7 +1700,7 @@ const styles = StyleSheet.create({
   datePickerConfirmButton: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
   },
   datePickerConfirmText: {
@@ -1746,7 +1756,7 @@ const styles = StyleSheet.create({
   modalButtonSecondary: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     borderWidth: 1,
     alignItems: 'center',
   },
@@ -1757,7 +1767,7 @@ const styles = StyleSheet.create({
   modalButtonPrimary: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
   },
   modalButtonTextPrimary: {
@@ -1791,7 +1801,7 @@ const styles = StyleSheet.create({
   payOnSiteInfo: {
     marginTop: 16,
     padding: 16,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     gap: 12,
   },
   infoRow: {
@@ -1837,8 +1847,8 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingBottom: 8,
     backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: SPACING.m,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1904,8 +1914,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: SPACING.m,
     paddingVertical: 14,
     gap: 12,
   },
@@ -1981,7 +1991,7 @@ const styles = StyleSheet.create({
   timePickerButton: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
   },
   timePickerButtonSecondary: {
@@ -2026,7 +2036,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 2,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     padding: 16,
     marginBottom: 12,
     gap: 12,
@@ -2034,7 +2044,7 @@ const styles = StyleSheet.create({
   locationIcon: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: RADIUS.lg,
     justifyContent: 'center',
     alignItems: 'center',
   },

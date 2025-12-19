@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { Button, Card, Toggle } from '../../packages/components';
 import { formatCurrency, formatPricePerDay } from '../../packages/utils/currency';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -453,39 +454,48 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    left: 16,
+    left: SPACING.m,
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.surface + 'F0',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
     zIndex: 1000,
   },
   scrollView: {
     flex: 1,
   },
   contentContainer: {
-    paddingBottom: 20,
+    paddingBottom: SPACING.l,
     paddingTop: 60,
   },
   section: {
-    paddingHorizontal: 24,
-    marginTop: 24,
+    paddingHorizontal: SPACING.l,
+    marginTop: SPACING.l,
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.card,
+    padding: SPACING.m,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   firstSection: {
-    marginTop: 28,
+    marginTop: SPACING.xl,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.m,
     letterSpacing: -0.3,
+    color: COLORS.text,
   },
   detailCard: {
     padding: 0,
@@ -529,7 +539,7 @@ const styles = StyleSheet.create({
   },
   priceCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: RADIUS.card,
   },
   priceRow: {
     flexDirection: 'row',
@@ -593,7 +603,7 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     backgroundColor: '#F8F9FA',
     borderRadius: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: SPACING.m,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -621,7 +631,7 @@ const styles = StyleSheet.create({
   },
   termsCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: RADIUS.card,
   },
   termsStatement: {
     fontSize: 14,
@@ -635,7 +645,7 @@ const styles = StyleSheet.create({
   },
   paymentOptionsCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: RADIUS.card,
   },
   paymentOption: {
     flexDirection: 'row',
@@ -699,7 +709,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
-    borderRadius: 8,
+    borderRadius: RADIUS.card,
     marginTop: 12,
   },
   balanceOnSiteLeft: {
@@ -726,7 +736,7 @@ const styles = StyleSheet.create({
   },
   notesCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: RADIUS.card,
     borderWidth: 0,
     shadowOpacity: 0,
     elevation: 0,
@@ -762,7 +772,7 @@ const styles = StyleSheet.create({
   },
   policyCard: {
     padding: 20,
-    borderRadius: 16,
+    borderRadius: RADIUS.card,
   },
   policyHeader: {
     flexDirection: 'row',
@@ -786,7 +796,7 @@ const styles = StyleSheet.create({
   policyBadge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: RADIUS.card,
     minWidth: 50,
     alignItems: 'center',
   },
@@ -822,7 +832,7 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: SPACING.l,
     paddingVertical: 12,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',

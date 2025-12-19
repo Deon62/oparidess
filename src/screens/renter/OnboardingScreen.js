@@ -13,15 +13,27 @@ import TryItOutIcon from '../../../assets/icons/tryitout.svg';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const OnboardingIcon = ({ slideId, size }) => {
+  // Safety check: ensure size is a valid number
+  const iconSize = size && typeof size === 'number' && size > 0 ? size : 200;
+  
+  // Safety check: ensure SVG components are valid React components
+  const renderIcon = (IconComponent) => {
+    if (!IconComponent || typeof IconComponent !== 'function') {
+      console.warn(`Invalid SVG component for slideId: ${slideId}`);
+      return null;
+    }
+    return <IconComponent width={iconSize} height={iconSize} />;
+  };
+
   switch (slideId) {
     case 'problem':
-      return <StorytimeIcon width={size} height={size} />;
+      return renderIcon(StorytimeIcon);
     case 'solution':
-      return <OpaSolutionIcon width={size} height={size} />;
+      return renderIcon(OpaSolutionIcon);
     case 'result':
-      return <PeopleLoveIcon width={size} height={size} />;
+      return renderIcon(PeopleLoveIcon);
     case 'invitation':
-      return <TryItOutIcon width={size} height={size} />;
+      return renderIcon(TryItOutIcon);
     default:
       return null;
   }

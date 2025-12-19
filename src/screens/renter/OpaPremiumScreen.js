@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { Card } from '../../packages/components';
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
@@ -91,8 +92,8 @@ const OpaPremiumScreen = () => {
         unit: '/ month',
         amount: 85000,
         features: monthlyFeatures,
-        cardStyle: { backgroundColor: '#FFFFFF', shadowColor: '#0B1B3A' },
-        priceColor: '#0B1B3A',
+        cardStyle: { backgroundColor: COLORS.surface, shadowColor: '#000' },
+        priceColor: COLORS.brand,
         buttonStyle: { backgroundColor: '#FF1577' },
         buttonTextStyle: { color: theme.colors.white },
       },
@@ -106,8 +107,8 @@ const OpaPremiumScreen = () => {
         unit: '/ month',
         amount: 135000,
         features: plusFeatures,
-        cardStyle: { backgroundColor: '#FFFFFF', shadowColor: '#0B1B3A' },
-        priceColor: '#0B1B3A',
+        cardStyle: { backgroundColor: COLORS.surface, shadowColor: '#000' },
+        priceColor: COLORS.brand,
         buttonStyle: { backgroundColor: '#FF1577' },
         buttonTextStyle: { color: theme.colors.white },
         badgeText: 'Recommended',
@@ -124,15 +125,15 @@ const OpaPremiumScreen = () => {
   const selectedPlan = useMemo(() => plans.find((p) => p.id === selectedPlanId) ?? plans[0], [plans, selectedPlanId]);
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F6F7FB' }]}>
-      <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
+    <View style={[styles.container, { backgroundColor: COLORS.bg }]}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.bg} />
 
       <TouchableOpacity
-        style={[styles.floatingBackButton, { backgroundColor: theme.colors.white, top: insets.top + 10 }]}
+        style={[styles.floatingBackButton, { backgroundColor: COLORS.surface, top: insets.top + SPACING.m }]}
         onPress={() => navigation.goBack()}
         activeOpacity={0.8}
       >
-        <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
+        <Ionicons name="arrow-back" size={20} color={COLORS.text} />
       </TouchableOpacity>
 
       <ScrollView
@@ -141,7 +142,7 @@ const OpaPremiumScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.hero}>
-          <Text style={[styles.pageTitle, { color: theme.colors.textPrimary }]}>Pricing</Text>
+          <Text style={[styles.pageTitle, { color: COLORS.text }]}>Pricing</Text>
           <View style={styles.planToggleWrap}>
             <TouchableOpacity
               activeOpacity={0.85}
@@ -183,7 +184,7 @@ const OpaPremiumScreen = () => {
         <Card style={[styles.planCard, selectedPlan.cardStyle]}>
           <View style={styles.planCardInner}>
             <View style={styles.selectRow}>
-              <Text style={[styles.planName, { color: '#0B1B3A' }]}>{selectedPlan.title}</Text>
+              <Text style={styles.planName}>{selectedPlan.title}</Text>
               {!!selectedPlan.badgeText && (
                 <View style={styles.popularBadgePremium}>
                   <Text style={styles.popularText}>{selectedPlan.badgeText}</Text>
@@ -234,17 +235,17 @@ const styles = StyleSheet.create({
   },
   floatingBackButton: {
     position: 'absolute',
-    left: 16,
+    left: SPACING.m,
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: RADIUS.pill,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
     zIndex: 10,
   },
   scrollView: {
@@ -270,46 +271,47 @@ const styles = StyleSheet.create({
   planToggleWrap: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 5,
-    borderRadius: 999,
-    backgroundColor: '#EEF1F6',
-    borderWidth: 1,
-    borderColor: 'rgba(11, 27, 58, 0.08)',
+    padding: SPACING.xs,
+    borderRadius: RADIUS.pill,
+    backgroundColor: COLORS.border,
+    borderWidth: 0.5,
+    borderColor: COLORS.borderStrong,
     width: 210,
-    marginTop: 12,
+    marginTop: SPACING.m,
   },
   planTogglePill: {
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 999,
+    paddingVertical: SPACING.m,
+    paddingHorizontal: SPACING.m,
+    borderRadius: RADIUS.pill,
     width: 98,
     alignItems: 'center',
   },
   planTogglePillActive: {
-    backgroundColor: '#0B1B3A',
+    backgroundColor: COLORS.brand,
   },
   planToggleText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_700Bold',
+    fontSize: TYPE.caption.fontSize,
+    fontFamily: TYPE.caption.fontFamily,
     letterSpacing: 0.2,
-    color: 'rgba(11, 27, 58, 0.7)',
+    color: COLORS.subtle,
   },
   planToggleTextActive: {
-    color: '#FFFFFF',
+    color: COLORS.surface,
   },
   planCard: {
     flex: 1,
     minHeight: CARD_MIN_HEIGHT,
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.l,
     marginBottom: 0,
-    shadowColor: '#0B1B3A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    elevation: 6,
-    borderWidth: 1,
-    borderColor: 'rgba(11, 27, 58, 0.08)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 12,
+    elevation: 3,
+    borderWidth: 0.5,
+    borderColor: COLORS.border,
+    backgroundColor: COLORS.surface,
   },
   planCardInner: {
     flex: 1,
@@ -332,60 +334,63 @@ const styles = StyleSheet.create({
     color: '#0B1B3A',
   },
   planName: {
-    fontSize: 22,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 6,
+    fontSize: TYPE.title.fontSize + 2,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.s,
     letterSpacing: -0.3,
+    color: COLORS.text,
   },
   planDescription: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 20,
-    color: 'rgba(11, 27, 58, 0.72)',
-    marginBottom: 12,
+    fontSize: TYPE.body.fontSize - 1,
+    fontFamily: TYPE.body.fontFamily,
+    lineHeight: TYPE.body.lineHeight,
+    color: COLORS.muted,
+    marginBottom: SPACING.m,
   },
   selectRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
-    marginTop: 12,
+    marginBottom: SPACING.s,
+    marginTop: SPACING.m,
   },
   priceRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 8,
-    marginBottom: 14,
+    gap: SPACING.s,
+    marginBottom: SPACING.m,
   },
   priceStack: {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
   oldPriceText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
-    color: 'rgba(11, 27, 58, 0.45)',
+    fontSize: TYPE.caption.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    color: COLORS.subtle,
     textDecorationLine: 'line-through',
-    marginBottom: 2,
+    marginBottom: SPACING.xs,
   },
   priceValue: {
-    fontSize: 32,
-    fontFamily: 'Nunito_700Bold',
+    fontSize: TYPE.title.fontSize + 12,
+    fontFamily: TYPE.title.fontFamily,
     letterSpacing: -0.5,
+    color: COLORS.brand,
   },
   priceUnit: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-    paddingBottom: 6,
+    fontSize: TYPE.body.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    paddingBottom: SPACING.s,
+    color: COLORS.muted,
   },
   cardDivider: {
     height: 1,
-    backgroundColor: 'rgba(11, 27, 58, 0.1)',
-    marginBottom: 14,
+    backgroundColor: COLORS.border,
+    marginBottom: SPACING.m,
   },
   featuresContainer: {
-    gap: 10,
-    marginBottom: 18,
+    gap: SPACING.m,
+    marginBottom: SPACING.l,
     flexGrow: 1,
     justifyContent: 'flex-start',
   },
@@ -396,16 +401,16 @@ const styles = StyleSheet.create({
   },
   featureIndex: {
     width: 22,
-    fontSize: 13,
-    fontFamily: 'Nunito_700Bold',
-    color: 'rgba(11, 27, 58, 0.9)',
+    fontSize: TYPE.body.fontSize - 1,
+    fontFamily: TYPE.section.fontFamily,
+    color: COLORS.text,
   },
   featureTextPremium: {
     flex: 1,
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 22,
-    color: 'rgba(11, 27, 58, 0.75)',
+    fontSize: TYPE.body.fontSize,
+    fontFamily: TYPE.body.fontFamily,
+    lineHeight: TYPE.body.lineHeight + 2,
+    color: COLORS.muted,
   },
   getPlanButton: {
     height: 46,

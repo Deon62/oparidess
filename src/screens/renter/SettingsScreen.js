@@ -609,15 +609,17 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.surface,
   },
   modalTitle: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 12,
+    fontSize: TYPE.title.fontSize + 4,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.m,
+    color: COLORS.text,
   },
   modalMessage: {
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 22,
-    marginBottom: 20,
+    fontSize: TYPE.body.fontSize + 1,
+    fontFamily: TYPE.body.fontFamily,
+    lineHeight: TYPE.body.lineHeight + 2,
+    marginBottom: SPACING.l,
+    color: COLORS.muted,
   },
   modalInput: {
     borderWidth: 1,
@@ -630,7 +632,7 @@ const styles = StyleSheet.create({
   },
   modalButtons: {
     flexDirection: 'row',
-    gap: 12,
+    gap: SPACING.m,
   },
   modalButton: {
     flex: 1,
@@ -646,8 +648,9 @@ const styles = StyleSheet.create({
     opacity: 1,
   },
   modalButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    color: COLORS.text,
   },
   // Logout Modal Styles
   logoutModalOverlay: {
@@ -700,13 +703,14 @@ const styles = StyleSheet.create({
   },
   logoutModalButtonCancel: {
     borderWidth: 1,
+    borderColor: COLORS.border,
     backgroundColor: 'transparent',
   },
   logoutModalButtonLogout: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
     elevation: 4,
   },
   logoutButton: {
@@ -788,16 +792,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   versionText: {
-    fontSize: 14,
-    fontFamily: 'Nunito_600SemiBold',
-    marginBottom: 8,
+    fontSize: TYPE.body.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    marginBottom: SPACING.s,
+    color: COLORS.text,
   },
   versionDescription: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: TYPE.body.fontSize - 1,
+    fontFamily: TYPE.body.fontFamily,
     textAlign: 'center',
-    lineHeight: 20,
-    paddingHorizontal: 16,
+    lineHeight: TYPE.body.lineHeight,
+    paddingHorizontal: SPACING.m,
+    color: COLORS.muted,
   },
 });
 

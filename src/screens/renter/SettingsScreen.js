@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { useUser } from '../../packages/context/UserContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Toggle, Button } from '../../packages/components';
@@ -487,23 +488,24 @@ const styles = StyleSheet.create({
   customHeader: {
     position: 'relative',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 1,
   },
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 16,
-    paddingTop: 12,
+    paddingHorizontal: SPACING.l,
+    paddingBottom: SPACING.m,
+    paddingTop: SPACING.m,
   },
   headerTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
     flex: 1,
+    color: COLORS.text,
   },
   sectionHeader: {
     fontSize: 12,
@@ -512,7 +514,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginTop: 24,
     marginBottom: 8,
-    paddingHorizontal: 24,
+    paddingHorizontal: SPACING.l,
   },
   section: {
     marginHorizontal: 24,
@@ -525,30 +527,31 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionCard: {
-    marginHorizontal: 24,
-    marginTop: 16,
-    marginBottom: 8,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
+    marginHorizontal: SPACING.l,
+    marginTop: SPACING.m,
+    marginBottom: SPACING.s,
+    borderRadius: RADIUS.lg,
+    backgroundColor: COLORS.surface,
+    paddingHorizontal: SPACING.m,
+    paddingVertical: SPACING.m,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   sectionCardTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 10,
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.section.fontFamily,
+    marginBottom: SPACING.m,
     letterSpacing: -0.2,
+    color: COLORS.text,
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
+    paddingVertical: SPACING.m,
     paddingHorizontal: 0,
   },
   settingItemLeft: {
@@ -558,8 +561,9 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   settingItemTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    color: COLORS.text,
   },
   settingItemRight: {
     flexDirection: 'row',
@@ -567,8 +571,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   settingItemValue: {
-    fontSize: 14,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: TYPE.body.fontSize,
+    fontFamily: TYPE.body.fontFamily,
+    color: COLORS.subtle,
   },
   iconButton: {
     width: 44,
@@ -599,8 +604,9 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     maxWidth: 400,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: RADIUS.card,
+    padding: SPACING.l,
+    backgroundColor: COLORS.surface,
   },
   modalTitle: {
     fontSize: 24,
@@ -615,7 +621,7 @@ const styles = StyleSheet.create({
   },
   modalInput: {
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     paddingVertical: 12,
     paddingHorizontal: 16,
     fontSize: 16,
@@ -629,7 +635,7 @@ const styles = StyleSheet.create({
   modalButton: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -652,9 +658,10 @@ const styles = StyleSheet.create({
   },
   logoutModalContent: {
     width: '85%',
-    borderRadius: 24,
-    padding: 32,
+    borderRadius: RADIUS.lg + 6,
+    padding: SPACING.xl,
     alignItems: 'center',
+    backgroundColor: COLORS.surface,
   },
   logoutIconCircle: {
     width: 100,
@@ -665,17 +672,19 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   logoutModalTitle: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 12,
+    fontSize: TYPE.title.fontSize + 4,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.m,
     textAlign: 'center',
+    color: COLORS.text,
   },
   logoutModalMessage: {
-    fontSize: 16,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.body.fontFamily,
     textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 22,
+    marginBottom: SPACING.l,
+    lineHeight: TYPE.body.lineHeight + 2,
+    color: COLORS.muted,
   },
   logoutModalButtons: {
     flexDirection: 'row',
@@ -685,7 +694,7 @@ const styles = StyleSheet.create({
   logoutModalButton: {
     flex: 1,
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -704,18 +713,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
-    marginHorizontal: 24,
-    gap: 12,
-    marginTop: 8,
+    padding: SPACING.l,
+    marginHorizontal: SPACING.l,
+    gap: SPACING.m,
+    marginTop: SPACING.s,
   },
   logoutText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
   },
   logoutModalButtonText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
   },
   // Biometric Success Modal Styles
   biometricModalOverlay: {
@@ -727,16 +736,17 @@ const styles = StyleSheet.create({
   biometricModalContent: {
     width: '85%',
     maxWidth: 400,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: RADIUS.card,
+    padding: SPACING.l,
     alignItems: 'center',
+    backgroundColor: COLORS.surface,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
     elevation: 8,
   },
   biometricIconCircle: {
@@ -763,7 +773,7 @@ const styles = StyleSheet.create({
   biometricModalButton: {
     width: '100%',
     paddingVertical: 14,
-    borderRadius: 12,
+    borderRadius: RADIUS.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -773,7 +783,7 @@ const styles = StyleSheet.create({
   },
   // Version Section Styles
   versionSection: {
-    paddingHorizontal: 24,
+    paddingHorizontal: SPACING.l,
     paddingVertical: 24,
     alignItems: 'center',
   },

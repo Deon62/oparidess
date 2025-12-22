@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
@@ -21,15 +21,15 @@ const ServiceListScreen = () => {
   }, [navigation, theme]);
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={styles.content}>
-        <View style={styles.card}>
-          <ServicesIcon width={260} height={200} style={styles.bgSvg} />
-          <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Services</Text>
-          <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>Coming soon</Text>
-        </View>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={styles.emptyState}>
+        <ServicesIcon width={240} height={240} />
+        <Text style={[styles.title, { color: theme.colors.textPrimary }]}>Services</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
+          Coming soon! We're working on bringing you amazing services.
+        </Text>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -37,34 +37,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  card: {
-    width: '100%',
-    position: 'relative',
-    overflow: 'hidden',
+  emptyState: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 24,
-    paddingHorizontal: 16,
-    minHeight: 220,
-  },
-  bgSvg: {
-    position: 'absolute',
-    top: -10,
-    right: -40,
-    opacity: 0.12,
+    paddingHorizontal: 32,
+    paddingBottom: 60,
   },
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
+    letterSpacing: -0.3,
   },
   subtitle: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 6,
+    marginTop: 8,
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
 

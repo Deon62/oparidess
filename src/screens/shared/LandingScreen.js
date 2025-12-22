@@ -78,7 +78,7 @@ const LandingScreen = () => {
         {/* Social Login Section */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: theme.colors.white }]}
+            style={[styles.socialButton, styles.googleButton, { backgroundColor: theme.colors.white }]}
             onPress={() => handleSocialLogin('google')}
             activeOpacity={0.85}
             disabled={!!loadingProvider}
@@ -99,7 +99,7 @@ const LandingScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: '#FF1577' }]}
+            style={[styles.socialButton, styles.appleButton, { backgroundColor: '#FF1577' }]}
             onPress={() => handleSocialLogin('apple')}
             activeOpacity={0.9}
             disabled={!!loadingProvider}
@@ -162,18 +162,32 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   socialButton: {
-    paddingVertical: 11,
+    paddingVertical: 14,
     paddingHorizontal: 18,
     borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 46,
+    height: 54,
+  },
+  googleButton: {
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 4,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.06)',
+  },
+  appleButton: {
+    shadowColor: '#FF1577',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
   },

@@ -1157,12 +1157,12 @@ const RenterHomeScreen = () => {
       )}
 
       {activeTab === 'services' && (
-        <View style={styles.comingSoonSection}>
-          <View style={styles.comingSoonCard}>
-            <ServicesSvg width={260} height={200} style={styles.comingSoonBgSvg} />
-            <Text style={[styles.comingSoonTitle, { color: theme.colors.textPrimary }]}>Services</Text>
-            <Text style={[styles.comingSoonSubtitle, { color: theme.colors.textSecondary }]}>Coming soon</Text>
-          </View>
+        <View style={styles.emptyStateSection}>
+          <ServicesSvg width={220} height={220} />
+          <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>Services</Text>
+          <Text style={[styles.emptyStateSubtitle, { color: theme.colors.textSecondary }]}>
+            Coming soon! We're working on bringing you amazing services.
+          </Text>
         </View>
       )}
 
@@ -1619,12 +1619,12 @@ const RenterHomeScreen = () => {
       )}
 
       {activeTab === 'discover' && (
-        <View style={styles.comingSoonSection}>
-          <View style={styles.comingSoonCard}>
-            <DiscoverSvg width={260} height={200} style={styles.comingSoonBgSvg} />
-            <Text style={[styles.comingSoonTitle, { color: theme.colors.textPrimary }]}>Discover</Text>
-            <Text style={[styles.comingSoonSubtitle, { color: theme.colors.textSecondary }]}>Coming soon</Text>
-          </View>
+        <View style={styles.emptyStateSection}>
+          <DiscoverSvg width={220} height={220} />
+          <Text style={[styles.emptyStateTitle, { color: theme.colors.textPrimary }]}>Discover</Text>
+          <Text style={[styles.emptyStateSubtitle, { color: theme.colors.textSecondary }]}>
+            Coming soon! Explore exciting destinations and experiences.
+          </Text>
         </View>
       )}
 
@@ -4707,33 +4707,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },
-  comingSoonSection: {
-    paddingHorizontal: 24,
-    paddingTop: 20,
-  },
-  comingSoonCard: {
-    position: 'relative',
-    overflow: 'hidden',
-    paddingHorizontal: 16,
-    paddingVertical: 24,
+  emptyStateSection: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 220,
+    paddingHorizontal: 32,
+    paddingTop: 60,
+    paddingBottom: 100,
   },
-  comingSoonBgSvg: {
-    position: 'absolute',
-    top: -10,
-    right: -40,
-    opacity: 0.12,
-  },
-  comingSoonTitle: {
-    fontSize: 18,
+  emptyStateTitle: {
+    fontSize: 22,
     fontFamily: 'Nunito_700Bold',
+    marginTop: 16,
+    letterSpacing: -0.3,
   },
-  comingSoonSubtitle: {
+  emptyStateSubtitle: {
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
-    marginTop: 6,
+    marginTop: 8,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   skeletonLine: {
     borderRadius: 4,

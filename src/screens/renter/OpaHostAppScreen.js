@@ -1,11 +1,27 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, Image } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 
 const hostImage = require('../../../assets/images/host.png');
 
 const OpaHostAppScreen = () => {
   const theme = useTheme();
+  const navigation = useNavigation();
+
+  // Hide bottom tab bar when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
+      return () => {
+        navigation.getParent()?.setOptions({
+          tabBarStyle: undefined,
+        });
+      };
+    }, [navigation])
+  );
 
   const handleLearnMore = () => {
     const url = 'https://opa.deonhq.xyz';

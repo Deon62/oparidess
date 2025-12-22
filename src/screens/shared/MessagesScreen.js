@@ -12,8 +12,45 @@ const MessagesScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
-  // Custom messages data - empty for now
-  const messages = [];
+  // Mock messages data for testing
+  const messages = [
+    {
+      id: '1',
+      name: 'John Mwangi',
+      avatar: require('../../../assets/logo/profile.jpg'),
+      lastMessage: 'Hi! Is the Toyota Camry still available for this weekend?',
+      time: '2m ago',
+      unread: 2,
+      isOnline: true,
+    },
+    {
+      id: '2',
+      name: 'Sarah Wanjiku',
+      avatar: require('../../../assets/logo/profile.jpg'),
+      lastMessage: 'Thank you for the smooth rental experience!',
+      time: '1h ago',
+      unread: 0,
+      isOnline: false,
+    },
+    {
+      id: '3',
+      name: 'David Ochieng',
+      avatar: require('../../../assets/logo/profile.jpg'),
+      lastMessage: 'Can I extend my booking by 2 more days?',
+      time: '3h ago',
+      unread: 1,
+      isOnline: true,
+    },
+    {
+      id: '4',
+      name: 'Grace Akinyi',
+      avatar: require('../../../assets/logo/profile.jpg'),
+      lastMessage: 'The car has been returned. Please check.',
+      time: 'Yesterday',
+      unread: 0,
+      isOnline: false,
+    },
+  ];
 
   // Set custom header with profile picture and status bar
   useLayoutEffect(() => {

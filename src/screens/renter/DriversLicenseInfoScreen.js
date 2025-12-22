@@ -253,7 +253,7 @@ const DriversLicenseInfoScreen = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
             <Ionicons name="card-outline" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
@@ -402,8 +402,6 @@ const styles = StyleSheet.create({
   section: {
     marginHorizontal: 24,
     marginTop: 24,
-    borderRadius: 16,
-    padding: 20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',

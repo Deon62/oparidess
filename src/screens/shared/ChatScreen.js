@@ -158,7 +158,7 @@ const ChatScreen = () => {
         style={[
           styles.messageContent,
           item.isSent
-            ? { backgroundColor: theme.colors.primary }
+            ? { backgroundColor: theme.colors.textPrimary }
             : { backgroundColor: theme.colors.white },
         ]}
       >
@@ -254,7 +254,7 @@ const ChatScreen = () => {
               styles.sendButton,
               {
                 backgroundColor: message.trim()
-                  ? theme.colors.primary
+                  ? '#FF1577'
                   : theme.colors.hint + '40',
               },
             ]}
@@ -320,7 +320,7 @@ const ChatScreen = () => {
                 styles.sendButton,
                 {
                   backgroundColor: message.trim()
-                    ? theme.colors.primary
+                    ? '#FF1577'
                     : theme.colors.hint + '40',
                 },
               ]}

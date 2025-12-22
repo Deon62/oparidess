@@ -93,7 +93,7 @@ const LegalScreen = () => {
             onPress={() => handleSectionPress(section.screenName)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+            <Text style={[styles.readMoreText, { color: theme.colors.textPrimary }]}>
               Read More
             </Text>
           </TouchableOpacity>
@@ -109,15 +109,15 @@ const LegalScreen = () => {
           For complete legal information, terms, and policies, please visit our legal website.
         </Text>
         <TouchableOpacity
-          style={styles.websiteButton}
+          style={[styles.websiteButton, { borderColor: theme.colors.hint + '30' }]}
           onPress={() => handleLinkPress('https://opa.deonhq.xyz')}
           activeOpacity={0.7}
         >
-          <Ionicons name="globe-outline" size={20} color={theme.colors.primary} />
-          <Text style={[styles.websiteButtonText, { color: theme.colors.primary }]}>
+          <Ionicons name="globe-outline" size={20} color={theme.colors.textPrimary} />
+          <Text style={[styles.websiteButtonText, { color: theme.colors.textPrimary }]}>
             opa.deonhq.xyz
           </Text>
-          <Ionicons name="open-outline" size={16} color={theme.colors.primary} />
+          <Ionicons name="open-outline" size={16} color={theme.colors.hint} />
         </TouchableOpacity>
       </View>
 
@@ -130,12 +130,12 @@ const LegalScreen = () => {
           For legal inquiries or questions about our terms and policies, please contact our legal team.
         </Text>
         <TouchableOpacity
-          style={styles.contactButton}
+          style={[styles.contactButton, { borderColor: theme.colors.hint + '30' }]}
           onPress={() => handleLinkPress('mailto:legal@oparides.com')}
           activeOpacity={0.7}
         >
-          <Ionicons name="mail-outline" size={20} color={theme.colors.primary} />
-          <Text style={[styles.contactButtonText, { color: theme.colors.primary }]}>
+          <Ionicons name="mail-outline" size={20} color={theme.colors.textPrimary} />
+          <Text style={[styles.contactButtonText, { color: theme.colors.textPrimary }]}>
             legal@oparides.com
           </Text>
         </TouchableOpacity>
@@ -186,8 +186,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 21, 119, 0.3)',
-    backgroundColor: 'rgba(255, 21, 119, 0.05)',
     alignSelf: 'flex-start',
   },
   websiteButtonText: {
@@ -203,7 +201,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 21, 119, 0.3)',
     alignSelf: 'flex-start',
   },
   contactButtonText: {

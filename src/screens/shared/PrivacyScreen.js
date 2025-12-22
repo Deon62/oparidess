@@ -83,8 +83,8 @@ const PrivacyScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.actionButtonLeft}>
-            <Ionicons name="download-outline" size={22} color={theme.colors.primary} />
-            <Text style={[styles.actionButtonText, { color: theme.colors.primary }]}>
+            <Ionicons name="download-outline" size={22} color={theme.colors.textPrimary} />
+            <Text style={[styles.actionButtonText, { color: theme.colors.textPrimary }]}>
               Download My Data
             </Text>
           </View>
@@ -110,8 +110,8 @@ const PrivacyScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.primary + '15' }]}>
-              <Ionicons name="download-outline" size={40} color={theme.colors.primary} />
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+              <Ionicons name="download-outline" size={40} color={theme.colors.textPrimary} />
             </View>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               Download My Data

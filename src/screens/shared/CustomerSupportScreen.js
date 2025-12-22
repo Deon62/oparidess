@@ -142,7 +142,7 @@ const CustomerSupportScreen = () => {
       contentContainerStyle={styles.formContent}
       showsVerticalScrollIndicator={false}
     >
-      <View style={[styles.formSection, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.formSection}>
         <Text style={[styles.formSectionTitle, { color: theme.colors.textPrimary }]}>
           Urgency Level
         </Text>
@@ -184,7 +184,7 @@ const CustomerSupportScreen = () => {
         </View>
       </View>
 
-      <View style={[styles.formSection, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.formSection}>
         <Text style={[styles.formLabel, { color: theme.colors.textPrimary }]}>
           Subject <Text style={{ color: '#F44336' }}>*</Text>
         </Text>
@@ -192,9 +192,9 @@ const CustomerSupportScreen = () => {
           style={[
             styles.formInput,
             {
-              backgroundColor: theme.colors.background,
+              backgroundColor: theme.colors.white,
               color: theme.colors.textPrimary,
-              borderColor: theme.colors.hint + '40',
+              borderColor: theme.colors.hint + '30',
             },
           ]}
           placeholder="Enter ticket subject"
@@ -204,7 +204,7 @@ const CustomerSupportScreen = () => {
         />
       </View>
 
-      <View style={[styles.formSection, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.formSection}>
         <Text style={[styles.formLabel, { color: theme.colors.textPrimary }]}>
           Description <Text style={{ color: '#F44336' }}>*</Text>
         </Text>
@@ -212,9 +212,9 @@ const CustomerSupportScreen = () => {
           style={[
             styles.formTextArea,
             {
-              backgroundColor: theme.colors.background,
+              backgroundColor: theme.colors.white,
               color: theme.colors.textPrimary,
-              borderColor: theme.colors.hint + '40',
+              borderColor: theme.colors.hint + '30',
             },
           ]}
           placeholder="Describe your issue or request..."
@@ -472,9 +472,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   formSection: {
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 16,
+    marginBottom: 20,
   },
   formSectionTitle: {
     fontSize: 16,
@@ -487,21 +485,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   formInput: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     borderWidth: 1,
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_400Regular',
   },
   formTextArea: {
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
     borderWidth: 1,
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_400Regular',
-    minHeight: 120,
+    minHeight: 140,
   },
   urgencyButtonsContainer: {
     flexDirection: 'row',
@@ -511,7 +509,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 24,
     borderWidth: 1,
     alignItems: 'center',
   },

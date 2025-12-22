@@ -153,7 +153,7 @@ const DisputeScreen = () => {
           <View style={styles.section}>
             <Card style={[styles.bookingCard, { backgroundColor: theme.colors.white }]}>
               <View style={styles.bookingHeader}>
-                <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+                <Ionicons name="calendar-outline" size={24} color={theme.colors.textPrimary} />
                 <View style={styles.bookingHeaderContent}>
                   <Text style={[styles.bookingTitle, { color: theme.colors.textPrimary }]}>
                     Booking Details
@@ -190,10 +190,10 @@ const DisputeScreen = () => {
                   styles.typeButton,
                   {
                     backgroundColor: disputeType === type.id 
-                      ? theme.colors.primary + '20' 
+                      ? theme.colors.textPrimary + '10' 
                       : theme.colors.white,
                     borderColor: disputeType === type.id 
-                      ? theme.colors.primary 
+                      ? theme.colors.textPrimary 
                       : '#E0E0E0',
                   },
                 ]}
@@ -204,7 +204,7 @@ const DisputeScreen = () => {
                   <Ionicons
                     name={type.icon}
                     size={24}
-                    color={disputeType === type.id ? theme.colors.primary : theme.colors.textSecondary}
+                    color={disputeType === type.id ? theme.colors.textPrimary : theme.colors.textSecondary}
                   />
                   <View style={styles.typeButtonTextContainer}>
                     <Text
@@ -212,7 +212,7 @@ const DisputeScreen = () => {
                         styles.typeButtonTitle,
                         {
                           color: disputeType === type.id 
-                            ? theme.colors.primary 
+                            ? theme.colors.textPrimary 
                             : theme.colors.textPrimary,
                           fontFamily: disputeType === type.id 
                             ? 'Nunito_600SemiBold' 
@@ -228,7 +228,7 @@ const DisputeScreen = () => {
                   </View>
                 </View>
                 {disputeType === type.id && (
-                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.textPrimary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -262,12 +262,12 @@ const DisputeScreen = () => {
             Upload photos, receipts, or other documents that support your dispute
           </Text>
           <TouchableOpacity
-            style={[styles.uploadButton, { borderColor: theme.colors.primary }]}
+            style={[styles.uploadButton, { borderColor: theme.colors.textPrimary }]}
             onPress={handleFileSelect}
             activeOpacity={0.7}
           >
-            <Ionicons name="cloud-upload-outline" size={24} color={theme.colors.primary} />
-            <Text style={[styles.uploadButtonText, { color: theme.colors.primary }]}>
+            <Ionicons name="cloud-upload-outline" size={24} color={theme.colors.textPrimary} />
+            <Text style={[styles.uploadButtonText, { color: theme.colors.textPrimary }]}>
               Upload Files
             </Text>
           </TouchableOpacity>
@@ -345,8 +345,8 @@ const DisputeScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
-              <Ionicons name="document-text-outline" size={64} color={theme.colors.primary} />
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+              <Ionicons name="document-text-outline" size={64} color={theme.colors.textPrimary} />
             </View>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               Submit Dispute?

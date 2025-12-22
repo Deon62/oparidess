@@ -93,7 +93,7 @@ const AboutScreen = () => {
       >
       {/* App Logo/Title Section */}
       <View style={styles.headerSection}>
-        <Text style={[styles.appTitle, { color: theme.colors.primary }]}>Oparides</Text>
+        <Text style={[styles.appTitle, { color: theme.colors.textPrimary }]}>Oparides</Text>
         <Text style={[styles.appTagline, { color: theme.colors.textSecondary }]}>
           Premium Car Rental, Services & Discoveries
         </Text>
@@ -115,7 +115,7 @@ const AboutScreen = () => {
             <View style={styles.itemsList}>
               {section.items.map((item, itemIndex) => (
                 <View key={itemIndex} style={styles.itemRow}>
-                  <Ionicons name="checkmark-circle-outline" size={18} color={theme.colors.primary} />
+                  <Ionicons name="checkmark-circle-outline" size={18} color={theme.colors.textPrimary} />
                   <Text style={[styles.itemText, { color: theme.colors.textSecondary }]}>
                     {item}
                   </Text>
@@ -138,7 +138,7 @@ const AboutScreen = () => {
             onPress={contact.action}
             activeOpacity={0.7}
           >
-            <Ionicons name={contact.icon} size={22} color={theme.colors.primary} />
+            <Ionicons name={contact.icon} size={22} color={theme.colors.textPrimary} />
             <View style={styles.contactInfo}>
               <Text style={[styles.contactLabel, { color: theme.colors.hint }]}>
                 {contact.label}
@@ -165,7 +165,7 @@ const AboutScreen = () => {
               onPress={social.action}
               activeOpacity={0.7}
             >
-              <Ionicons name={social.icon} size={24} color={theme.colors.primary} />
+              <Ionicons name={social.icon} size={24} color={theme.colors.textPrimary} />
               <Text style={[styles.socialLabel, { color: theme.colors.textSecondary }]}>
                 {social.label}
               </Text>

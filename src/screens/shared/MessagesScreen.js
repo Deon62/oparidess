@@ -94,8 +94,9 @@ const MessagesScreen = () => {
 
 
   return (
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
     <ScrollView
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      style={styles.scrollView}
       contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
     >
@@ -134,7 +135,7 @@ const MessagesScreen = () => {
                   {message.lastMessage}
                 </Text>
                 {message.unread > 0 && (
-                  <View style={[styles.unreadBadge, { backgroundColor: theme.colors.primary }]}>
+                  <View style={[styles.unreadBadge, { backgroundColor: theme.colors.textPrimary }]}>
                     <Text style={[styles.unreadText, { color: theme.colors.white }]}>
                       {message.unread}
                     </Text>
@@ -156,6 +157,18 @@ const MessagesScreen = () => {
         </View>
       )}
     </ScrollView>
+
+      {/* Emergency floating button */}
+      <TouchableOpacity
+        style={[styles.emergencyFab, { bottom: Math.max(insets.bottom + 20, 28) }]}
+        activeOpacity={0.85}
+        onPress={() => {
+          navigation.navigate('EmergencyOptions');
+        }}
+      >
+        <Ionicons name="alert" size={22} color="#FFFFFF" />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -303,6 +316,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  emergencyFab: {
+    position: 'absolute',
+    right: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
   },
 });
 

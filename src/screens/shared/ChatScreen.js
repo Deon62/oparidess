@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -137,14 +137,19 @@ const ChatScreen = () => {
     });
   }, [navigation, theme]);
 
-  // Ensure StatusBar is dark when screen is focused
+  // Ensure StatusBar is dark and hide bottom tab bar when screen is focused
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       StatusBar.setBarStyle('dark-content', true);
+      navigation.getParent()?.setOptions({
+        tabBarStyle: { display: 'none' },
+      });
       return () => {
-        // StatusBar will be restored by other screens
+        navigation.getParent()?.setOptions({
+          tabBarStyle: undefined,
+        });
       };
-    }, [])
+    }, [navigation])
   );
 
   const renderMessage = ({ item }) => (
@@ -414,17 +419,17 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     borderWidth: 1,
-    minHeight: 40,
-    maxHeight: 100,
+    minHeight: 48,
+    maxHeight: 120,
   },
   input: {
     flex: 1,
     fontSize: 15,
     fontFamily: 'Nunito_400Regular',
     paddingHorizontal: 14,
-    paddingVertical: 10,
-    minHeight: 40,
-    maxHeight: 100,
+    paddingVertical: 12,
+    minHeight: 48,
+    maxHeight: 120,
   },
   sendButton: {
     width: 40,

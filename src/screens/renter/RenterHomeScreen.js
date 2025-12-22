@@ -324,7 +324,7 @@ const RenterHomeScreen = () => {
           images: getCarImages('x'),
           videoUrl: getCarVideoUrl(),
           rating: 4.8, 
-          tag: 'Premium SUV',
+          tag: 'Renters Favourite',
           transmission: 'Automatic',
         },
         { 
@@ -338,8 +338,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('audi'),
           images: getCarImages('audi'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.7, 
-          tag: 'Executive',
+          rating: 4.7,
           transmission: 'Automatic',
         },
       ],
@@ -361,7 +360,7 @@ const RenterHomeScreen = () => {
           images: getCarImages('porsche'),
           videoUrl: getCarVideoUrl(),
           rating: 4.9, 
-          tag: 'Boss Vibe',
+          tag: 'Renters Favourite',
           transmission: 'Automatic',
         },
         { 
@@ -375,8 +374,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('mercedes'),
           images: getCarImages('mercedes'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.8, 
-          tag: 'Luxury Sedan',
+          rating: 4.8,
           transmission: 'Automatic',
         },
         { 
@@ -390,8 +388,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('i'),
           images: getCarImages('i'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.8, 
-          tag: 'Premium',
+          rating: 4.8,
           transmission: 'Automatic',
         },
         { 
@@ -405,8 +402,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('bmw1'),
           images: getCarImages('bmw1'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.9, 
-          tag: 'Track Ready',
+          rating: 4.9,
           transmission: 'Automatic',
         },
         { 
@@ -420,8 +416,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('m5'),
           images: getCarImages('m5'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.8, 
-          tag: 'Eco Performance',
+          rating: 4.8,
           transmission: 'Automatic',
         },
       ],
@@ -443,7 +438,7 @@ const RenterHomeScreen = () => {
           images: getCarImages('rolls'),
           videoUrl: getCarVideoUrl(),
           rating: 5.0, 
-          tag: 'Royal Feel',
+          tag: 'Renters Favourite',
           transmission: 'Automatic',
         },
         { 
@@ -457,8 +452,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('bentley'),
           images: getCarImages('bentley'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.9, 
-          tag: 'Ultra Luxury',
+          rating: 4.9,
           transmission: 'Automatic',
         },
         { 
@@ -472,8 +466,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('lambo'),
           images: getCarImages('lambo'),
           videoUrl: getCarVideoUrl(),
-          rating: 5.0, 
-          tag: 'Supercar',
+          rating: 5.0,
           transmission: 'Automatic',
         },
         { 
@@ -487,8 +480,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('tesla'),
           images: getCarImages('tesla'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.9, 
-          tag: 'Electric Luxury',
+          rating: 4.9,
           transmission: 'Automatic',
         },
       ],
@@ -513,8 +505,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('pickup'),
           images: getCarImages('pickup'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.9, 
-          tag: 'Best Offroader',
+          rating: 4.9,
           transmission: 'Manual',
         },
       ],
@@ -535,8 +526,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('van'),
           images: getCarImages('van'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.8, 
-          tag: 'Spacious',
+          rating: 4.8,
           transmission: 'Manual',
         },
       ],
@@ -557,8 +547,7 @@ const RenterHomeScreen = () => {
           imageUri: getCarPrimaryImage('truck'),
           images: getCarImages('truck'),
           videoUrl: getCarVideoUrl(),
-          rating: 4.8, 
-          tag: 'Heavy Duty',
+          rating: 4.8,
           transmission: 'Manual',
         },
       ],
@@ -3081,18 +3070,6 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
         </>
       )}
       </ScrollView>
-
-      {/* Emergency floating button */}
-      <TouchableOpacity
-        style={[styles.emergencyFab, { bottom: Math.max(insets.bottom + 20, 28) }]}
-        activeOpacity={0.85}
-        onPress={async () => {
-          await impactLight();
-          navigation.navigate('EmergencyOptions');
-        }}
-      >
-        <Ionicons name="alert" size={22} color="#FFFFFF" />
-      </TouchableOpacity>
 
       {/* Prices Include All Fees Message Banner - Bottom Above Navbar */}
       {showNoFeesMessage && (

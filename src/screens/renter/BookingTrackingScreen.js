@@ -234,7 +234,7 @@ const BookingTrackingScreen = () => {
       activeOpacity={onPress ? 0.7 : 1}
     >
       <View style={styles.infoCardLeft}>
-        <Ionicons name={icon} size={24} color={theme.colors.primary} />
+        <Ionicons name={icon} size={24} color={theme.colors.textPrimary} />
         <View style={styles.infoCardText}>
           <Text style={[styles.infoCardLabel, { color: theme.colors.hint }]}>{title}</Text>
           <Text style={[styles.infoCardValue, { color: theme.colors.textPrimary }]}>{value}</Text>
@@ -279,7 +279,7 @@ const BookingTrackingScreen = () => {
         </Text>
         <View style={styles.countdownContainer}>
           <View style={styles.countdownItem}>
-            <Text style={[styles.countdownValue, { color: theme.colors.primary }]}>
+            <Text style={[styles.countdownValue, { color: theme.colors.textPrimary }]}>
               {daysUntilPickup}
             </Text>
             <Text style={[styles.countdownLabel, { color: theme.colors.textSecondary }]}>
@@ -290,7 +290,7 @@ const BookingTrackingScreen = () => {
             <Text style={[styles.countdownSeparatorText, { color: theme.colors.hint }]}>:</Text>
           </View>
           <View style={styles.countdownItem}>
-            <Text style={[styles.countdownValue, { color: theme.colors.primary }]}>
+            <Text style={[styles.countdownValue, { color: theme.colors.textPrimary }]}>
               {hoursUntilPickup}
             </Text>
             <Text style={[styles.countdownLabel, { color: theme.colors.textSecondary }]}>
@@ -301,7 +301,7 @@ const BookingTrackingScreen = () => {
             <Text style={[styles.countdownSeparatorText, { color: theme.colors.hint }]}>:</Text>
           </View>
           <View style={styles.countdownItem}>
-            <Text style={[styles.countdownValue, { color: theme.colors.primary }]}>
+            <Text style={[styles.countdownValue, { color: theme.colors.textPrimary }]}>
               {minutesUntilPickup}
             </Text>
             <Text style={[styles.countdownLabel, { color: theme.colors.textSecondary }]}>
@@ -330,8 +330,8 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.imageRepositoryLink}>
-            <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
-            <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+            <Ionicons name="images-outline" size={18} color={theme.colors.textPrimary} />
+            <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.textPrimary }]}>
               View all images
             </Text>
           </View>
@@ -383,7 +383,7 @@ const BookingTrackingScreen = () => {
         </Text>
         <View style={styles.instructionsList}>
           <View style={styles.instructionItem}>
-            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.primary }]}>
+            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.textPrimary }]}>
               <Text style={[styles.instructionNumberText, { color: theme.colors.white }]}>1</Text>
             </View>
             <View style={styles.instructionContent}>
@@ -397,7 +397,7 @@ const BookingTrackingScreen = () => {
           </View>
 
           <View style={styles.instructionItem}>
-            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.primary }]}>
+            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.textPrimary }]}>
               <Text style={[styles.instructionNumberText, { color: theme.colors.white }]}>2</Text>
             </View>
             <View style={styles.instructionContent}>
@@ -411,7 +411,7 @@ const BookingTrackingScreen = () => {
           </View>
 
           <View style={styles.instructionItem}>
-            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.primary }]}>
+            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.textPrimary }]}>
               <Text style={[styles.instructionNumberText, { color: theme.colors.white }]}>3</Text>
             </View>
             <View style={styles.instructionContent}>
@@ -425,7 +425,7 @@ const BookingTrackingScreen = () => {
           </View>
 
           <View style={styles.instructionItem}>
-            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.primary }]}>
+            <View style={[styles.instructionNumber, { backgroundColor: theme.colors.textPrimary }]}>
               <Text style={[styles.instructionNumberText, { color: theme.colors.white }]}>4</Text>
             </View>
             <View style={styles.instructionContent}>
@@ -450,37 +450,37 @@ const BookingTrackingScreen = () => {
         </Text>
         <View style={styles.rulesList}>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               Minimum age requirement: 21 years
             </Text>
           </View>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               Valid driver's license required
             </Text>
           </View>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               No smoking inside the vehicle
             </Text>
           </View>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               Return vehicle with same fuel level
             </Text>
           </View>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               Late return fees apply after dropoff time
             </Text>
           </View>
           <View style={styles.ruleItem}>
-            <Ionicons name="checkmark-circle" size={20} color={theme.colors.primary} />
+            <Ionicons name="checkmark-circle" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.ruleText, { color: theme.colors.textSecondary }]}>
               Report any accidents or damages immediately
             </Text>
@@ -498,26 +498,26 @@ const BookingTrackingScreen = () => {
         </Text>
         <View style={styles.infoList}>
           <View style={styles.infoListItem}>
-            <Ionicons name="information-circle-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="information-circle-outline" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.infoListText, { color: theme.colors.textSecondary }]}>
               Booking ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
             </Text>
           </View>
           <View style={styles.infoListItem}>
-            <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="time-outline" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.infoListText, { color: theme.colors.textSecondary }]}>
               Pickup Time: 10:00 AM
             </Text>
           </View>
           <View style={styles.infoListItem}>
-            <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="location-outline" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.infoListText, { color: theme.colors.textSecondary }]}>
               Pickup Location: Nairobi CBD, Kenya
             </Text>
           </View>
           {bookingDetails?.specialRequirements && (
             <View style={styles.infoListItem}>
-              <Ionicons name="document-text-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="document-text-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.infoListText, { color: theme.colors.textSecondary }]}>
                 Special Requirements: {bookingDetails.specialRequirements}
               </Text>
@@ -563,21 +563,21 @@ const BookingTrackingScreen = () => {
             </View>
           </View>
           <View style={styles.verificationBadges}>
-            <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
-              <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-              <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
+            <View style={[styles.badge, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+              <Ionicons name="checkmark-circle" size={16} color={theme.colors.textPrimary} />
+              <Text style={[styles.badgeText, { color: theme.colors.textPrimary }]}>
                 ID Verified
               </Text>
             </View>
-            <View style={[styles.badge, { backgroundColor: theme.colors.primary + '15' }]}>
-              <Ionicons name="checkmark-circle" size={16} color={theme.colors.primary} />
-              <Text style={[styles.badgeText, { color: theme.colors.primary }]}>
+            <View style={[styles.badge, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+              <Ionicons name="checkmark-circle" size={16} color={theme.colors.textPrimary} />
+              <Text style={[styles.badgeText, { color: theme.colors.textPrimary }]}>
                 Phone Verified
               </Text>
             </View>
           </View>
           <TouchableOpacity
-            style={[styles.messageButton, { backgroundColor: theme.colors.primary }]}
+            style={[styles.messageButton, { backgroundColor: theme.colors.textPrimary }]}
             onPress={handleMessageCarOwner}
             activeOpacity={0.8}
           >
@@ -603,8 +603,8 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.addDaysIconWrapper}>
-            <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
-            <View style={[styles.addDaysPlusIcon, { backgroundColor: theme.colors.primary }]}>
+            <Ionicons name="calendar-outline" size={24} color={theme.colors.textPrimary} />
+            <View style={[styles.addDaysPlusIcon, { backgroundColor: theme.colors.textPrimary }]}>
               <Ionicons name="add" size={14} color={theme.colors.white} />
             </View>
           </View>
@@ -628,7 +628,7 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.manageItemLeft}>
-            <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="calendar-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               Add to Calendar
             </Text>
@@ -641,7 +641,7 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.manageItemLeft}>
-            <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="receipt-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               Download Receipt
             </Text>
@@ -659,7 +659,7 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.manageItemLeft}>
-            <Ionicons name="call-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="call-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               Call Owner
             </Text>
@@ -719,7 +719,7 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.manageItemLeft}>
-            <Ionicons name="book-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="book-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               View Car Manual
             </Text>
@@ -768,7 +768,7 @@ const BookingTrackingScreen = () => {
           activeOpacity={0.7}
         >
           <View style={styles.manageItemLeft}>
-            <Ionicons name="headset-outline" size={24} color={theme.colors.primary} />
+            <Ionicons name="headset-outline" size={24} color={theme.colors.textPrimary} />
             <Text style={[styles.manageItemText, { color: theme.colors.textPrimary }]}>
               Contact Support
             </Text>
@@ -804,8 +804,8 @@ const BookingTrackingScreen = () => {
               </>
             ) : (
               <>
-                <View style={[styles.receiptIconCircle, { backgroundColor: theme.colors.primary + '20' }]}>
-                  <Ionicons name="receipt" size={48} color={theme.colors.primary} />
+                <View style={[styles.receiptIconCircle, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+                  <Ionicons name="receipt" size={48} color={theme.colors.textPrimary} />
                 </View>
                 <Text style={[styles.receiptModalTitle, { color: theme.colors.textPrimary }]}>
                   Download Receipt
@@ -826,7 +826,7 @@ const BookingTrackingScreen = () => {
                     <Text style={[styles.receiptDetailLabel, { color: theme.colors.hint }]}>
                       Amount Paid
                     </Text>
-                    <Text style={[styles.receiptDetailValue, { color: theme.colors.primary }]}>
+                    <Text style={[styles.receiptDetailValue, { color: theme.colors.textPrimary }]}>
                       {formatCurrency(totalPrice || 0)}
                     </Text>
                   </View>
@@ -850,7 +850,7 @@ const BookingTrackingScreen = () => {
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.receiptModalButton, styles.receiptModalButtonDownload, { backgroundColor: theme.colors.primary }]}
+                    style={[styles.receiptModalButton, styles.receiptModalButtonDownload, { backgroundColor: '#FF1577' }]}
                     onPress={handleConfirmDownload}
                     activeOpacity={0.7}
                   >

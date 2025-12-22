@@ -232,14 +232,14 @@ const UpdateProfileScreen = () => {
                     key={y}
                     style={[
                       styles.dateOption,
-                      year === y && { backgroundColor: theme.colors.primary + '20' },
+                      year === y && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setYear(y)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: year === y ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {y}
@@ -253,14 +253,14 @@ const UpdateProfileScreen = () => {
                     key={m}
                     style={[
                       styles.dateOption,
-                      month === m && { backgroundColor: theme.colors.primary + '20' },
+                      month === m && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setMonth(m)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: month === m ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {m}
@@ -274,14 +274,14 @@ const UpdateProfileScreen = () => {
                     key={d}
                     style={[
                       styles.dateOption,
-                      day === d && { backgroundColor: theme.colors.primary + '20' },
+                      day === d && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setDay(d)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: day === d ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {d}
@@ -319,7 +319,7 @@ const UpdateProfileScreen = () => {
         showsVerticalScrollIndicator={false}
       >
       {/* Personal Information Form */}
-      <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
           Personal Information
         </Text>
@@ -371,7 +371,7 @@ const UpdateProfileScreen = () => {
             >
               {formData.date_of_birth || 'Select date (YYYY-MM-DD)'}
             </Text>
-            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
           </TouchableOpacity>
           {errors.date_of_birth && (
             <Text style={styles.errorText}>{errors.date_of_birth}</Text>
@@ -404,7 +404,7 @@ const UpdateProfileScreen = () => {
             >
               {formData.gender || 'Select gender'}
             </Text>
-            <Ionicons name="chevron-down-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="chevron-down-outline" size={20} color={theme.colors.textPrimary} />
           </TouchableOpacity>
           {errors.gender && <Text style={styles.errorText}>{errors.gender}</Text>}
         </View>
@@ -457,7 +457,7 @@ const UpdateProfileScreen = () => {
                 style={[
                   styles.modalOption,
                   formData.gender === option && {
-                    backgroundColor: theme.colors.primary + '20',
+                    backgroundColor: theme.colors.textPrimary + '10',
                   },
                 ]}
                 onPress={() => handleGenderSelect(option)}
@@ -467,17 +467,14 @@ const UpdateProfileScreen = () => {
                   style={[
                     styles.modalOptionText,
                     {
-                      color:
-                        formData.gender === option
-                          ? theme.colors.primary
-                          : theme.colors.textPrimary,
+                      color: theme.colors.textPrimary,
                     },
                   ]}
                 >
                   {option}
                 </Text>
                 {formData.gender === option && (
-                  <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                  <Ionicons name="checkmark" size={20} color={theme.colors.textPrimary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -514,14 +511,6 @@ const styles = StyleSheet.create({
   section: {
     marginHorizontal: SPACING.l,
     marginTop: SPACING.l,
-    borderRadius: RADIUS.card,
-    padding: SPACING.l,
-    backgroundColor: COLORS.surface,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
   },
   sectionTitle: {
     fontSize: TYPE.title.fontSize,

@@ -128,107 +128,67 @@ const PastRentalDetailsScreen = () => {
 
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[styles.scrollContent, { paddingTop: 0 }]}
+        contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 60 }]}
         showsVerticalScrollIndicator={false}
       >
-        <TouchableOpacity
-          style={styles.heroImageWrap}
-          onPress={() => {
-            navigation.navigate('ImageRepository', {
-              images: carImages,
-              title: `${booking.carName || 'Car'} - Images`,
-            });
-          }}
-          activeOpacity={0.9}
-        >
-          {previewImages.length > 0 ? (
-            <Image
-              source={{ uri: previewImages[0] }}
-              style={styles.heroImage}
-              resizeMode="cover"
-            />
-          ) : (
-            <View style={styles.heroImagePlaceholder} />
-          )}
-        </TouchableOpacity>
-
-        <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}
-          >
-            Image Repository
-          </Text>
-
-          <TouchableOpacity
-            style={styles.imageRepositoryCard}
-            onPress={() => {
-              navigation.navigate('ImageRepository', {
-                images: carImages,
-                title: `${booking.carName || 'Car'} - Images`,
-              });
-            }}
-            activeOpacity={0.7}
-          >
-            <View style={styles.imageRepositoryLink}>
-              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
-              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
-                View all images
-              </Text>
+        {/* Car Summary Card */}
+        <View style={styles.carSummaryCard}>
+          <View style={styles.carImageWrapper}>
+            {previewImages.length > 0 ? (
+              <Image
+                source={{ uri: previewImages[0] }}
+                style={styles.carCircularImage}
+                resizeMode="cover"
+              />
+            ) : (
+              <View style={[styles.carCircularImage, { backgroundColor: theme.colors.hint + '30' }]}>
+                <Ionicons name="car" size={40} color={theme.colors.hint} />
+              </View>
+            )}
+          </View>
+          <View style={styles.carSummaryInfo}>
+            <Text style={[styles.carSummaryName, { color: theme.colors.textPrimary }]}>
+              {booking.carName}
+            </Text>
+            <View style={styles.carSummarySpecs}>
+              {booking.seats && (
+                <Text style={[styles.carSummarySpec, { color: theme.colors.textSecondary }]}>
+                  {booking.seats} Seats
+                </Text>
+              )}
+              {booking.seats && booking.fuel && (
+                <Text style={[styles.carSummaryDot, { color: theme.colors.hint }]}>•</Text>
+              )}
+              {booking.fuel && (
+                <Text style={[styles.carSummarySpec, { color: theme.colors.textSecondary }]}>
+                  {booking.fuel}
+                </Text>
+              )}
             </View>
-          </TouchableOpacity>
+            <Text style={[styles.carSummaryPrice, { color: theme.colors.textPrimary }]}>
+              {booking.price || 'KSh 0'}
+            </Text>
+          </View>
         </View>
 
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* Rental info */}
-        <View style={[styles.section, styles.firstSection]}>
-          {/* <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
-            Rental info
-          </Text> */}
-          <View style={styles.infoCard}>
-            <View>
-              <Text style={[styles.carName, { color: theme.colors.textPrimary }]}>
-                {booking.carName}
-              </Text>
-              <View style={styles.carSpecs}>
-                {booking.seats && (
-                  <View style={styles.specItem}>
-                    <Ionicons name="people-outline" size={18} color={theme.colors.hint} />
-                    <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                      {booking.seats} Seats
-                    </Text>
-                  </View>
-                )}
-                {booking.fuel && (
-                  <View style={styles.specItem}>
-                    <Ionicons name="car-outline" size={18} color={theme.colors.hint} />
-                    <Text style={[styles.specText, { color: theme.colors.textSecondary }]}>
-                      {booking.fuel}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </View>
-
+        {/* Booking Details */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Booking Details
+          </Text>
+          <View style={styles.detailsGrid}>
             {renderInfoRow({
               icon: 'calendar-outline',
-              label: 'Pickup Date',
+              label: 'Pickup',
               value: formatDate(booking.pickupDate || booking.date),
             })}
             {renderInfoRow({
-              icon: 'time-outline',
-              label: 'Pickup Time',
-              value: booking.pickupTime,
-            })}
-            {renderInfoRow({
               icon: 'calendar-outline',
-              label: 'Dropoff Date',
+              label: 'Dropoff',
               value: formatDate(booking.dropoffDate || booking.date),
-            })}
-            {renderInfoRow({
-              icon: 'time-outline',
-              label: 'Dropoff Time',
-              value: booking.dropoffTime,
             })}
             {renderInfoRow({
               icon: 'timer-outline',
@@ -237,23 +197,24 @@ const PastRentalDetailsScreen = () => {
             })}
             {renderInfoRow({
               icon: 'location-outline',
-              label: 'Pickup Location',
+              label: 'Location',
               value: booking.pickupLocation,
             })}
-            {renderInfoRow({
-              icon: 'navigate-outline',
-              label: 'Dropoff Location',
-              value: booking.dropoffLocation,
-            })}
-            {renderInfoRow({
-              icon: 'wallet-outline',
-              label: 'Total Paid',
-              value: booking.price || 'KSh 0',
-              valueStyle: { ...styles.totalPrice, color: theme.colors.primary },
-            })}
+          </View>
+        </View>
+
+        {/* Separator Line */}
+        <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
+
+        {/* Payment Info */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
+            Payment
+          </Text>
+          <View style={styles.detailsGrid}>
             {renderInfoRow({
               icon: 'card-outline',
-              label: 'Payment Method',
+              label: 'Method',
               value: booking.paymentMethod
                 ? booking.paymentMethod === 'mpesa'
                   ? 'M-PESA'
@@ -262,7 +223,7 @@ const PastRentalDetailsScreen = () => {
                     : booking.paymentMethod === 'card'
                       ? 'Card'
                       : booking.paymentMethod
-                : null,
+                : 'N/A',
             })}
             {renderInfoRow({
               icon: 'barcode-outline',
@@ -272,13 +233,13 @@ const PastRentalDetailsScreen = () => {
           </View>
         </View>
 
-        {/* Separator Line */}
+        {/* Rated confirmation */}
         {isRated && (
           <>
             <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
             <View style={styles.section}>
-              <View style={[styles.ratedCard, { backgroundColor: theme.colors.hint + '30' }]}>
-                <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+              <View style={[styles.ratedCard, { backgroundColor: theme.colors.hint + '20' }]}>
+                <Ionicons name="checkmark-circle" size={24} color={theme.colors.textPrimary} />
                 <Text style={[styles.ratedText, { color: theme.colors.textSecondary }]}>
                   Thank you for your rating!
                 </Text>
@@ -395,7 +356,7 @@ const PastRentalDetailsScreen = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.ratingModalButton, styles.ratingModalButtonSubmit, { backgroundColor: theme.colors.primary }]}
+                style={[styles.ratingModalButton, styles.ratingModalButtonSubmit, { backgroundColor: '#FF1577' }]}
                 onPress={handleSubmitRating}
                 activeOpacity={0.7}
               >
@@ -474,49 +435,66 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     marginTop: 24,
   },
-  firstSection: {
-    marginTop: 6,
-  },
   sectionSeparator: {
     borderTopWidth: 1,
     marginHorizontal: 24,
     marginTop: 24,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'Nunito_700Bold',
     marginBottom: 16,
     letterSpacing: -0.3,
   },
-  imageRepositoryCard: {
-    paddingVertical: 16,
-  },
-  imagePreviewGrid: {
+  carSummaryCard: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 10,
-    marginBottom: 12,
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+    gap: 16,
   },
-  imagePreviewItem: {
-    width: '100%',
-    borderRadius: 12,
+  carImageWrapper: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     overflow: 'hidden',
     backgroundColor: '#F2F2F2',
   },
-  imagePreviewImage: {
-    width: '100%',
-    height: 230,
+  carCircularImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  imageRepositoryLink: {
+  carSummaryInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  carSummaryName: {
+    fontSize: 20,
+    fontFamily: 'Nunito_700Bold',
+    letterSpacing: -0.3,
+  },
+  carSummarySpecs: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
-  imageRepositoryLinkText: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
-    textDecorationLine: 'underline',
+  carSummarySpec: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+  },
+  carSummaryDot: {
+    fontSize: 14,
+  },
+  carSummaryPrice: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 4,
+  },
+  detailsGrid: {
+    gap: 14,
   },
   statusContainer: {
     flexDirection: 'row',

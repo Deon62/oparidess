@@ -540,7 +540,7 @@ const BookingScreen = () => {
                     <View
                       style={[
                         styles.datePickerDayContent,
-                        selected && { backgroundColor: theme.colors.primary },
+                        selected && { backgroundColor: theme.colors.textPrimary },
                         disabled && { opacity: 0.3 },
                       ]}
                     >
@@ -572,7 +572,7 @@ const BookingScreen = () => {
               <TouchableOpacity
                 style={[
                   styles.datePickerConfirmButton,
-                  { backgroundColor: theme.colors.primary },
+                  { backgroundColor: theme.colors.textPrimary },
                   !tempSelectedDate && { opacity: 0.5 }
                 ]}
                 onPress={() => {
@@ -736,7 +736,7 @@ const BookingScreen = () => {
               }}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -776,7 +776,7 @@ const BookingScreen = () => {
               }}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -812,8 +812,7 @@ const BookingScreen = () => {
         {/* Separator Line */}
         <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
 
-        {/* 3. Extras (insurance, cross‑country, check‑in) */}
-        {/* Cross Country Travel Toggle */}
+        {/* 3. Cross Country Travel Toggle */}
         <View style={styles.section}>
           <View style={styles.crossCountryCard}>
             <View style={styles.crossCountryInfo}>
@@ -821,54 +820,24 @@ const BookingScreen = () => {
                 Cross Country Travel
               </Text>
               <Text style={[styles.crossCountryDescription, { color: theme.colors.textSecondary }]}>
-                Enable this option if you plan to travel across different countries or regions (+KSh 5,000/day)
+                Travel across different countries (+KSh 5,000/day)
               </Text>
-              
-              {/* Instructions List */}
-              <View style={styles.crossCountryInstructions}>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Required for travel outside the vehicle's registered country
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Includes border crossing documentation support
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Additional insurance coverage for international travel
-                  </Text>
-                </View>
-                <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
-                  <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
-                    Owner must approve cross-country travel in advance
-                  </Text>
-                </View>
-              </View>
-              
-              {/* Read More Link */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate('CrossCountryTravelDetails')}
-                activeOpacity={0.7}
-                style={[styles.readMoreButton, { marginTop: 16 }]}
-              >
-                <Text style={[styles.readMoreText, { color: theme.colors.textPrimary }]}>
-                  Read more
-                </Text>
-                <Ionicons name="chevron-forward" size={16} color={theme.colors.textPrimary} />
-              </TouchableOpacity>
             </View>
             <Toggle
               value={crossCountryTravelEnabled}
               onValueChange={setCrossCountryTravelEnabled}
             />
           </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('CrossCountryTravelDetails')}
+            activeOpacity={0.7}
+            style={styles.readMoreButton}
+          >
+            <Text style={[styles.readMoreText, { color: theme.colors.textPrimary }]}>
+              Learn more
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.textPrimary} />
+          </TouchableOpacity>
         </View>
 
         {/* Bottom Spacing */}
@@ -1000,7 +969,7 @@ const BookingScreen = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary }]}
+                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.textPrimary }]}
                 onPress={() => {
                   setShowAgeRequirementModal(false);
                   // UpdateProfile is in the same HomeStack, so we can navigate directly
@@ -1026,8 +995,8 @@ const BookingScreen = () => {
       >
         <View style={styles.customModalOverlay}>
           <View style={[styles.customModal, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
-              <Ionicons name="person-circle-outline" size={48} color={theme.colors.primary} />
+            <View style={[styles.modalIconContainer, { backgroundColor: theme.colors.textPrimary + '20' }]}>
+              <Ionicons name="person-circle-outline" size={48} color={theme.colors.textPrimary} />
             </View>
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               {user?.date_of_birth ? 'Update Date of Birth' : 'Add Date of Birth'}
@@ -1048,7 +1017,7 @@ const BookingScreen = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary }]}
+                style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.textPrimary }]}
                 onPress={() => {
                   setShowUpdateProfileModal(false);
                   // UpdateProfile is in the same HomeStack, so we can navigate directly
@@ -1084,7 +1053,7 @@ const BookingScreen = () => {
               Great! You meet the age requirement of {MINIMUM_AGE} years old. You can proceed with your booking.
             </Text>
             <TouchableOpacity
-              style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.primary, width: '100%' }]}
+              style={[styles.modalButtonPrimary, { backgroundColor: theme.colors.textPrimary, width: '100%' }]}
               onPress={() => setShowAgeEligibleModal(false)}
               activeOpacity={0.7}
             >
@@ -1135,7 +1104,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     key={i}
                     style={[
                       styles.timePickerItem,
-                      hours === i && { backgroundColor: theme.colors.primary + '10' },
+                      hours === i && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setHours(i)}
                     activeOpacity={0.7}
@@ -1143,7 +1112,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     <Text
                       style={[
                         styles.timePickerItemText,
-                        { color: hours === i ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                         hours === i && { fontFamily: 'Nunito_700Bold' },
                       ]}
                     >
@@ -1161,7 +1130,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     key={min}
                     style={[
                       styles.timePickerItem,
-                      minutes === min && { backgroundColor: theme.colors.primary + '10' },
+                      minutes === min && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setMinutes(min)}
                     activeOpacity={0.7}
@@ -1169,7 +1138,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
                     <Text
                       style={[
                         styles.timePickerItemText,
-                        { color: minutes === min ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                         minutes === min && { fontFamily: 'Nunito_700Bold' },
                       ]}
                     >
@@ -1192,7 +1161,7 @@ const TimePicker = ({ visible, onClose, selectedTime, onTimeSelect, title }) => 
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.timePickerButton, styles.timePickerButtonPrimary, { backgroundColor: theme.colors.primary }]}
+              style={[styles.timePickerButton, styles.timePickerButtonPrimary, { backgroundColor: theme.colors.textPrimary }]}
               onPress={handleConfirm}
               activeOpacity={0.7}
             >
@@ -1230,14 +1199,14 @@ const LocationPicker = ({ visible, onClose, locations, selectedLocation, onLocat
                 key={location.id}
                 style={[
                   styles.locationItem,
-                  { borderColor: selectedLocation === location.name ? theme.colors.primary : '#E0E0E0' },
-                  selectedLocation === location.name && { backgroundColor: theme.colors.primary + '10' },
+                  { borderColor: selectedLocation === location.name ? theme.colors.textPrimary : '#E0E0E0' },
+                  selectedLocation === location.name && { backgroundColor: theme.colors.textPrimary + '10' },
                 ]}
                 onPress={() => onLocationSelect(location)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.locationIcon, { backgroundColor: theme.colors.primary + '20' }]}>
-                  <Ionicons name="location" size={20} color={theme.colors.primary} />
+                <View style={[styles.locationIcon, { backgroundColor: theme.colors.textPrimary + '20' }]}>
+                  <Ionicons name="location" size={20} color={theme.colors.textPrimary} />
                 </View>
                 <View style={styles.locationItemContent}>
                   <Text style={[styles.locationItemName, { color: theme.colors.textPrimary }]}>
@@ -1248,7 +1217,7 @@ const LocationPicker = ({ visible, onClose, locations, selectedLocation, onLocat
                   </Text>
                 </View>
                 {selectedLocation === location.name && (
-                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.primary} />
+                  <Ionicons name="checkmark-circle" size={24} color={theme.colors.textPrimary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -1291,15 +1260,8 @@ const styles = StyleSheet.create({
   },
   section: {
     marginHorizontal: SPACING.l,
-    marginTop: SPACING.m,
-    padding: SPACING.m,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.card,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    marginTop: SPACING.l,
+    marginBottom: SPACING.s,
   },
   sectionTitle: {
     fontSize: TYPE.title.fontSize,

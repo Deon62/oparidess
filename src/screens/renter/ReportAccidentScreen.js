@@ -241,13 +241,13 @@ const ReportAccidentScreen = () => {
           </View>
 
           <TouchableOpacity
-            style={[styles.uploadButton, { borderColor: theme.colors.primary }]}
+            style={[styles.uploadButton, { borderColor: theme.colors.textPrimary }]}
             onPress={handlePickImages}
             activeOpacity={0.7}
             disabled={isSending}
           >
-            <Ionicons name="camera-outline" size={22} color={theme.colors.primary} />
-            <Text style={[styles.uploadButtonText, { color: theme.colors.primary }]}>
+            <Ionicons name="camera-outline" size={22} color={theme.colors.textPrimary} />
+            <Text style={[styles.uploadButtonText, { color: theme.colors.textPrimary }]}>
               Add Photos
             </Text>
             <View style={{ flex: 1 }} />

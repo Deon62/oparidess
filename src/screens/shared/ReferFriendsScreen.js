@@ -115,20 +115,18 @@ const ReferFriendsScreen = () => {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-      {/* Header Card */}
-      <Card style={[styles.headerCard, { backgroundColor: theme.colors.primary }]}>
-        <View style={styles.headerContent}>
-          <View style={[styles.iconCircle, { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-            <Ionicons name="gift-outline" size={28} color={theme.colors.white} />
-          </View>
-          <Text style={[styles.headerTitle, { color: theme.colors.white }]}>
-            Refer & Earn
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: 'rgba(255, 255, 255, 0.9)' }]}>
-            Share with friends and earn rewards when they sign up!
-          </Text>
+      {/* Header Section */}
+      <View style={styles.headerSection}>
+        <View style={[styles.iconCircle, { backgroundColor: theme.colors.textPrimary + '10' }]}>
+          <Ionicons name="gift-outline" size={28} color={theme.colors.textPrimary} />
         </View>
-      </Card>
+        <Text style={[styles.headerTitle, { color: theme.colors.textPrimary }]}>
+          Refer & Earn
+        </Text>
+        <Text style={[styles.headerSubtitle, { color: theme.colors.textSecondary }]}>
+          Share with friends and earn rewards when they sign up!
+        </Text>
+      </View>
 
       {/* Referral Code Card */}
       <View style={styles.section}>
@@ -137,16 +135,16 @@ const ReferFriendsScreen = () => {
         </Text>
         <Card style={[styles.codeCard, { backgroundColor: theme.colors.white }]}>
           <View style={styles.codeContainer}>
-            <Text style={[styles.referralCode, { color: theme.colors.primary }]}>
+            <Text style={[styles.referralCode, { color: theme.colors.textPrimary }]}>
               {referralCode}
             </Text>
             <TouchableOpacity
-              style={[styles.copyButton, { backgroundColor: theme.colors.primary + '20' }]}
+              style={[styles.copyButton, { backgroundColor: theme.colors.textPrimary + '10' }]}
               onPress={copyToClipboard}
               activeOpacity={0.7}
             >
-              <Ionicons name="copy-outline" size={20} color={theme.colors.primary} />
-              <Text style={[styles.copyButtonText, { color: theme.colors.primary }]}>
+              <Ionicons name="copy-outline" size={20} color={theme.colors.textPrimary} />
+              <Text style={[styles.copyButtonText, { color: theme.colors.textPrimary }]}>
                 Copy
               </Text>
             </TouchableOpacity>
@@ -161,17 +159,17 @@ const ReferFriendsScreen = () => {
         </Text>
         <View style={styles.shareButtons}>
           <TouchableOpacity
-            style={[styles.shareButton, { backgroundColor: theme.colors.white, borderColor: theme.colors.primary }]}
+            style={[styles.shareButton, { backgroundColor: theme.colors.white, borderColor: theme.colors.textPrimary }]}
             onPress={shareReferralCode}
             activeOpacity={0.7}
           >
-            <Ionicons name="share-social-outline" size={20} color={theme.colors.primary} />
-            <Text style={[styles.shareButtonText, { color: theme.colors.primary }]}>
+            <Ionicons name="share-social-outline" size={20} color={theme.colors.textPrimary} />
+            <Text style={[styles.shareButtonText, { color: theme.colors.textPrimary }]}>
               Share Code
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.shareButton, { backgroundColor: theme.colors.primary }]}
+            style={[styles.shareButton, { backgroundColor: '#FF1577' }]}
             onPress={shareReferralLink}
             activeOpacity={0.7}
           >
@@ -213,8 +211,8 @@ const ReferFriendsScreen = () => {
             <Text style={[styles.modalTitle, { color: theme.colors.textPrimary }]}>
               Code Copied!
             </Text>
-            <View style={[styles.modalCodeBox, { backgroundColor: theme.colors.primary + '10', borderColor: theme.colors.primary }]}>
-              <Text style={[styles.modalCodeText, { color: theme.colors.primary }]}>
+            <View style={[styles.modalCodeBox, { backgroundColor: theme.colors.textPrimary + '10', borderColor: theme.colors.textPrimary }]}>
+              <Text style={[styles.modalCodeText, { color: theme.colors.textPrimary }]}>
                 {referralCode}
               </Text>
             </View>
@@ -232,7 +230,7 @@ const ReferFriendsScreen = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modalButton, styles.modalButtonPrimary, { backgroundColor: theme.colors.primary }]}
+                style={[styles.modalButton, styles.modalButtonPrimary, { backgroundColor: '#FF1577' }]}
                 onPress={() => {
                   setShowCopyModal(false);
                   shareReferralCode();
@@ -260,14 +258,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingBottom: 20,
   },
-  headerCard: {
+  headerSection: {
     marginHorizontal: 24,
     marginTop: 24,
-    padding: 20,
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-  headerContent: {
     alignItems: 'center',
   },
   iconCircle: {

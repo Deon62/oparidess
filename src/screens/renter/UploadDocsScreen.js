@@ -169,14 +169,14 @@ const UploadDocsScreen = () => {
           <Ionicons
             name={docType === 'nationalId' ? 'card-outline' : 'id-card-outline'}
             size={24}
-            color={theme.colors.primary}
+            color={theme.colors.textPrimary}
           />
           <Text style={[styles.docCardTitle, { color: theme.colors.textPrimary }]}>{title}</Text>
         </View>
         <TouchableOpacity
           style={[
             styles.toggleButton,
-            { backgroundColor: isActive ? theme.colors.primary : '#E0E0E0' },
+            { backgroundColor: isActive ? theme.colors.textPrimary : '#E0E0E0' },
           ]}
           onPress={() => setSelectedDocType(docType)}
           activeOpacity={0.7}
@@ -208,12 +208,12 @@ const UploadDocsScreen = () => {
             </View>
           ) : (
             <TouchableOpacity
-              style={[styles.uploadButton, { borderColor: theme.colors.primary }]}
+              style={[styles.uploadButton, { borderColor: theme.colors.textPrimary }]}
               onPress={() => showImageOptions(docType)}
               activeOpacity={0.7}
             >
-              <Ionicons name="camera-outline" size={32} color={theme.colors.primary} />
-              <Text style={[styles.uploadButtonText, { color: theme.colors.primary }]}>
+              <Ionicons name="camera-outline" size={32} color={theme.colors.textPrimary} />
+              <Text style={[styles.uploadButtonText, { color: theme.colors.textPrimary }]}>
                 Tap to Upload
               </Text>
               <Text style={[styles.uploadButtonSubtext, { color: theme.colors.hint }]}>
@@ -235,7 +235,7 @@ const UploadDocsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
       <View style={[styles.infoCard, { backgroundColor: theme.colors.white }]}>
-        <Ionicons name="information-circle-outline" size={24} color={theme.colors.primary} />
+        <Ionicons name="information-circle-outline" size={24} color={theme.colors.textPrimary} />
         <Text style={[styles.infoText, { color: theme.colors.textSecondary }]}>
           Please upload clear photos of your documents. Ensure all text is visible and the image is
           well-lit.
@@ -305,7 +305,7 @@ const UploadDocsScreen = () => {
               )}
             </View>
             <TouchableOpacity
-              style={[styles.successModalButton, { backgroundColor: theme.colors.primary }]}
+              style={[styles.successModalButton, { backgroundColor: '#FF1577' }]}
               onPress={() => {
                 setShowSuccessModal(false);
                 navigation.goBack();

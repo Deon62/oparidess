@@ -165,14 +165,14 @@ const DriversLicenseInfoScreen = () => {
                     key={y}
                     style={[
                       styles.dateOption,
-                      year === y && { backgroundColor: theme.colors.primary + '20' },
+                      year === y && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setYear(y)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: year === y ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {y}
@@ -186,14 +186,14 @@ const DriversLicenseInfoScreen = () => {
                     key={m}
                     style={[
                       styles.dateOption,
-                      month === m && { backgroundColor: theme.colors.primary + '20' },
+                      month === m && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setMonth(m)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: month === m ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {m}
@@ -207,14 +207,14 @@ const DriversLicenseInfoScreen = () => {
                     key={d}
                     style={[
                       styles.dateOption,
-                      day === d && { backgroundColor: theme.colors.primary + '20' },
+                      day === d && { backgroundColor: theme.colors.textPrimary + '10' },
                     ]}
                     onPress={() => setDay(d)}
                   >
                     <Text
                       style={[
                         styles.dateOptionText,
-                        { color: day === d ? theme.colors.primary : theme.colors.textPrimary },
+                        { color: theme.colors.textPrimary },
                       ]}
                     >
                       {d}
@@ -255,7 +255,7 @@ const DriversLicenseInfoScreen = () => {
       >
         <View style={[styles.section, { backgroundColor: theme.colors.white }]}>
           <View style={styles.sectionHeaderRow}>
-            <Ionicons name="card-outline" size={20} color={theme.colors.primary} />
+            <Ionicons name="card-outline" size={20} color={theme.colors.textPrimary} />
             <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
               Driver's Licence Information
             </Text>
@@ -312,7 +312,7 @@ const DriversLicenseInfoScreen = () => {
               >
                 {dlIssueDate || 'Select issue date (YYYY-MM-DD)'}
               </Text>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
             </TouchableOpacity>
             {errors.dl_issue_date && <Text style={styles.errorText}>{errors.dl_issue_date}</Text>}
           </View>
@@ -342,7 +342,7 @@ const DriversLicenseInfoScreen = () => {
               >
                 {dlExpiryDate || 'Select expiry date (YYYY-MM-DD)'}
               </Text>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
             </TouchableOpacity>
             {errors.dl_expiry_date && <Text style={styles.errorText}>{errors.dl_expiry_date}</Text>}
           </View>

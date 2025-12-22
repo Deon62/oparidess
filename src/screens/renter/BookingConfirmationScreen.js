@@ -113,7 +113,7 @@ const BookingConfirmationScreen = () => {
         <View style={styles.detailCard}>
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Ionicons name="car-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="car-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                 Car
               </Text>
@@ -129,7 +129,7 @@ const BookingConfirmationScreen = () => {
 
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                 Pickup
               </Text>
@@ -148,7 +148,7 @@ const BookingConfirmationScreen = () => {
 
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                 Dropoff
               </Text>
@@ -167,7 +167,7 @@ const BookingConfirmationScreen = () => {
 
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="location-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                 Pickup Location
               </Text>
@@ -184,7 +184,7 @@ const BookingConfirmationScreen = () => {
               <View style={styles.detailDivider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <Ionicons name="location-outline" size={20} color={theme.colors.primary} />
+                  <Ionicons name="location-outline" size={20} color={theme.colors.textPrimary} />
                   <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                     Dropoff Location
                   </Text>
@@ -202,7 +202,7 @@ const BookingConfirmationScreen = () => {
 
           <View style={styles.detailRow}>
             <View style={styles.detailLeft}>
-              <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="time-outline" size={20} color={theme.colors.textPrimary} />
               <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                 Duration
               </Text>
@@ -238,7 +238,7 @@ const BookingConfirmationScreen = () => {
               <View style={styles.detailDivider} />
               <View style={styles.detailRow}>
                 <View style={styles.detailLeft}>
-                  <Ionicons name="document-text-outline" size={20} color={theme.colors.primary} />
+                  <Ionicons name="document-text-outline" size={20} color={theme.colors.textPrimary} />
                   <Text style={[styles.detailLabel, { color: theme.colors.textSecondary }]}>
                     Special Requirements
                   </Text>
@@ -267,7 +267,7 @@ const BookingConfirmationScreen = () => {
             <Text style={[styles.priceLabelTotal, { color: theme.colors.textPrimary }]}>
               {paymentOption === 'payOnSite' ? 'Total Rental Price' : 'Total'}
             </Text>
-            <Text style={[styles.priceValueTotal, { color: theme.colors.primary }]}>
+            <Text style={[styles.priceValueTotal, { color: theme.colors.textPrimary }]}>
               {formatCurrency(totalRentalPrice)}
             </Text>
           </View>
@@ -277,13 +277,13 @@ const BookingConfirmationScreen = () => {
             onPress={() => setShowBreakdown((prev) => !prev)}
             activeOpacity={0.8}
           >
-            <Text style={[styles.viewBreakdownText, { color: theme.colors.primary }]}>
+            <Text style={[styles.viewBreakdownText, { color: theme.colors.textPrimary }]}>
               {showBreakdown ? 'Hide breakdown' : 'View full breakdown'}
             </Text>
             <Ionicons
               name={showBreakdown ? 'chevron-up' : 'chevron-down'}
               size={18}
-              color={theme.colors.primary}
+              color={theme.colors.textPrimary}
             />
           </TouchableOpacity>
 
@@ -351,7 +351,7 @@ const BookingConfirmationScreen = () => {
                         Booking fee only
                       </Text>
                     </View>
-                    <Text style={[styles.payNowValue, { color: theme.colors.primary }]}>
+                    <Text style={[styles.payNowValue, { color: theme.colors.textPrimary }]}>
                       {formatCurrency(bookingFee)}
                     </Text>
                   </View>
@@ -361,9 +361,6 @@ const BookingConfirmationScreen = () => {
           )}
         </View>
       </View>
-      
-      <View style={[styles.sectionSeparator, { borderTopColor: '#E0E0E0' }]} />
-
       {/* Important Notes */}
       <View style={styles.section}>
         <View style={[styles.notesCard, { backgroundColor: '#FF9800' + '10' }]}>
@@ -410,7 +407,7 @@ const BookingConfirmationScreen = () => {
           <Text style={[styles.termsStatement, { color: theme.colors.textSecondary }]}>
             By proceeding, you agree to all{' '}
             <Text 
-              style={[styles.termsLink, { color: theme.colors.primary }]}
+              style={[styles.termsLink, { color: theme.colors.textPrimary }]}
               onPress={() => navigation.navigate('CancellationPolicy')}
             >
               Terms and Conditions
@@ -433,7 +430,7 @@ const BookingConfirmationScreen = () => {
         <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
           {paymentOption === 'payOnSite' ? 'Booking Fee' : 'Total'}
         </Text>
-        <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
+        <Text style={[styles.bottomBarPriceValue, { color: theme.colors.textPrimary }]}>
           {formatCurrency(paymentOption === 'payOnSite' ? bookingFee : totalRentalPrice, { showDecimals: false })}
         </Text>
       </View>
@@ -478,14 +475,7 @@ const styles = StyleSheet.create({
   section: {
     paddingHorizontal: SPACING.l,
     marginTop: SPACING.l,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.card,
-    padding: SPACING.m,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    padding: 0,
   },
   firstSection: {
     marginTop: SPACING.xl,

@@ -373,8 +373,8 @@ const PaymentScreen = () => {
               style={[
                 styles.paymentMethodCard,
                 {
-                  backgroundColor: selectedMethod === method.id ? theme.colors.primary + '10' : 'transparent',
-                  borderColor: selectedMethod === method.id ? theme.colors.primary : '#E0E0E0',
+                  backgroundColor: selectedMethod === method.id ? theme.colors.textPrimary + '08' : 'transparent',
+                  borderColor: selectedMethod === method.id ? theme.colors.textPrimary : '#E0E0E0',
                 },
               ]}
               onPress={() => {
@@ -417,12 +417,12 @@ const PaymentScreen = () => {
                 style={[
                   styles.radioButton,
                   {
-                    borderColor: selectedMethod === method.id ? theme.colors.primary : theme.colors.hint,
+                    borderColor: selectedMethod === method.id ? theme.colors.textPrimary : theme.colors.hint,
                   },
                 ]}
               >
                 {selectedMethod === method.id && (
-                  <View style={[styles.radioButtonInner, { backgroundColor: theme.colors.primary }]} />
+                  <View style={[styles.radioButtonInner, { backgroundColor: theme.colors.textPrimary }]} />
                 )}
               </View>
             </TouchableOpacity>
@@ -593,7 +593,7 @@ const PaymentScreen = () => {
       <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 14) }]}>
         <View style={styles.bottomBarPrice}>
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>Total</Text>
-          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
+          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.textPrimary }]}>
             {formatCurrencyClean(totalPrice || 0)}
           </Text>
         </View>
@@ -641,7 +641,7 @@ const PaymentScreen = () => {
                 <Text style={[styles.successDetailLabel, { color: theme.colors.hint }]}>
                   Amount Paid
                 </Text>
-                <Text style={[styles.successDetailValue, { color: theme.colors.primary }]}>
+                <Text style={[styles.successDetailValue, { color: theme.colors.textPrimary }]}>
                   {formatCurrencyClean(totalPrice || 0)}
                 </Text>
               </View>

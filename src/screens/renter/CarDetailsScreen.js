@@ -707,8 +707,8 @@ const CarDetailsScreen = () => {
             activeOpacity={0.7}
           >
             <View style={styles.imageRepositoryLink}>
-              <Ionicons name="images-outline" size={18} color={theme.colors.primary} />
-              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.primary }]}>
+              <Ionicons name="images-outline" size={18} color={theme.colors.textPrimary} />
+              <Text style={[styles.imageRepositoryLinkText, { color: theme.colors.textPrimary }]}>
                 View all images
               </Text>
             </View>
@@ -728,7 +728,7 @@ const CarDetailsScreen = () => {
               {features.map((feature, index) => (
                 <View key={index} style={styles.featureItem}>
                   <View style={styles.featureIconCircle}>
-                    <Ionicons name={feature.icon} size={18} color={theme.colors.primary} />
+                    <Ionicons name={feature.icon} size={18} color={theme.colors.textPrimary} />
                   </View>
                   <Text style={[styles.featureText, { color: theme.colors.textSecondary }]}>
                     {feature.name}
@@ -809,7 +809,7 @@ const CarDetailsScreen = () => {
           </Text>
           <View style={styles.availabilityCard}>
             <View style={styles.availabilityRow}>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
               <View style={styles.availabilityInfo}>
                 <Text style={[styles.availabilityLabel, { color: theme.colors.textSecondary }]}>
                   Next Available
@@ -824,7 +824,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.availabilityRow}>
-              <Ionicons name="time-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="time-outline" size={20} color={theme.colors.textPrimary} />
               <View style={styles.availabilityInfo}>
                 <Text style={[styles.availabilityLabel, { color: theme.colors.textSecondary }]}>
                   Rental Period
@@ -835,7 +835,7 @@ const CarDetailsScreen = () => {
               </View>
             </View>
             <View style={styles.availabilityRow}>
-              <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+              <Ionicons name="calendar-outline" size={20} color={theme.colors.textPrimary} />
               <View style={styles.availabilityInfo}>
                 <Text style={[styles.availabilityLabel, { color: theme.colors.textSecondary }]}>
                   Available Days
@@ -898,7 +898,7 @@ const CarDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Meet Your car Host
           </Text>
-          <View style={[styles.hostCard, { backgroundColor: theme.colors.white }]}>
+          <View style={styles.hostSection}>
             <View style={styles.hostTopRow}>
               <View style={styles.hostAvatarWrapper}>
                 <Image source={hostInfo.photo} style={styles.hostAvatar} resizeMode="cover" />
@@ -927,8 +927,8 @@ const CarDetailsScreen = () => {
             <View style={styles.hostNameRow}>
               <Text style={[styles.hostName, { color: theme.colors.textPrimary }]}>{hostInfo.name}</Text>
               <View style={styles.hostSuperBadge}>
-                <Ionicons name="checkmark-circle" size={14} color={theme.colors.primary} />
-                <Text style={[styles.hostSuperText, { color: theme.colors.primary }]}>Superhost</Text>
+                <Ionicons name="checkmark-circle" size={14} color={theme.colors.textPrimary} />
+                <Text style={[styles.hostSuperText, { color: theme.colors.textPrimary }]}>Superhost</Text>
               </View>
             </View>
 
@@ -984,7 +984,7 @@ const CarDetailsScreen = () => {
             {whyChooseItems.map((item, idx) => (
               <View key={idx} style={styles.whyChooseItem}>
                 <View style={styles.whyChooseNumberBadge}>
-                  <Ionicons name={item.icon} size={20} color={theme.colors.primary} />
+                  <Ionicons name={item.icon} size={20} color={theme.colors.textPrimary} />
                 </View>
                 <View style={styles.whyChooseContent}>
                   <Text style={[styles.whyChooseTitle, { color: theme.colors.textPrimary }]}>
@@ -1011,7 +1011,7 @@ const CarDetailsScreen = () => {
             {guaranteeItems.map((item, idx) => (
               <View key={idx} style={styles.guaranteeItem}>
                 <View style={styles.guaranteeBadge}>
-                  <Ionicons name={item.icon} size={18} color={theme.colors.primary} />
+                  <Ionicons name={item.icon} size={18} color={theme.colors.textPrimary} />
                 </View>
                 <View style={styles.guaranteeContent}>
                   <Text style={[styles.guaranteeTitle, { color: theme.colors.textPrimary }]}>
@@ -1049,13 +1049,13 @@ const CarDetailsScreen = () => {
                 style={styles.showMoreButton}
                 activeOpacity={0.7}
               >
-                <Text style={[styles.showMoreText, { color: theme.colors.primary }]}>
+                <Text style={[styles.showMoreText, { color: theme.colors.textPrimary }]}>
                   {showMoreRules ? 'Show Less' : 'Show More'}
                 </Text>
                 <Ionicons 
                   name={showMoreRules ? 'chevron-up' : 'chevron-down'} 
                   size={18} 
-                  color={theme.colors.primary} 
+                  color={theme.colors.textPrimary} 
                 />
               </TouchableOpacity>
             )}
@@ -1210,7 +1210,7 @@ const CarDetailsScreen = () => {
       <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
         <View style={styles.priceContainer}>
           <Text style={[styles.priceLabel, { color: theme.colors.hint }]}>Price per day</Text>
-          <Text style={[styles.priceValue, { color: theme.colors.primary }]}>
+          <Text style={[styles.priceValue, { color: theme.colors.textPrimary }]}>
             {rentalInfo.perDay}
           </Text>
         </View>
@@ -1616,15 +1616,7 @@ const styles = StyleSheet.create({
     color: COLORS.brand,
   },
   infoCard: {
-    padding: SPACING.l,
     gap: SPACING.m,
-    backgroundColor: COLORS.surface,
-    borderRadius: RADIUS.card,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
   },
   infoRow: {
     flexDirection: 'row',
@@ -1809,6 +1801,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  hostSection: {
+    gap: 16,
+  },
   hostTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1978,7 +1973,6 @@ const styles = StyleSheet.create({
   },
   // Availability section styles
   availabilityCard: {
-    padding: 20,
     gap: 16,
   },
   availabilityRow: {
@@ -2000,7 +1994,6 @@ const styles = StyleSheet.create({
   },
   // Rules section styles
   rulesCard: {
-    padding: 20,
     gap: 12,
   },
   ruleItem: {
@@ -2028,7 +2021,6 @@ const styles = StyleSheet.create({
   },
   // Safety section styles
   safetyCard: {
-    padding: 20,
     gap: 16,
   },
   safetyContent: {
@@ -2163,8 +2155,6 @@ const styles = StyleSheet.create({
   },
   // Why Choose This Car section styles
   whyChooseCard: {
-    paddingVertical: 12,
-    paddingHorizontal: 12,
     gap: 18,
   },
   whyChooseItem: {
@@ -2206,9 +2196,6 @@ const styles = StyleSheet.create({
     height: 28,
   },
   guaranteesCard: {
-    paddingVertical: 12,
-    paddingTop: 8,
-    paddingHorizontal: 8,
     gap: 18,
   },
   guaranteeItem: {

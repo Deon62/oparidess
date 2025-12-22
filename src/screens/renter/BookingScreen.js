@@ -646,7 +646,7 @@ const BookingScreen = () => {
               onPress={openPickupDatePicker}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.primary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -670,7 +670,7 @@ const BookingScreen = () => {
             >
               <Text style={[
                 styles.dateChangeButtonText,
-                { color: pickupDate ? theme.colors.primary : theme.colors.hint, textDecorationLine: 'underline' }
+                { color: pickupDate ? theme.colors.textPrimary : theme.colors.hint, textDecorationLine: 'underline' }
               ]}>
                 Change
               </Text>
@@ -827,25 +827,25 @@ const BookingScreen = () => {
               {/* Instructions List */}
               <View style={styles.crossCountryInstructions}>
                 <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
                   <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
                     Required for travel outside the vehicle's registered country
                   </Text>
                 </View>
                 <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
                   <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
                     Includes border crossing documentation support
                   </Text>
                 </View>
                 <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
                   <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
                     Additional insurance coverage for international travel
                   </Text>
                 </View>
                 <View style={styles.crossCountryInstructionItem}>
-                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.primary} />
+                  <Ionicons name="information-circle-outline" size={16} color={theme.colors.textPrimary} />
                   <Text style={[styles.crossCountryInstructionText, { color: theme.colors.textSecondary }]}>
                     Owner must approve cross-country travel in advance
                   </Text>
@@ -858,10 +858,10 @@ const BookingScreen = () => {
                 activeOpacity={0.7}
                 style={[styles.readMoreButton, { marginTop: 16 }]}
               >
-                <Text style={[styles.readMoreText, { color: theme.colors.primary }]}>
+                <Text style={[styles.readMoreText, { color: theme.colors.textPrimary }]}>
                   Read more
                 </Text>
-                <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.textPrimary} />
               </TouchableOpacity>
             </View>
             <Toggle
@@ -881,7 +881,7 @@ const BookingScreen = () => {
           <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
             {days > 0 ? `${days} ${days === 1 ? 'day' : 'days'}` : 'Total'}
           </Text>
-          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.primary }]}>
+          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.textPrimary }]}>
             {formatCurrency(totalPrice, { showDecimals: false })}
           </Text>
         </View>

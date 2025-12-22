@@ -93,7 +93,7 @@ const OpaPremiumScreen = () => {
         amount: 85000,
         features: monthlyFeatures,
         cardStyle: { backgroundColor: COLORS.surface, shadowColor: '#000' },
-        priceColor: COLORS.brand,
+        priceColor: COLORS.text,
         buttonStyle: { backgroundColor: '#FF1577' },
         buttonTextStyle: { color: theme.colors.white },
       },
@@ -108,7 +108,7 @@ const OpaPremiumScreen = () => {
         amount: 135000,
         features: plusFeatures,
         cardStyle: { backgroundColor: COLORS.surface, shadowColor: '#000' },
-        priceColor: COLORS.brand,
+        priceColor: COLORS.text,
         buttonStyle: { backgroundColor: '#FF1577' },
         buttonTextStyle: { color: theme.colors.white },
         badgeText: 'Recommended',
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   planTogglePillActive: {
-    backgroundColor: COLORS.brand,
+    backgroundColor: COLORS.text,
   },
   planToggleText: {
     fontSize: TYPE.caption.fontSize,

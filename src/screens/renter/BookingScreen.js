@@ -652,16 +652,8 @@ const BookingScreen = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Separator between pickup and dropoff */}
-          <View
-            style={[
-              styles.sectionSeparator,
-              { borderTopColor: theme.colors.hint + '40', marginTop: 16, marginHorizontal: -16 },
-            ]}
-          />
-
           {/* Dropoff Date */}
-          <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
+          <View style={[styles.dateSectionRow, { marginTop: SPACING.m }]}>
             <View style={styles.dateSectionContent}>
               <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
                 Dropoff Date

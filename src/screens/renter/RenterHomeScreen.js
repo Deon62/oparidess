@@ -10,6 +10,8 @@ import { parseCurrency } from '../../packages/utils/currency';
 import { useWishlist } from '../../packages/context/WishlistContext';
 import { getCarPrimaryImage, getCarImages, getCarVideoUrl } from '../../packages/utils/supabaseImages';
 import { impactLight } from '../../packages/utils/haptics';
+import DiscoverSvg from '../../../assets/icons/discover.svg';
+import ServicesSvg from '../../../assets/icons/services.svg';
 // Location import - will use expo-location if available
 let Location = null;
 try {
@@ -995,13 +997,13 @@ const RenterHomeScreen = () => {
                   <Ionicons 
                     name={activeTab === 'cars' ? 'car' : 'car-outline'} 
                     size={22} 
-                    color={activeTab === 'cars' ? theme.colors.primary : theme.colors.textSecondary} 
+                    color={theme.colors.textPrimary} 
                   />
                 )}
                 <Text style={[
                   styles.toggleText, 
                   { 
-                    color: activeTab === 'cars' ? theme.colors.primary : theme.colors.textSecondary,
+                    color: theme.colors.textPrimary,
                     fontSize: activeTab === 'cars' ? 16 : 15,
                     fontFamily: activeTab === 'cars' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                   }
@@ -1009,7 +1011,7 @@ const RenterHomeScreen = () => {
                   Vehicles
                 </Text>
               </View>
-              {activeTab === 'cars' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
+              {activeTab === 'cars' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.textPrimary }]} />}
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -1022,14 +1024,14 @@ const RenterHomeScreen = () => {
                   <Ionicons 
                     name={activeTab === 'services' ? 'briefcase' : 'briefcase-outline'} 
                     size={22} 
-                    color={activeTab === 'services' ? theme.colors.primary : theme.colors.textSecondary} 
+                    color={theme.colors.textPrimary} 
                   />
                 )}
                 <Text 
                   style={[
                     styles.toggleText, 
                     { 
-                      color: activeTab === 'services' ? theme.colors.primary : theme.colors.textSecondary,
+                      color: theme.colors.textPrimary,
                       fontSize: activeTab === 'services' ? 16 : 15,
                       fontFamily: activeTab === 'services' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                     }
@@ -1040,7 +1042,7 @@ const RenterHomeScreen = () => {
                   Services
                 </Text>
               </View>
-              {activeTab === 'services' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
+              {activeTab === 'services' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.textPrimary }]} />}
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -1053,13 +1055,13 @@ const RenterHomeScreen = () => {
                   <Ionicons 
                     name={activeTab === 'discover' ? 'compass' : 'compass-outline'} 
                     size={22} 
-                    color={activeTab === 'discover' ? theme.colors.primary : theme.colors.textSecondary} 
+                    color={theme.colors.textPrimary} 
                   />
                 )}
                 <Text style={[
                   styles.toggleText, 
                   { 
-                    color: activeTab === 'discover' ? theme.colors.primary : theme.colors.textSecondary,
+                    color: theme.colors.textPrimary,
                     fontSize: activeTab === 'discover' ? 16 : 15,
                     fontFamily: activeTab === 'discover' ? 'Nunito_700Bold' : 'Nunito_600SemiBold',
                   }
@@ -1067,7 +1069,7 @@ const RenterHomeScreen = () => {
                   Discover
                 </Text>
               </View>
-              {activeTab === 'discover' && <View style={[styles.tabIndicator, { backgroundColor: '#FF1577' }]} />}
+              {activeTab === 'discover' && <View style={[styles.tabIndicator, { backgroundColor: theme.colors.textPrimary }]} />}
             </TouchableOpacity>
           </View>
         </View>
@@ -1091,7 +1093,7 @@ const RenterHomeScreen = () => {
   // Skeleton Components
   const CarCardSkeleton = () => (
     <View style={[styles.carCardWrapper]}>
-      <View style={[styles.carCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.carCard}>
         <View style={[styles.carImageContainer, { backgroundColor: '#E0E0E0' }]}>
           <View style={{ width: '100%', height: '100%', backgroundColor: '#E0E0E0' }} />
         </View>
@@ -1165,8 +1167,18 @@ const RenterHomeScreen = () => {
         </View>
       )}
 
-      {/* Services Section */}
       {activeTab === 'services' && (
+        <View style={styles.comingSoonSection}>
+          <View style={styles.comingSoonCard}>
+            <ServicesSvg width={260} height={200} style={styles.comingSoonBgSvg} />
+            <Text style={[styles.comingSoonTitle, { color: theme.colors.textPrimary }]}>Services</Text>
+            <Text style={[styles.comingSoonSubtitle, { color: theme.colors.textSecondary }]}>Coming soon</Text>
+          </View>
+        </View>
+      )}
+
+      {/* Services Section */}
+      {activeTab === 'services_disabled' && (
         <View style={styles.servicesSection}>
           {/* Road Trips Section */}
           {getFilteredServices('roadTrips').length > 0 && (
@@ -1617,8 +1629,18 @@ const RenterHomeScreen = () => {
         </View>
       )}
 
-      {/* Discover Section */}
       {activeTab === 'discover' && (
+        <View style={styles.comingSoonSection}>
+          <View style={styles.comingSoonCard}>
+            <DiscoverSvg width={260} height={200} style={styles.comingSoonBgSvg} />
+            <Text style={[styles.comingSoonTitle, { color: theme.colors.textPrimary }]}>Discover</Text>
+            <Text style={[styles.comingSoonSubtitle, { color: theme.colors.textSecondary }]}>Coming soon</Text>
+          </View>
+        </View>
+      )}
+
+      {/* Discover Section */}
+      {activeTab === 'discover_disabled' && (
         <View style={styles.discoverSection}>
           {/* Special Offers Section */}
           <View style={[styles.discoverSubsection, styles.firstSection]}>
@@ -2860,7 +2882,7 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                 activeOpacity={1}
                 style={styles.carCardWrapper}
               >
-                <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
+                <View style={styles.carCard}>
                   <View style={styles.carImageContainer}>
                     <Image 
                       source={car.imageUri ? { uri: car.imageUri } : (car.image ? { uri: car.image } : { uri: getCarPrimaryImage('x') })} 
@@ -2905,13 +2927,13 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                       </Text>
                       {car.rating && (
                         <View style={styles.carRatingContainer}>
-                          <Ionicons name="star" size={12} color="#FFB800" />
+                          <Ionicons name="star" size={12} color={theme.colors.textPrimary} />
                           <Text style={styles.carRatingText}>{car.rating}</Text>
                         </View>
                       )}
                     </View>
                   </View>
-                </Card>
+                </View>
               </TouchableOpacity>
             ))
             )}
@@ -2961,7 +2983,7 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                   activeOpacity={1}
                   style={styles.carCardWrapper}
                 >
-                  <Card style={[styles.carCard, { borderRadius: 12, borderWidth: 0 }]}>
+                  <View style={styles.carCard}>
                     <View style={styles.carImageContainer}>
                       <Image 
                         source={vehicle.imageUri ? { uri: vehicle.imageUri } : vehicle.image} 
@@ -3006,13 +3028,13 @@ No matter when you visit, Kenya's national parks offer incredible wildlife exper
                         </Text>
                         {vehicle.rating && (
                           <View style={styles.carRatingContainer}>
-                            <Ionicons name="star" size={12} color="#FFB800" />
+                            <Ionicons name="star" size={12} color={theme.colors.textPrimary} />
                             <Text style={styles.carRatingText}>{vehicle.rating}</Text>
                           </View>
                         )}
                       </View>
                     </View>
-                  </Card>
+                  </View>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -3851,19 +3873,14 @@ const styles = StyleSheet.create({
     padding: 0,
     overflow: 'hidden',
     borderWidth: 0,
-    borderRadius: RADIUS.card,
-    backgroundColor: COLORS.surface,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    backgroundColor: 'transparent',
   },
   carImageContainer: {
     width: '100%',
-    height: 120,
+    height: 160,
     position: 'relative',
     overflow: 'hidden',
+    borderRadius: RADIUS.card,
   },
   carImage: {
     width: '100%',
@@ -3911,16 +3928,15 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   carInfo: {
-    padding: SPACING.m,
-    borderBottomLeftRadius: RADIUS.card,
-    borderBottomRightRadius: RADIUS.card,
-    overflow: 'hidden',
-    backgroundColor: COLORS.surface,
+    paddingTop: SPACING.s,
+    paddingHorizontal: 2,
+    paddingBottom: 2,
+    backgroundColor: 'transparent',
   },
   carName: {
     fontSize: TYPE.body.fontSize,
     fontFamily: TYPE.bodyStrong.fontFamily,
-    marginBottom: SPACING.s,
+    marginBottom: 4,
     lineHeight: TYPE.body.lineHeight,
     color: COLORS.text,
   },
@@ -4713,6 +4729,34 @@ const styles = StyleSheet.create({
   filterApplyText: {
     fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
+  },
+  comingSoonSection: {
+    paddingHorizontal: 24,
+    paddingTop: 20,
+  },
+  comingSoonCard: {
+    position: 'relative',
+    overflow: 'hidden',
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 220,
+  },
+  comingSoonBgSvg: {
+    position: 'absolute',
+    top: -10,
+    right: -40,
+    opacity: 0.12,
+  },
+  comingSoonTitle: {
+    fontSize: 18,
+    fontFamily: 'Nunito_700Bold',
+  },
+  comingSoonSubtitle: {
+    fontSize: 14,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 6,
   },
   skeletonLine: {
     borderRadius: 4,

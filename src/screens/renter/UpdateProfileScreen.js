@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Modal, Sta
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { useUser } from '../../packages/context/UserContext';
 import { Input, Button } from '../../packages/components';
 
@@ -511,16 +512,23 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   section: {
-    marginHorizontal: 24,
-    marginTop: 24,
-    borderRadius: 16,
-    padding: 20,
+    marginHorizontal: SPACING.l,
+    marginTop: SPACING.l,
+    borderRadius: RADIUS.card,
+    padding: SPACING.l,
+    backgroundColor: COLORS.surface,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 8,
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.s,
     letterSpacing: -0.3,
+    color: COLORS.text,
   },
   sectionSubtitle: {
     fontSize: 14,
@@ -540,9 +548,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderColor: COLORS.border,
+    borderRadius: RADIUS.card,
+    paddingHorizontal: SPACING.m,
     minHeight: 48,
+    backgroundColor: COLORS.bg,
   },
   selectInputText: {
     flex: 1,
@@ -558,9 +568,9 @@ const styles = StyleSheet.create({
   },
   actionButtonsContainer: {
     flexDirection: 'row',
-    gap: 12,
-    paddingHorizontal: 24,
-    marginTop: 24,
+    gap: SPACING.m,
+    paddingHorizontal: SPACING.l,
+    marginTop: SPACING.l,
   },
   actionButton: {
     flex: 1,
@@ -571,25 +581,27 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
+    borderTopLeftRadius: RADIUS.card,
+    borderTopRightRadius: RADIUS.card,
+    padding: SPACING.l,
     maxHeight: '80%',
+    backgroundColor: COLORS.surface,
   },
   modalTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 20,
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.l,
     textAlign: 'center',
+    color: COLORS.text,
   },
   modalOption: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    marginBottom: 8,
+    paddingVertical: SPACING.m,
+    paddingHorizontal: SPACING.m,
+    borderRadius: RADIUS.card,
+    marginBottom: SPACING.s,
   },
   modalOptionText: {
     fontSize: 16,

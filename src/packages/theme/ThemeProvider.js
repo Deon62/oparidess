@@ -13,11 +13,11 @@ export const useTheme = () => {
 export const ThemeProvider = ({ children }) => {
   const theme = {
     colors: {
-      primary: '#0A1D37', // Deep Navy
-      background: '#F7F7F7', // Soft White
-      textPrimary: '#1A1A1A', // Chocolate Black
-      textSecondary: '#3A3A3A', // Charcoal
-      hint: '#6D6D6D', // Muted Grey
+      primary: '#FF1577', // Deep Navy
+      background: '#F2F2F7', // Soft White
+      textPrimary: '#0B0B0F', // Chocolate Black
+      textSecondary: '#4A4A4A', // Charcoal
+      hint: '#6A6A6A', // Muted Grey
       white: '#FFFFFF',
       black: '#000000',
     },

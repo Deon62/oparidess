@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
+import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { Button } from '../../packages/components';
 import { formatCurrency } from '../../packages/utils/currency';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -217,51 +218,49 @@ const PendingRentalDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Rental Period
           </Text>
-          <View style={styles.infoCard}>
+          <View style={styles.infoRow}>
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+              Pickup Date
+            </Text>
+            <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+              {formatDate(booking.pickupDate || booking.date)}
+            </Text>
+          </View>
+          {booking.pickupTime && (
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Pickup Date
+                Pickup Time
               </Text>
               <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {formatDate(booking.pickupDate || booking.date)}
+                {booking.pickupTime}
               </Text>
             </View>
-            {booking.pickupTime && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Pickup Time
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.pickupTime}
-                </Text>
-              </View>
-            )}
+          )}
+          <View style={styles.infoRow}>
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+              Dropoff Date
+            </Text>
+            <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+              {formatDate(booking.dropoffDate || booking.date)}
+            </Text>
+          </View>
+          {booking.dropoffTime && (
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Dropoff Date
+                Dropoff Time
               </Text>
               <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {formatDate(booking.dropoffDate || booking.date)}
+                {booking.dropoffTime}
               </Text>
             </View>
-            {booking.dropoffTime && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Dropoff Time
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.dropoffTime}
-                </Text>
-              </View>
-            )}
-            <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                Duration
-              </Text>
-              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
-              </Text>
-            </View>
+          )}
+          <View style={styles.infoRow}>
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+              Duration
+            </Text>
+            <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+              {booking.duration || `${booking.days || 1} day${(booking.days || 1) > 1 ? 's' : ''}`}
+            </Text>
           </View>
         </View>
 
@@ -275,28 +274,26 @@ const PendingRentalDetailsScreen = () => {
               <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
                 Locations
               </Text>
-              <View style={styles.infoCard}>
-                {booking.pickupLocation && (
-                  <View style={styles.infoRow}>
-                    <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                      Pickup Location
-                    </Text>
-                    <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                      {booking.pickupLocation}
-                    </Text>
-                  </View>
-                )}
-                {booking.dropoffLocation && (
-                  <View style={styles.infoRow}>
-                    <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                      Dropoff Location
-                    </Text>
-                    <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                      {booking.dropoffLocation}
-                    </Text>
-                  </View>
-                )}
-              </View>
+              {booking.pickupLocation && (
+                <View style={styles.infoRow}>
+                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                    Pickup Location
+                  </Text>
+                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                    {booking.pickupLocation}
+                  </Text>
+                </View>
+              )}
+              {booking.dropoffLocation && (
+                <View style={styles.infoRow}>
+                  <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+                    Dropoff Location
+                  </Text>
+                  <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                    {booking.dropoffLocation}
+                  </Text>
+                </View>
+              )}
             </View>
             <View style={[styles.sectionSeparator, { borderTopColor: theme.colors.hint + '40' }]} />
           </>
@@ -307,26 +304,24 @@ const PendingRentalDetailsScreen = () => {
           <Text style={[styles.sectionTitle, { color: theme.colors.textPrimary }]}>
             Payment Information
           </Text>
-          <View style={styles.infoCard}>
+          <View style={styles.infoRow}>
+            <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
+              {booking?.payOnSite ? 'Total Amount' : 'Booking Fee'}
+            </Text>
+            <Text style={[styles.totalPrice, { color: theme.colors.primary }]}>
+              {formatCurrency(paymentAmount)}
+            </Text>
+          </View>
+          {booking.bookingId && (
             <View style={styles.infoRow}>
               <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                {booking?.payOnSite ? 'Total Amount' : 'Booking Fee'}
+                Booking ID
               </Text>
-              <Text style={[styles.totalPrice, { color: theme.colors.primary }]}>
-                {formatCurrency(paymentAmount)}
+              <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
+                {booking.bookingId || `BK-${booking.id}`}
               </Text>
             </View>
-            {booking.bookingId && (
-              <View style={styles.infoRow}>
-                <Text style={[styles.infoLabel, { color: theme.colors.textSecondary }]}>
-                  Booking ID
-                </Text>
-                <Text style={[styles.infoValue, { color: theme.colors.textPrimary }]}>
-                  {booking.bookingId || `BK-${booking.id}`}
-                </Text>
-              </View>
-            )}
-          </View>
+          )}
         </View>
 
         {/* Separator Line */}
@@ -404,19 +399,21 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   section: {
-    paddingHorizontal: 24,
-    marginTop: 24,
+    paddingHorizontal: SPACING.l,
+    marginTop: SPACING.l,
   },
   sectionSeparator: {
     borderTopWidth: 1,
-    marginHorizontal: 24,
-    marginTop: 24,
+    borderTopColor: COLORS.border,
+    marginHorizontal: SPACING.l,
+    marginTop: SPACING.l,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 16,
+    fontSize: TYPE.title.fontSize,
+    fontFamily: TYPE.title.fontFamily,
+    marginBottom: SPACING.m,
     letterSpacing: -0.3,
+    color: COLORS.text,
   },
   statusContainer: {
     flexDirection: 'row',
@@ -465,22 +462,23 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
-  infoCard: {
-    padding: 20,
-    gap: 16,
-  },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingVertical: SPACING.m,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   infoLabel: {
-    fontSize: 15,
-    fontFamily: 'Nunito_400Regular',
+    fontSize: TYPE.body.fontSize + 1,
+    fontFamily: TYPE.body.fontFamily,
+    color: COLORS.muted,
   },
   infoValue: {
-    fontSize: 16,
-    fontFamily: 'Nunito_600SemiBold',
+    fontSize: TYPE.section.fontSize,
+    fontFamily: TYPE.bodyStrong.fontFamily,
+    color: COLORS.text,
   },
   totalPrice: {
     fontSize: 20,

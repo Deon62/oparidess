@@ -2,7 +2,6 @@ import React, { useState, useLayoutEffect, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, TextInput, StatusBar } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { useUser } from '../../packages/context/UserContext';
@@ -21,14 +20,12 @@ const SettingsScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { logout } = useUser();
-  const PREVIEW_VERIFIED_PROFILE_KEY = '@oparides:preview_verified_profile';
   const [biometricsEnabled, setBiometricsEnabled] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricType, setBiometricType] = useState('Biometric');
   const [showBiometricSuccessModal, setShowBiometricSuccessModal] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState('English');
-  const [previewVerifiedProfile, setPreviewVerifiedProfile] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -48,18 +45,6 @@ const SettingsScreen = () => {
       }
     };
     checkBiometrics();
-  }, []);
-
-  useEffect(() => {
-    const loadPreviewVerifiedProfile = async () => {
-      try {
-        const value = await AsyncStorage.getItem(PREVIEW_VERIFIED_PROFILE_KEY);
-        setPreviewVerifiedProfile(value === 'true');
-      } catch {
-        setPreviewVerifiedProfile(false);
-      }
-    };
-    loadPreviewVerifiedProfile();
   }, []);
 
   // Handle biometric toggle
@@ -168,15 +153,6 @@ const SettingsScreen = () => {
     // Navigation will happen automatically via MainNavigator
   };
 
-  const handlePreviewVerifiedProfileToggle = async (value) => {
-    setPreviewVerifiedProfile(value);
-    try {
-      await AsyncStorage.setItem(PREVIEW_VERIFIED_PROFILE_KEY, value ? 'true' : 'false');
-    } catch {
-      // ignore
-    }
-  };
-
   const SettingItem = ({ icon, title, onPress, rightComponent, showArrow = true, iconColor }) => (
     <TouchableOpacity
       style={styles.settingItem}
@@ -220,7 +196,7 @@ const SettingsScreen = () => {
         showsVerticalScrollIndicator={false}
       >
       {/* Account Section */}
-      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.sectionCard}>
         <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
           Account
         </Text>
@@ -228,18 +204,6 @@ const SettingsScreen = () => {
           icon="lock-closed-outline"
           title="Change Password"
           onPress={handleChangePassword}
-        />
-        <SettingItem
-          icon="eye-outline"
-          title="Preview Verified Profile"
-          onPress={null}
-          showArrow={false}
-          rightComponent={
-            <Toggle
-              value={previewVerifiedProfile}
-              onValueChange={handlePreviewVerifiedProfileToggle}
-            />
-          }
         />
         <SettingItem
           icon={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'}
@@ -257,7 +221,7 @@ const SettingsScreen = () => {
       </View>
 
       {/* Preferences Section */}
-      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.sectionCard}>
         <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
           Preferences
         </Text>
@@ -279,7 +243,7 @@ const SettingsScreen = () => {
       </View>
 
       {/* Support & Info Section */}
-      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.sectionCard}>
         <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
           Support & Information
         </Text>
@@ -306,7 +270,7 @@ const SettingsScreen = () => {
       </View>
 
       {/* Account Actions */}
-      <View style={[styles.sectionCard, { backgroundColor: theme.colors.white }]}>
+      <View style={styles.sectionCard}>
         <Text style={[styles.sectionCardTitle, { color: theme.colors.textPrimary }]}>
           Account actions
         </Text>
@@ -445,11 +409,11 @@ const SettingsScreen = () => {
       >
         <View style={styles.biometricModalOverlay}>
           <View style={[styles.biometricModalContent, { backgroundColor: theme.colors.white }]}>
-            <View style={[styles.biometricIconCircle, { backgroundColor: theme.colors.primary + '20' }]}>
+            <View style={[styles.biometricIconCircle, { backgroundColor: theme.colors.background }]}>
               <Ionicons 
                 name={biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'} 
                 size={64} 
-                color={theme.colors.primary} 
+                color={theme.colors.textPrimary} 
               />
             </View>
             <Text style={[styles.biometricModalTitle, { color: theme.colors.textPrimary }]}>
@@ -459,7 +423,7 @@ const SettingsScreen = () => {
               You can now use {biometricType} to quickly login to your account. This will make your login process faster and more secure.
             </Text>
             <TouchableOpacity
-              style={[styles.biometricModalButton, { backgroundColor: theme.colors.primary }]}
+              style={[styles.biometricModalButton, { backgroundColor: theme.colors.textPrimary }]}
               onPress={() => setShowBiometricSuccessModal(false)}
               activeOpacity={0.7}
             >
@@ -527,18 +491,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionCard: {
-    marginHorizontal: SPACING.l,
     marginTop: SPACING.m,
     marginBottom: SPACING.s,
-    borderRadius: RADIUS.lg,
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.m,
-    paddingVertical: SPACING.m,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    paddingHorizontal: SPACING.l,
+    backgroundColor: 'transparent',
   },
   sectionCardTitle: {
     fontSize: TYPE.section.fontSize,
@@ -553,6 +509,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: SPACING.m,
     paddingHorizontal: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   settingItemLeft: {
     flexDirection: 'row',

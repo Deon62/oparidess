@@ -1,8 +1,7 @@
 import React, { useMemo, useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { Animated, View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert, Modal, StatusBar, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { COLORS, SPACING, RADIUS, TYPE } from '../../packages/theme/tokens';
 import { useUser } from '../../packages/context/UserContext';
@@ -16,11 +15,8 @@ const profileImage = require('../../../assets/logo/profile.jpg');
 const RenterProfileScreen = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  const route = useRoute();
   const insets = useSafeAreaInsets();
   const { logout, user, updateUser } = useUser();
-  const PREVIEW_VERIFIED_PROFILE_KEY = '@oparides:preview_verified_profile';
-  const [previewVerified, setPreviewVerified] = useState(route?.params?.previewVerified === true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [profileImageUri, setProfileImageUri] = useState(user?.profile_image_uri || null);
   const [showNameEditModal, setShowNameEditModal] = useState(false);
@@ -99,10 +95,7 @@ const RenterProfileScreen = () => {
     ];
   }, [personalInfo.phone_number, personalInfo.id_number, hasDlInfo, profileImageUri, user?.profile_completeness]);
 
-  const displayVerificationRows = useMemo(() => {
-    if (!previewVerified) return verificationRows;
-    return verificationRows.map((r) => ({ ...r, ok: true }));
-  }, [previewVerified, verificationRows]);
+  const displayVerificationRows = useMemo(() => verificationRows, [verificationRows]);
 
   const verificationProgress = useMemo(() => {
     const total = displayVerificationRows.length || 1;
@@ -115,7 +108,6 @@ const RenterProfileScreen = () => {
   }, [displayVerificationRows]);
 
   const missingDocsText = useMemo(() => {
-    if (previewVerified) return '';
     const missing = verificationRows
       .filter((r) => !r.ok)
       .map((r) => {
@@ -130,7 +122,7 @@ const RenterProfileScreen = () => {
     if (missing.length === 1) return missing[0];
     if (missing.length === 2) return `${missing[0]} and ${missing[1]}`;
     return `${missing.slice(0, -1).join(', ')}, and ${missing[missing.length - 1]}`;
-  }, [previewVerified, verificationRows]);
+  }, [verificationRows]);
 
   const handleFlipVerificationCard = () => {
     if (isFlippingRef.current) return;
@@ -178,28 +170,6 @@ const RenterProfileScreen = () => {
     React.useCallback(() => {
       // StatusBar will be shown via the component
     }, [])
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-      let mounted = true;
-      const loadPreviewVerified = async () => {
-        try {
-          const value = await AsyncStorage.getItem(PREVIEW_VERIFIED_PROFILE_KEY);
-          const storedEnabled = value === 'true';
-          const routeEnabled = route?.params?.previewVerified === true;
-          if (mounted) setPreviewVerified(storedEnabled || routeEnabled);
-        } catch {
-          const routeEnabled = route?.params?.previewVerified === true;
-          if (mounted) setPreviewVerified(routeEnabled);
-        }
-      };
-
-      loadPreviewVerified();
-      return () => {
-        mounted = false;
-      };
-    }, [route?.params?.previewVerified])
   );
 
   const handleUploadDocs = () => {
@@ -354,7 +324,7 @@ const RenterProfileScreen = () => {
   const InfoRow = ({ icon, label, value }) => (
     <View style={styles.infoRow}>
       <View style={styles.infoRowLeft}>
-        <Ionicons name={icon} size={20} color={theme.colors.primary} />
+        <Ionicons name={icon} size={20} color={theme.colors.textPrimary} />
         <View style={styles.infoTextContainer}>
           <Text style={[styles.infoLabel, { color: theme.colors.hint }]}>
             {label}
@@ -370,7 +340,7 @@ const RenterProfileScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <StatusBar barStyle="dark-content" backgroundColor={theme.colors.background} />
-      {/* Floating Back Button and Settings Icon */}
+      {/* Floating Back Button */}
       <View style={[styles.topButtonsContainer, { paddingTop: insets.top + 8 }]}>
         <TouchableOpacity
           style={[styles.backButton, { backgroundColor: theme.colors.white }]}
@@ -378,13 +348,6 @@ const RenterProfileScreen = () => {
           activeOpacity={0.8}
         >
           <Ionicons name="arrow-back" size={20} color={theme.colors.textPrimary} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.settingsButton, { backgroundColor: theme.colors.white }]}
-          onPress={() => navigation.navigate('Settings')}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="settings-outline" size={20} color={theme.colors.textPrimary} />
         </TouchableOpacity>
       </View>
 
@@ -398,16 +361,16 @@ const RenterProfileScreen = () => {
         <View style={styles.profileImageContainer}>
           <Image
             source={profileImageUri ? { uri: profileImageUri } : profileImage}
-            style={[styles.profileImage, { borderColor: theme.colors.primary }]}
+            style={[styles.profileImage, { borderColor: theme.colors.white }]}
             resizeMode="cover"
           />
           <View style={styles.onlineIndicator} />
           <TouchableOpacity
-            style={[styles.cameraButton, { backgroundColor: theme.colors.primary }]}
+            style={[styles.cameraButton, { backgroundColor: theme.colors.white }]}
             onPress={showImageOptions}
             activeOpacity={0.7}
           >
-            <Ionicons name="camera" size={16} color={theme.colors.white} />
+            <Ionicons name="camera" size={16} color={theme.colors.textPrimary} />
           </TouchableOpacity>
         </View>
         <View style={styles.profileNameContainer}>
@@ -600,16 +563,27 @@ const RenterProfileScreen = () => {
 
         <TouchableOpacity
           style={styles.additionalActionButton}
+          onPress={() => navigation.navigate('Settings')}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="settings-outline" size={24} color={theme.colors.textPrimary} />
+          <View style={styles.additionalActionTextWrap}>
+            <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
+              Settings
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.additionalActionButton}
           onPress={handleUpdateProfile}
           activeOpacity={0.7}
         >
-          <Ionicons name="person-circle-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="person-circle-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Personal info
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Name, contact, and basic profile details
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -620,13 +594,10 @@ const RenterProfileScreen = () => {
           onPress={handleDriversLicenseInfo}
           activeOpacity={0.7}
         >
-          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="card-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Driving license
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              License number and expiry details
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -637,13 +608,10 @@ const RenterProfileScreen = () => {
           onPress={handleUploadDocs}
           activeOpacity={0.7}
         >
-          <Ionicons name="document-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="document-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Documents
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              ID, proof of address, and supporting files
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -664,7 +632,7 @@ const RenterProfileScreen = () => {
                 style={styles.updateProfileIcon}
                 activeOpacity={0.7}
               >
-                <Ionicons name="create-outline" size={22} color={theme.colors.primary} />
+                <Ionicons name="create-outline" size={22} color={theme.colors.textPrimary} />
               </TouchableOpacity>
             </View>
             {dlInfo.dl_number && (
@@ -708,13 +676,10 @@ const RenterProfileScreen = () => {
           onPress={handleAddPayment}
           activeOpacity={0.7}
         >
-          <Ionicons name="card-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="card-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Payment methods
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Add or manage your saved payment options
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -730,9 +695,6 @@ const RenterProfileScreen = () => {
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               OPA Premium
             </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Subscribe to premium plans and unlock exclusive benefits
-            </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
         </TouchableOpacity>
@@ -747,13 +709,10 @@ const RenterProfileScreen = () => {
           onPress={handleReferHost}
           activeOpacity={0.7}
         >
-          <Ionicons name="person-add-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="person-add-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Refer a host
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Invite car and service providers and earn rewards
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -764,13 +723,10 @@ const RenterProfileScreen = () => {
           onPress={handleReferFriends}
           activeOpacity={0.7}
         >
-          <Ionicons name="people-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="people-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Refer friends
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Share Opa with renters you know
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -781,13 +737,10 @@ const RenterProfileScreen = () => {
           onPress={handleOpaHostApp}
           activeOpacity={0.7}
         >
-          <Ionicons name="business-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="business-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Become a host
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              List a car or service on Opa
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -803,13 +756,10 @@ const RenterProfileScreen = () => {
           onPress={() => navigation.navigate('WriteBlog')}
           activeOpacity={0.7}
         >
-          <Ionicons name="create-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="create-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Write Opa blog
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Share your stories and tips with the community
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -820,13 +770,10 @@ const RenterProfileScreen = () => {
           onPress={() => navigation.navigate('ShareFeedback')}
           activeOpacity={0.7}
         >
-          <Ionicons name="chatbubble-outline" size={24} color={theme.colors.primary} />
+          <Ionicons name="chatbubble-outline" size={24} color={theme.colors.textPrimary} />
           <View style={styles.additionalActionTextWrap}>
             <Text style={[styles.additionalActionText, { color: theme.colors.textPrimary }]}>
               Help us improve
-            </Text>
-            <Text style={[styles.additionalActionSubtitle, { color: theme.colors.textSecondary }]}>
-              Send feedback about your experience
             </Text>
           </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.hint} />
@@ -908,7 +855,7 @@ const RenterProfileScreen = () => {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.nameEditModalButton, styles.nameEditModalButtonSave, { backgroundColor: theme.colors.primary }]}
+                style={[styles.nameEditModalButton, styles.nameEditModalButtonSave, { backgroundColor: theme.colors.textPrimary }]}
                 onPress={handleSaveName}
                 activeOpacity={0.7}
               >
@@ -940,7 +887,7 @@ const RenterProfileScreen = () => {
               Your name has been updated successfully.
             </Text>
             <TouchableOpacity
-              style={[styles.nameSuccessModalButton, { backgroundColor: theme.colors.primary }]}
+              style={[styles.nameSuccessModalButton, { backgroundColor: theme.colors.textPrimary }]}
               onPress={() => setShowNameSuccessModal(false)}
               activeOpacity={0.7}
             >
@@ -1013,26 +960,13 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 1000,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.m,
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingHorizontal: 24,
+    zIndex: 10,
   },
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: RADIUS.pill,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: COLORS.surface,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  settingsButton: {
     width: 40,
     height: 40,
     borderRadius: RADIUS.pill,
@@ -1436,20 +1370,9 @@ const styles = StyleSheet.create({
     gap: 0,
   },
   sectionCard: {
-    marginHorizontal: SPACING.l,
     marginTop: SPACING.s,
     marginBottom: SPACING.s,
-    borderRadius: RADIUS.lg,
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.m,
-    paddingVertical: SPACING.m,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-    borderWidth: 0.5,
-    borderColor: COLORS.border,
+    paddingHorizontal: SPACING.l,
   },
   sectionCardTitle: {
     fontSize: TYPE.section.fontSize,
@@ -1468,6 +1391,8 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.m,
     paddingHorizontal: SPACING.xs,
     gap: SPACING.m,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   additionalActionText: {
     flex: 1,
@@ -1477,12 +1402,6 @@ const styles = StyleSheet.create({
   },
   additionalActionTextWrap: {
     flex: 1,
-  },
-  additionalActionSubtitle: {
-    fontSize: TYPE.caption.fontSize,
-    fontFamily: TYPE.body.fontFamily,
-    marginTop: SPACING.xs,
-    color: COLORS.muted,
   },
   logoutButton: {
     flexDirection: 'row',

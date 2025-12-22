@@ -1,12 +1,13 @@
-import React, { useEffect, useLayoutEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, AppState, ActivityIndicator, Image } from 'react-native';
+import React, { useLayoutEffect, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ActivityIndicator, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { VideoView, useVideoPlayer } from 'expo-video';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../../packages/theme/ThemeProvider';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../packages/context/UserContext';
+
+import SalesmanIcon from '../../../assets/icons/salesman.svg';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -17,54 +18,22 @@ const LandingScreen = () => {
   const { login } = useUser();
   const [loadingProvider, setLoadingProvider] = useState(null); // 'google' | 'apple' | null
 
-  // Force status bar to be light (white) for this screen
+  // Force status bar to be dark for this screen (Apple feel with light background)
   useLayoutEffect(() => {
     navigation.setOptions({
-      statusBarStyle: 'light',
+      statusBarStyle: 'dark',
       statusBarBackgroundColor: 'transparent',
     });
   }, [navigation]);
 
-  // Ensure status bar stays light when screen is focused
+  // Ensure status bar stays dark when screen is focused
   useFocusEffect(
     React.useCallback(() => {
       navigation.setOptions({
-        statusBarStyle: 'light',
+        statusBarStyle: 'dark',
         statusBarBackgroundColor: 'transparent',
       });
     }, [navigation])
-  );
-
-  // Create video player - try using require() directly first
-  const player = useVideoPlayer(require('../../../assets/logo/landing.mp4'), (player) => {
-    player.loop = true;
-    player.muted = true;
-  });
-
-  useEffect(() => {
-    // Ensure video plays when component mounts
-    if (player) {
-      player.play();
-    }
-  }, [player]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      // Resume playback when screen regains focus
-      if (player) {
-        player.play();
-      }
-
-      const appStateSubscription = AppState.addEventListener('change', (state) => {
-        if (state === 'active' && player) {
-          player.play();
-        }
-      });
-
-      return () => {
-        appStateSubscription.remove();
-      };
-    }, [player])
   );
 
   const handleSocialLogin = useCallback(
@@ -90,18 +59,22 @@ const LandingScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      {/* Video Background */}
-      <VideoView
-        player={player}
-        style={styles.video}
-        contentFit="cover"
-        nativeControls={false}
-      />
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar style="dark" />
 
-      {/* Content Overlay */}
-      <View style={[styles.overlay, { paddingTop: insets.top + 20, paddingBottom: insets.bottom + 12 }]}>
+      {/* Main Content */}
+      <View style={[styles.content, { paddingTop: insets.top + 40, paddingBottom: insets.bottom + 12 }]}>
+        {/* Hero Section with SVG */}
+        <View style={styles.heroSection}>
+          <SalesmanIcon width={280} height={280} />
+          <Text style={[styles.heroTitle, { color: theme.colors.textPrimary }]}>
+            Opa Rides
+          </Text>
+          <Text style={[styles.heroSubtitle, { color: theme.colors.textSecondary }]}>
+            Your journey starts here
+          </Text>
+        </View>
+
         {/* Social Login Section */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity
@@ -143,10 +116,10 @@ const LandingScreen = () => {
           </TouchableOpacity>
 
           {/* Terms Text */}
-          <Text style={[styles.termsText, { color: theme.colors.white }]}>
+          <Text style={[styles.termsText, { color: theme.colors.textSecondary }]}>
             By continuing, you agree to our{' '}
             <Text 
-              style={[styles.termsLink, { color: theme.colors.white }]}
+              style={[styles.termsLink, { color: theme.colors.textPrimary }]}
               onPress={handleTermsPress}
             >
               Terms
@@ -161,26 +134,31 @@ const LandingScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
   },
-  video: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT,
-  },
-  overlay: {
+  content: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 24,
-    zIndex: 1,
-    position: 'relative',
+  },
+  heroSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 20,
+  },
+  heroTitle: {
+    fontSize: 32,
+    fontFamily: 'Nunito_700Bold',
+    marginTop: 24,
+    letterSpacing: -0.5,
+  },
+  heroSubtitle: {
+    fontSize: 16,
+    fontFamily: 'Nunito_400Regular',
+    marginTop: 8,
   },
   buttonContainer: {
-    gap: 16,
+    gap: 14,
     paddingBottom: 12,
   },
   socialButton: {

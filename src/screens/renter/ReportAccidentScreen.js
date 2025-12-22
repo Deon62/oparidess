@@ -182,27 +182,17 @@ const ReportAccidentScreen = () => {
           contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom + 24, 24) }]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={[styles.noticeCard, { backgroundColor: '#F44336' + '10', borderColor: '#F44336' + '25' }]}>
-            <View style={styles.noticeHeader}>
-              <Ionicons name="warning-outline" size={22} color="#F44336" />
-              <Text style={[styles.noticeTitle, { color: theme.colors.textPrimary }]}>
-                Safety First
-              </Text>
+          <TouchableOpacity
+            style={styles.emergencyCallRow}
+            onPress={handleCallPolice}
+            activeOpacity={0.7}
+          >
+            <View style={styles.emergencyCallLeft}>
+              <Ionicons name="call" size={20} color="#F44336" />
+              <Text style={[styles.emergencyCallText, { color: theme.colors.textPrimary }]}>Call Emergency (999)</Text>
             </View>
-            <Text style={[styles.noticeText, { color: theme.colors.textSecondary }]}>
-              If anyone is injured or there is immediate danger, please call the police/emergency services right away.
-            </Text>
-            <Button
-              title="Call Police"
-              onPress={handleCallPolice}
-              variant="primary"
-              style={[styles.callButton, { backgroundColor: '#F44336' }]}
-              textStyle={{ color: theme.colors.white }}
-            />
-            <Text style={[styles.noticeHint, { color: theme.colors.textSecondary }]}>
-              This will attempt to dial 999 (or 112 if unavailable).
-            </Text>
-          </View>
+            <Ionicons name="chevron-forward" size={18} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
 
           <Text style={[styles.label, { color: theme.colors.textPrimary }]}>
             What happened?
@@ -268,17 +258,13 @@ const ReportAccidentScreen = () => {
           )}
 
           <Button
-            title={isSending ? 'Sending...' : 'Send Report (with location)'}
+            title={isSending ? 'Sending...' : 'Send Report'}
             onPress={handleSend}
             variant="primary"
             loading={isSending}
             disabled={isSending}
             style={styles.sendButton}
           />
-
-          <Text style={[styles.helperText, { color: theme.colors.textSecondary }]}>
-            When you send, we’ll attach your current location and the photos you selected.
-          </Text>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -326,36 +312,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 8,
   },
-  noticeCard: {
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    marginBottom: 18,
-  },
-  noticeHeader: {
+  emergencyCallRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.06)',
   },
-  noticeTitle: {
+  emergencyCallLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  emergencyCallText: {
     fontSize: 15,
-    fontFamily: 'Nunito_700Bold',
-  },
-  noticeText: {
-    fontSize: 13,
-    fontFamily: 'Nunito_400Regular',
-    lineHeight: 18,
-    marginBottom: 12,
-  },
-  callButton: {
-    borderRadius: 14,
-    paddingVertical: 12,
-    marginBottom: 8,
-  },
-  noticeHint: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
+    fontFamily: 'Nunito_600SemiBold',
   },
   label: {
     fontSize: 14,

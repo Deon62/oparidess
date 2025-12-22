@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -18,19 +18,12 @@ const YourReferralsScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
+  // Hide tab bar whenever this screen is focused
   useFocusEffect(
-    React.useCallback(() => {
-      const tabNavigator = navigation.getParent()?.getParent?.() ?? navigation.getParent();
-
-      tabNavigator?.setOptions({
-        tabBarStyle: { display: 'none' },
-      });
-
-      return () => {
-        tabNavigator?.setOptions({
-          tabBarStyle: undefined,
-        });
-      };
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({ tabBarStyle: { display: 'none' } });
+      // Don't restore - parent screen will handle it
     }, [navigation])
   );
 

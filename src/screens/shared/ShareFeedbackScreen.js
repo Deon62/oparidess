@@ -12,7 +12,6 @@ const ShareFeedbackScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   
-  const [feedbackCategory, setFeedbackCategory] = useState('general');
   const [feedbackDescription, setFeedbackDescription] = useState('');
   const [showFeedbackSuccessModal, setShowFeedbackSuccessModal] = useState(false);
 
@@ -47,25 +46,12 @@ const ShareFeedbackScreen = () => {
 
     // TODO: Submit feedback to backend
     console.log('Feedback submitted:', {
-      category: feedbackCategory,
       description: feedbackDescription,
     });
 
     setShowFeedbackSuccessModal(true);
     // Reset form
     setFeedbackDescription('');
-    setFeedbackCategory('general');
-  };
-
-  const getCategoryLabel = (category) => {
-    const labels = {
-      general: 'General',
-      bug_report: 'Bug Report',
-      feature_request: 'Feature Request',
-      service_quality: 'Service Quality',
-      payment_issue: 'Payment Issue',
-    };
-    return labels[category] || category;
   };
 
   return (
@@ -77,55 +63,7 @@ const ShareFeedbackScreen = () => {
         contentContainerStyle={styles.formContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.formSection, { backgroundColor: theme.colors.white }]}>
-          <Text style={[styles.formSectionTitle, { color: theme.colors.textPrimary }]}>
-            Feedback Category
-          </Text>
-          <View style={styles.categoryButtonsContainer}>
-            {[
-              'general',
-              'bug_report',
-              'feature_request',
-              'service_quality',
-              'payment_issue',
-            ].map((category) => (
-              <TouchableOpacity
-                key={category}
-                style={[
-                  styles.categoryButton,
-                  feedbackCategory === category && [
-                    styles.categoryButtonActive,
-                    { backgroundColor: theme.colors.primary },
-                  ],
-                  {
-                    borderColor:
-                      feedbackCategory === category
-                        ? theme.colors.primary
-                        : theme.colors.hint + '40',
-                  },
-                ]}
-                onPress={() => setFeedbackCategory(category)}
-                activeOpacity={0.7}
-              >
-                <Text
-                  style={[
-                    styles.categoryButtonText,
-                    {
-                      color:
-                        feedbackCategory === category
-                          ? theme.colors.white
-                          : theme.colors.textSecondary,
-                    },
-                  ]}
-                >
-                  {getCategoryLabel(category)}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        <View style={[styles.formSection, { backgroundColor: theme.colors.white }]}>
+        <View style={styles.formSection}>
           <Text style={[styles.formLabel, { color: theme.colors.textPrimary }]}>
             Feedback Description <Text style={{ color: '#F44336' }}>*</Text>
           </Text>
@@ -202,14 +140,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   formSection: {
-    padding: 16,
-    borderRadius: 12,
     marginBottom: 16,
-  },
-  formSectionTitle: {
-    fontSize: 16,
-    fontFamily: 'Nunito_700Bold',
-    marginBottom: 12,
   },
   formLabel: {
     fontSize: 14,
@@ -224,24 +155,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Nunito_400Regular',
     minHeight: 120,
-  },
-  categoryButtonsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  categoryButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  categoryButtonActive: {
-    borderWidth: 0,
-  },
-  categoryButtonText: {
-    fontSize: 12,
-    fontFamily: 'Nunito_600SemiBold',
   },
   submitButton: {
     marginTop: 8,

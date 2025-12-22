@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -14,19 +14,12 @@ const HowHostReferralsWorkScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
+  // Hide tab bar whenever this screen is focused
   useFocusEffect(
-    React.useCallback(() => {
-      const tabNavigator = navigation.getParent()?.getParent?.() ?? navigation.getParent();
-
-      tabNavigator?.setOptions({
-        tabBarStyle: { display: 'none' },
-      });
-
-      return () => {
-        tabNavigator?.setOptions({
-          tabBarStyle: undefined,
-        });
-      };
+    useCallback(() => {
+      const parent = navigation.getParent();
+      parent?.setOptions({ tabBarStyle: { display: 'none' } });
+      // Don't restore - parent screen will handle it
     }, [navigation])
   );
 
@@ -49,20 +42,20 @@ const HowHostReferralsWorkScreen = () => {
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 24 }]} showsVerticalScrollIndicator={false}>
         <Text style={[styles.title, { color: theme.colors.textPrimary }]}>How host referrals work</Text>
 
-        <View style={[styles.card, { backgroundColor: theme.colors.white }]}> 
+        <View style={styles.stepsContainer}>
           <View style={styles.stepRow}>
             <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>1.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Share your referral link</Text>
-              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Choose Car or Service, then send the link to the host you’re inviting.</Text>
+              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Send the link to the host you're inviting.</Text>
             </View>
           </View>
 
           <View style={styles.stepRow}>
             <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>2.</Text>
             <View style={styles.stepTextWrap}>
-              <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>They sign up and submit details</Text>
-              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>The host signs up and completes their listing information.</Text>
+              <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>They sign up</Text>
+              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>The host signs up and completes their listing.</Text>
             </View>
           </View>
 
@@ -70,7 +63,7 @@ const HowHostReferralsWorkScreen = () => {
             <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>3.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Verification</Text>
-              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Opa verifies the listing. Once approved, your referral is marked as completed.</Text>
+              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Opa verifies and approves the listing.</Text>
             </View>
           </View>
 
@@ -78,15 +71,14 @@ const HowHostReferralsWorkScreen = () => {
             <Text style={[styles.stepNumber, { color: theme.colors.textPrimary }]}>4.</Text>
             <View style={styles.stepTextWrap}>
               <Text style={[styles.stepTitle, { color: theme.colors.textPrimary }]}>Get rewarded</Text>
-              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Rewards are credited after verification. You can track progress in “Your referrals”.</Text>
+              <Text style={[styles.stepDesc, { color: theme.colors.textSecondary }]}>Rewards credited after verification.</Text>
             </View>
           </View>
         </View>
 
-        <View style={[styles.noteCard, { backgroundColor: theme.colors.white }]}> 
-          <Ionicons name="information-circle-outline" size={20} color={theme.colors.textSecondary} />
-          <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>Rewards depend on host category and location. Fraudulent activity may lead to disqualification.</Text>
-        </View>
+        <Text style={[styles.noteText, { color: theme.colors.textSecondary }]}>
+          Rewards depend on host category and location.
+        </Text>
       </ScrollView>
     </View>
   );
@@ -132,15 +124,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_700Bold',
     marginBottom: 6,
   },
-  card: {
-    borderRadius: 18,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 2,
-    marginBottom: 14,
+  stepsContainer: {
+    marginTop: 16,
+    marginBottom: 24,
   },
   stepRow: {
     flexDirection: 'row',
@@ -166,18 +152,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Nunito_400Regular',
     lineHeight: 18,
   },
-  noteCard: {
-    borderRadius: 16,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 10,
-  },
   noteText: {
-    flex: 1,
-    fontSize: 12,
+    fontSize: 13,
     fontFamily: 'Nunito_400Regular',
     lineHeight: 18,
+    textAlign: 'center',
   },
 });
 

@@ -30,11 +30,7 @@ const ReportAccidentScreen = () => {
       navigation.getParent()?.setOptions({
         tabBarStyle: { display: 'none' },
       });
-      return () => {
-        navigation.getParent()?.setOptions({
-          tabBarStyle: undefined,
-        });
-      };
+      // Don't restore tab bar here - let EmergencyOptionsScreen handle it
     }, [navigation])
   );
 

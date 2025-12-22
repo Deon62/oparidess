@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../packages/theme/ThemeProvider';
@@ -27,15 +27,16 @@ const EmergencyOptionsScreen = () => {
   const insets = useSafeAreaInsets();
   const theme = useTheme();
 
-  useFocusEffect(
-    React.useCallback(() => {
-      const parent = navigation.getParent();
-      parent?.setOptions({ tabBarStyle: { display: 'none' } });
-      return () => {
-        parent?.setOptions({ tabBarStyle: undefined });
-      };
-    }, [navigation])
-  );
+  // Hide tab bar on mount
+  useEffect(() => {
+    const parent = navigation.getParent();
+    parent?.setOptions({ tabBarStyle: { display: 'none' } });
+    
+    // Restore tab bar only when component unmounts (leaving emergency flow entirely)
+    return () => {
+      parent?.setOptions({ tabBarStyle: undefined });
+    };
+  }, [navigation]);
 
   return (
     <View style={[styles.container, { 

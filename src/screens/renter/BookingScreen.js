@@ -634,44 +634,41 @@ const BookingScreen = () => {
           {/* Pickup Date */}
           <View style={styles.dateSectionRow}>
             <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textPrimary }]}>
                 Pickup Date
               </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textSecondary }]}>
                 {pickupDate ? formatDateShort(pickupDate) : 'Select date'}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.dateChangeButton}
+              style={[styles.changeButton, { backgroundColor: theme.colors.background, borderColor: theme.colors.hint + '40' }]}
               onPress={openPickupDatePicker}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.changeButtonText, { color: theme.colors.textPrimary }]}>
                 Change
               </Text>
             </TouchableOpacity>
           </View>
 
           {/* Dropoff Date */}
-          <View style={[styles.dateSectionRow, { marginTop: SPACING.m }]}>
+          <View style={[styles.dateSectionRow, { marginTop: 16 }]}>
             <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textPrimary }]}>
                 Dropoff Date
               </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textSecondary }]}>
                 {dropoffDate ? formatDateShort(dropoffDate) : 'Select date'}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.dateChangeButton}
+              style={[styles.changeButton, { backgroundColor: theme.colors.background, borderColor: theme.colors.hint + '40', opacity: pickupDate ? 1 : 0.5 }]}
               onPress={openDropoffDatePicker}
               activeOpacity={0.7}
               disabled={!pickupDate}
             >
-              <Text style={[
-                styles.dateChangeButtonText,
-                { color: pickupDate ? theme.colors.textPrimary : theme.colors.hint, textDecorationLine: 'underline' }
-              ]}>
+              <Text style={[styles.changeButtonText, { color: theme.colors.textPrimary }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -721,22 +718,22 @@ const BookingScreen = () => {
         <View style={styles.section}>
           <View style={styles.dateSectionRow}>
             <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textPrimary }]}>
                 Times
               </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textSecondary }]}>
                 {pickupTime} - {dropoffTime}
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.dateChangeButton}
+              style={[styles.changeButton, { backgroundColor: theme.colors.background, borderColor: theme.colors.hint + '40' }]}
               onPress={() => {
                 setIsSelectingPickupTime(true);
                 setShowTimePicker(true);
               }}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.changeButtonText, { color: theme.colors.textPrimary }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -751,32 +748,22 @@ const BookingScreen = () => {
         <View style={styles.section}>
           <View style={styles.dateSectionRow}>
             <View style={styles.dateSectionContent}>
-              <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary }]}>
-                {sameDropoffLocation ? 'Location' : 'Pickup Location'}
+              <Text style={[styles.dateSectionLabel, { color: theme.colors.textPrimary }]}>
+                Location
               </Text>
-              <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
+              <Text style={[styles.dateSectionValue, { color: theme.colors.textSecondary }]}>
                 {pickupLocation || 'Select location'}
               </Text>
-              {!sameDropoffLocation && (
-                <>
-                  <Text style={[styles.dateSectionLabel, { color: theme.colors.textSecondary, marginTop: 8 }]}>
-                    Dropoff Location
-                  </Text>
-                  <Text style={[styles.dateSectionValue, { color: theme.colors.textPrimary }]}>
-                    {dropoffLocation || 'Select location'}
-                  </Text>
-                </>
-              )}
             </View>
             <TouchableOpacity
-              style={styles.dateChangeButton}
+              style={[styles.changeButton, { backgroundColor: theme.colors.background, borderColor: theme.colors.hint + '40' }]}
               onPress={() => {
                 setIsSelectingPickupLocation(true);
                 setShowLocationPicker(true);
               }}
               activeOpacity={0.7}
             >
-              <Text style={[styles.dateChangeButtonText, { color: theme.colors.textPrimary, textDecorationLine: 'underline' }]}>
+              <Text style={[styles.changeButtonText, { color: theme.colors.textPrimary }]}>
                 Change
               </Text>
             </TouchableOpacity>
@@ -845,20 +832,15 @@ const BookingScreen = () => {
       </ScrollView>
 
       {/* Bottom Payment Bar */}
-      <View style={[styles.bottomBar, { backgroundColor: theme.colors.white }]}>
-        <View style={styles.bottomBarPrice}>
-          <Text style={[styles.bottomBarLabel, { color: theme.colors.hint }]}>
-            {days > 0 ? `${days} ${days === 1 ? 'day' : 'days'}` : 'Total'}
-          </Text>
-          <Text style={[styles.bottomBarPriceValue, { color: theme.colors.textPrimary }]}>
-            {formatCurrency(totalPrice, { showDecimals: false })}
-          </Text>
-        </View>
-        <Button
-          title="Continue to Review"
+      <View style={[styles.bottomBar, { backgroundColor: theme.colors.background }]}>
+        <TouchableOpacity
+          style={[
+            styles.nextButton,
+            { backgroundColor: theme.colors.textPrimary },
+            (!pickupDate || !dropoffDate || days < rentalInfo.minimumDays || !pickupLocation || (!sameDropoffLocation && !dropoffLocation) || isDateRangeUnavailable || isDateRangeTooShort) && { opacity: 0.5 }
+          ]}
           onPress={handleContinue}
-          variant="primary"
-          style={[styles.payButton, { backgroundColor: '#FF1577' }]}
+          activeOpacity={0.9}
           disabled={
             !pickupDate ||
             !dropoffDate ||
@@ -868,7 +850,9 @@ const BookingScreen = () => {
             isDateRangeUnavailable ||
             isDateRangeTooShort
           }
-        />
+        >
+          <Text style={[styles.nextButtonText, { color: theme.colors.white }]}>Next</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Pickup Date Picker */}
@@ -1472,29 +1456,9 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   bottomBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 24,
     paddingVertical: 16,
-    paddingBottom: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
-    gap: 16,
-  },
-  bottomBarPrice: {
-    flex: 1,
-  },
-  bottomBarLabel: {
-    fontSize: 12,
-    fontFamily: 'Nunito_400Regular',
-    marginBottom: 4,
-  },
-  bottomBarPriceValue: {
-    fontSize: 24,
-    fontFamily: 'Nunito_700Bold',
-  },
-  payButton: {
-    minWidth: 140,
+    paddingBottom: 24,
   },
   // Airbnb-style Date Section
   dateSectionRow: {
@@ -1506,20 +1470,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   dateSectionLabel: {
-    fontSize: 14,
+    fontSize: 15,
     fontFamily: 'Nunito_600SemiBold',
     marginBottom: 4,
   },
   dateSectionValue: {
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: 'Nunito_400Regular',
   },
-  dateChangeButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+  changeButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
   },
-  dateChangeButtonText: {
-    fontSize: 14,
+  changeButtonText: {
+    fontSize: 13,
+    fontFamily: 'Nunito_600SemiBold',
+  },
+  nextButton: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nextButtonText: {
+    fontSize: 16,
     fontFamily: 'Nunito_600SemiBold',
   },
   ageWarningBanner: {
